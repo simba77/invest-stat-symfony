@@ -14,12 +14,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
-        "resources/js/*"
+        "assets/*"
       ],
     }
   },
   "include": [
-    "resources/js/**/*"
+    "assets/**/*"
   ],
   "exclude": [
     "node_modules"
