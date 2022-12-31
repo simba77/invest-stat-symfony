@@ -19,7 +19,7 @@
               class="form-input"
               placeholder="Email address"
               required
-              v-model="form.email"
+              v-model="form.username"
             >
           </div>
           <div>
@@ -38,7 +38,7 @@
         </div>
 
         <div class="flex items-center">
-          <input id="remember-me" name="remember-me" type="checkbox" class="form-checkbox" v-model="form.remember">
+          <input id="remember-me" name="remember-me" type="checkbox" class="form-checkbox" v-model="form.remember_me">
           <label for="remember-me" class="form-checkbox-label">Remember me</label>
         </div>
 
@@ -64,9 +64,9 @@ export default {
   data() {
     return {
       form: {
-        email: '',
+        username: '',
         password: '',
-        remember: true,
+        remember_me: true,
       },
       loading: false,
       error: null,
@@ -89,7 +89,7 @@ export default {
         })
         .catch((error) => {
           if (error.response.status === 401) {
-            this.error = error.response.data.message;
+            this.error = error.response.data.error;
           } else {
             alert('An error has occurred');
           }
@@ -101,6 +101,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-</style>
