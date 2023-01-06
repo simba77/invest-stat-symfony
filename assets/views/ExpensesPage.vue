@@ -93,7 +93,7 @@
 <script lang="ts">
 import PageComponent from "../components/PageComponent.vue";
 import axios from "axios";
-import {PencilIcon, XCircleIcon, PlusCircleIcon} from "@heroicons/vue/outline";
+import {PencilIcon, XCircleIcon, PlusCircleIcon} from "@heroicons/vue/24/outline";
 import BaseModal from "@/components/Modals/BaseModal.vue";
 import ConfirmModal from "@/components/Modals/ConfirmModal.vue";
 import StatCard from "@/components/Cards/StatCard.vue";

@@ -13,10 +13,10 @@
         v-if="percent"
       >
         <template v-if="percent > 0">
-          <arrow-sm-up-icon class="h-5 mr-0.5 text-green-500"></arrow-sm-up-icon>
+          <arrow-small-up-icon class="h-5 mr-0.5 text-green-500"></arrow-small-up-icon>
         </template>
         <template v-else>
-          <arrow-sm-down-icon class="h-5 mr-0.5 text-red-500"></arrow-sm-down-icon>
+          <arrow-small-down-icon class="h-5 mr-0.5 text-red-500"></arrow-small-down-icon>
         </template>
         {{ Math.abs(percent) }}%
       </div>
@@ -25,11 +25,11 @@
 </template>
 
 <script lang="ts">
-import {QuestionMarkCircleIcon, ArrowSmUpIcon, ArrowSmDownIcon} from "@heroicons/vue/solid";
+import {QuestionMarkCircleIcon, ArrowSmallUpIcon, ArrowSmallDownIcon} from "@heroicons/vue/24/solid";
 
 export default {
   name: "StatCard",
-  components: {QuestionMarkCircleIcon, ArrowSmUpIcon, ArrowSmDownIcon},
+  components: {QuestionMarkCircleIcon, ArrowSmallUpIcon, ArrowSmallDownIcon},
   props: {
     name: {
       type: String,

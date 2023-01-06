@@ -211,7 +211,7 @@
                                   class="text-gray-300 hover:text-gray-600 mr-2 cursor-pointer"
                                   title="Sell"
                                 >
-                                  <cash-icon class="h-5 w-5"></cash-icon>
+                                  <banknotes-icon class="h-5 w-5"></banknotes-icon>
                                 </div>
                                 <button
                                   type="button"
@@ -281,7 +281,7 @@
                             class="text-gray-300 hover:text-gray-600 mr-2 cursor-pointer"
                             title="Sell"
                           >
-                            <cash-icon class="h-5 w-5"></cash-icon>
+                            <banknotes-icon class="h-5 w-5"></banknotes-icon>
                           </div>
                           <button
                             type="button"
@@ -321,7 +321,7 @@
 <script lang="ts">
 import PageComponent from "../../components/PageComponent.vue";
 import axios from "axios";
-import {PencilIcon, XCircleIcon, PlusCircleIcon, CashIcon} from "@heroicons/vue/outline";
+import {PencilIcon, XCircleIcon, PlusCircleIcon, BanknotesIcon} from "@heroicons/vue/24/outline";
 import BaseModal from "@/components/Modals/BaseModal.vue";
 import ConfirmModal from "@/components/Modals/ConfirmModal.vue";
 import StatCard from "@/components/Cards/StatCard.vue";
@@ -330,7 +330,7 @@ import SellModal from "@/components/Modals/SellModal.vue";
 
 export default {
   name: "AccountsPage",
-  components: {SellModal, StatCard, ConfirmModal, BaseModal, PageComponent, PencilIcon, XCircleIcon, PlusCircleIcon, CashIcon},
+  components: {SellModal, StatCard, ConfirmModal, BaseModal, PageComponent, PencilIcon, XCircleIcon, PlusCircleIcon, BanknotesIcon},
   mounted() {
     this.getItems();
     this.getStat();

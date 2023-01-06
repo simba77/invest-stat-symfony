@@ -53,7 +53,7 @@
 
 <script lang="ts">
 import PageComponent from "../components/PageComponent.vue";
-import {XCircleIcon, PencilIcon} from "@heroicons/vue/outline";
+import {XCircleIcon, PencilIcon} from "@heroicons/vue/24/outline";
 import axios from "axios";
 import helpers from "../helpers";
 import BaseModal from "@/components/Modals/BaseModal.vue";

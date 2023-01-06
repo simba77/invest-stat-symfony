@@ -52,8 +52,8 @@
             <DisclosureButton
               class="btn btn-primary border-indigo-700">
               <span class="sr-only">Open main menu</span>
-              <MenuIcon v-if="!open" class="block h-6 w-6" aria-hidden="true"/>
-              <XIcon v-else class="block h-6 w-6" aria-hidden="true"/>
+              <Bars3Icon v-if="!open" class="block h-6 w-6" aria-hidden="true"/>
+              <XMarkIcon v-else class="block h-6 w-6" aria-hidden="true"/>
             </DisclosureButton>
           </div>
         </div>
@@ -115,7 +115,7 @@
 
 <script setup>
 import {Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
-import {MenuIcon, XIcon, UserIcon} from '@heroicons/vue/outline'
+import {Bars3Icon, XMarkIcon, UserIcon} from '@heroicons/vue/24/outline'
 import {authStore} from "@/stores/authStore";
 import router from "@/router";
 
