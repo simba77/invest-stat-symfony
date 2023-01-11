@@ -1,3 +1,6 @@
+include .env
+include .env.local
+
 up:
 	docker-compose up -d
 
@@ -8,4 +11,4 @@ stop:
 	docker-compose stop
 
 shell:
-	docker exec -it $$(docker ps -q -f name=ubuntu) bash
+	docker exec -it $$(docker ps -q -f name=ubuntu.${APP_NAMESPACE}) bash
