@@ -20,12 +20,6 @@ class AuthController extends AbstractController
             return $this->json(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
 
-        return $this->json(
-            [
-                'id'    => $user->getId(),
-                'name'  => $user->getName(),
-                'email' => $user->getEmail(),
-            ]
-        );
+        return $this->json($user, context: ['groups' => 'authUserData']);
     }
 }
