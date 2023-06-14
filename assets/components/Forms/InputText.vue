@@ -17,7 +17,7 @@
       v-model="value"
     >
     <div class="mt-1 text-sm text-gray-500" v-if="help" v-html="help"></div>
-    <div class="mt-1 text-sm text-red-500" v-if="error">{{ typeof error === 'object' ? error.join(',') : error }}</div>
+    <div class="mt-1 text-sm text-red-500" v-if="error">{{ typeof error === 'object' ? error.message : error }}</div>
   </div>
 </template>
 

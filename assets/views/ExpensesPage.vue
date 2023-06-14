@@ -26,7 +26,7 @@
       </tr>
       </thead>
       <tbody>
-      <template v-for="(cat, index) in expenses.data" :key="index">
+      <template v-for="(cat, index) in expenses.items" :key="index">
         <template v-if="! cat.isTotal">
           <tr class="table-subtitle">
             <td colspan="2">{{ cat.name }}</td>
@@ -48,7 +48,7 @@
               </template>
             </td>
           </tr>
-          <template v-if="cat.expenses.length > 0">
+          <template v-if="cat.expenses?.length > 0">
             <tr v-for="(expense, i) in cat.expenses" :class="[expense.isTotal ? 'font-bold' : '']" :key="i">
               <td :class="[expense.isSubTotal || expense.isTotal ? 'text-right' : '']">{{ expense.name }}</td>
               <td>{{ new Intl.NumberFormat('ru-RU').format(expense.sum) }} {{ expense.currency }}</td>
@@ -143,7 +143,7 @@ export default {
     },
     getItems() {
       this.loading = true;
-      axios.get('/api/expenses/list')
+      axios.get('/api/expenses')
         .then((response) => {
           this.expenses = response.data;
         })

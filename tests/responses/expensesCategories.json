@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "name": "Shops and Others"
+    },
+    {
+      "id": 2,
+      "name": "Regular Payments"
+    },
+    {
+      "id": 3,
+      "name": "Base Expenses"
+    }
+  ]
+}

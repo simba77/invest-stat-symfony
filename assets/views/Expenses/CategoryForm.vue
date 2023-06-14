@@ -51,7 +51,7 @@ export default {
   methods: {
     submitForm() {
       this.loading = true;
-      axios.post('/api/expenses/store-category', this.form)
+      axios.post('/api/expenses/category/create', this.form)
         .then(() => {
           this.$router.push({name: 'Expenses'});
         })
