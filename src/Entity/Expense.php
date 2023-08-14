@@ -31,8 +31,8 @@ class Expense implements
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $user_id = null;
+    #[ORM\Column(name: 'user_id')]
+    private ?int $userId;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
@@ -40,8 +40,16 @@ class Expense implements
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2)]
     private ?float $sum = null;
 
-    #[ORM\Column]
-    private ?int $category_id = null;
+    #[ORM\Column(name: 'category_id')]
+    private ?int $categoryId;
+
+    public function __construct(string $name, float $sum, int $categoryId, int $userId)
+    {
+        $this->name = $name;
+        $this->sum = $sum;
+        $this->categoryId = $categoryId;
+        $this->userId = $userId;
+    }
 
     public function getId(): ?int
     {
@@ -50,12 +58,12 @@ class Expense implements
 
     public function getUserId(): ?int
     {
-        return $this->user_id;
+        return $this->userId;
     }
 
-    public function setUserId(int $user_id): static
+    public function setUserId(int $userId): static
     {
-        $this->user_id = $user_id;
+        $this->userId = $userId;
 
         return $this;
     }
@@ -86,12 +94,12 @@ class Expense implements
 
     public function getCategoryId(): ?int
     {
-        return $this->category_id;
+        return $this->categoryId;
     }
 
-    public function setCategoryId(int $category_id): static
+    public function setCategoryId(int $categoryId): static
     {
-        $this->category_id = $category_id;
+        $this->categoryId = $categoryId;
 
         return $this;
     }

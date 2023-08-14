@@ -24,12 +24,7 @@ class ExpenseController extends AbstractController
     #[Route('/expenses/{categoryId}/create', name: 'app_expenses_expense', requirements: ['categoryId' => '\d+'], methods: ['POST'])]
     public function create(int $categoryId, #[MapRequestPayload] CreateExpenseRequestDTO $dto, #[CurrentUser] ?User $user): Response
     {
-        $expense = new Expense();
-        $expense->setName($dto->name);
-        $expense->setSum($dto->sum);
-        $expense->setCategoryId($categoryId);
-        $expense->setUserId($user->getId());
-
+        $expense = new Expense($dto->name, $dto->sum, $categoryId, $user->getId());
         $this->entityManager->persist($expense);
         $this->entityManager->flush();
 
