@@ -29,8 +29,6 @@ class ExpenseController extends AbstractController
         $expense->setSum($dto->sum);
         $expense->setCategoryId($categoryId);
         $expense->setUserId($user->getId());
-        $expense->setCreatedBy($user->getId());
-        $expense->setUpdatedBy($user->getId());
 
         $this->entityManager->persist($expense);
         $this->entityManager->flush();

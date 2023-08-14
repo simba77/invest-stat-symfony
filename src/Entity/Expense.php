@@ -3,18 +3,28 @@
 namespace App\Entity;
 
 use App\Repository\ExpenseRepository;
+use App\Shared\CreatedByProvider;
 use App\Shared\CreatedDateProvider;
 use App\Shared\CreatedDateProviderInterface;
+use App\Shared\CreatedUserProviderInterface;
+use App\Shared\UpdatedByProvider;
 use App\Shared\UpdatedDateProvider;
 use App\Shared\UpdatedDateProviderInterface;
+use App\Shared\UpdatedUserProviderInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ExpenseRepository::class)]
-class Expense implements CreatedDateProviderInterface, UpdatedDateProviderInterface
+class Expense implements
+    CreatedDateProviderInterface,
+    UpdatedDateProviderInterface,
+    CreatedUserProviderInterface,
+    UpdatedUserProviderInterface
 {
     use CreatedDateProvider;
     use UpdatedDateProvider;
+    use CreatedByProvider;
+    use UpdatedByProvider;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -32,12 +42,6 @@ class Expense implements CreatedDateProviderInterface, UpdatedDateProviderInterf
 
     #[ORM\Column]
     private ?int $category_id = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $created_by = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $updated_by = null;
 
     public function getId(): ?int
     {
@@ -88,30 +92,6 @@ class Expense implements CreatedDateProviderInterface, UpdatedDateProviderInterf
     public function setCategoryId(int $category_id): static
     {
         $this->category_id = $category_id;
-
-        return $this;
-    }
-
-    public function getCreatedBy(): ?int
-    {
-        return $this->created_by;
-    }
-
-    public function setCreatedBy(?int $created_by): self
-    {
-        $this->created_by = $created_by;
-
-        return $this;
-    }
-
-    public function getUpdatedBy(): ?int
-    {
-        return $this->updated_by;
-    }
-
-    public function setUpdatedBy(?int $updated_by): self
-    {
-        $this->updated_by = $updated_by;
 
         return $this;
     }
