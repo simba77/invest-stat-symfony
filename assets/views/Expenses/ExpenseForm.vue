@@ -6,12 +6,11 @@
           <h3 class="text-lg font-medium text-gray-900">Expense</h3>
           <p class="mt-1 text-sm text-gray-600">Enter the name and amount of expense</p>
         </div>
-        <div class="bg-red-500 inline-block text-white rounded px-4 py-2" v-if="errors && errors.message">{{ errors.message }}</div>
         <div class="w-full md:w-2/4">
           <input-text
             v-model="form.name"
             :key="componentKey"
-            :error="errors?.name"
+            :error="errors"
             name="name"
             label="Category Name"
             placeholder="Enter a category name"
@@ -19,9 +18,9 @@
           <input-text
             type="number"
             class="mt-3"
-            v-model="form.sum"
+            v-model.number="form.sum"
             :key="componentKey"
-            :error="errors?.sum"
+            :error="errors"
             name="sum"
             label="Amount of expense"
             placeholder="Amount of expense"
@@ -62,13 +61,13 @@ export default {
   methods: {
     submitForm() {
       this.loading = true;
-      axios.post('/api/expenses/store-expense/' + this.$route.params.category, this.form)
+      axios.post('/api/expenses/' + this.$route.params.category + '/create', this.form)
         .then(() => {
           this.$router.push({name: 'Expenses'});
         })
         .catch((error) => {
-          if (error.response.data.errors) {
-            this.errors = error.response.data.errors;
+          if (error.response.data) {
+            this.errors = error.response.data;
             this.componentKey += 1;
           } else {
             alert('An error has occurred');
