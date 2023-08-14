@@ -2,7 +2,7 @@
   <div class="">
     <label :for="elementId" class="block text-sm font-medium text-gray-700">{{ label }}</label>
     <input
-      :class="[error ? 'border-red-500' : '', 'mt-1 form-input']"
+      :class="[errorMessage ? 'border-red-500' : '', 'mt-1 form-input']"
       :id="elementId"
       :name="name"
       :type="type"
@@ -17,7 +17,7 @@
       v-model="value"
     >
     <div class="mt-1 text-sm text-gray-500" v-if="help" v-html="help"></div>
-    <div class="mt-1 text-sm text-red-500" v-if="error">{{ typeof error === 'object' ? error.message : error }}</div>
+    <div class="mt-1 text-sm text-red-500" v-if="errorMessage" v-html="errorMessage"></div>
   </div>
 </template>
 
@@ -80,6 +80,17 @@ export default {
     return {
       value: this.modelValue,
       elementId: this.id ? this.id : this.name
+    }
+  },
+  computed: {
+    errorMessage() {
+      return this.error?.violations.filter((item: { propertyPath: any; }) => {
+        return item.propertyPath === this.name;
+      })
+        .map((item: { title: any; }) => {
+          return item.title;
+        })
+        .join('<br>');
     }
   },
   methods: {

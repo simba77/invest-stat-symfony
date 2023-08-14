@@ -6,9 +6,8 @@ namespace App\Services;
 
 use App\Entity\ExpensesCategory;
 use App\Entity\User;
-use App\Models\ExpensesCategoryListItem;
-use App\Models\ExpensesCategoryListResponse;
 use App\Repository\ExpensesCategoryRepository;
+use App\Response\DTO\Expenses\ExpenseCategoryDTO;
 use Doctrine\Common\Collections\Criteria;
 
 class ExpensesCategoryService
@@ -18,17 +17,23 @@ class ExpensesCategoryService
     ) {
     }
 
-    public function getCategories(?User $user = null): ExpensesCategoryListResponse
+    public function getCategories(?User $user = null): array
     {
         $categories = $this->categoryRepository->findBy(
             ['user_id' => $user?->getId()],
             ['name' => Criteria::DESC]
         );
 
-        $items = array_map(fn(ExpensesCategory $category) => new ExpensesCategoryListItem(
-            id: $category->getId(), name: $category->getName()
-        ), $categories);
+        $items = [];
+        foreach ($categories as $category) {
+            $items[] = new ExpenseCategoryDTO(
+                id: $category->getId(),
+                name: $category->getName()
+            );
+        }
 
-        return new ExpensesCategoryListResponse($items);
+        return [
+            'items' => $items,
+        ];
     }
 }
