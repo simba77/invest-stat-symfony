@@ -80,7 +80,7 @@ class Expense implements
         return $this;
     }
 
-    public function getSum(): ?string
+    public function getSum(): ?float
     {
         return $this->sum;
     }
