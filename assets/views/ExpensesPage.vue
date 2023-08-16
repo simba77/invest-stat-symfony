@@ -170,7 +170,7 @@ export default {
     deleteCategory(id: number) {
       this.deleting = true;
       return new Promise((resolve, reject) => {
-        axios.post('/api/expenses/delete-category/' + id)
+        axios.post('/api/expenses/category/delete/' + id)
           .then(() => {
             this.getItems();
             resolve({deleted: true});

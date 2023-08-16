@@ -39,4 +39,24 @@ class ExpensesCategoryController extends AbstractController
 
         return $this->json(['success' => true]);
     }
+
+    #[Route('/expenses/category/delete/{id}', name: 'app_expenses_category_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $category = $this->em->getRepository(ExpensesCategory::class)->findOneBy(['id' => $id, 'userId' => $user->getId()]);
+        if (! $category) {
+            throw $this->createNotFoundException('No category found for id ' . $id);
+        }
+
+        // Remove related expenses
+        $expenses = $category->getExpenses();
+        foreach ($expenses as $expense) {
+            $this->em->remove($expense);
+        }
+
+        $this->em->remove($category);
+        $this->em->flush();
+
+        return $this->json(['success' => true]);
+    }
 }
