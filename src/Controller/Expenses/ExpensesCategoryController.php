@@ -7,11 +7,11 @@ namespace App\Controller\Expenses;
 use App\Entity\ExpensesCategory;
 use App\Entity\User;
 use App\Request\DTO\Expenses\CreateCategoryRequestDTO;
+use App\Response\DTO\Expenses\ExpenseCategoryDTO;
 use App\Services\ExpensesCategoryService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
@@ -55,6 +55,27 @@ class ExpensesCategoryController extends AbstractController
         }
 
         $this->em->remove($category);
+        $this->em->flush();
+
+        return $this->json(['success' => true]);
+    }
+
+    #[Route('/expenses/category/{id}', name: 'app_expenses_category_get_by_id', requirements: ['id' => '\d+'])]
+    public function getById(int $id, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $category = $this->em->getRepository(ExpensesCategory::class)->findOneBy(['id' => $id, 'userId' => $user->getId()]);
+        return $this->json(new ExpenseCategoryDTO($category->getId(), $category->getName(), []));
+    }
+
+    #[Route('/expenses/category/edit/{id}', name: 'app_expenses_category_edit', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function edit(int $id, #[MapRequestPayload] CreateCategoryRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $category = $this->em->getRepository(ExpensesCategory::class)->findOneBy(['id' => $id, 'userId' => $user?->getId()]);
+        if (! $category) {
+            throw $this->createNotFoundException('No category found for id ' . $id);
+        }
+
+        $category->setName($dto->name);
         $this->em->flush();
 
         return $this->json(['success' => true]);

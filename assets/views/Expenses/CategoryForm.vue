@@ -50,7 +50,14 @@ export default {
   methods: {
     submitForm() {
       this.loading = true;
-      axios.post('/api/expenses/category/create', this.form)
+      let requestUrl;
+      if (this.$route.params.id) {
+        requestUrl = '/api/expenses/category/edit/' + this.$route.params.id
+      } else {
+        requestUrl = '/api/expenses/category/create'
+      }
+
+      axios.post(requestUrl, this.form)
         .then(() => {
           this.$router.push({name: 'Expenses'});
         })
@@ -68,9 +75,9 @@ export default {
     },
     getForm(id: number) {
       this.loading = true;
-      axios.get('/api/expenses/edit-category/' + id)
+      axios.get('/api/expenses/category/' + id)
         .then((response) => {
-          this.form = response.data.form;
+          this.form = response.data;
           this.componentKey += 1;
         })
         .catch(() => {

@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\Criteria;
 class ExpensesCategoryService
 {
     public function __construct(
-        private ExpensesCategoryRepository $categoryRepository
+        private readonly ExpensesCategoryRepository $categoryRepository
     ) {
     }
 
@@ -22,7 +22,7 @@ class ExpensesCategoryService
     {
         $categories = $this->categoryRepository->findBy(
             ['userId' => $user?->getId()],
-            ['name' => Criteria::DESC]
+            ['id' => Criteria::ASC]
         );
 
         $items = [];
