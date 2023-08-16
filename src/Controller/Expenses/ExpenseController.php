@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Expenses;
 
 use App\Entity\Expense;
+use App\Entity\ExpensesCategory;
 use App\Entity\User;
 use App\Request\DTO\Expenses\CreateExpenseRequestDTO;
 use App\Services\ExpenseService;
@@ -27,7 +28,9 @@ class ExpenseController extends AbstractController
     #[Route('/expenses/{categoryId}/create', name: 'app_expenses_expense', requirements: ['categoryId' => '\d+'], methods: ['POST'])]
     public function create(int $categoryId, #[MapRequestPayload] CreateExpenseRequestDTO $dto, #[CurrentUser] ?User $user): Response
     {
-        $expense = new Expense($dto->name, $dto->sum, $categoryId, $user->getId());
+        $category = $this->entityManager->getRepository(ExpensesCategory::class)->find($categoryId);
+        $expense = new Expense($dto->name, $dto->sum, $user->getId());
+        $expense->setCategory($category);
         $this->entityManager->persist($expense);
         $this->entityManager->flush();
 

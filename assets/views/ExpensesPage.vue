@@ -156,7 +156,7 @@ export default {
     },
     getStat() {
       this.loading = true;
-      axios.get('/api/expenses/summary')
+      /*axios.get('/api/expenses/summary')
         .then((response) => {
           this.stat = response.data;
         })
@@ -165,7 +165,7 @@ export default {
         })
         .finally(() => {
           this.loading = false;
-        })
+        })*/
     },
     deleteCategory(id: number) {
       this.deleting = true;

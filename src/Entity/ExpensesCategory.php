@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ExpensesCategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -34,6 +36,14 @@ class ExpensesCategory
 
     #[ORM\Column(nullable: true)]
     private ?int $updated_by = null;
+
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Expense::class, fetch: 'EAGER')]
+    private Collection $expenses;
+
+    public function __construct()
+    {
+        $this->expenses = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -117,5 +127,13 @@ class ExpensesCategory
         $this->updated_by = $updated_by;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Expense>
+     */
+    public function getExpenses(): Collection
+    {
+        return $this->expenses;
     }
 }
