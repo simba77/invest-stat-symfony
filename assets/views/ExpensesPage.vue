@@ -187,7 +187,7 @@ export default {
     deleteExpense(id: number) {
       this.deleting = true;
       return new Promise((resolve, reject) => {
-        axios.post('/api/expenses/delete-expense/' + id)
+        axios.post('/api/expenses/expense/delete/' + id)
           .then(() => {
             this.getItems();
             resolve({deleted: true});

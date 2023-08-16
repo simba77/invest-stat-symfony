@@ -20,7 +20,7 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 class ExpenseController extends AbstractController
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
+        private readonly EntityManagerInterface $em,
         private readonly ExpenseService $expenseService
     ) {
     }
@@ -28,11 +28,11 @@ class ExpenseController extends AbstractController
     #[Route('/expenses/{categoryId}/create', name: 'app_expenses_expense', requirements: ['categoryId' => '\d+'], methods: ['POST'])]
     public function create(int $categoryId, #[MapRequestPayload] CreateExpenseRequestDTO $dto, #[CurrentUser] ?User $user): Response
     {
-        $category = $this->entityManager->getRepository(ExpensesCategory::class)->find($categoryId);
+        $category = $this->em->getRepository(ExpensesCategory::class)->find($categoryId);
         $expense = new Expense($dto->name, $dto->sum, $user->getId());
         $expense->setCategory($category);
-        $this->entityManager->persist($expense);
-        $this->entityManager->flush();
+        $this->em->persist($expense);
+        $this->em->flush();
 
         return $this->json(['success' => true]);
     }
@@ -44,17 +44,30 @@ class ExpenseController extends AbstractController
         return $this->json($expense);
     }
 
-    #[Route('/expenses/edit/{id}', name: 'app_expenses_expense_edit', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[Route('/expenses/expense/edit/{id}', name: 'app_expenses_expense_edit', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function edit(int $id, #[MapRequestPayload] CreateExpenseRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
     {
-        $expense = $this->entityManager->getRepository(Expense::class)->findOneBy(['id' => $id, 'userId' => $user?->getId()]);
+        $expense = $this->em->getRepository(Expense::class)->findOneBy(['id' => $id, 'userId' => $user?->getId()]);
         if (! $expense) {
             throw $this->createNotFoundException('No expense found for id ' . $id);
         }
 
         $expense->setName($dto->name);
         $expense->setSum($dto->sum);
-        $this->entityManager->flush();
+        $this->em->flush();
+
+        return $this->json(['success' => true]);
+    }
+
+    #[Route('/expenses/expense/delete/{id}', name: 'app_expenses_expense_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $expense = $this->em->getRepository(Expense::class)->findOneBy(['id' => $id, 'userId' => $user?->getId()]);
+        if (! $expense) {
+            throw $this->createNotFoundException('No expense found for id ' . $id);
+        }
+        $this->em->remove($expense);
+        $this->em->flush();
 
         return $this->json(['success' => true]);
     }

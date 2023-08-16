@@ -63,7 +63,7 @@ export default {
       this.loading = true;
       let requestUrl = '';
       if (this.$route.params.id) {
-        requestUrl = '/api/expenses/edit/' + this.$route.params.id
+        requestUrl = '/api/expenses/expense/edit/' + this.$route.params.id
       } else {
         requestUrl = '/api/expenses/' + this.$route.params.category + '/create'
       }
