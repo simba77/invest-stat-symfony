@@ -20,7 +20,7 @@ class ExpensesCategoryController extends AbstractController
 {
     public function __construct(
         private readonly ExpensesCategoryService $expensesCategoryService,
-        protected EntityManagerInterface $entityManager,
+        protected EntityManagerInterface $em,
     ) {
     }
 
@@ -30,24 +30,12 @@ class ExpensesCategoryController extends AbstractController
         return $this->json($this->expensesCategoryService->getCategories($user));
     }
 
-    #[Route('/expenses/category/create', name: 'app_expensescategory_create')]
-    public function create(
-        #[MapRequestPayload] CreateCategoryRequestDTO $dto,
-        Request $request,
-        #[CurrentUser] ?User $user
-    ): JsonResponse {
-        if ($request->isXmlHttpRequest()) {
-            $expensesCategory = new ExpensesCategory();
-            $expensesCategory->setName($dto->name);
-            $expensesCategory->setUserId($user->getId());
-            $expensesCategory->setCreatedBy($user->getId());
-            $expensesCategory->setUpdatedBy($user->getId());
-            $expensesCategory->setCreatedAt(new \DateTimeImmutable());
-            $expensesCategory->setUpdatedAt(new \DateTimeImmutable());
-
-            $this->entityManager->persist($expensesCategory);
-            $this->entityManager->flush();
-        }
+    #[Route('/expenses/category/create', name: 'app_expenses_category_create', methods: ['POST'])]
+    public function create(#[MapRequestPayload] CreateCategoryRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $expensesCategory = new ExpensesCategory($dto->name, $user->getId());
+        $this->em->persist($expensesCategory);
+        $this->em->flush();
 
         return $this->json(['success' => true]);
     }

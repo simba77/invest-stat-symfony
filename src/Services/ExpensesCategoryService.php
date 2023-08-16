@@ -21,7 +21,7 @@ class ExpensesCategoryService
     public function getCategories(?User $user = null): array
     {
         $categories = $this->categoryRepository->findBy(
-            ['user_id' => $user?->getId()],
+            ['userId' => $user?->getId()],
             ['name' => Criteria::DESC]
         );
 

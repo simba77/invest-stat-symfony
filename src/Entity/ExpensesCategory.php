@@ -3,6 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\ExpensesCategoryRepository;
+use App\Shared\CreatedByProvider;
+use App\Shared\CreatedDateProvider;
+use App\Shared\CreatedDateProviderInterface;
+use App\Shared\CreatedUserProviderInterface;
+use App\Shared\UpdatedByProvider;
+use App\Shared\UpdatedDateProvider;
+use App\Shared\UpdatedDateProviderInterface;
+use App\Shared\UpdatedUserProviderInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,39 +18,38 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ExpensesCategoryRepository::class)]
-class ExpensesCategory
+class ExpensesCategory implements
+    CreatedUserProviderInterface,
+    CreatedDateProviderInterface,
+    UpdatedUserProviderInterface,
+    UpdatedDateProviderInterface
 {
+    use CreatedByProvider;
+    use UpdatedByProvider;
+    use CreatedDateProvider;
+    use UpdatedDateProvider;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $user_id = null;
+    #[ORM\Column(name: 'user_id')]
+    private ?int $userId = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Groups(['expensesForm'])]
     private ?string $name = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $updated_at = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $created_by = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $updated_by = null;
-
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Expense::class, fetch: 'EAGER')]
     private Collection $expenses;
 
-    public function __construct()
+    public function __construct(string $name, ?int $userId)
     {
         $this->expenses = new ArrayCollection();
+        $this->name = $name;
+        $this->userId = $userId;
     }
 
     public function getId(): ?int
@@ -59,12 +66,12 @@ class ExpensesCategory
 
     public function getUserId(): ?int
     {
-        return $this->user_id;
+        return $this->userId;
     }
 
-    public function setUserId(int $user_id): self
+    public function setUserId(int $userId): self
     {
-        $this->user_id = $user_id;
+        $this->userId = $userId;
 
         return $this;
     }
@@ -77,54 +84,6 @@ class ExpensesCategory
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt(\DateTimeImmutable $updated_at): self
-    {
-        $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
-    public function getCreatedBy(): ?int
-    {
-        return $this->created_by;
-    }
-
-    public function setCreatedBy(?int $created_by): self
-    {
-        $this->created_by = $created_by;
-
-        return $this;
-    }
-
-    public function getUpdatedBy(): ?int
-    {
-        return $this->updated_by;
-    }
-
-    public function setUpdatedBy(?int $updated_by): self
-    {
-        $this->updated_by = $updated_by;
 
         return $this;
     }
