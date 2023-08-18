@@ -1,7 +1,7 @@
 <template>
-  <page-component title="Investments and Results">
+  <page-component title="Investments">
     <div class="mb-4">
-      <router-link :to="{name: 'AddDeposit'}" class="btn btn-primary">Add Deposit</router-link>
+      <router-link :to="{name: 'AddDeposit'}" class="btn btn-primary">Add</router-link>
     </div>
     <table class="simple-table">
       <thead>
@@ -34,8 +34,8 @@
           </template>
         </td>
       </tr>
-      <tr v-if="deposits.data?.length < 1">
-        <td colspan="3" class="text-center">The list is empty</td>
+      <tr v-if="deposits.length < 1">
+        <td colspan="4" class="text-center">The list is empty</td>
       </tr>
       </tbody>
     </table>
@@ -95,7 +95,7 @@ export default {
     },
     getDeposits() {
       this.loading = true;
-      axios.get('/api/investments/deposits')
+      axios.get('/api/investments')
         .then((response) => {
           this.deposits = response.data;
         })

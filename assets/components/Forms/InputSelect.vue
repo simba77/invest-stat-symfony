@@ -5,7 +5,7 @@
       :required="required"
       :disabled="disabled"
       :name="name"
-      :class="[error ? 'border-red-500' : '', 'form-select rounded w-full mt-1']"
+      :class="[errorMessage ? 'border-red-500' : '', 'form-select rounded w-full mt-1']"
       :id="elementId"
       v-model="value"
       @change="updateModelValue"
@@ -13,7 +13,7 @@
       <option v-for="(option, index) in options" :key="index" :value="getValue(option)">{{ getName(option) }}</option>
     </select>
     <div class="mt-1 text-sm text-gray-500" v-if="help" v-html="help"></div>
-    <div class="mt-1 text-sm text-red-500" v-if="error">{{ typeof error === 'object' ? error.join(',') : error }}</div>
+    <div class="mt-1 text-sm text-red-500" v-if="errorMessage" v-html="errorMessage"></div>
   </div>
 </template>
 
@@ -71,6 +71,17 @@ export default {
     return {
       value: this.modelValue,
       elementId: this.id ? this.id : this.name
+    }
+  },
+  computed: {
+    errorMessage() {
+      return this.error?.violations.filter((item: { propertyPath: any; }) => {
+        return item.propertyPath === this.name;
+      })
+        .map((item: { title: any; }) => {
+          return item.title;
+        })
+        .join('<br>');
     }
   },
   methods: {

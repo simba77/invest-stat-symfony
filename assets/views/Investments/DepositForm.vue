@@ -6,12 +6,11 @@
           <h3 class="text-lg font-medium text-gray-900">Deposit</h3>
           <p class="mt-1 text-sm text-gray-600">Enter the date and amount of expense</p>
         </div>
-        <div class="bg-red-500 inline-block text-white rounded px-4 py-2" v-if="errors && errors.message">{{ errors.message }}</div>
         <div class="w-full md:w-2/4">
           <input-text
             v-model="form.date"
             :key="componentKey"
-            :error="errors?.date"
+            :error="errors"
             type="date"
             name="date"
             label="Date"
@@ -20,9 +19,9 @@
           <input-text
             type="number"
             class="mt-3"
-            v-model="form.sum"
+            v-model.number="form.sum"
             :key="componentKey"
-            :error="errors?.sum"
+            :error="errors"
             name="sum"
             label="Amount of Deposit"
             placeholder="Amount of Deposit"
@@ -33,8 +32,8 @@
             name="account"
             placeholder="Select Account"
             field-value="id"
-            :error="errors?.account"
-            v-model="form.account"
+            :error="errors"
+            v-model.number="form.account"
             :key="componentKey"
             :options="accounts"
           />
@@ -76,13 +75,13 @@ export default {
   methods: {
     submitForm() {
       this.loading = true;
-      axios.post('/api/investments/deposits/store', this.form)
+      axios.post('/api/investments/create', this.form)
         .then(() => {
           this.$router.push({name: 'Investments'});
         })
         .catch((error) => {
-          if (error.response.data.errors) {
-            this.errors = error.response.data.errors;
+          if (error.response.status === 422 && error.response.data) {
+            this.errors = error.response.data;
             this.componentKey += 1;
           } else {
             alert('An error has occurred');
@@ -95,9 +94,9 @@ export default {
 
     getForm(id: number) {
       this.loading = true;
-      axios.get('/api/investments/deposits/edit/' + id)
+      axios.get('/api/investments/get-form/' + id)
         .then((response) => {
-          this.form = response.data.form;
+          Object.assign(this.form, response.data.form)
           this.accounts = response.data.accounts;
           this.componentKey += 1;
         })
