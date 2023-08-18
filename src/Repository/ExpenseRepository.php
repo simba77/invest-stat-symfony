@@ -21,6 +21,16 @@ class ExpenseRepository extends ServiceEntityRepository
         parent::__construct($registry, Expense::class);
     }
 
+    public function getSumForUser(int $userId): float
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.userId = :userId')
+            ->setParameter('userId', $userId)
+            ->select('sum(e.sum) as allExpenses')
+            ->getQuery()
+            ->getOneOrNullResult()['allExpenses'] ?? 0;
+    }
+
 //    /**
 //     * @return Expense[] Returns an array of Expense objects
 //     */

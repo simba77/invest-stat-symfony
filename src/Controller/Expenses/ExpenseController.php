@@ -71,4 +71,29 @@ class ExpenseController extends AbstractController
 
         return $this->json(['success' => true]);
     }
+
+    #[Route('/expenses/summary', name: 'app_expenses_summary')]
+    public function summary(#[CurrentUser] ?User $user): JsonResponse
+    {
+        $expenses = $this->em->getRepository(Expense::class)->getSumForUser($user?->getId() ?? 0);
+        return $this->json(
+            [
+                'summary' => [
+                    [
+                        'name'  => 'Salary',
+                        'total' => $this->getParameter('app.expenses.salary'),
+                    ],
+                    [
+                        'name'  => 'All Expenses',
+                        'total' => $expenses,
+                    ],
+                    [
+                        'name'     => 'Salary - Expenses',
+                        'helpText' => 'Free Money for Investments',
+                        'total'    => $this->getParameter('app.expenses.salary') - $expenses,
+                    ],
+                ],
+            ]
+        );
+    }
 }
