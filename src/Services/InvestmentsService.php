@@ -21,14 +21,14 @@ class InvestmentsService
      */
     public function getInvestmentsForUser(?User $user): array
     {
-        $investments = $this->investmentRepository->findBy(['userId' => $user?->getId()], ['date' => 'DESC']);
+        $investments = $this->investmentRepository->getByUserId($user?->getId() ?? 0);
         $result = [];
         foreach ($investments as $investment) {
             $result[] = new InvestmentResponseDTO(
-                id:      $investment->getId(),
-                sum:     $investment->getSum(),
-                date:    $investment->getDate()->format('d.m.Y'),
-                account: $investment->getAccount()?->getName()
+                id:      $investment['investment']->getId(),
+                sum:     $investment['investment']->getSum(),
+                date:    $investment['investment']->getDate()->format('d.m.Y'),
+                account: $investment['account_name']
             );
         }
         return $result;

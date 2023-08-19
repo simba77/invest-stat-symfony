@@ -44,7 +44,7 @@ class Account implements
     #[ORM\Column(nullable: true)]
     private ?int $sort = null;
 
-    #[ORM\OneToMany(mappedBy: 'account', targetEntity: Investment::class, fetch: 'EAGER')]
+    #[ORM\OneToMany(mappedBy: 'account', targetEntity: Investment::class)]
     private Collection $investments;
 
     public function __construct()

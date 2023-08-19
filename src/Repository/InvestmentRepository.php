@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Account;
 use App\Entity\Investment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -23,28 +25,20 @@ class InvestmentRepository extends ServiceEntityRepository
         parent::__construct($registry, Investment::class);
     }
 
-//    /**
-//     * @return Investment[] Returns an array of Investment objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('i')
-//            ->andWhere('i.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('i.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Investment
-//    {
-//        return $this->createQueryBuilder('i')
-//            ->andWhere('i.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /**
+     * @param int $userId
+     * @return array<int, array{investment: Investment, account_name: string}>
+     */
+    public function getByUserId(int $userId): array
+    {
+        return $this->createQueryBuilder('inv')
+            ->select(['inv as investment'])
+            ->leftJoin(Account::class, 'acc', Join::WITH, 'inv.account = acc.id')
+            ->andWhere('inv.userId = :userId')
+            ->addSelect(['acc.name as account_name'])
+            ->setParameter('userId', $userId)
+            ->orderBy('inv.date')
+            ->getQuery()
+            ->getResult();
+    }
 }
