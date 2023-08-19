@@ -50,20 +50,34 @@ class InvestmentsController extends AbstractController
     public function getForm(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
         $form = [];
+        if ($id > 0) {
+            $investment = $this->em->getRepository(Investment::class)->findOneBy(['id' => $id, 'userId' => $user?->getId()]);
+            if (! $investment) {
+                throw $this->createNotFoundException('No investment found for id ' . $id);
+            }
+            $form = [
+                'id'      => $investment->getId(),
+                'sum'     => $investment->getSum(),
+                'date'    => $investment->getDate()->format('Y-m-d'),
+                'account' => $investment->getAccount()->getId(),
+            ];
+        }
+
         $accounts = $this->accountService->getAccountsForUser($user);
         return $this->json(['form' => $form, 'accounts' => $accounts]);
     }
 
     #[Route('/investments/edit/{id}', name: 'app_investments_investments_edit', requirements: ['id' => '\d+'], methods: ['POST'])]
-    public function edit(int $id, #[MapRequestPayload] CreateExpenseRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
+    public function edit(int $id, #[MapRequestPayload] InvestmentRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
     {
-        $expense = $this->em->getRepository(Expense::class)->findOneBy(['id' => $id, 'userId' => $user?->getId()]);
-        if (! $expense) {
-            throw $this->createNotFoundException('No expense found for id ' . $id);
+        $investment = $this->em->getRepository(Investment::class)->findOneBy(['id' => $id, 'userId' => $user?->getId()]);
+        if (! $investment) {
+            throw $this->createNotFoundException('No investment found for id ' . $id);
         }
-
-        $expense->setName($dto->name);
-        $expense->setSum($dto->sum);
+        $account = $this->em->getRepository(Account::class)->find($dto->account);
+        $investment->setDate(new \DateTimeImmutable($dto->date));
+        $investment->setSum($dto->sum);
+        $investment->setAccount($account);
         $this->em->flush();
 
         return $this->json(['success' => true]);

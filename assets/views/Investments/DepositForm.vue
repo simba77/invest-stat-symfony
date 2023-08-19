@@ -75,7 +75,8 @@ export default {
   methods: {
     submitForm() {
       this.loading = true;
-      axios.post('/api/investments/create', this.form)
+      let requestUrl = this.$route.params.id > 0 ? '/api/investments/edit/' + this.$route.params.id : '/api/investments/create'
+      axios.post(requestUrl, this.form)
         .then(() => {
           this.$router.push({name: 'Investments'});
         })
