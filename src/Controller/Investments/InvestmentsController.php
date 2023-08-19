@@ -86,11 +86,11 @@ class InvestmentsController extends AbstractController
     #[Route('/investments/delete/{id}', name: 'app_investments_investments_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
-        $expense = $this->em->getRepository(Expense::class)->findOneBy(['id' => $id, 'userId' => $user?->getId()]);
-        if (! $expense) {
-            throw $this->createNotFoundException('No expense found for id ' . $id);
+        $investment = $this->em->getRepository(Investment::class)->findOneBy(['id' => $id, 'userId' => $user?->getId()]);
+        if (! $investment) {
+            throw $this->createNotFoundException('No investment found for id ' . $id);
         }
-        $this->em->remove($expense);
+        $this->em->remove($investment);
         $this->em->flush();
 
         return $this->json(['success' => true]);

@@ -109,7 +109,7 @@ export default {
     deleteDeposit(id: number) {
       this.deleting = true;
       return new Promise((resolve, reject) => {
-        axios.post('/api/investments/deposits/delete/' + id)
+        axios.post('/api/investments/delete/' + id)
           .then(() => {
             this.getDeposits();
             resolve({deleted: true});
