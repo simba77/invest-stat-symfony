@@ -85,12 +85,20 @@ const routes: Array<RouteRecordRaw> = [
 
   // Accounts
   {
+    name: 'AccountsOld',
+    path: '/old-accounts',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('./views/Accounts/AccountsPage.vue')
+  },
+  {
     name: 'Accounts',
     path: '/accounts',
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Accounts/AccountsPage.vue')
+    component: () => import('./views/Accounts/AccountsNewPage.vue')
   },
   {
     name: 'CreateAccount',
@@ -107,6 +115,14 @@ const routes: Array<RouteRecordRaw> = [
       requiresAuth: true,
     },
     component: () => import('./views/Accounts/AccountForm.vue')
+  },
+  {
+    name: 'AccountDetail',
+    path: '/accounts/:id',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('./views/Accounts/AccountDetail.vue')
   },
 
   // Assets
@@ -134,6 +150,68 @@ const routes: Array<RouteRecordRaw> = [
     },
     component: () => import('./views/Accounts/SoldAssetsPage.vue')
   },
+
+  // Savings
+  {
+    name: 'SavingAccounts',
+    path: '/savings/accounts',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('./views/Savings/SavingAccountsPage.vue')
+  },
+  {
+    name: 'SavingAccountsCreate',
+    path: '/savings/accounts/create',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('./views/Savings/SavingAccountForm.vue')
+  },
+  {
+    name: 'SavingAccountsEdit',
+    path: '/savings/accounts/edit/:id',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('./views/Savings/SavingAccountForm.vue')
+  },
+
+  // Пополнения и списания с накопительных счетов
+  {
+    name: 'Savings',
+    path: '/savings',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('./views/Savings/SavingsPage.vue')
+  },
+  {
+    name: 'SavingCreate',
+    path: '/savings/create',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('./views/Savings/SavingForm.vue')
+  },
+  {
+    name: 'SavingEdit',
+    path: '/savings/edit/:id',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('./views/Savings/SavingForm.vue')
+  },
+
+  {
+    name: 'Analytics',
+    path: '/analytics',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('./views/Analytics/AnalyticsPage.vue')
+  },
+
 ];
 
 const router = createRouter({

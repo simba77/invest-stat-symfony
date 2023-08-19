@@ -16,13 +16,19 @@
           ></checkbox-component>
           <input-text
             v-model="form.ticker"
-            :key="componentKey"
+            :key="tickerComponentKey"
             :error="errors?.ticker"
             class="mt-3"
             name="name"
             label="Ticker"
+            @update:modelValue="getTickerData"
             placeholder="Enter a ticker"
           />
+
+          <div v-if="tickerData" class="mt-2">
+            {{ tickerData.shortName }}
+          </div>
+
           <input-select
             v-model="form.stock_market"
             :key="componentKey"
@@ -75,75 +81,85 @@
         </div>
         <div class="border-b"></div>
         <button type="submit" class="btn btn-primary" :disabled="loading">Save</button>
-        <router-link :to="{name: 'Accounts'}" class="btn btn-secondary ml-3">Back</router-link>
+        <router-link :to="{name: 'AccountDetail', params: {id: $route.params.account}}" class="btn btn-secondary ml-3">Back</router-link>
       </form>
     </div>
   </page-component>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import PageComponent from "@/components/PageComponent.vue";
 import InputText from "@/components/Forms/InputText.vue";
 import axios from "axios";
 import InputSelect from "@/components/Forms/InputSelect.vue";
 import CheckboxComponent from "@/components/Forms/CheckboxComponent.vue";
+import {onMounted, ref} from 'vue'
+import useAsync from '@/utils/use-async'
+import {useRoute} from 'vue-router'
+import router from '@/router'
+import {useDebounceFn, useFetch} from '@vueuse/core'
 
-export default {
-  name: "AssetForm",
-  components: {CheckboxComponent, InputSelect, InputText, PageComponent},
-  data() {
-    return {
-      form: {
-        ticker: '',
-        stock_market: 'SPB',
-        quantity: 1,
-        buy_price: '',
-        currency: 'USD',
-        short: false,
-      },
-      loading: false,
-      errors: null,
-      componentKey: 0,
-    }
-  },
-  mounted() {
-    if (this.$route.params.id) {
-      this.getForm(this.$route.params.id);
-    }
-  },
-  methods: {
-    submitForm() {
-      this.loading = true;
-      axios.post('/api/assets/store/' + this.$route.params.account, this.form)
-        .then(() => {
-          this.$router.push({name: 'Accounts'});
-        })
-        .catch((error) => {
-          if (error.response.data.errors) {
-            this.errors = error.response.data.errors;
-            this.componentKey += 1;
-          } else {
-            alert('An error has occurred');
-          }
-        })
-        .finally(() => {
-          this.loading = false;
-        })
-    },
-    getForm(id: number) {
-      this.loading = true;
-      axios.get('/api/assets/edit/' + id)
-        .then((response) => {
-          this.form = response.data.form;
-          this.componentKey += 1;
-        })
-        .catch(() => {
-          alert('An error has occurred');
-        })
-        .finally(() => {
-          this.loading = false;
-        })
-    }
+const {params: routeParams} = useRoute()
+const form = ref({
+  ticker: '',
+  stock_market: 'SPB',
+  quantity: 1,
+  buy_price: '',
+  currency: 'USD',
+  short: false,
+  target_price: 0,
+})
+const errors = ref(null)
+const componentKey = ref(0)
+const tickerComponentKey = ref(0)
+const tickerData = ref(null)
+
+
+const {loading, run: submitForm} = useAsync(() => {
+  axios.post('/api/assets/store/' + routeParams.account, form.value)
+    .then(() => {
+      router.push({name: 'AccountDetail', params: {id: routeParams.account}});
+    })
+    .catch((error) => {
+      if (error.response.data.errors) {
+        errors.value = error.response.data.errors
+        componentKey.value += 1
+        tickerComponentKey.value += 1
+      } else {
+        throw error
+      }
+    })
+})
+
+const {run: getForm} = useAsync((id: any) => {
+  axios.get('/api/assets/edit/' + id)
+    .then((response) => {
+      form.value = response.data.form
+      componentKey.value += 1
+      tickerComponentKey.value += 1
+    })
+})
+
+
+const getTickerData = useDebounceFn(async () => {
+  const {data} = await useFetch('/api/assets/get-by-ticker/' + form.value.ticker).json()
+
+  tickerData.value = data.value
+
+  form.value.currency = data.value.currency;
+  form.value.stock_market = data.value.stockMarket;
+  form.value.buy_price = data.value.price;
+  form.value.quantity = data.value.lotSize;
+  // Добавляем 5% к текущей стоимости
+  form.value.target_price = Math.round(parseFloat(data.value.price) + (parseFloat(data.value.price) * 0.05));
+  componentKey.value += 1
+
+}, 300)
+
+onMounted(() => {
+  if (routeParams.id) {
+    getForm(routeParams.id);
   }
-}
+})
+
 </script>

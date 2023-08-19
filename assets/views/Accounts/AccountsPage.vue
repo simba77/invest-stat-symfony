@@ -87,7 +87,9 @@
 
                 <!-- Total row -->
                 <tr v-if="asset.isSubTotal" class="font-bold">
-                  <td>{{ asset.name }}</td>
+                  <td>
+                    {{ asset.name }}
+                  </td>
                   <td></td>
 
                   <td>{{ helpers.formatPrice(asset.fullBuyPrice) }} {{ asset.currency }}</td>
@@ -113,7 +115,10 @@
                         :class="[asset.isSubTotal || asset.isTotal ? 'text-right' : '', 'underline']"
                         v-tooltip="'Last Update: ' + asset.updated"
                       >
-                        <div class="font-extrabold">{{ asset.name }}</div>
+                        <div class="font-extrabold">
+                          <lock-closed-icon class="h-3 w-3 inline-block" v-if="asset.blocked"></lock-closed-icon>
+                          {{ asset.name }}
+                        </div>
                         <div class="text-gray-500">
                           <span class="text-xs">{{ asset.ticker }}</span>
                           <span v-if="asset.isShort" class="bg-red-200 text-red-900 rounded-full inline-flex pr-2 pl-2 items-center ml-2">short</span>
@@ -168,7 +173,10 @@
                           <tr v-for="(subItem, subIndex) in asset.items" :key="'sub' + subIndex">
                             <td>
                               <div>
-                                <div class="font-extrabold">{{ subItem.name }}</div>
+                                <div class="font-extrabold">
+                                  <lock-closed-icon class="h-3 w-3 inline-block" v-if="subItem.blocked"></lock-closed-icon>
+                                  {{ subItem.name }}
+                                </div>
                                 <div class="text-xs text-gray-500">
                                   <span>{{ subItem.ticker }}</span>
                                   <span v-if="subItem.isShort" class="bg-red-200 text-red-900 rounded-full inline-flex pr-2 pl-2 items-center ml-2">short</span>
@@ -211,7 +219,7 @@
                                   class="text-gray-300 hover:text-gray-600 mr-2 cursor-pointer"
                                   title="Sell"
                                 >
-                                  <banknotes-icon class="h-5 w-5"></banknotes-icon>
+                                  <banknotes-icon class="h-5 w-5" />
                                 </div>
                                 <button
                                   type="button"
@@ -237,7 +245,10 @@
                       v-tooltip="'Last Update: ' + asset.updated"
                     >
                       <div>
-                        <div class="font-extrabold">{{ asset.name }}</div>
+                        <div class="font-extrabold">
+                          <lock-closed-icon class="h-3 w-3 inline-block" v-if="asset.blocked"></lock-closed-icon>
+                          {{ asset.name }}
+                        </div>
                         <div class="text-xs text-gray-500">
                           <span>{{ asset.ticker }}</span>
                           <span v-if="asset.isShort" class="bg-red-200 text-red-900 rounded-full inline-flex ml-2 pr-2 pl-2 items-center">short</span>
@@ -321,7 +332,7 @@
 <script lang="ts">
 import PageComponent from "../../components/PageComponent.vue";
 import axios from "axios";
-import {PencilIcon, XCircleIcon, PlusCircleIcon, BanknotesIcon} from "@heroicons/vue/24/outline";
+import {LockClosedIcon, PencilIcon, XCircleIcon, PlusCircleIcon, BanknotesIcon} from "@heroicons/vue/24/outline";
 import BaseModal from "@/components/Modals/BaseModal.vue";
 import ConfirmModal from "@/components/Modals/ConfirmModal.vue";
 import StatCard from "@/components/Cards/StatCard.vue";
@@ -330,7 +341,7 @@ import SellModal from "@/components/Modals/SellModal.vue";
 
 export default {
   name: "AccountsPage",
-  components: {SellModal, StatCard, ConfirmModal, BaseModal, PageComponent, PencilIcon, XCircleIcon, PlusCircleIcon, BanknotesIcon},
+  components: {SellModal, StatCard, ConfirmModal, BaseModal, PageComponent, PencilIcon, LockClosedIcon, XCircleIcon, PlusCircleIcon, BanknotesIcon},
   mounted() {
     this.getItems();
     this.getStat();

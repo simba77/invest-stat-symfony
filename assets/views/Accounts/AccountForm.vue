@@ -28,6 +28,16 @@
             placeholder="Enter Balance"
           />
           <input-text
+            v-model="form.usd_balance"
+            :key="componentKey"
+            :error="errors?.usd_balance"
+            class="mb-3"
+            type="number"
+            name="usd_balance"
+            label="USD Balance"
+            placeholder="Enter USD Balance"
+          />
+          <input-text
             v-model="form.commission"
             :key="componentKey"
             :error="errors?.commission"
@@ -37,14 +47,27 @@
             label="Commission"
             placeholder="Commission"
           />
-          <input-select
-            v-model="form.currency"
+
+          <input-text
+            v-model="form.futures_commission"
             :key="componentKey"
-            :error="errors?.balance"
-            :options="[{value: 'RUB', name: 'RUB'}, {value: 'USD', name: 'USD'}]"
-            id="currency"
-            name="currency"
-            label="Currency"
+            :error="errors?.futures_commission"
+            class="mb-3"
+            type="number"
+            name="futures_commission"
+            label="Futures Commission"
+            placeholder="Futures Commission"
+          />
+
+          <input-text
+            v-model="form.sort"
+            :key="componentKey"
+            :error="errors?.sort"
+            class="mb-3"
+            type="number"
+            name="sort"
+            label="Sort"
+            placeholder="Sort"
           />
         </div>
         <div class="border-b"></div>
@@ -59,18 +82,19 @@
 import PageComponent from "@/components/PageComponent.vue";
 import InputText from "@/components/Forms/InputText.vue";
 import axios from "axios";
-import InputSelect from "@/components/Forms/InputSelect.vue";
 
 export default {
   name: "CategoryForm",
-  components: {InputSelect, InputText, PageComponent},
+  components: {InputText, PageComponent},
   data() {
     return {
       form: {
         name: '',
         balance: '',
+        usd_balance: '',
         commission: '',
-        currency: 'RUB',
+        futures_commission: '',
+        sort: 100,
       },
       loading: false,
       errors: null,
