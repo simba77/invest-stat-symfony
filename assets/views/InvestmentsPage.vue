@@ -13,7 +13,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(deposit, index) in deposits.data" :key="index">
+      <tr v-for="(deposit, index) in deposits.items" :key="index">
         <td>{{ deposit.date }}</td>
         <td>{{ helpers.formatPrice(deposit.sum) }} {{ deposit.currency }}</td>
         <td>{{ deposit.account }}</td>
@@ -34,7 +34,7 @@
           </template>
         </td>
       </tr>
-      <tr v-if="deposits.length < 1">
+      <tr v-if="deposits.items?.length < 1">
         <td colspan="4" class="text-center">The list is empty</td>
       </tr>
       </tbody>

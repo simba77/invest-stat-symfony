@@ -43,16 +43,14 @@ class Investment implements
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
-    #[ORM\Column(name: 'account_id')]
-    private ?int $accountId = null;
+    #[ORM\ManyToOne(targetEntity: Account::class, inversedBy: 'investments')]
+    private ?Account $account;
 
-    public function __construct(
-        float $sum, \DateTimeImmutable $date, int $accountId, int $userId
-    )
+    public function __construct(float $sum, \DateTimeImmutable $date, Account $account, int $userId)
     {
         $this->sum = $sum;
         $this->date = $date;
-        $this->accountId = $accountId;
+        $this->account = $account;
         $this->userId = $userId;
     }
 
@@ -73,7 +71,7 @@ class Investment implements
         return $this;
     }
 
-    public function getSum(): ?string
+    public function getSum(): ?float
     {
         return $this->sum;
     }
@@ -97,14 +95,14 @@ class Investment implements
         return $this;
     }
 
-    public function getAccountId(): ?int
+    public function getAccount(): ?Account
     {
-        return $this->accountId;
+        return $this->account;
     }
 
-    public function setAccountId(int $accountId): static
+    public function setAccount(?Account $account): static
     {
-        $this->accountId = $accountId;
+        $this->account = $account;
 
         return $this;
     }

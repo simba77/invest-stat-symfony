@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Controller\Investments;
 
+use App\Entity\Account;
 use App\Entity\Expense;
 use App\Entity\Investment;
 use App\Entity\User;
 use App\Request\DTO\Expenses\CreateExpenseRequestDTO;
 use App\Request\DTO\Investments\InvestmentRequestDTO;
 use App\Services\AccountService;
+use App\Services\InvestmentsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,20 +24,23 @@ class InvestmentsController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
+        private readonly InvestmentsService $investmentsService,
         private readonly AccountService $accountService
     ) {
     }
 
     #[Route('/investments', name: 'app_investments_investments_index')]
-    public function index(): JsonResponse
+    public function index(#[CurrentUser] ?User $user): JsonResponse
     {
-        return $this->json([]);
+        $items = $this->investmentsService->getInvestmentsForUser($user);
+        return $this->json(['items' => $items]);
     }
 
     #[Route('/investments/create', name: 'app_investments_investments_create', requirements: ['categoryId' => '\d+'], methods: ['POST'])]
     public function create(#[MapRequestPayload] InvestmentRequestDTO $dto, #[CurrentUser] ?User $user): Response
     {
-        $inv = new Investment($dto->sum, new \DateTimeImmutable($dto->date), $dto->account, $user->getId());
+        $account = $this->em->getRepository(Account::class)->find($dto->account);
+        $inv = new Investment($dto->sum, new \DateTimeImmutable($dto->date), $account, $user->getId());
         $this->em->persist($inv);
         $this->em->flush();
         return $this->json(['success' => true]);

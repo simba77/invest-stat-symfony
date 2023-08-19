@@ -13,6 +13,8 @@ use App\Shared\UpdatedByProvider;
 use App\Shared\UpdatedDateProvider;
 use App\Shared\UpdatedDateProviderInterface;
 use App\Shared\UpdatedUserProviderInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AccountRepository::class)]
@@ -41,6 +43,14 @@ class Account implements
 
     #[ORM\Column(nullable: true)]
     private ?int $sort = null;
+
+    #[ORM\OneToMany(mappedBy: 'account', targetEntity: Investment::class, fetch: 'EAGER')]
+    private Collection $investments;
+
+    public function __construct()
+    {
+        $this->investments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -81,5 +91,13 @@ class Account implements
         $this->sort = $sort;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Investment>
+     */
+    public function getInvestments(): Collection
+    {
+        return $this->investments;
     }
 }
