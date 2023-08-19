@@ -6,21 +6,20 @@
           <h3 class="text-lg font-medium text-gray-900">Account</h3>
           <p class="mt-1 text-sm text-gray-600">Enter the name of the account to group your assets</p>
         </div>
-        <div class="bg-red-500 inline-block text-white rounded px-4 py-2" v-if="errors && errors.message">{{ errors.message }}</div>
         <div class="w-full md:w-2/4">
           <input-text
             v-model="form.name"
             :key="componentKey"
-            :error="errors?.name"
+            :error="errors"
             class="mb-3"
             name="name"
             label="Account Name"
             placeholder="Enter an Account Name"
           />
           <input-text
-            v-model="form.balance"
+            v-model.number="form.balance"
             :key="componentKey"
-            :error="errors?.balance"
+            :error="errors"
             class="mb-3"
             type="number"
             name="balance"
@@ -28,9 +27,9 @@
             placeholder="Enter Balance"
           />
           <input-text
-            v-model="form.usd_balance"
+            v-model.number="form.usdBalance"
             :key="componentKey"
-            :error="errors?.usd_balance"
+            :error="errors"
             class="mb-3"
             type="number"
             name="usd_balance"
@@ -38,9 +37,9 @@
             placeholder="Enter USD Balance"
           />
           <input-text
-            v-model="form.commission"
+            v-model.number="form.commission"
             :key="componentKey"
-            :error="errors?.commission"
+            :error="errors"
             class="mb-3"
             type="number"
             name="commission"
@@ -49,9 +48,9 @@
           />
 
           <input-text
-            v-model="form.futures_commission"
+            v-model.number="form.futuresCommission"
             :key="componentKey"
-            :error="errors?.futures_commission"
+            :error="errors"
             class="mb-3"
             type="number"
             name="futures_commission"
@@ -60,9 +59,9 @@
           />
 
           <input-text
-            v-model="form.sort"
+            v-model.number="form.sort"
             :key="componentKey"
-            :error="errors?.sort"
+            :error="errors"
             class="mb-3"
             type="number"
             name="sort"
@@ -91,9 +90,9 @@ export default {
       form: {
         name: '',
         balance: '',
-        usd_balance: '',
+        usdBalance: '',
         commission: '',
-        futures_commission: '',
+        futuresCommission: '',
         sort: 100,
       },
       loading: false,
@@ -109,13 +108,13 @@ export default {
   methods: {
     submitForm() {
       this.loading = true;
-      axios.post('/api/accounts/store', this.form)
+      axios.post('/api/accounts/create', this.form)
         .then(() => {
           this.$router.push({name: 'Accounts'});
         })
         .catch((error) => {
-          if (error.response.data.errors) {
-            this.errors = error.response.data.errors;
+          if (error.response.status === 422 && error.response.data) {
+            this.errors = error.response.data;
             this.componentKey += 1;
           } else {
             alert('An error has occurred');

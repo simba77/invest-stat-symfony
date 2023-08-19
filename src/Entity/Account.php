@@ -15,6 +15,7 @@ use App\Shared\UpdatedDateProviderInterface;
 use App\Shared\UpdatedUserProviderInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AccountRepository::class)]
@@ -47,9 +48,41 @@ class Account implements
     #[ORM\OneToMany(mappedBy: 'account', targetEntity: Investment::class)]
     private Collection $investments;
 
-    public function __construct()
-    {
+    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
+    private ?float $balance = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
+    private ?float $usdBalance = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
+    private ?float $startSumOfAssets = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
+    private ?float $currentSumOfAssets = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
+    private ?float $commission = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
+    private ?float $futuresCommission = null;
+
+    public function __construct(
+        int $userId,
+        string $name,
+        float $balance = 0,
+        float $usdBalance = 0,
+        float $commission = 0,
+        float $futuresCommission = 0,
+        int $sort = 100
+    ) {
         $this->investments = new ArrayCollection();
+        $this->userId = $userId;
+        $this->name = $name;
+        $this->balance = $balance;
+        $this->usdBalance = $usdBalance;
+        $this->commission = $commission;
+        $this->futuresCommission = $futuresCommission;
+        $this->sort = $sort;
     }
 
     public function getId(): ?int
@@ -99,5 +132,77 @@ class Account implements
     public function getInvestments(): Collection
     {
         return $this->investments;
+    }
+
+    public function getBalance(): ?float
+    {
+        return $this->balance;
+    }
+
+    public function setBalance(?float $balance): static
+    {
+        $this->balance = $balance;
+
+        return $this;
+    }
+
+    public function getUsdBalance(): ?float
+    {
+        return $this->usdBalance;
+    }
+
+    public function setUsdBalance(?float $usdBalance): static
+    {
+        $this->usdBalance = $usdBalance;
+
+        return $this;
+    }
+
+    public function getStartSumOfAssets(): ?float
+    {
+        return $this->startSumOfAssets;
+    }
+
+    public function setStartSumOfAssets(?float $startSumOfAssets): static
+    {
+        $this->startSumOfAssets = $startSumOfAssets;
+
+        return $this;
+    }
+
+    public function getCurrentSumOfAssets(): ?float
+    {
+        return $this->currentSumOfAssets;
+    }
+
+    public function setCurrentSumOfAssets(?float $currentSumOfAssets): static
+    {
+        $this->currentSumOfAssets = $currentSumOfAssets;
+
+        return $this;
+    }
+
+    public function getCommission(): ?float
+    {
+        return $this->commission;
+    }
+
+    public function setCommission(?float $commission): static
+    {
+        $this->commission = $commission;
+
+        return $this;
+    }
+
+    public function getFuturesCommission(): ?float
+    {
+        return $this->futuresCommission;
+    }
+
+    public function setFuturesCommission(?float $futuresCommission): static
+    {
+        $this->futuresCommission = $futuresCommission;
+
+        return $this;
     }
 }
