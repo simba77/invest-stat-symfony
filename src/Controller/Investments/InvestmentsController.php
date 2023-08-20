@@ -63,7 +63,7 @@ class InvestmentsController extends AbstractController
             ];
         }
 
-        $accounts = $this->accountService->getAccountsForUser($user);
+        $accounts = $this->accountService->getSimpleListOfAccountsForUser($user);
         return $this->json(['form' => $form, 'accounts' => $accounts]);
     }
 

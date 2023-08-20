@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Account;
+use App\Entity\Investment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -23,28 +24,20 @@ class AccountRepository extends ServiceEntityRepository
         parent::__construct($registry, Account::class);
     }
 
-//    /**
-//     * @return Account[] Returns an array of Account objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Account
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /**
+     * @param int $userId
+     * @return array<int, array{account: Account, deposits_sum: string | null}>
+     */
+    public function findByUserIdWithDeposits(int $userId): array
+    {
+        return $this->createQueryBuilder('a')
+            ->select('a as account')
+            ->andWhere('a.userId = :val')
+            ->setParameter('val', $userId)
+            ->orderBy('a.sort', 'ASC')
+            ->addSelect('(select sum(inv.sum) from '.Investment::class.' as inv where inv.account = a) as deposits_sum')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

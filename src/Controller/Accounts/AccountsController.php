@@ -7,6 +7,7 @@ namespace App\Controller\Accounts;
 use App\Entity\Account;
 use App\Entity\User;
 use App\Request\DTO\Accounts\CreateAccountRequestDTO;
+use App\Services\AccountService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,14 +19,16 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 class AccountsController extends AbstractController
 {
     public function __construct(
-        private readonly EntityManagerInterface $em
+        private readonly EntityManagerInterface $em,
+        private readonly AccountService $accountService
     ) {
     }
 
     #[Route('/accounts', name: 'app_accounts_accounts_index')]
     public function index(#[CurrentUser] ?User $user): JsonResponse
     {
-        return $this->json([]);
+        $list = $this->accountService->getAccountsListForUser($user);
+        return $this->json($list);
     }
 
     #[Route('/accounts/create', name: 'app_accounts_accounts_create', methods: ['POST'])]

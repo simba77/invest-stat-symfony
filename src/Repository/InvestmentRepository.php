@@ -7,7 +7,6 @@ namespace App\Repository;
 use App\Entity\Account;
 use App\Entity\Investment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
