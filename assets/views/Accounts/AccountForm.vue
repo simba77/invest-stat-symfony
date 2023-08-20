@@ -108,7 +108,8 @@ export default {
   methods: {
     submitForm() {
       this.loading = true;
-      axios.post('/api/accounts/create', this.form)
+      let requestUrl = this.$route.params.id ? '/api/accounts/update/' + this.$route.params.id : '/api/accounts/create'
+      axios.post(requestUrl, this.form)
         .then(() => {
           this.$router.push({name: 'Accounts'});
         })
@@ -126,9 +127,9 @@ export default {
     },
     getForm(id: number) {
       this.loading = true;
-      axios.get('/api/accounts/edit/' + id)
+      axios.get('/api/accounts/get-form/' + id)
         .then((response) => {
-          this.form = response.data.form;
+          this.form = response.data;
           this.componentKey += 1;
         })
         .catch(() => {

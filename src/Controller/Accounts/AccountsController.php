@@ -49,4 +49,34 @@ class AccountsController extends AbstractController
 
         return $this->json(['success' => true]);
     }
+
+    #[Route('/accounts/update/{id}', name: 'app_accounts_accounts_update', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function update(int $id, #[MapRequestPayload] CreateAccountRequestDTO $dto, #[CurrentUser] ?User $user): Response
+    {
+        $account = $this->em->getRepository(Account::class)->findOneBy(['id' => $id, 'userId' => $user->getId()]);
+        if (! $account) {
+            throw $this->createNotFoundException('No accounts found for id ' . $id);
+        }
+
+        $account->setName($dto->name);
+        $account->setBalance($dto->balance);
+        $account->setUsdBalance($dto->usdBalance);
+        $account->setCommission($dto->commission);
+        $account->setFuturesCommission($dto->futuresCommission);
+        $account->setSort($dto->sort);
+        $this->em->persist($account);
+        $this->em->flush();
+
+        return $this->json(['success' => true]);
+    }
+
+    #[Route('/accounts/get-form/{id}', name: 'app_accounts_accounts_getform', requirements: ['id' => '\d+'])]
+    public function getForm(int $id, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $form = $this->accountService->getEditForm($id, $user->getId() ?? 0);
+        if (! $form) {
+            throw $this->createNotFoundException('No accounts found for id ' . $id);
+        }
+        return $this->json($form);
+    }
 }

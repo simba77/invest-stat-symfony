@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Entity\User;
 use App\Repository\AccountRepository;
+use App\Response\DTO\Accounts\AccountEditFormResponseDTO;
 use App\Response\DTO\Accounts\AccountListItemResponseDTO;
 use App\Response\DTO\Accounts\AccountResponseDTO;
 
@@ -48,5 +49,22 @@ class AccountService
             );
         }
         return $result;
+    }
+
+    public function getEditForm(int $id, int $userId): ?AccountEditFormResponseDTO
+    {
+        $account = $this->accountRepository->findOneBy(['id' => $id, 'userId' => $userId]);
+        if (! $account) {
+            return null;
+        }
+
+        return new AccountEditFormResponseDTO(
+            name:              $account->getName(),
+            balance:           $account->getBalance(),
+            usdBalance:        $account->getUsdBalance(),
+            commission:        $account->getCommission(),
+            futuresCommission: $account->getFuturesCommission(),
+            sort:              $account->getSort(),
+        );
     }
 }
