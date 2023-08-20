@@ -28,17 +28,23 @@ class AccountService
 
     public function getAccountsListForUser(?User $user): array
     {
-        $accounts = $this->accountRepository->findByUserIdWithDeposits($user->getId() ?? 0);
+        $items = $this->accountRepository->findByUserIdWithDeposits($user->getId() ?? 0);
         $result = [];
-        foreach ($accounts as $account) {
+        foreach ($items as $item) {
+            $usdRate = 0; // TODO: Add the currency rate
+            $account = $item['account'];
+
+            $currentValue = round($account->getCurrentSumOfAssets() + $account->getBalance() + ($account->getUsdBalance() * $usdRate), 2);
+            $sumDeposits = (float) $item['deposits_sum'] ?? 0;
+
             $result[] = new AccountListItemResponseDTO(
-                id:           $account['account']->getId(),
-                name:         $account['account']->getName(),
-                balance:      $account['account']->getBalance() ?? 0,
-                usdBalance:   $account['account']->getUsdBalance() ?? 0,
-                deposits:     (float) $account['deposits_sum'] ?? 0,
-                currentValue: 0,
-                fullProfit:   0,
+                id:           $account->getId(),
+                name:         $account->getName(),
+                balance:      $account->getBalance(),
+                usdBalance:   $account->getUsdBalance(),
+                deposits:     $sumDeposits,
+                currentValue: $currentValue,
+                fullProfit:   round($currentValue - $sumDeposits, 2),
             );
         }
         return $result;

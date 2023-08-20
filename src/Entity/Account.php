@@ -134,9 +134,9 @@ class Account implements
         return $this->investments;
     }
 
-    public function getBalance(): ?float
+    public function getBalance(): float
     {
-        return $this->balance;
+        return $this->balance ?? 0;
     }
 
     public function setBalance(?float $balance): static
@@ -146,9 +146,9 @@ class Account implements
         return $this;
     }
 
-    public function getUsdBalance(): ?float
+    public function getUsdBalance(): float
     {
-        return $this->usdBalance;
+        return $this->usdBalance ?? 0;
     }
 
     public function setUsdBalance(?float $usdBalance): static
@@ -158,9 +158,9 @@ class Account implements
         return $this;
     }
 
-    public function getStartSumOfAssets(): ?float
+    public function getStartSumOfAssets(): float
     {
-        return $this->startSumOfAssets;
+        return $this->startSumOfAssets ?? 0;
     }
 
     public function setStartSumOfAssets(?float $startSumOfAssets): static
@@ -170,9 +170,9 @@ class Account implements
         return $this;
     }
 
-    public function getCurrentSumOfAssets(): ?float
+    public function getCurrentSumOfAssets(): float
     {
-        return $this->currentSumOfAssets;
+        return $this->currentSumOfAssets ?? 0;
     }
 
     public function setCurrentSumOfAssets(?float $currentSumOfAssets): static
@@ -182,9 +182,9 @@ class Account implements
         return $this;
     }
 
-    public function getCommission(): ?float
+    public function getCommission(): float
     {
-        return $this->commission;
+        return $this->commission ?? 0;
     }
 
     public function setCommission(?float $commission): static
@@ -194,9 +194,9 @@ class Account implements
         return $this;
     }
 
-    public function getFuturesCommission(): ?float
+    public function getFuturesCommission(): float
     {
-        return $this->futuresCommission;
+        return $this->futuresCommission ?? 0;
     }
 
     public function setFuturesCommission(?float $futuresCommission): static
