@@ -3,7 +3,8 @@
     <div class="mb-4">
       <router-link :to="{name: 'AddDeposit'}" class="btn btn-primary">Add</router-link>
     </div>
-    <table class="simple-table">
+    <preloader-component v-if="investments.loadingInvestments.value"/>
+    <table v-else class="simple-table">
       <thead>
       <tr>
         <th>Date</th>
@@ -13,20 +14,20 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(deposit, index) in deposits.items" :key="index">
-        <td>{{ deposit.date }}</td>
-        <td>{{ helpers.formatPrice(deposit.sum) }} {{ deposit.currency }}</td>
-        <td>{{ deposit.account }}</td>
+      <tr v-for="(investment, index) in investments.investments.value.items" :key="index">
+        <td>{{ investment.date }}</td>
+        <td>{{ helpers.formatPrice(investment.sum) }} {{ investment.currency }}</td>
+        <td>{{ investment.account }}</td>
         <td class="table-actions">
-          <template v-if="deposit.id">
+          <template v-if="investment.id">
             <div class="flex justify-end items-center show-on-row-hover">
-              <router-link class="text-gray-300 hover:text-gray-900 mr-3" :to="{name: 'EditDeposit', params: {id: deposit.id}}">
+              <router-link class="text-gray-300 hover:text-gray-900 mr-3" :to="{name: 'EditDeposit', params: {id: investment.id}}">
                 <pencil-icon class="h-5 w-5"></pencil-icon>
               </router-link>
               <button
                 type="button"
                 class="text-gray-300 hover:text-red-500"
-                @click="openConfirmModal(deposit)"
+                @click="confirmDelete(investment)"
               >
                 <x-circle-icon class="h-5 w-5"></x-circle-icon>
               </button>
@@ -34,95 +35,34 @@
           </template>
         </td>
       </tr>
-      <tr v-if="deposits.items?.length < 1">
+      <tr v-if="investments.investments.value?.length < 1">
         <td colspan="4" class="text-center">The list is empty</td>
       </tr>
       </tbody>
     </table>
   </page-component>
-
-  <base-modal ref="deleteConfirmationModal">
-    <confirm-modal
-      :close="closeModal"
-      :confirm="confirmDeletion"
-      title="Deletion confirmation"
-      text="Are you sure you want to delete it?"
-    ></confirm-modal>
-  </base-modal>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import PageComponent from "../components/PageComponent.vue";
 import {XCircleIcon, PencilIcon} from "@heroicons/vue/24/outline";
-import axios from "axios";
 import helpers from "../helpers";
-import BaseModal from "@/components/Modals/BaseModal.vue";
-import ConfirmModal from "@/components/Modals/ConfirmModal.vue";
+import {useInvestments} from "@/composable/useInvestments";
+import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
+import {Investment} from "@/models/investments";
+import {useModal} from "@/composable/useModal";
+import ConfirmDeleteInvestmentModal from "@/components/Investments/ConfirmDeleteInvestmentModal.vue";
 
-export default {
-  name: "InvestmentsPage",
-  components: {PageComponent, XCircleIcon, PencilIcon, BaseModal, ConfirmModal},
-  data() {
-    return {
-      helpers,
-      loading: true,
-      deleting: false,
-      deleteItem: {
-        type: '',
-        data: {},
-      },
-      deposits: {},
-    }
-  },
-  mounted() {
-    this.getDeposits();
-  },
-  methods: {
-    openConfirmModal(item: any) {
-      this.deleteItem.data = item;
-      setTimeout(() => {
-        this.$refs.deleteConfirmationModal.openModal();
-      });
-    },
-    closeModal() {
-      this.$refs.deleteConfirmationModal.closeModal();
-    },
-    confirmDeletion() {
-      this.deleteDeposit(this.deleteItem.data.id)
-        .finally(() => {
-          this.closeModal();
-        });
-    },
-    getDeposits() {
-      this.loading = true;
-      axios.get('/api/investments')
-        .then((response) => {
-          this.deposits = response.data;
-        })
-        .catch(() => {
-          alert('An error has occurred');
-        })
-        .finally(() => {
-          this.loading = false;
-        })
-    },
-    deleteDeposit(id: number) {
-      this.deleting = true;
-      return new Promise((resolve, reject) => {
-        axios.post('/api/investments/delete/' + id)
-          .then(() => {
-            this.getDeposits();
-            resolve({deleted: true});
-          })
-          .catch(() => {
-            alert('An error has occurred');
-            reject('An error has occurred');
-          })
-          .finally(() => {
-            this.deleting = false;
-          })
-      });
-    },
-  }
+const investments = useInvestments()
+const modal = useModal()
+
+investments.getInvestments()
+
+function confirmDelete(item: Investment) {
+  modal.open({
+    component: ConfirmDeleteInvestmentModal,
+    modelValue: item
+  })
 }
+
 </script>
