@@ -1,11 +1,8 @@
 <template>
   <router-view></router-view>
+  <base-modal></base-modal>
 </template>
 
-<script lang="ts">
-import {defineComponent} from 'vue';
-
-export default defineComponent({
-  name: "App"
-});
+<script setup lang="ts">
+import BaseModal from "@/components/Modals/BaseModal.vue";
 </script>

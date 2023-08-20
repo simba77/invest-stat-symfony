@@ -1,6 +1,6 @@
 <template>
-  <TransitionRoot as="template" :show="open">
-    <Dialog as="div" class="relative z-10" @close="open = false">
+  <TransitionRoot as="template" :show="isOpen">
+    <Dialog as="div" class="relative z-10" @close="close()">
       <TransitionChild
         as="template"
         enter="ease-out duration-300"
@@ -26,7 +26,21 @@
               class="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:w-full"
               :class="[large ? 'w-full md:max-w-7xl' : 'w-full md:max-w-lg']"
             >
-              <slot></slot>
+              <!-- dynamic components, using model to share values payload -->
+              <component :is="view" v-model="model"></component>
+
+              <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button
+                  v-for="(action, index) in actions"
+                  :key="index"
+                  class="btn"
+                  :class="action.classes"
+                  type="button"
+                  @click="action.callback(model)"
+                >
+                  {{ action.label }}
+                </button>
+              </div>
             </DialogPanel>
           </TransitionChild>
         </div>
@@ -35,29 +49,14 @@
   </TransitionRoot>
 </template>
 
-<script setup>
-import {ref} from 'vue';
+<script setup lang="ts">
 import {Dialog, DialogPanel, TransitionChild, TransitionRoot} from '@headlessui/vue';
+import {useModal} from "@/composable/useModal";
 
-defineProps({
-  refName: {type: String},
-  large: {default: false}
-})
+// convert all state properties to reactive references to be used on view
+const {isOpen, view, model, actions, close} = useModal();
 
-defineExpose({
-  openModal,
-  closeModal
-})
-
-const open = ref(false);
-
-function openModal()
-{
-  open.value = true;
-}
-
-function closeModal()
-{
-  open.value = false;
-}
+defineProps<{
+  large?: boolean,
+}>()
 </script>
