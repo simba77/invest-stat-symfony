@@ -81,7 +81,7 @@ class AccountsController extends AbstractController
     }
 
     #[Route('/accounts/delete/{id}', name: 'app_accounts_accounts_delete', requirements: ['id' => '\d+'])]
-    public function delete(int $id, #[CurrentUser] ?User $user)
+    public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
         $account = $this->em->getRepository(Account::class)->findOneBy(['id' => $id, 'userId' => $user->getId()]);
         if (! $account) {

@@ -33,7 +33,7 @@
       <button
         type="button"
         class="text-gray-300 hover:text-red-500"
-        @click="confirmDeletion(account, () => getAccounts())"
+        @click="confirmDeletion(account)"
         title="Delete Account"
       >
         <x-circle-icon class="h-5 w-5"></x-circle-icon>
@@ -45,14 +45,24 @@
 import type {Account} from "@/models/account";
 import helpers from "../../helpers";
 import {PencilIcon, XCircleIcon, PlusCircleIcon} from "@heroicons/vue/24/outline";
-import useAccounts from "@/composable/useAccounts";
-import {inject} from "vue";
+import {useModal} from "@/composable/useModal";
+import ConfirmDeleteAccountModal from "@/components/Account/ConfirmDeleteAccountModal.vue";
 
 defineProps<{
   account: Account
 }>();
 
-const {getAccounts} = inject('accounts')
-const {confirmDeletion} = useAccounts()
+const modal = useModal()
+
+function confirmDeletion(account: Account) {
+  modal.open({
+    component: ConfirmDeleteAccountModal,
+    modelValue: {
+      id: account.id,
+      title: 'Deletion confirmation',
+      text: 'Are you sure you want to delete &quot;<b>' + account.name + '</b>&quot;?',
+    },
+  })
+}
 
 </script>

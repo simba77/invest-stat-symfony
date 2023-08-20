@@ -28,19 +28,6 @@
             >
               <!-- dynamic components, using model to share values payload -->
               <component :is="view" v-model="model"></component>
-
-              <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button
-                  v-for="(action, index) in actions"
-                  :key="index"
-                  class="btn"
-                  :class="action.classes"
-                  type="button"
-                  @click="action.callback(model)"
-                >
-                  {{ action.label }}
-                </button>
-              </div>
             </DialogPanel>
           </TransitionChild>
         </div>
@@ -54,7 +41,7 @@ import {Dialog, DialogPanel, TransitionChild, TransitionRoot} from '@headlessui/
 import {useModal} from "@/composable/useModal";
 
 // convert all state properties to reactive references to be used on view
-const {isOpen, view, model, actions, close} = useModal();
+const {isOpen, view, model, close} = useModal();
 
 defineProps<{
   large?: boolean,
