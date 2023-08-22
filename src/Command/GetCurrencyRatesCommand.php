@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Entity\CurrencyRate;
-use App\Services\MarketData\Currencies\MoexCurrencyProvider;
+use App\Services\MarketData\Currencies\CurrencyProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -20,7 +20,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class GetCurrencyRatesCommand extends Command
 {
     public function __construct(
-        private readonly MoexCurrencyProvider $currencyProvider,
+        private readonly CurrencyProviderInterface $currencyProvider,
         private readonly EntityManagerInterface $em,
     ) {
         parent::__construct();
