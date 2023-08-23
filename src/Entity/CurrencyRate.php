@@ -13,6 +13,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CurrencyRateRepository::class)]
+#[ORM\Table(name: 'currency_rates')]
 class CurrencyRate implements CreatedDateProviderInterface, UpdatedDateProviderInterface
 {
     use CreatedDateProvider;

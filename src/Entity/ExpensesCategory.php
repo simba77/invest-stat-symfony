@@ -18,6 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ExpensesCategoryRepository::class)]
+#[ORM\Table(name: 'expense_categories')]
 class ExpensesCategory implements
     CreatedUserProviderInterface,
     CreatedDateProviderInterface,

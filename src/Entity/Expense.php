@@ -15,6 +15,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ExpenseRepository::class)]
+#[ORM\Table(name: 'expenses')]
 class Expense implements
     CreatedDateProviderInterface,
     UpdatedDateProviderInterface,
