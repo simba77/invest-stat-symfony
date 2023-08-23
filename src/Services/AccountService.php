@@ -9,11 +9,13 @@ use App\Repository\AccountRepository;
 use App\Response\DTO\Accounts\AccountEditFormResponseDTO;
 use App\Response\DTO\Accounts\AccountListItemResponseDTO;
 use App\Response\DTO\Accounts\AccountResponseDTO;
+use App\Services\MarketData\Currencies\CurrencyService;
 
 class AccountService
 {
     public function __construct(
-        private readonly AccountRepository $accountRepository
+        private readonly AccountRepository $accountRepository,
+        private readonly CurrencyService $currencyService
     ) {
     }
 
@@ -32,7 +34,7 @@ class AccountService
         $items = $this->accountRepository->findByUserIdWithDeposits($user->getId() ?? 0);
         $result = [];
         foreach ($items as $item) {
-            $usdRate = 0; // TODO: Add the currency rate
+            $usdRate = $this->currencyService->getUSDRUBRate();
             $account = $item['account'];
 
             $currentValue = round($account->getCurrentSumOfAssets() + $account->getBalance() + ($account->getUsdBalance() * $usdRate), 2);

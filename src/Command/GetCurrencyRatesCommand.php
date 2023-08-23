@@ -39,8 +39,9 @@ class GetCurrencyRatesCommand extends Command
                 $rate = new CurrencyRate($item->getBaseCurrency(), $item->getTargetCurrency(), $item->getRate());
             }
             $this->em->persist($rate);
+            $this->em->flush();
         }
-        $this->em->flush();
+
 
         $io->success('Success');
 
