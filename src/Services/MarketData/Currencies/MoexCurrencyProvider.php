@@ -18,7 +18,7 @@ class MoexCurrencyProvider implements CurrencyProviderInterface
      */
     public function getCurrencyRates(): array
     {
-        $allRates = $this->httpClient->getCurrenciesRate();
+        $allRates = $this->httpClient->getCurrencyRates();
         $secIds = [
             'USD/RUB',
             'HKD/RUB',

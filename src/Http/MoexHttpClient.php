@@ -38,11 +38,27 @@ class MoexHttpClient
         return json_decode(json_encode($xmlObject, JSON_THROW_ON_ERROR), true) ?? [];
     }
 
-    public function getCurrenciesRate(): array
+    public function getCurrencyRates(): array
     {
         $data = $this->getData('/iss/statistics/engines/futures/markets/indicativerates/securities.xml');
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
         $currencies = $propertyAccessor->getValue($data, '[data][0][rows][row]') ?? [];
         return array_column($currencies, '@attributes');
+    }
+
+    /**
+     * @return array{shares: array, marketData: array}
+     */
+    public function getSharesByBoard(string $board): array
+    {
+        $data = $this->getData('/iss/engines/stock/markets/shares/boards/' . $board . '/securities.xml');
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+        $shares = $propertyAccessor->getValue($data, '[data][0][rows][row]') ?? [];
+        $marketData = $propertyAccessor->getValue($data, '[data][1][rows][row]') ?? [];
+
+        return [
+            'shares'     => array_column($shares, '@attributes'),
+            'marketData' => array_column($marketData, '@attributes'),
+        ];
     }
 }

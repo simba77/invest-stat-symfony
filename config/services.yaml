@@ -28,3 +28,6 @@ services:
   # Currency rates provider
   App\Services\MarketData\Currencies\CurrencyProviderInterface:
     class: App\Services\MarketData\Currencies\MoexCurrencyProvider
+
+  App\Services\MarketData\Securities\SharesProviderInterface:
+    class: App\Services\MarketData\Securities\MoexSharesProvider
