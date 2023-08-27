@@ -73,7 +73,23 @@ class MoexHttpClient
         $marketData = $propertyAccessor->getValue($data, '[data][1][rows][row]') ?? [];
 
         return [
-            'bonds'     => array_column($bonds, '@attributes'),
+            'bonds'      => array_column($bonds, '@attributes'),
+            'marketData' => array_column($marketData, '@attributes'),
+        ];
+    }
+
+    /**
+     * @return array{futures: array, marketData: array}
+     */
+    public function getFutures(): array
+    {
+        $data = $this->getData('/iss/engines/futures/markets/forts/securities.xml');
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+        $bonds = $propertyAccessor->getValue($data, '[data][0][rows][row]') ?? [];
+        $marketData = $propertyAccessor->getValue($data, '[data][1][rows][row]') ?? [];
+
+        return [
+            'futures'    => array_column($bonds, '@attributes'),
             'marketData' => array_column($marketData, '@attributes'),
         ];
     }
