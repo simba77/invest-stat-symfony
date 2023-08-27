@@ -61,4 +61,20 @@ class MoexHttpClient
             'marketData' => array_column($marketData, '@attributes'),
         ];
     }
+
+    /**
+     * @return array{bonds: array, marketData: array}
+     */
+    public function getBonds(): array
+    {
+        $data = $this->getData('/iss/engines/stock/markets/bonds/boards/TQCB/securities.xml');
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+        $bonds = $propertyAccessor->getValue($data, '[data][0][rows][row]') ?? [];
+        $marketData = $propertyAccessor->getValue($data, '[data][1][rows][row]') ?? [];
+
+        return [
+            'bonds'     => array_column($bonds, '@attributes'),
+            'marketData' => array_column($marketData, '@attributes'),
+        ];
+    }
 }
