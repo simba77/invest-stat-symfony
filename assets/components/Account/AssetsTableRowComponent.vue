@@ -52,14 +52,14 @@
           class="text-gray-300 hover:text-gray-600 mr-2"
           title="Edit"
         >
-          <pencil-icon class="h-5 w-5"></pencil-icon>
+          <pencil-icon class="h-5 w-5" />
         </router-link>
         <div
           @click="sellAssetModal(item)"
           class="text-gray-300 hover:text-gray-600 mr-2 cursor-pointer"
           title="Sell"
         >
-          <cash-icon class="h-5 w-5"></cash-icon>
+          <banknotes-icon class="h-5 w-5" />
         </div>
         <button
           type="button"
@@ -67,7 +67,7 @@
           @click="confirmDeletionAsset(item, () => getAccounts(item.accountId))"
           title="Delete"
         >
-          <x-circle-icon class="h-5 w-5"></x-circle-icon>
+          <x-circle-icon class="h-5 w-5" />
         </button>
       </div>
     </td>
@@ -75,7 +75,7 @@
 </template>
 <script setup lang="ts">
 import {inject} from 'vue'
-import {LockClosedIcon, PencilIcon, XCircleIcon, CashIcon} from "@heroicons/vue/outline";
+import {LockClosedIcon, PencilIcon, XCircleIcon, BanknotesIcon} from "@heroicons/vue/24/outline";
 import helpers from "../../helpers";
 import type {Asset, AssetsGroup} from "@/models/account";
 import {useAssets} from "@/composable/useAssets";

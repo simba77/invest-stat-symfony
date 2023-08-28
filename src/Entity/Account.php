@@ -66,6 +66,9 @@ class Account implements
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
     private ?float $futuresCommission = null;
 
+    #[ORM\OneToMany(mappedBy: 'account', targetEntity: Deal::class)]
+    private Collection $deals;
+
     public function __construct(
         int $userId,
         string $name,
@@ -83,6 +86,7 @@ class Account implements
         $this->commission = $commission;
         $this->futuresCommission = $futuresCommission;
         $this->sort = $sort;
+        $this->deals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -202,6 +206,36 @@ class Account implements
     public function setFuturesCommission(?float $futuresCommission): static
     {
         $this->futuresCommission = $futuresCommission;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Deal>
+     */
+    public function getDeals(): Collection
+    {
+        return $this->deals;
+    }
+
+    public function addDeal(Deal $deal): static
+    {
+        if (!$this->deals->contains($deal)) {
+            $this->deals->add($deal);
+            $deal->setAccount($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDeal(Deal $deal): static
+    {
+        if ($this->deals->removeElement($deal)) {
+            // set the owning side to null (unless already changed)
+            if ($deal->getAccount() === $this) {
+                $deal->setAccount(null);
+            }
+        }
 
         return $this;
     }

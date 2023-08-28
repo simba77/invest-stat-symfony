@@ -20,7 +20,7 @@ export default function () {
   }
 
   async function getAccount(id: number) {
-    account.value = await axios.get('/api/accounts/show/' + id).then((response) => response.data);
+    account.value = await axios.get('/api/deals/' + id).then((response) => response.data);
   }
 
   const {loading: loadingAccount, run: asyncGetAccount} = useAsync((id: any) => getAccount(id))
