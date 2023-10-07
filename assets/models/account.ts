@@ -21,6 +21,29 @@ export interface CurrencyGroup {
 }
 
 export interface AssetsGroup {
+  accountId: number
+  ticker: string
+  shortName: string
+  quantity: number
+  buyPrice: number
+  fullBuyPrice: number
+  currentPrice: number
+  fullCurrentPrice: number
+  targetPrice: number
+  fullTargetPrice: number
+  profit: number
+  profitPercent: number
+  commission: number
+  targetProfit: number
+  fullTargetProfit: number
+  targetProfitPercent: number
+  percent: number
+  currency: string
+  isBlocked: boolean
+  isShort: boolean
+}
+
+export interface AssetsGroupOld {
   group: boolean,
   id?: number,
   accountId: number,

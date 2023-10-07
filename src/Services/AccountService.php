@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Entity\User;
 use App\Repository\AccountRepository;
+use App\Response\DTO\Accounts\AccountDetailResponseDTO;
 use App\Response\DTO\Accounts\AccountEditFormResponseDTO;
 use App\Response\DTO\Accounts\AccountListItemResponseDTO;
 use App\Response\DTO\Accounts\AccountResponseDTO;
@@ -67,6 +68,35 @@ class AccountService
             commission:        $account->getCommission(),
             futuresCommission: $account->getFuturesCommission(),
             sort:              $account->getSort(),
+        );
+    }
+
+    /**
+     * @param int $id
+     * @param int $userId
+     * @return AccountDetailResponseDTO|null
+     */
+    public function getAccountWithDetailInformation(int $id, int $userId): ?AccountDetailResponseDTO
+    {
+        $usdRate = $this->currencyService->getUSDRUBRate();
+        $accountData = $this->accountRepository->findByUserAndIdWithDeposits($id, $userId);
+        if (! $accountData) {
+            return null;
+        }
+
+        $account = $accountData['account'];
+
+        $currentValue = round($account->getCurrentSumOfAssets() + $account->getBalance() + ($account->getUsdBalance() * $usdRate), 2);
+        $sumDeposits = (float) $accountData['deposits_sum'] ?? 0;
+
+        return new AccountDetailResponseDTO(
+            id:           $account->getId(),
+            name:         $account->getName(),
+            balance:      $account->getBalance(),
+            usdBalance:   $account->getUsdBalance(),
+            deposits:     $sumDeposits,
+            currentValue: $currentValue,
+            fullProfit:   round($currentValue - $sumDeposits, 2),
         );
     }
 }

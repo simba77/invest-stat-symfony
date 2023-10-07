@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Account;
+use App\Entity\Bond;
 use App\Entity\Deal;
+use App\Entity\Future;
+use App\Entity\Share;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -23,28 +29,42 @@ class DealRepository extends ServiceEntityRepository
         parent::__construct($registry, Deal::class);
     }
 
-//    /**
-//     * @return Deal[] Returns an array of Deal objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('d')
-//            ->andWhere('d.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('d.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return array<int, array{deal: Deal}>
+     */
+    public function findForUserAndAccount(?User $user, Account $account): array
+    {
+        return $this->createQueryBuilder('d')
+            ->select(
+                [
+                    'd as deal',
 
-//    public function findOneBySomeField($value): ?Deal
-//    {
-//        return $this->createQueryBuilder('d')
-//            ->andWhere('d.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+                    // Share
+                    's.shortName shareName',
+                    's.price sharePrice',
+                    's.currency shareCurrency',
+                    's.type shareType',
+
+                    // Bond
+                    'b.shortName bondName',
+                    'b.price bondPrice',
+                    'b.currency bondCurrency',
+
+                    // Future
+                    'f.shortName futureName',
+                    'f.price futurePrice',
+                    'f.currency futureCurrency',
+                ]
+            )
+            ->andWhere('d.user = :user')
+            ->andWhere('d.account = :account')
+            ->setParameter('user', $user)
+            ->setParameter('account', $account)
+            ->leftJoin(Share::class, 's', Join::WITH, 's.ticker = d.ticker AND s.stockMarket = d.stockMarket')
+            ->leftJoin(Bond::class, 'b', Join::WITH, 'b.ticker = d.ticker AND b.stockMarket = d.stockMarket')
+            ->leftJoin(Future::class, 'f', Join::WITH, 'f.ticker = d.ticker AND f.stockMarket = d.stockMarket')
+            ->orderBy('d.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

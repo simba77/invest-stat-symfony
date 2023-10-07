@@ -12,7 +12,7 @@ async function getAccounts() {
 const {loading, run: asyncGetAccounts} = useAsync(getAccounts)
 
 export default function () {
-  const account = ref<Account>();
+  const account = ref<{account: Account, deals: object}>();
 
   // Delete expense with the specific id
   async function deleteAccount(id: number) {
