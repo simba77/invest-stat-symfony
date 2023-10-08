@@ -43,10 +43,10 @@ class DealsListService
             /** @var ?GroupByTicker $group */
             $group = $this->propertyAccess->getValue($result, '[' . $status['code'] . '][' . $instrumentType['code'] . '][' . $currency['code'] . '][' . $ticker . ']');
             if ($group) {
-                $group->addDeal(new DealCalculator($deal, $account));
+                $group->addDeal(new DealData($deal, $account));
             } else {
                 $group = new GroupByTicker();
-                $group->addDeal(new DealCalculator($deal, $account));
+                $group->addDeal(new DealData($deal, $account));
                 $result[$status['code']][$instrumentType['code']][$currency['code']][$ticker] = $group;
             }
         }

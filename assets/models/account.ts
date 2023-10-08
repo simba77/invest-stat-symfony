@@ -20,6 +20,11 @@ export interface CurrencyGroup {
   items: AssetsGroup[]
 }
 
+export interface AssetsGroupData {
+  groupData: AssetsGroup,
+  deals: Deal[]
+}
+
 export interface AssetsGroup {
   accountId: number
   ticker: string
@@ -43,66 +48,28 @@ export interface AssetsGroup {
   isShort: boolean
 }
 
-export interface AssetsGroupOld {
-  group: boolean,
-  id?: number,
-  accountId: number,
-  ticker: string,
-  name: string,
-  stockMarket: string,
-  blocked: boolean | null,
-  quantity: number,
-  avgBuyPrice: number,
-  fullBuyPrice: number,
-  avgTargetPrice: number,
-  fullTargetPrice: number,
-  currentPrice: number,
-  fullCurrentPrice: number,
-  profit: number,
-  profitPercent: number,
-  fullCommission: number,
-  targetProfit: number,
-  fullTargetProfit: number,
-  fullTargetProfitPercent: number,
-  groupPercent: number,
-  currency: string,
-  showItems: boolean,
-  isShort: boolean,
-  items: [],
-
-  // Поля для Subtotal строк
-  isSubTotal: boolean,
-  isBaseCurrency: boolean,
-  fullBuyPriceConverted: number,
-  fullCurrentPriceConverted: number,
-  profitConverted: number,
-
+export interface Deal {
+  id: number
+  accountId: number
+  ticker: string
+  shortName: string
+  quantity: number
+  buyPrice: number
+  fullBuyPrice: number
+  currentPrice: number
+  fullCurrentPrice: number
+  targetPrice: number
+  fullTargetPrice: number
+  profit: number
+  profitPercent: number
+  commission: number
+  targetProfit: number
+  fullTargetProfit: number
+  fullTargetProfitPercent: number
+  percent: number
+  currency: string
+  isShort: boolean
+  isBlocked: boolean
+  createdAt: string
+  updatedAt: string
 }
-
-export interface Asset {
-  id: number,
-  createdAt: string,
-  updatedAt: string,
-  accountId: number,
-  ticker: string,
-  name: string,
-  stockMarket: string,
-  blocked: boolean | null,
-  quantity: number,
-  avgBuyPrice: number,
-  fullBuyPrice: number,
-  avgTargetPrice: number,
-  fullTargetPrice: number,
-  currentPrice: number,
-  fullCurrentPrice: number,
-  profit: number,
-  profitPercent: number,
-  commission: number,
-  targetProfit: number,
-  fullTargetProfit: number,
-  fullTargetProfitPercent: number,
-  groupPercent: number,
-  currency: string,
-  isShort: boolean,
-}
-

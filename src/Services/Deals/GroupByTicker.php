@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace App\Services\Deals;
 
+use App\Response\DTO\Deals\DealInGroupDTO;
 use App\Response\DTO\Deals\DealListGroupByTickerDTO;
 
 class GroupByTicker
 {
     /**
-     * @param DealCalculator[] $deals
+     * @param DealData[] $deals
      */
     public function __construct(
         private array $deals = [],
     ) {
     }
 
-    public function addDeal(DealCalculator $deal): void
+    public function addDeal(DealData $deal): void
     {
         $this->deals[] = $deal;
     }
@@ -65,8 +66,35 @@ class GroupByTicker
         );
     }
 
-    public function getDeals()
+    public function getDeals(): array
     {
-        return $this->deals;
+        return array_map(
+            fn($deal) => new DealInGroupDTO(
+                id:                      $deal->getId(),
+                accountId:               $deal->getAccountId(),
+                ticker:                  $deal->getTicker(),
+                shortName:               $deal->getName(),
+                quantity:                $deal->getQuantity(),
+                buyPrice:                $deal->getBuyPrice(),
+                fullBuyPrice:            $deal->getFullBuyPrice(),
+                currentPrice:            $deal->getCurrentPrice(),
+                fullCurrentPrice:        $deal->getFullCurrentPrice(),
+                targetPrice:             $deal->getTargetPrice(),
+                fullTargetPrice:         $deal->getFullTargetPrice(),
+                profit:                  $deal->getProfit(),
+                profitPercent:           $deal->getProfitPercent(),
+                commission:              $deal->getCommission(),
+                targetProfit:            $deal->getTargetProfit(),
+                fullTargetProfit:        $deal->getFullTargetProfit(),
+                fullTargetProfitPercent: $deal->getTargetProfitPercent(), // Maybe bug
+                percent:                 0,
+                currency:                $deal->getCurrencyName(),
+                isShort:                 $deal->getType() === DealType::Short,
+                isBlocked:               $deal->getStatus() === DealStatus::Blocked,
+                createdAt:               $deal->getCreatedAt(),
+                updatedAt:               $deal->getUpdatedAt() ?? '',
+            ),
+            $this->deals
+        );
     }
 }

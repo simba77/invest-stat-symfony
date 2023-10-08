@@ -7,7 +7,7 @@ function formatProfit(asset: { profit: number; currency: string; }) {
   return (asset.profit > 0 ? '+' : '-') + ' ' + helpers.formatPrice(Math.abs(asset.profit)) + ' ' + asset.currency;
 }
 
-const emit = defineEmits<{ showChildren: boolean }>()
+defineEmits<{ showChildren: boolean }>()
 
 defineProps<{
   item: AssetsGroup
@@ -16,7 +16,7 @@ defineProps<{
 </script>
 
 <template>
-  <tr :class="{'tr-clickable': clickable}" @click="emit('showChildren')">
+  <tr class="tr-clickable" @click="$emit('showChildren')">
     <td class="underline">
       <div class="font-extrabold">
         <lock-closed-icon class="h-3 w-3 inline-block" v-if="item.isBlocked"></lock-closed-icon>

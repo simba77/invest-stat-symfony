@@ -7,7 +7,7 @@ namespace App\Services\Deals;
 use App\Entity\Account;
 use App\Entity\Deal;
 
-class DealCalculator
+class DealData
 {
     /** @param array{
      *     deal: Deal,
@@ -23,6 +23,16 @@ class DealCalculator
         private readonly array $deal,
         private readonly Account $account,
     ) {
+    }
+
+    public function getId(): int
+    {
+        return $this->deal['deal']->getId();
+    }
+
+    public function getAccountId(): int
+    {
+        return $this->account->getId();
     }
 
     public function getName(): string
@@ -125,7 +135,7 @@ class DealCalculator
         if (! $this->getFullTargetPrice()) {
             return 0;
         }
-        return round($this->getFullTargetProfit() / $this->getFullTargetPrice() * 100, 2);
+        return round($this->getFullTargetProfit() / $this->getFullBuyPrice() * 100, 2);
     }
 
     public function getCurrencyName(): string
@@ -146,5 +156,15 @@ class DealCalculator
     public function getStatus(): DealStatus
     {
         return $this->deal['deal']->getStatus();
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->deal['deal']->createdAt()->format('d.m.Y H:i');
+    }
+
+    public function getUpdatedAt(): ?string
+    {
+        return $this->deal['deal']->updatedAt()?->format('d.m.Y H:i');
     }
 }

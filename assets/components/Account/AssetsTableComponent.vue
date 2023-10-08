@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import helpers from "../../helpers";
 import AssetsTableRowComponent from "@/components/Account/AssetsTableRowComponent.vue";
-import {AssetsGroup} from "@/models/account";
+import {AssetsGroupData} from "@/models/account";
 import AssetsTableGroupComponent from "@/components/Account/AssetsTableGroupComponent.vue";
 
-defineProps<{ assets: AssetsGroup[] }>()
+defineProps<{ assets: AssetsGroupData }>()
+
+function showDeals(index: any) {
+  console.log(index)
+}
+
 </script>
 <template>
   <table class="simple-table sub-table white-header">
@@ -58,11 +63,11 @@ defineProps<{ assets: AssetsGroup[] }>()
         <assets-table-group-component
           :item="asset.groupData"
           :clickable="true"
-          @showChildren="() => asset.showItems = !asset.showItems"
+          @showChildren="showDeals(i)"
         />
 
         <!-- Children table -->
-        <tr v-if="asset.showItems">
+        <tr>
           <td colspan="111" class="!p-2 !bg-white">
             <table class="simple-table sub-table white-header">
               <thead>
