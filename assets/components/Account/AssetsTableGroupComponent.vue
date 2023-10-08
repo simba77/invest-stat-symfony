@@ -60,6 +60,7 @@ defineProps<{
     <td class="table-actions">
       <div class="flex justify-end items-center show-on-row-hover">
         <router-link
+          @click.stop
           to="/"
           class="text-gray-300 hover:text-gray-600 mr-2"
           title="Edit"
@@ -67,12 +68,14 @@ defineProps<{
           <pencil-icon class="h-5 w-5"/>
         </router-link>
         <div
+          @click.stop
           class="text-gray-300 hover:text-gray-600 mr-2 cursor-pointer"
           title="Sell"
         >
           <banknotes-icon class="h-5 w-5"/>
         </div>
         <button
+          @click.stop
           type="button"
           class="text-gray-300 hover:text-red-500"
           title="Delete"

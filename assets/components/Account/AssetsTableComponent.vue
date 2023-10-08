@@ -3,11 +3,14 @@ import helpers from "../../helpers";
 import AssetsTableRowComponent from "@/components/Account/AssetsTableRowComponent.vue";
 import {AssetsGroupData} from "@/models/account";
 import AssetsTableGroupComponent from "@/components/Account/AssetsTableGroupComponent.vue";
+import {useDealsGroup} from "@/composable/useDealsGroup";
 
-defineProps<{ assets: AssetsGroupData }>()
+defineProps<{ assets: {[key: string]: AssetsGroupData} }>()
+
+const dealsGroup = useDealsGroup()
 
 function showDeals(index: any) {
-  console.log(index)
+  dealsGroup.toggleGroup(index)
 }
 
 </script>
@@ -67,7 +70,7 @@ function showDeals(index: any) {
         />
 
         <!-- Children table -->
-        <tr>
+        <tr v-if="dealsGroup.openedGroups.value[i]">
           <td colspan="111" class="!p-2 !bg-white">
             <table class="simple-table sub-table white-header">
               <thead>
@@ -88,7 +91,7 @@ function showDeals(index: any) {
               </thead>
               <tbody>
               <template v-for="(subItem, subIndex) in asset.deals" :key="'sub' + subIndex">
-                <assets-table-row-component :item="subItem" :show-actions="true"></assets-table-row-component>
+                <assets-table-row-component :item="subItem"></assets-table-row-component>
               </template>
               </tbody>
             </table>
