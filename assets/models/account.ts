@@ -73,3 +73,25 @@ export interface Deal {
   createdAt: string
   updatedAt: string
 }
+
+export interface GroupSummary {
+  buyPrice: number
+  currentPrice: number
+  profit: number
+  profitPercent: number
+  isBaseCurrency: boolean
+  buyPriceConverted: number
+  currentPriceConverted: number
+  profitConverted: number
+}
+
+export interface AccountData {
+  account: Account
+  deals: {
+    dealsList: object
+    statuses: { [keys: string]: { code: string, name: string } }
+    instrumentTypes: { [keys: string]: { code: string, name: string } }
+    currencies: { [keys: string]: { code: string, name: string } }
+    summary: object
+  }
+}

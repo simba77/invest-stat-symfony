@@ -42,18 +42,18 @@ provide('accounts', {getAccounts: getAccount})
       <template v-for="(groupedByStatus, groupedByStatusIndex) in data.deals.dealsList" :key="groupedByStatusIndex">
         <!-- Если групп блокировки больше одной, выводим название -->
         <template v-if="Object.keys(data.deals.dealsList).length > 1">
-          <div class="font-extrabold uppercase text-base mb-4">{{ data.deals.statuses[groupedByStatusIndex].name }}</div>
+          <div class="font-extrabold uppercase text-base mb-4">{{data.deals.statuses[groupedByStatusIndex]['name'] }}</div>
         </template>
 
         <!-- Вывод типа инструмента -->
         <template v-for="(groupedByInstrumentType, groupedByInstrumentTypeIndex) in groupedByStatus" :key="groupedByInstrumentTypeIndex">
-          <div class="font-bold text-neutral-600 mb-4">{{ data.deals.instrumentTypes[groupedByInstrumentTypeIndex].name }}</div>
+          <div class="font-bold text-neutral-600 mb-4">{{ data.deals.instrumentTypes[groupedByInstrumentTypeIndex]['name'] }}</div>
 
 
           <!-- Выводим группы активов по валютам -->
           <template v-for="(groupedByCurrency, groupedByCurrencyIndex) in groupedByInstrumentType" :key="groupedByCurrencyIndex">
             <div class="flex items-center">
-              <div class="font-bold text-sm mb-4">{{ data.deals.currencies[groupedByCurrencyIndex].name  }}</div>
+              <div class="font-bold text-sm mb-4">{{ data.deals.currencies[groupedByCurrencyIndex]['name']  }}</div>
               <div class="flex-grow mb-4 ml-3 border-b"></div>
             </div>
 
@@ -63,7 +63,7 @@ provide('accounts', {getAccounts: getAccount})
               </template>
               <template v-else>
                 <!-- Выводим таблицу с активами -->
-                <assets-table-component :assets="groupedByCurrency"></assets-table-component>
+                <assets-table-component :assets="groupedByCurrency" :summary="data.deals.summary[groupedByStatusIndex][groupedByInstrumentTypeIndex][groupedByCurrencyIndex]"></assets-table-component>
               </template>
             </div>
           </template>

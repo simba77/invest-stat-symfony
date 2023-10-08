@@ -24,6 +24,7 @@ class DealsListService
         $instrumentTypes = [];
         $currencies = [];
         $deals = $this->dealRepository->findForUserAndAccount($user, $account);
+        $summary = new SummaryForGroup();
 
         foreach ($deals as $deal) {
             // Statuses
@@ -40,15 +41,19 @@ class DealsListService
 
             $ticker = $deal['deal']->getTicker();
 
+            $dealData = new DealData($deal, $account);
+
             /** @var ?GroupByTicker $group */
             $group = $this->propertyAccess->getValue($result, '[' . $status['code'] . '][' . $instrumentType['code'] . '][' . $currency['code'] . '][' . $ticker . ']');
             if ($group) {
-                $group->addDeal(new DealData($deal, $account));
+                $group->addDeal($dealData);
             } else {
                 $group = new GroupByTicker();
-                $group->addDeal(new DealData($deal, $account));
+                $group->addDeal($dealData);
                 $result[$status['code']][$instrumentType['code']][$currency['code']][$ticker] = $group;
             }
+
+            $summary->addDeal($status['code'], $instrumentType['code'], $currency['code'], $dealData);
         }
 
         return [
@@ -56,6 +61,7 @@ class DealsListService
             'statuses'        => $statuses,
             'instrumentTypes' => $instrumentTypes,
             'currencies'      => $currencies,
+            'summary'         => $summary->getSummary(),
         ];
     }
 

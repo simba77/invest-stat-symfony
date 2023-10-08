@@ -1,5 +1,5 @@
 import {ref} from "vue";
-import {Account} from "@/models/account";
+import {Account, AccountData} from "@/models/account";
 import axios from "axios";
 import useAsync from "@/utils/use-async";
 
@@ -12,7 +12,7 @@ async function getAccounts() {
 const {loading, run: asyncGetAccounts} = useAsync(getAccounts)
 
 export default function () {
-  const account = ref<{account: Account, deals: object}>();
+  const account = ref<AccountData>();
 
   // Delete expense with the specific id
   async function deleteAccount(id: number) {
