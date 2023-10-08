@@ -9,10 +9,6 @@ defineProps<{ assets: { [key: string]: AssetsGroupData }, summary: GroupSummary 
 
 const dealsGroup = useDealsGroup()
 
-function showDeals(index: any) {
-  dealsGroup.toggleGroup(index)
-}
-
 </script>
 <template>
   <table class="simple-table sub-table white-header">
@@ -41,7 +37,7 @@ function showDeals(index: any) {
       <assets-table-group-component
         :item="asset.groupData"
         :clickable="true"
-        @showChildren="showDeals(i)"
+        @showChildren="dealsGroup.toggleGroup(i)"
       />
 
       <!-- Children table -->

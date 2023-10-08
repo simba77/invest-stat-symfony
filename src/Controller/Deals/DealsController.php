@@ -37,7 +37,7 @@ class DealsController extends AbstractController
         $deals = $this->dealsListService->getListWithGroups($user, $acc);
 
         $account = $this->accountService->getAccountWithDetailInformation($accountId, $user->getId());
-        return $this->json(['account' => $account, 'deals'=> $deals]);
+        return $this->json(['account' => $account, 'deals' => $deals]);
     }
 
     #[Route('/deals/create/{accountId}', name: 'app_deals_deals_create', requirements: ['accountId' => '\d+'], methods: ['POST'])]
@@ -61,6 +61,19 @@ class DealsController extends AbstractController
         );
 
         $this->em->persist($deal);
+        $this->em->flush();
+
+        return $this->json(['success' => true]);
+    }
+
+    #[Route('/deals/delete/{id}', name: 'app_deals_deals_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $deal = $this->em->getRepository(Deal::class)->findOneBy(['id' => $id, 'user' => $user]);
+        if (! $deal) {
+            throw $this->createNotFoundException('No expense found for id ' . $id);
+        }
+        $this->em->remove($deal);
         $this->em->flush();
 
         return $this->json(['success' => true]);

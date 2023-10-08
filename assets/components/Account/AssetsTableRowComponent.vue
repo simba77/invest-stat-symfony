@@ -2,6 +2,8 @@
 import {LockClosedIcon, PencilIcon, XCircleIcon, BanknotesIcon} from "@heroicons/vue/24/outline";
 import helpers from "../../helpers";
 import type {Deal} from "@/models/account";
+import {useModal} from "@/composable/useModal";
+import DeleteDealModal from "@/components/Account/DeleteDealModal.vue";
 
 function formatProfit(asset: { profit: number; currency: string; }) {
   return (asset.profit > 0 ? '+' : '-') + ' ' + helpers.formatPrice(Math.abs(asset.profit)) + ' ' + asset.currency;
@@ -10,6 +12,20 @@ function formatProfit(asset: { profit: number; currency: string; }) {
 defineProps<{
   item: Deal,
 }>();
+
+const modal = useModal();
+
+function deleteDeal(deal: Deal) {
+  modal.open({
+    component: DeleteDealModal,
+    modelValue: {
+      id: deal.id,
+      title: 'Deletion confirmation',
+      text: 'Are you sure you want to delete &quot;<b>' + deal.shortName + '</b>&quot;?',
+    }
+  })
+}
+
 </script>
 
 <template>
@@ -73,6 +89,7 @@ defineProps<{
           type="button"
           class="text-gray-300 hover:text-red-500"
           title="Delete"
+          @click="deleteDeal(item)"
         >
           <x-circle-icon class="h-5 w-5"/>
         </button>
