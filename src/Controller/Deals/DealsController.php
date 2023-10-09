@@ -7,8 +7,9 @@ namespace App\Controller\Deals;
 use App\Entity\Account;
 use App\Entity\Deal;
 use App\Entity\User;
-use App\Repository\DealRepository;
 use App\Request\DTO\Deals\CreateDealRequestDTO;
+use App\Request\DTO\Deals\EditDealRequestDTO;
+use App\Response\DTO\Deals\EditDealDTO;
 use App\Services\AccountService;
 use App\Services\Deals\DealsListService;
 use App\Services\Deals\DealStatus;
@@ -74,6 +75,48 @@ class DealsController extends AbstractController
             throw $this->createNotFoundException('No expense found for id ' . $id);
         }
         $this->em->remove($deal);
+        $this->em->flush();
+
+        return $this->json(['success' => true]);
+    }
+
+    #[Route('/deals/get-by-id/{id}', name: 'app_deals_deals_getbyid', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function getById(int $id, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $deal = $this->em->getRepository(Deal::class)->findOneBy(['id' => $id, 'user' => $user]);
+        if (! $deal) {
+            throw $this->createNotFoundException('No deal found for id ' . $id);
+        }
+        return $this->json(
+            [
+                'deal' => new EditDealDTO(
+                    id:          $deal->getId(),
+                    ticker:      $deal->getTicker(),
+                    stockMarket: $deal->getStockMarket(),
+                    quantity:    $deal->getQuantity(),
+                    buyPrice:    $deal->getBuyPrice(),
+                    targetPrice: $deal->getTargetPrice(),
+                    isShort:     $deal->getType() === DealType::Short
+                ),
+            ]
+        );
+    }
+
+    #[Route('/deals/edit/{id}', name: 'app_deals_deals_edit', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function edit(int $id, #[MapRequestPayload] EditDealRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $deal = $this->em->getRepository(Deal::class)->findOneBy(['id' => $id, 'user' => $user]);
+        if (! $deal) {
+            throw $this->createNotFoundException('No deal found for id ' . $id);
+        }
+
+        $deal->setTicker($dto->ticker);
+        $deal->setStockMarket($dto->stockMarket);
+        $deal->setType($dto->isShort ? DealType::Short : DealType::Long);
+        $deal->setQuantity($dto->quantity);
+        $deal->setBuyPrice($dto->buyPrice);
+        $deal->setTargetPrice($dto->targetPrice);
+        $this->em->persist($deal);
         $this->em->flush();
 
         return $this->json(['success' => true]);

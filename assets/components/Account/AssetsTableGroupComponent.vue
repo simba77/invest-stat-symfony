@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {LockClosedIcon, PencilIcon, XCircleIcon, BanknotesIcon} from "@heroicons/vue/24/outline";
+import {LockClosedIcon, BanknotesIcon} from "@heroicons/vue/24/outline";
 import helpers from "../../helpers";
 import type {AssetsGroup} from "@/models/account";
 
@@ -59,14 +59,6 @@ defineProps<{
     <td>{{ item.percent }}%</td>
     <td class="table-actions">
       <div class="flex justify-end items-center show-on-row-hover">
-        <router-link
-          @click.stop
-          to="/"
-          class="text-gray-300 hover:text-gray-600 mr-2"
-          title="Edit"
-        >
-          <pencil-icon class="h-5 w-5"/>
-        </router-link>
         <div
           @click.stop
           class="text-gray-300 hover:text-gray-600 mr-2 cursor-pointer"
@@ -74,14 +66,6 @@ defineProps<{
         >
           <banknotes-icon class="h-5 w-5"/>
         </div>
-        <button
-          @click.stop
-          type="button"
-          class="text-gray-300 hover:text-red-500"
-          title="Delete"
-        >
-          <x-circle-icon class="h-5 w-5"/>
-        </button>
       </div>
     </td>
   </tr>

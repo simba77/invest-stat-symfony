@@ -73,7 +73,7 @@ function deleteDeal(deal: Deal) {
     <td class="table-actions">
       <div class="flex justify-end items-center show-on-row-hover">
         <router-link
-          to="/"
+          :to="{name: 'EditAsset', params: {account: item.accountId, id: item.id}}"
           class="text-gray-300 hover:text-gray-600 mr-2"
           title="Edit"
         >
