@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import PageComponent from "@/components/PageComponent.vue";
 import InputText from "@/components/Forms/InputText.vue";
@@ -10,6 +9,14 @@ import useAsync from '@/utils/use-async'
 import {useRoute} from 'vue-router'
 import router from '@/router'
 import {useDebounceFn, useFetch} from '@vueuse/core'
+
+interface SecurityData {
+  ticker: string
+  shortName: string
+  stockMarket: string
+  price: number
+  lotSize: number
+}
 
 const {params: routeParams} = useRoute()
 const form = ref({
@@ -23,7 +30,7 @@ const form = ref({
 const errors = ref(null)
 const componentKey = ref(0)
 const tickerComponentKey = ref(0)
-const tickerData = ref(null)
+const tickerData = ref<SecurityData | null>(null)
 
 
 const {loading, run: submitForm} = useAsync(() => {
@@ -54,18 +61,16 @@ const {run: getForm} = useAsync((id: any) => {
 
 
 const getTickerData = useDebounceFn(async () => {
-  const {data} = await useFetch('/api/assets/get-by-ticker/' + form.value.ticker).json()
-
-  tickerData.value = data.value
-
-  form.value.currency = data.value.currency;
-  form.value.stock_market = data.value.stockMarket;
-  form.value.buy_price = data.value.price;
-  form.value.quantity = data.value.lotSize;
-  // Добавляем 5% к текущей стоимости
-  form.value.target_price = Math.round(parseFloat(data.value.price) + (parseFloat(data.value.price) * 0.05));
-  componentKey.value += 1
-
+  const {data} = await useFetch('/api/securities/get-data-by-ticker/' + form.value.ticker).json()
+  if (data.value.security) {
+    tickerData.value = data.value.security
+    form.value.stockMarket = data.value.security.stockMarket;
+    form.value.buyPrice = data.value.security.price;
+    form.value.quantity = data.value.security.lotSize;
+    // Добавляем 5% к текущей стоимости
+    form.value.targetPrice = Math.round(parseFloat(data.value.security.price) + (parseFloat(data.value.security.price) * 0.05));
+    componentKey.value += 1
+  }
 }, 300)
 
 onMounted(() => {
