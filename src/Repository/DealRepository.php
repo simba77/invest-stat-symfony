@@ -70,4 +70,44 @@ class DealRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * @return array<int, array{deal: Deal}>
+     */
+    public function findForAccount(Account $account): array
+    {
+        return $this->createQueryBuilder('d')
+            ->select(
+                [
+                    'd as deal',
+
+                    // Share
+                    's.shortName shareName',
+                    's.price sharePrice',
+                    's.currency shareCurrency',
+                    's.type shareType',
+
+                    // Bond
+                    'b.shortName bondName',
+                    'b.price bondPrice',
+                    'b.currency bondCurrency',
+                    'b.lotSize bondLotSize',
+
+                    // Future
+                    'f.shortName futureName',
+                    'f.price futurePrice',
+                    'f.currency futureCurrency',
+                    'f.stepPrice futureStepPrice',
+                    'f.lotSize futureLotSize',
+                ]
+            )
+            ->andWhere('d.account = :account')
+            ->setParameter('account', $account)
+            ->leftJoin(Share::class, 's', Join::WITH, 's.ticker = d.ticker AND s.stockMarket = d.stockMarket')
+            ->leftJoin(Bond::class, 'b', Join::WITH, 'b.ticker = d.ticker AND b.stockMarket = d.stockMarket')
+            ->leftJoin(Future::class, 'f', Join::WITH, 'f.ticker = d.ticker AND f.stockMarket = d.stockMarket')
+            ->orderBy('d.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }
