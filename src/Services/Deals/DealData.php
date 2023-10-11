@@ -16,6 +16,7 @@ class DealData
      *     futureName?: string,
      *     sharePrice?: string,
      *     bondPrice?: string,
+     *     bondLotSize?: string,
      *     futurePrice?: string,
      *     futureStepPrice?: string,
      *     futureLotSize?: string,
@@ -54,6 +55,11 @@ class DealData
             return (float) ($this->deal['deal']->getBuyPrice() * $this->deal['futureStepPrice'] * $this->deal['futureLotSize']);
         }
 
+        // Bond price
+        if ($this->deal['bondName']) {
+            return (float) ($this->deal['deal']->getBuyPrice() * $this->deal['bondLotSize'] / 100);
+        }
+
         return (float) $this->deal['deal']->getBuyPrice();
     }
 
@@ -71,6 +77,10 @@ class DealData
     {
         if ($this->deal['futurePrice']) {
             return (float) ($this->deal['futurePrice'] * $this->deal['futureStepPrice'] * $this->deal['futureLotSize']);
+        }
+
+        if ($this->deal['bondPrice']) {
+            return (float) ($this->deal['bondPrice'] * $this->deal['bondLotSize'] / 100);
         }
 
         return (float) $this->deal['sharePrice'] ?? $this->deal['bondPrice'] ?? 0;

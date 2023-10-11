@@ -49,6 +49,7 @@ class DealRepository extends ServiceEntityRepository
                     'b.shortName bondName',
                     'b.price bondPrice',
                     'b.currency bondCurrency',
+                    'b.lotSize bondLotSize',
 
                     // Future
                     'f.shortName futureName',
