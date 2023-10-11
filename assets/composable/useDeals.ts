@@ -1,4 +1,5 @@
 import axios from "axios";
+import {SellSecurity} from "@/models/account";
 
 export function useDeals() {
   // Delete deal with the specific id
@@ -7,8 +8,15 @@ export function useDeals() {
   }
 
   // Sell asset with the specific id
-  async function sell(id: number, price: number) {
-    await axios.post('/api/assets/sell/' + id, {price: price})
+  async function sell(security: SellSecurity) {
+    console.log(security)
+    await axios.post('/api/deals/sell/', {
+      id: security.id,
+      accountId: Number(security.accountId),
+      ticker: security.ticker,
+      price: Number(security.price),
+      quantity: Number(security.quantity),
+    })
   }
 
   return {

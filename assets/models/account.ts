@@ -95,3 +95,12 @@ export interface AccountData {
     summary: object
   }
 }
+
+export interface SellSecurity {
+  id?: number
+  accountId: number
+  ticker: string
+  name: string
+  price: number
+  quantity: number
+}

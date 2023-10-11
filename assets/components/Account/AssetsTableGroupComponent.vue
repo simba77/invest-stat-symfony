@@ -2,6 +2,12 @@
 import {LockClosedIcon, BanknotesIcon} from "@heroicons/vue/24/outline";
 import helpers from "../../helpers";
 import type {AssetsGroup} from "@/models/account";
+import {useModal} from "@/composable/useModal";
+import SellModal from "@/components/Modals/SellModal.vue";
+import {useRoute} from "vue-router";
+
+const modal = useModal()
+const route = useRoute()
 
 function formatProfit(asset: { profit: number; currency: string; }) {
   return (asset.profit > 0 ? '+' : '-') + ' ' + helpers.formatPrice(Math.abs(asset.profit)) + ' ' + asset.currency;
@@ -12,6 +18,19 @@ defineEmits<{ showChildren: boolean }>()
 defineProps<{
   item: AssetsGroup
 }>();
+
+function showSellModal(item: AssetsGroup) {
+  modal.open({
+    component: SellModal,
+    modelValue: {
+      accountId: route.params.id,
+      ticker: item.ticker,
+      name: item.shortName,
+      price: item.currentPrice,
+      quantity: ''
+    }
+  })
+}
 
 </script>
 
@@ -60,7 +79,7 @@ defineProps<{
     <td class="table-actions">
       <div class="flex justify-end items-center show-on-row-hover">
         <div
-          @click.stop
+          @click.stop="showSellModal(item)"
           class="text-gray-300 hover:text-gray-600 mr-2 cursor-pointer"
           title="Sell"
         >

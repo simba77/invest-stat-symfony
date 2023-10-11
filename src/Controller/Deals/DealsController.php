@@ -9,8 +9,10 @@ use App\Entity\Deal;
 use App\Entity\User;
 use App\Request\DTO\Deals\CreateDealRequestDTO;
 use App\Request\DTO\Deals\EditDealRequestDTO;
+use App\Request\DTO\Deals\SellDealRequestDTO;
 use App\Response\DTO\Deals\EditDealDTO;
 use App\Services\AccountService;
+use App\Services\Deals\DealService;
 use App\Services\Deals\DealsListService;
 use App\Services\Deals\DealStatus;
 use App\Services\Deals\DealType;
@@ -27,7 +29,8 @@ class DealsController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly AccountService $accountService,
-        private readonly DealsListService $dealsListService
+        private readonly DealsListService $dealsListService,
+        private readonly DealService $dealService
     ) {
     }
 
@@ -118,6 +121,25 @@ class DealsController extends AbstractController
         $deal->setTargetPrice($dto->targetPrice);
         $this->em->persist($deal);
         $this->em->flush();
+
+        return $this->json(['success' => true]);
+    }
+
+    #[Route('/deals/sell/', name: 'app_deals_deals_sell', methods: ['POST'])]
+    public function sell(#[MapRequestPayload] SellDealRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
+    {
+        if ($dto->id) {
+            // Sell one deal
+            $deal = $this->em->getRepository(Deal::class)->findOneBy(['id' => $dto->id, 'user' => $user]);
+            if (! $deal) {
+                throw $this->createNotFoundException('No deal found for id ' . $dto->id);
+            }
+            $this->dealService->sellOne($deal, $dto);
+        } else {
+            // Sell the required number of securities
+            $account = $this->em->getRepository(Account::class)->findOneBy(['id' => $dto->accountId, 'userId' => $user->getId()]);
+            $this->dealService->sellAsNeeded($user, $account, $dto);
+        }
 
         return $this->json(['success' => true]);
     }

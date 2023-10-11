@@ -4,6 +4,7 @@ import helpers from "../../helpers";
 import type {Deal} from "@/models/account";
 import {useModal} from "@/composable/useModal";
 import DeleteDealModal from "@/components/Account/DeleteDealModal.vue";
+import SellModal from "@/components/Modals/SellModal.vue";
 
 function formatProfit(asset: { profit: number; currency: string; }) {
   return (asset.profit > 0 ? '+' : '-') + ' ' + helpers.formatPrice(Math.abs(asset.profit)) + ' ' + asset.currency;
@@ -22,6 +23,20 @@ function deleteDeal(deal: Deal) {
       id: deal.id,
       title: 'Deletion confirmation',
       text: 'Are you sure you want to delete &quot;<b>' + deal.shortName + '</b>&quot;?',
+    }
+  })
+}
+
+function showSellModal(item: Deal) {
+  modal.open({
+    component: SellModal,
+    modelValue: {
+      id: item.id,
+      accountId: item.accountId,
+      ticker: item.ticker,
+      name: item.shortName,
+      price: item.currentPrice,
+      quantity: item.quantity
     }
   })
 }
@@ -82,6 +97,7 @@ function deleteDeal(deal: Deal) {
         <div
           class="text-gray-300 hover:text-gray-600 mr-2 cursor-pointer"
           title="Sell"
+          @click.prevent="showSellModal(item)"
         >
           <banknotes-icon class="h-5 w-5"/>
         </div>
