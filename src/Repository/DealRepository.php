@@ -54,6 +54,8 @@ class DealRepository extends ServiceEntityRepository
                     'f.shortName futureName',
                     'f.price futurePrice',
                     'f.currency futureCurrency',
+                    'f.stepPrice futureStepPrice',
+                    'f.lotSize futureLotSize',
                 ]
             )
             ->andWhere('d.user = :user')

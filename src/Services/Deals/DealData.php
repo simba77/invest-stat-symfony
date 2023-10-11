@@ -17,6 +17,8 @@ class DealData
      *     sharePrice?: string,
      *     bondPrice?: string,
      *     futurePrice?: string,
+     *     futureStepPrice?: string,
+     *     futureLotSize?: string,
      * } $deal
      */
     public function __construct(
@@ -47,6 +49,11 @@ class DealData
 
     public function getBuyPrice(): float
     {
+        // Futures price
+        if ($this->deal['futureName']) {
+            return (float) ($this->deal['deal']->getBuyPrice() * $this->deal['futureStepPrice'] * $this->deal['futureLotSize']);
+        }
+
         return (float) $this->deal['deal']->getBuyPrice();
     }
 
@@ -62,7 +69,11 @@ class DealData
 
     public function getCurrentPrice(): float
     {
-        return (float) $this->deal['sharePrice'] ?? $this->deal['bondPrice'] ?? $this->deal['futurePrice'] ?? 0;
+        if ($this->deal['futurePrice']) {
+            return (float) ($this->deal['futurePrice'] * $this->deal['futureStepPrice'] * $this->deal['futureLotSize']);
+        }
+
+        return (float) $this->deal['sharePrice'] ?? $this->deal['bondPrice'] ?? 0;
     }
 
     public function getFullCurrentPrice(): float
