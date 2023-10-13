@@ -10,13 +10,12 @@ use App\Response\DTO\Accounts\AccountDetailResponseDTO;
 use App\Response\DTO\Accounts\AccountEditFormResponseDTO;
 use App\Response\DTO\Accounts\AccountListItemResponseDTO;
 use App\Response\DTO\Accounts\AccountResponseDTO;
-use App\Services\MarketData\Currencies\CurrencyService;
 
 class AccountService
 {
     public function __construct(
         private readonly AccountRepository $accountRepository,
-        private readonly CurrencyService $currencyService
+        private readonly AccountCalculator $accountCalculator,
     ) {
     }
 
@@ -35,10 +34,9 @@ class AccountService
         $items = $this->accountRepository->findByUserIdWithDeposits($user->getId() ?? 0);
         $result = [];
         foreach ($items as $item) {
-            $usdRate = $this->currencyService->getUSDRUBRate();
             $account = $item['account'];
 
-            $currentValue = round($account->getCurrentSumOfAssets() + $account->getBalance() + ($account->getUsdBalance() * $usdRate), 2);
+            $currentValue = $this->accountCalculator->getAccountValue($account);
             $sumDeposits = (float) $item['deposits_sum'] ?? 0;
 
             $result[] = new AccountListItemResponseDTO(
@@ -78,7 +76,6 @@ class AccountService
      */
     public function getAccountWithDetailInformation(int $id, int $userId): ?AccountDetailResponseDTO
     {
-        $usdRate = $this->currencyService->getUSDRUBRate();
         $accountData = $this->accountRepository->findByUserAndIdWithDeposits($id, $userId);
         if (! $accountData) {
             return null;
@@ -86,7 +83,7 @@ class AccountService
 
         $account = $accountData['account'];
 
-        $currentValue = round($account->getCurrentSumOfAssets() + $account->getBalance() + ($account->getUsdBalance() * $usdRate), 2);
+        $currentValue = $this->accountCalculator->getAccountValue($account);
         $sumDeposits = (float) $accountData['deposits_sum'] ?? 0;
 
         return new AccountDetailResponseDTO(

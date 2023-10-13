@@ -13,6 +13,7 @@ class GroupByTicker
      * @param DealData[] $deals
      */
     public function __construct(
+        private readonly float $accountValue = 0,
         private array $deals = [],
     ) {
     }
@@ -59,7 +60,7 @@ class GroupByTicker
             targetProfit:        round($fullTargetProfit / $quantity, 4),
             fullTargetProfit:    $fullTargetProfit,
             targetProfitPercent: round($fullTargetProfit / $fullBuyPrice * 100, 2),
-            percent:             0,
+            percent:             round($fullCurrentPrice / $this->accountValue * 100, 2),
             currency:            $firstDeal->getCurrencyName(),
             isShort:             $firstDeal->getType() === DealType::Short,
             isBlocked:           $firstDeal->getStatus() === DealStatus::Blocked,
@@ -87,7 +88,7 @@ class GroupByTicker
                 targetProfit:            $deal->getTargetProfit(),
                 fullTargetProfit:        $deal->getFullTargetProfit(),
                 fullTargetProfitPercent: $deal->getTargetProfitPercent(), // Maybe bug
-                percent:                 0,
+                percent:                 round($deal->getFullCurrentPrice() / $this->accountValue * 100, 2),
                 currency:                $deal->getCurrencyName(),
                 isShort:                 $deal->getType() === DealType::Short,
                 isBlocked:               $deal->getStatus() === DealStatus::Blocked,

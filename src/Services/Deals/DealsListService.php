@@ -7,6 +7,7 @@ namespace App\Services\Deals;
 use App\Entity\Account;
 use App\Entity\User;
 use App\Repository\DealRepository;
+use App\Services\AccountCalculator;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class DealsListService
@@ -14,6 +15,7 @@ class DealsListService
     public function __construct(
         private readonly DealRepository $dealRepository,
         private readonly PropertyAccessorInterface $propertyAccess,
+        private readonly AccountCalculator $accountCalculator,
     ) {
     }
 
@@ -25,6 +27,7 @@ class DealsListService
         $currencies = [];
         $deals = $this->dealRepository->findForUserAndAccount($user, $account);
         $summary = new SummaryForGroup();
+        $accountValue = $this->accountCalculator->getAccountValue($account);
 
         foreach ($deals as $deal) {
             // Statuses
@@ -48,7 +51,7 @@ class DealsListService
             if ($group) {
                 $group->addDeal($dealData);
             } else {
-                $group = new GroupByTicker();
+                $group = new GroupByTicker($accountValue);
                 $group->addDeal($dealData);
                 $result[$status['code']][$instrumentType['code']][$currency['code']][$ticker] = $group;
             }
