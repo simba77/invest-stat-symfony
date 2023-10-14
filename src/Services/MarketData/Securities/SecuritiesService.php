@@ -22,33 +22,83 @@ class SecuritiesService
         $share = $this->entityManager->getRepository(Share::class)->findOneBy(['ticker' => $ticker]);
         if ($share) {
             return new SecurityDTO(
-                ticker:      $share->getTicker(),
-                shortName:   $share->getShortName(),
-                stockMarket: $share->getStockMarket(),
-                price:       $share->getPrice() ?? 0,
-                lotSize:     (int) $share->getLotSize() ?? 1
+                ticker:       $share->getTicker(),
+                shortName:    $share->getShortName(),
+                stockMarket:  $share->getStockMarket(),
+                price:        $share->getPrice() ?? 0,
+                lotSize:      (int) $share->getLotSize() ?? 1,
+                currency:     $share->getCurrency(),
+                securityType: SecurityTypeEnum::Share,
             );
         }
 
         $bond = $this->entityManager->getRepository(Bond::class)->findOneBy(['ticker' => $ticker]);
         if ($bond) {
             return new SecurityDTO(
-                ticker:      $bond->getTicker(),
-                shortName:   $bond->getShortName(),
-                stockMarket: $bond->getStockMarket(),
-                price:       $bond->getPrice() ?? 0,
-                lotSize:     1
+                ticker:       $bond->getTicker(),
+                shortName:    $bond->getShortName(),
+                stockMarket:  $bond->getStockMarket(),
+                price:        $bond->getPrice() ?? 0,
+                lotSize:      1,
+                currency:     $bond->getCurrency(),
+                securityType: SecurityTypeEnum::Bond,
             );
         }
 
         $future = $this->entityManager->getRepository(Future::class)->findOneBy(['ticker' => $ticker]);
         if ($future) {
             return new SecurityDTO(
-                ticker:      $future->getTicker(),
-                shortName:   $future->getShortName(),
-                stockMarket: $future->getStockMarket(),
-                price:       $future->getPrice() ?? 0,
-                lotSize:     1
+                ticker:       $future->getTicker(),
+                shortName:    $future->getShortName(),
+                stockMarket:  $future->getStockMarket(),
+                price:        $future->getPrice() ?? 0,
+                lotSize:      1,
+                currency:     $future->getCurrency(),
+                securityType: SecurityTypeEnum::Future,
+            );
+        }
+
+        return null;
+    }
+
+    public function getSecurityByTickerAndStockMarket(string $ticker, string $stockMarket): ?SecurityDTO
+    {
+        $share = $this->entityManager->getRepository(Share::class)->findOneBy(['ticker' => $ticker, 'stockMarket' => $stockMarket]);
+        if ($share) {
+            return new SecurityDTO(
+                ticker:       $share->getTicker(),
+                shortName:    $share->getShortName(),
+                stockMarket:  $share->getStockMarket(),
+                price:        $share->getPrice() ?? 0,
+                lotSize:      (int) $share->getLotSize() ?? 1,
+                currency:     $share->getCurrency(),
+                securityType: SecurityTypeEnum::Share,
+            );
+        }
+
+        $bond = $this->entityManager->getRepository(Bond::class)->findOneBy(['ticker' => $ticker, 'stockMarket' => $stockMarket]);
+        if ($bond) {
+            return new SecurityDTO(
+                ticker:       $bond->getTicker(),
+                shortName:    $bond->getShortName(),
+                stockMarket:  $bond->getStockMarket(),
+                price:        $bond->getPrice() ?? 0,
+                lotSize:      1,
+                currency:     $bond->getCurrency(),
+                securityType: SecurityTypeEnum::Bond,
+            );
+        }
+
+        $future = $this->entityManager->getRepository(Future::class)->findOneBy(['ticker' => $ticker, 'stockMarket' => $stockMarket]);
+        if ($future) {
+            return new SecurityDTO(
+                ticker:       $future->getTicker(),
+                shortName:    $future->getShortName(),
+                stockMarket:  $future->getStockMarket(),
+                price:        $future->getPrice() ?? 0,
+                lotSize:      1,
+                currency:     $future->getCurrency(),
+                securityType: SecurityTypeEnum::Future,
             );
         }
 
