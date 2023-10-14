@@ -10,6 +10,7 @@ use App\Entity\Deal;
 use App\Entity\Future;
 use App\Entity\Share;
 use App\Entity\User;
+use App\Services\Deals\DealStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
@@ -61,8 +62,10 @@ class DealRepository extends ServiceEntityRepository
             )
             ->andWhere('d.user = :user')
             ->andWhere('d.account = :account')
+            ->andWhere('d.status != :status')
             ->setParameter('user', $user)
             ->setParameter('account', $account)
+            ->setParameter('status', DealStatus::Closed)
             ->leftJoin(Share::class, 's', Join::WITH, 's.ticker = d.ticker AND s.stockMarket = d.stockMarket')
             ->leftJoin(Bond::class, 'b', Join::WITH, 'b.ticker = d.ticker AND b.stockMarket = d.stockMarket')
             ->leftJoin(Future::class, 'f', Join::WITH, 'f.ticker = d.ticker AND f.stockMarket = d.stockMarket')
