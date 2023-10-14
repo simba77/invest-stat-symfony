@@ -22,12 +22,17 @@ class AccountCalculator
     {
         $accounts = $this->entityManager->getRepository(Account::class)->findAll();
         foreach ($accounts as $account) {
-            $summaryData = $this->calculateSumOfAllDealsForAccount($account);
-            $account->setStartSumOfAssets($summaryData['fullBuyPrice']);
-            $account->setCurrentSumOfAssets($summaryData['fullCurrentPrice']);
-            $this->entityManager->persist($account);
-            $this->entityManager->flush();
+            $this->recalculateBalanceForAccount($account);
         }
+    }
+
+    public function recalculateBalanceForAccount(Account $account): void
+    {
+        $summaryData = $this->calculateSumOfAllDealsForAccount($account);
+        $account->setStartSumOfAssets($summaryData['fullBuyPrice']);
+        $account->setCurrentSumOfAssets($summaryData['fullCurrentPrice']);
+        $this->entityManager->persist($account);
+        $this->entityManager->flush();
     }
 
     public function calculateSumOfAllDealsForAccount(Account $account): array

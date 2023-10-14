@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Request\DTO\Deals\CreateDealRequestDTO;
 use App\Request\DTO\Deals\SellDealRequestDTO;
 use App\Response\DTO\Securities\SecurityDTO;
+use App\Services\AccountCalculator;
 use App\Services\Deals\Exceptions\NoDealsException;
 use App\Services\MarketData\Securities\SecuritiesService;
 use App\Services\MarketData\Securities\SecurityTypeEnum;
@@ -22,6 +23,7 @@ class DealService
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly SecuritiesService $securitiesService,
+        private readonly AccountCalculator $accountCalculator,
     ) {
     }
 
@@ -43,6 +45,8 @@ class DealService
 
         $this->changeAccountBalanceWhenAddDeal($account, $dealRequestDTO);
 
+        $this->accountCalculator->recalculateBalanceForAccount($account);
+
         $this->entityManager->flush();
     }
 
@@ -53,6 +57,8 @@ class DealService
         $this->entityManager->persist($deal);
 
         $this->changeAccountBalance($deal, $dto);
+
+        $this->accountCalculator->recalculateBalanceForAccount($deal->getAccount());
 
         $this->entityManager->flush();
     }
@@ -113,6 +119,8 @@ class DealService
         if (isset($deal)) {
             $this->changeAccountBalance($deal, $dto);
         }
+
+        $this->accountCalculator->recalculateBalanceForAccount($account);
 
         $this->entityManager->flush();
     }
