@@ -53,7 +53,7 @@ class SecuritiesService
                 shortName:    $future->getShortName(),
                 stockMarket:  $future->getStockMarket(),
                 price:        $future->getPrice() ?? 0,
-                lotSize:      1,
+                lotSize:      $future->getLotSize(),
                 currency:     $future->getCurrency(),
                 securityType: SecurityTypeEnum::Future,
             );
@@ -98,7 +98,7 @@ class SecuritiesService
                 shortName:    $future->getShortName(),
                 stockMarket:  $future->getStockMarket(),
                 price:        $future->getPrice() ?? 0,
-                lotSize:      1,
+                lotSize:      $future->getLotSize(),
                 currency:     $future->getCurrency(),
                 securityType: SecurityTypeEnum::Future,
             );

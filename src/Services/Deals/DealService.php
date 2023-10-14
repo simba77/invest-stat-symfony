@@ -136,9 +136,6 @@ class DealService
                 $dealSum = $dealRequestDTO->buyPrice * $dealRequestDTO->quantity;
             } elseif ($security->securityType === SecurityTypeEnum::Bond) {
                 $dealSum = ($security->lotSize * $dealRequestDTO->buyPrice / 100 * $dealRequestDTO->quantity) + ($security->bondAccumulatedCoupon * $dealRequestDTO->quantity);
-            } elseif ($security->securityType === SecurityTypeEnum::Future) {
-                // TODO: Change it
-                $dealSum = 0;
             }
 
             if ($security->currency !== 'RUB') {
@@ -183,7 +180,7 @@ class DealService
             throw new RuntimeException('Security not found');
         }
 
-        $dealSum = $this->getDealSum($security, $dto);
+        $dealSum = $this->getDealSum($security, $dto, $deal);
         $account = $deal->getAccount();
         if ($security->currency === 'RUB') {
             $balanceToChange = $account->getBalance();
@@ -209,15 +206,14 @@ class DealService
         $this->entityManager->flush();
     }
 
-    private function getDealSum(SecurityDTO $securityDTO, SellDealRequestDTO $dealRequestDTO): float | int
+    private function getDealSum(SecurityDTO $securityDTO, SellDealRequestDTO $dealRequestDTO, Deal $deal): float | int
     {
         if ($securityDTO->securityType === SecurityTypeEnum::Share) {
             return $dealRequestDTO->price * $dealRequestDTO->quantity;
         } elseif ($securityDTO->securityType === SecurityTypeEnum::Bond) {
             return ($securityDTO->lotSize * $dealRequestDTO->price / 100 * $dealRequestDTO->quantity) + ($securityDTO->bondAccumulatedCoupon * $dealRequestDTO->quantity);
         } elseif ($securityDTO->securityType === SecurityTypeEnum::Future) {
-            // TODO: Change it
-            return 0;
+            return ($securityDTO->lotSize * $dealRequestDTO->price * $dealRequestDTO->quantity) - ($deal->getBuyPrice() * $securityDTO->lotSize * $dealRequestDTO->quantity);
         }
         return 0;
     }
