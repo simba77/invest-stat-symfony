@@ -7,6 +7,7 @@ namespace App\Services\Deals;
 use App\Entity\Account;
 use App\Entity\Deal;
 use App\Entity\User;
+use App\Request\DTO\Deals\CreateDealRequestDTO;
 use App\Request\DTO\Deals\SellDealRequestDTO;
 use App\Response\DTO\Securities\SecurityDTO;
 use App\Services\Deals\Exceptions\NoDealsException;
@@ -22,6 +23,27 @@ class DealService
         private readonly EntityManagerInterface $entityManager,
         private readonly SecuritiesService $securitiesService,
     ) {
+    }
+
+    public function addDeal(Account $account, User $user, CreateDealRequestDTO $dealRequestDTO): void
+    {
+        $deal = new Deal(
+            $user,
+            $account,
+            $dealRequestDTO->ticker,
+            $dealRequestDTO->stockMarket,
+            DealStatus::Active,
+            $dealRequestDTO->isShort ? DealType::Short : DealType::Long,
+            $dealRequestDTO->quantity,
+            $dealRequestDTO->buyPrice,
+            $dealRequestDTO->targetPrice
+        );
+
+        $this->entityManager->persist($deal);
+
+        $this->changeAccountBalanceWhenAddDeal($account, $dealRequestDTO);
+
+        $this->entityManager->flush();
     }
 
     public function sellOne(Deal $deal, SellDealRequestDTO $dto): void
@@ -92,6 +114,58 @@ class DealService
             $this->changeAccountBalance($deal, $dto);
         }
 
+        $this->entityManager->flush();
+    }
+
+    private function changeAccountBalanceWhenAddDeal(Account $account, CreateDealRequestDTO $dealRequestDTO): void
+    {
+        $security = $this->securitiesService->getSecurityByTickerAndStockMarket($dealRequestDTO->ticker, $dealRequestDTO->stockMarket);
+        $dealSum = 0;
+        $currency = 'RUB';
+
+        if ($security) {
+            if ($security->securityType === SecurityTypeEnum::Share) {
+                $dealSum = $dealRequestDTO->buyPrice * $dealRequestDTO->quantity;
+            } elseif ($security->securityType === SecurityTypeEnum::Bond) {
+                // TODO: Change it
+                $dealSum = 0;
+            } elseif ($security->securityType === SecurityTypeEnum::Future) {
+                // TODO: Change it
+                $dealSum = 0;
+            }
+
+            if ($security->currency !== 'RUB') {
+                $currency = $security->currency;
+            }
+        } else {
+            // If no data on the security is found, then we set the expected data for calculating the price
+            $dealSum = $dealRequestDTO->buyPrice * $dealRequestDTO->quantity;
+            if ($dealRequestDTO->stockMarket !== 'MOEX') {
+                $currency = 'USD';
+            }
+        }
+
+        if ($currency === 'RUB') {
+            $balanceToChange = $account->getBalance();
+
+            // Depends on the type of deal we decide to increase or decrease the balance.
+            if (! $dealRequestDTO->isShort) {
+                $account->setBalance($balanceToChange - $dealSum);
+            } else {
+                $account->setBalance($balanceToChange + $dealSum);
+            }
+        } else {
+            $balanceToChange = $account->getUsdBalance();
+
+            // Depends on the type of deal we decide to increase or decrease the balance.
+            if (! $dealRequestDTO->isShort) {
+                $account->setUsdBalance($balanceToChange - $dealSum);
+            } else {
+                $account->setUsdBalance($balanceToChange + $dealSum);
+            }
+        }
+
+        $this->entityManager->persist($account);
         $this->entityManager->flush();
     }
 

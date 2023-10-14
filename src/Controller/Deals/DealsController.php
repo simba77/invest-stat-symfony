@@ -14,7 +14,6 @@ use App\Response\DTO\Deals\EditDealDTO;
 use App\Services\AccountService;
 use App\Services\Deals\DealService;
 use App\Services\Deals\DealsListService;
-use App\Services\Deals\DealStatus;
 use App\Services\Deals\DealType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -52,21 +51,7 @@ class DealsController extends AbstractController
             throw $this->createNotFoundException('No account found for id ' . $accountId);
         }
 
-        $deal = new Deal(
-            $user,
-            $account,
-            $dto->ticker,
-            $dto->stockMarket,
-            DealStatus::Active,
-            $dto->isShort ? DealType::Short : DealType::Long,
-            $dto->quantity,
-            $dto->buyPrice,
-            $dto->targetPrice
-        );
-
-        $this->em->persist($deal);
-        $this->em->flush();
-
+        $this->dealService->addDeal($account, $user, $dto);
         return $this->json(['success' => true]);
     }
 
