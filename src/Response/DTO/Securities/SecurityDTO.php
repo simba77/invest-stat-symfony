@@ -13,9 +13,10 @@ class SecurityDTO
         public string $shortName,
         public string $stockMarket,
         public float $price,
-        public int $lotSize,
+        public int | float $lotSize,
         public string $currency,
         public SecurityTypeEnum $securityType,
+        public float $bondAccumulatedCoupon = 0,
     ) {
     }
 }

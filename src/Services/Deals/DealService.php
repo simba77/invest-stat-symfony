@@ -135,8 +135,7 @@ class DealService
             if ($security->securityType === SecurityTypeEnum::Share) {
                 $dealSum = $dealRequestDTO->buyPrice * $dealRequestDTO->quantity;
             } elseif ($security->securityType === SecurityTypeEnum::Bond) {
-                // TODO: Change it
-                $dealSum = 0;
+                $dealSum = ($security->lotSize * $dealRequestDTO->buyPrice / 100 * $dealRequestDTO->quantity) + ($security->bondAccumulatedCoupon * $dealRequestDTO->quantity);
             } elseif ($security->securityType === SecurityTypeEnum::Future) {
                 // TODO: Change it
                 $dealSum = 0;
@@ -215,8 +214,7 @@ class DealService
         if ($securityDTO->securityType === SecurityTypeEnum::Share) {
             return $dealRequestDTO->price * $dealRequestDTO->quantity;
         } elseif ($securityDTO->securityType === SecurityTypeEnum::Bond) {
-            // TODO: Change it
-            return 0;
+            return ($securityDTO->lotSize * $dealRequestDTO->price / 100 * $dealRequestDTO->quantity) + ($securityDTO->bondAccumulatedCoupon * $dealRequestDTO->quantity);
         } elseif ($securityDTO->securityType === SecurityTypeEnum::Future) {
             // TODO: Change it
             return 0;

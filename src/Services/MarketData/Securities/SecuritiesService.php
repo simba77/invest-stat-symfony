@@ -35,13 +35,14 @@ class SecuritiesService
         $bond = $this->entityManager->getRepository(Bond::class)->findOneBy(['ticker' => $ticker]);
         if ($bond) {
             return new SecurityDTO(
-                ticker:       $bond->getTicker(),
-                shortName:    $bond->getShortName(),
-                stockMarket:  $bond->getStockMarket(),
-                price:        $bond->getPrice() ?? 0,
-                lotSize:      1,
-                currency:     $bond->getCurrency(),
-                securityType: SecurityTypeEnum::Bond,
+                ticker:                $bond->getTicker(),
+                shortName:             $bond->getShortName(),
+                stockMarket:           $bond->getStockMarket(),
+                price:                 $bond->getPrice() ?? 0,
+                lotSize:               $bond->getLotSize(),
+                currency:              $bond->getCurrency(),
+                securityType:          SecurityTypeEnum::Bond,
+                bondAccumulatedCoupon: $bond->getCouponAccumulated(),
             );
         }
 
@@ -79,13 +80,14 @@ class SecuritiesService
         $bond = $this->entityManager->getRepository(Bond::class)->findOneBy(['ticker' => $ticker, 'stockMarket' => $stockMarket]);
         if ($bond) {
             return new SecurityDTO(
-                ticker:       $bond->getTicker(),
-                shortName:    $bond->getShortName(),
-                stockMarket:  $bond->getStockMarket(),
-                price:        $bond->getPrice() ?? 0,
-                lotSize:      1,
-                currency:     $bond->getCurrency(),
-                securityType: SecurityTypeEnum::Bond,
+                ticker:                $bond->getTicker(),
+                shortName:             $bond->getShortName(),
+                stockMarket:           $bond->getStockMarket(),
+                price:                 $bond->getPrice() ?? 0,
+                lotSize:               $bond->getLotSize(),
+                currency:              $bond->getCurrency(),
+                securityType:          SecurityTypeEnum::Bond,
+                bondAccumulatedCoupon: $bond->getCouponAccumulated(),
             );
         }
 
