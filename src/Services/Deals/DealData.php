@@ -20,6 +20,9 @@ class DealData
      *     futurePrice?: string,
      *     futureStepPrice?: string,
      *     futureLotSize?: string,
+     *     shareCurrency?: string,
+     *     futureCurrency?: string,
+     *     bondCurrency?: string,
      * } $deal
      */
     public function __construct(
@@ -161,7 +164,7 @@ class DealData
 
     public function getCurrencyName(): string
     {
-        $currency = $deal['shareCurrency'] ?? $deal['bondCurrency'] ?? $deal['futureCurrency'] ?? 'RUB';
+        $currency = $this->deal['shareCurrency'] ?? $this->deal['bondCurrency'] ?? $this->deal['futureCurrency'] ?? 'RUB';
 
         if ($currency === 'RUB') {
             return '₽';

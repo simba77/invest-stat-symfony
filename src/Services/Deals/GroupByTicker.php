@@ -56,7 +56,7 @@ class GroupByTicker
             fullTargetPrice:     $fullTargetPrice,
             profit:              $profit,
             profitPercent:       round($profit / $fullBuyPrice * 100, 2),
-            commission:          $commission,
+            commission:          round($commission, 2),
             targetProfit:        round($fullTargetProfit / $quantity, 4),
             fullTargetProfit:    $fullTargetProfit,
             targetProfitPercent: round($fullTargetProfit / $fullBuyPrice * 100, 2),
