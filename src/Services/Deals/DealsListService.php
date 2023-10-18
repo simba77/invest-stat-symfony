@@ -8,6 +8,7 @@ use App\Entity\Account;
 use App\Entity\User;
 use App\Repository\DealRepository;
 use App\Services\AccountCalculator;
+use App\Services\MarketData\Currencies\CurrencyService;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class DealsListService
@@ -16,6 +17,7 @@ class DealsListService
         private readonly DealRepository $dealRepository,
         private readonly PropertyAccessorInterface $propertyAccess,
         private readonly AccountCalculator $accountCalculator,
+        private readonly CurrencyService $currencyService,
     ) {
     }
 
@@ -44,7 +46,7 @@ class DealsListService
 
             $ticker = $deal['deal']->getTicker();
 
-            $dealData = new DealData($deal, $account);
+            $dealData = new DealData($deal, $account, $this->currencyService);
 
             /** @var ?GroupByTicker $group */
             $group = $this->propertyAccess->getValue($result, '[' . $status['code'] . '][' . $instrumentType['code'] . '][' . $currency['code'] . '][' . $ticker . ']');

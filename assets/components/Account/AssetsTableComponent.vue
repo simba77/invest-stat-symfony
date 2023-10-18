@@ -76,16 +76,16 @@ const dealsGroup = useDealsGroup()
       <td></td>
       <td>
         <div v-if="!summary.isBaseCurrency">{{ helpers.formatPrice(summary.buyPrice) }} $</div>
-        <div>{{ helpers.formatPrice(summary.buyPriceConverted) }} ₽</div>
+        <div>{{ helpers.formatPrice(summary.buyPriceInBaseCurrency) }} ₽</div>
       </td>
       <td>
         <div v-if="!summary.isBaseCurrency">{{ helpers.formatPrice(summary.currentPrice) }} $</div>
-        <div>{{ helpers.formatPrice(summary.currentPriceConverted) }} ₽</div>
+        <div>{{ helpers.formatPrice(summary.currentPriceInBaseCurrency) }} ₽</div>
       </td>
       <td></td>
       <td :class="[summary.profit > 0 ? 'text-green-600' : 'text-red-700']">
         <div v-if="!summary.isBaseCurrency">{{ helpers.formatPrice(summary.profit) }} $</div>
-        <div>{{ helpers.formatPrice(summary.profitConverted) }} ₽</div>
+        <div>{{ helpers.formatPrice(summary.profitInBaseCurrency) }} ₽</div>
         <div class="text-xs">({{ summary.profitPercent }}%)</div>
       </td>
       <td></td>

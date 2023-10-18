@@ -76,13 +76,13 @@ export interface Deal {
 
 export interface GroupSummary {
   buyPrice: number
+  buyPriceInBaseCurrency: number
   currentPrice: number
+  currentPriceInBaseCurrency: number
   profit: number
+  profitInBaseCurrency: number
   profitPercent: number
   isBaseCurrency: boolean
-  buyPriceConverted: number
-  currentPriceConverted: number
-  profitConverted: number
 }
 
 export interface AccountData {

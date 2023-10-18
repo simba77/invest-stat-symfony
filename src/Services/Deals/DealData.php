@@ -6,6 +6,7 @@ namespace App\Services\Deals;
 
 use App\Entity\Account;
 use App\Entity\Deal;
+use App\Services\MarketData\Currencies\CurrencyService;
 
 class DealData
 {
@@ -28,6 +29,7 @@ class DealData
     public function __construct(
         private readonly array $deal,
         private readonly Account $account,
+        private readonly CurrencyService $currencyService,
     ) {
     }
 
@@ -162,6 +164,11 @@ class DealData
         return round($this->getFullTargetProfit() / $this->getFullBuyPrice() * 100, 2);
     }
 
+    public function getCurrency(): string
+    {
+        return $this->deal['shareCurrency'] ?? $this->deal['bondCurrency'] ?? $this->deal['futureCurrency'] ?? 'RUB';
+    }
+
     public function getCurrencyName(): string
     {
         $currency = $this->deal['shareCurrency'] ?? $this->deal['bondCurrency'] ?? $this->deal['futureCurrency'] ?? 'RUB';
@@ -190,5 +197,39 @@ class DealData
     public function getUpdatedAt(): ?string
     {
         return $this->deal['deal']->updatedAt()?->format('d.m.Y H:i');
+    }
+
+    public function getBuyPriceInBaseCurrency(): float
+    {
+        if ($this->getCurrency() === 'RUB') {
+            return $this->getBuyPrice();
+        }
+        return $this->getBuyPrice() * $this->currencyService->getUSDRUBRate();
+    }
+
+    public function getFullBuyPriceInBaseCurrency(): float
+    {
+        return $this->getBuyPriceInBaseCurrency() * $this->getQuantity();
+    }
+
+    public function getCurrentPriceInBaseCurrency(): float
+    {
+        if ($this->getCurrency() === 'RUB') {
+            return $this->getCurrentPrice();
+        }
+        return $this->getCurrentPrice() * $this->currencyService->getUSDRUBRate();
+    }
+
+    public function getFullCurrentPriceInBaseCurrency(): float
+    {
+        return $this->getCurrentPriceInBaseCurrency() * $this->getQuantity();
+    }
+
+    public function getProfitInBaseCurrency(): float | int
+    {
+        if ($this->getCurrency() === 'RUB') {
+            return $this->getProfit();
+        }
+        return $this->getProfit() * $this->currencyService->getUSDRUBRate();
     }
 }
