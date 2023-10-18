@@ -115,4 +115,17 @@ class DealRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getTickersByStockMarket(string $stockMarket)
+    {
+        return $this->createQueryBuilder('d')
+            ->select('d.ticker')
+            ->where("d.stockMarket = :stock_market")
+            ->andWhere("d.status != :status")
+            ->groupBy('d.ticker')
+            ->setParameter('stock_market', $stockMarket)
+            ->setParameter('status', DealStatus::Closed)
+            ->getQuery()
+            ->getResult();
+    }
 }
