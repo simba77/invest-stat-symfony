@@ -30,6 +30,7 @@ class GroupByTicker
         $quantity = 0;
         $fullBuyPrice = 0;
         $fullCurrentPrice = 0;
+        $fullCurrentPriceInBaseCurrency = 0;
         $fullTargetPrice = 0;
         $profit = 0;
         $fullTargetProfit = 0;
@@ -38,6 +39,7 @@ class GroupByTicker
             $quantity += $deal->getQuantity();
             $fullBuyPrice += $deal->getFullBuyPrice();
             $fullCurrentPrice += $deal->getFullCurrentPrice();
+            $fullCurrentPriceInBaseCurrency += $deal->getFullCurrentPriceInBaseCurrency();
             $fullTargetPrice += $deal->getFullTargetPrice();
             $profit += $deal->getProfit();
             $commission += $deal->getCommission();
@@ -60,7 +62,7 @@ class GroupByTicker
             targetProfit:        round($fullTargetProfit / $quantity, 4),
             fullTargetProfit:    $fullTargetProfit,
             targetProfitPercent: round($fullTargetProfit / $fullBuyPrice * 100, 2),
-            percent:             round($fullCurrentPrice / $this->accountValue * 100, 2),
+            percent:             round($fullCurrentPriceInBaseCurrency / $this->accountValue * 100, 2),
             currency:            $firstDeal->getCurrencyName(),
             isShort:             $firstDeal->getType() === DealType::Short,
             isBlocked:           $firstDeal->getStatus() === DealStatus::Blocked,
