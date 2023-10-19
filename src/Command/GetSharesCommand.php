@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Entity\Share;
+use App\Services\AccountCalculator;
 use App\Services\MarketData\Securities\MoexSharesProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -22,6 +23,7 @@ class GetSharesCommand extends Command
     public function __construct(
         private readonly MoexSharesProvider $sharesProvider,
         private readonly EntityManagerInterface $em,
+        private readonly AccountCalculator $accountCalculator
     ) {
         parent::__construct();
     }
@@ -56,6 +58,8 @@ class GetSharesCommand extends Command
             $this->em->persist($share);
             $this->em->flush();
         }
+
+        $this->accountCalculator->recalculateBalanceForAllAccounts();
 
         $io->success('Success');
 

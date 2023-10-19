@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Entity\CurrencyRate;
+use App\Services\AccountCalculator;
 use App\Services\MarketData\Currencies\CurrencyProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -22,6 +23,7 @@ class GetCurrencyRatesCommand extends Command
     public function __construct(
         private readonly CurrencyProviderInterface $currencyProvider,
         private readonly EntityManagerInterface $em,
+        private readonly AccountCalculator $accountCalculator
     ) {
         parent::__construct();
     }
@@ -42,6 +44,7 @@ class GetCurrencyRatesCommand extends Command
             $this->em->flush();
         }
 
+        $this->accountCalculator->recalculateBalanceForAllAccounts();
 
         $io->success('Success');
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Entity\Future;
+use App\Services\AccountCalculator;
 use App\Services\MarketData\Securities\MoexFuturesProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -22,6 +23,7 @@ class GetFuturesCommand extends Command
     public function __construct(
         private readonly MoexFuturesProvider $futuresProvider,
         private readonly EntityManagerInterface $em,
+        private readonly AccountCalculator $accountCalculator
     ) {
         parent::__construct();
     }
@@ -56,6 +58,8 @@ class GetFuturesCommand extends Command
             $this->em->persist($future);
             $this->em->flush();
         }
+
+        $this->accountCalculator->recalculateBalanceForAllAccounts();
 
         $io->success('Success');
 

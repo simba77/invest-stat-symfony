@@ -7,6 +7,7 @@ namespace App\Command;
 use App\Entity\Deal;
 use App\Entity\Share;
 use App\Http\InvestCabHttpClient;
+use App\Services\AccountCalculator;
 use App\Services\MarketData\Securities\ShareTypeEnum;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -25,7 +26,8 @@ class GetSpbSharesCommand extends Command
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly InvestCabHttpClient $httpClient,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly AccountCalculator $accountCalculator
     ) {
         parent::__construct();
     }
@@ -70,6 +72,8 @@ class GetSpbSharesCommand extends Command
                 $this->logger->warning($throwable->getMessage(), ['e' => $throwable]);
             }
         }
+
+        $this->accountCalculator->recalculateBalanceForAllAccounts();
 
         $io->success('Success');
         return Command::SUCCESS;

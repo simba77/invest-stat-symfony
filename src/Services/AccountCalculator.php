@@ -41,9 +41,9 @@ class AccountCalculator
         $fullBuyPrice = 0;
         $fullCurrentPrice = 0;
         foreach ($deals as $deal) {
-            $dealData = new DealData($deal, $account);
-            $fullBuyPrice += $dealData->getFullBuyPrice();
-            $fullCurrentPrice += $dealData->getFullCurrentPrice();
+            $dealData = new DealData($deal, $account, $this->currencyService);
+            $fullBuyPrice += $dealData->getFullBuyPriceInBaseCurrency();
+            $fullCurrentPrice += $dealData->getFullCurrentPriceInBaseCurrency();
         }
         return [
             'fullBuyPrice'     => $fullBuyPrice,
