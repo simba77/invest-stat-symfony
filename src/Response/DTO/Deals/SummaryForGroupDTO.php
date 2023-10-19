@@ -15,9 +15,6 @@ class SummaryForGroupDTO
         public float $profitInBaseCurrency,
         public float $profitPercent,
         public bool $isBaseCurrency,
-        public float $buyPriceConverted,
-        public float $currentPriceConverted,
-        public float $profitConverted,
     ) {
     }
 }

@@ -46,9 +46,6 @@ class SummaryForGroup
                         profitInBaseCurrency:       $profitInBaseCurrency,
                         profitPercent:              round($profit / $buyPrice * 100, 2),
                         isBaseCurrency:             $currency === 'RUB',
-                        buyPriceConverted:          $buyPrice,
-                        currentPriceConverted:      $currentPrice,
-                        profitConverted:            $profit
                     );
                 }
             }
