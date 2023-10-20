@@ -37,11 +37,17 @@ export default {
 
 <template>
   <page-component title="Dashboard">
-    <div v-if="loading">Loading Data...</div>
+    <div v-if="loading">
+      Loading Data...
+    </div>
     <template v-else>
       <div class="flex justify-between">
-        <div class="text-xl mb-3">Investment Result</div>
-        <div class="text-xl mb-3">1 USD = {{ data.usd }}₽</div>
+        <div class="text-xl mb-3">
+          Investment Result
+        </div>
+        <div class="text-xl mb-3">
+          1 USD = {{ data.usd }}₽
+        </div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
         <stat-card
@@ -51,7 +57,7 @@ export default {
           :help-text="card.helpText ?? null"
           :percent="card.percent ?? null"
           :total="card.total"
-        ></stat-card>
+        />
       </div>
     </template>
   </page-component>

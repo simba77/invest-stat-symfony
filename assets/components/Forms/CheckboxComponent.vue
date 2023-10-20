@@ -1,30 +1,11 @@
-<template>
-  <div>
-    <div class="flex items-center">
-      <input
-        :id="elementId"
-        :name="name"
-        :disabled="disabled"
-        :required="required"
-        :readonly="readonly"
-        @change="updateModelValue"
-        v-model="value"
-        :class="[hasError ? 'is-invalid' : '']"
-        class="form-checkbox"
-        type="checkbox"
-      >
-      <label class="form-checkbox-label" :for="elementId" v-text="label"></label>
-    </div>
-    <span class="invalid-feedback mt-0" v-if="hasError">{{ error }}</span>
-    <div class="small text-secondary opacity-75" v-if="help">{{ help }}</div>
-  </div>
-</template>
-
 <script lang="ts">
 export default {
   name: "CheckboxComponent",
   props: {
-    modelValue: [String, Number, Boolean],
+    modelValue: {
+      type: [String, Number, Boolean],
+      default: ''
+    },
     label: {
       type: String,
       default: '',
@@ -77,3 +58,37 @@ export default {
   }
 }
 </script>
+
+<template>
+  <div>
+    <div class="flex items-center">
+      <input
+        :id="elementId"
+        v-model="value"
+        :name="name"
+        :disabled="disabled"
+        :required="required"
+        :readonly="readonly"
+        :class="[hasError ? 'is-invalid' : '']"
+        class="form-checkbox"
+        type="checkbox"
+        @change="updateModelValue"
+      >
+      <label
+        class="form-checkbox-label"
+        :for="elementId"
+        v-text="label"
+      />
+    </div>
+    <span
+      v-if="hasError"
+      class="invalid-feedback mt-0"
+    >{{ error }}</span>
+    <div
+      v-if="help"
+      class="small text-secondary opacity-75"
+    >
+      {{ help }}
+    </div>
+  </div>
+</template>

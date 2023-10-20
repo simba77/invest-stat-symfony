@@ -1,6 +1,29 @@
+<script setup lang="ts">
+import InputText from "@/components/Forms/InputText.vue";
+import CheckboxComponent from "@/components/Forms/CheckboxComponent.vue";
+import {reactive} from "vue";
+import InputSelect from '@/components/Forms/InputSelect.vue'
+
+const props = defineProps<{
+  modelValue: object,
+  errors?: object | []
+}>()
+
+const emits = defineEmits(['update:modelValue'])
+const fields = reactive(props.modelValue);
+
+function updated() {
+  emits('update:modelValue', fields);
+}
+</script>
+
 <template>
   <div>
-    <div v-for="(item, index) in fields" :key="index" class="mb-3">
+    <div
+      v-for="(item, index) in fields"
+      :key="index"
+      class="mb-3"
+    >
       <template v-if="item && item.type && !item.isHidden">
         <div v-if="item.type === 'text' || item.type === 'password' || item.type === 'number' || item.type === 'date'">
           <!-- Text or number input -->
@@ -50,21 +73,3 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
-import InputText from "@/components/Forms/InputText.vue";
-import CheckboxComponent from "@/components/Forms/CheckboxComponent.vue";
-import {reactive} from "vue";
-import InputSelect from '@/components/Forms/InputSelect.vue'
-
-const props = defineProps<{
-  modelValue: object,
-  errors?: object | []
-}>()
-
-const emits = defineEmits(['update:modelValue'])
-const fields = reactive(props.modelValue);
-
-function updated() {
-  emits('update:modelValue', fields);
-}
-</script>

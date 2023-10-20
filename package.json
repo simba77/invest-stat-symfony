@@ -2,7 +2,9 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "lint": "eslint ./assets --ext .js,.ts,.vue",
+    "lint-fix": "eslint ./assets --ext .js,.ts,.vue --fix"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.1",

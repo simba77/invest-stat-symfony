@@ -1,19 +1,3 @@
-<template>
-  <page-component title="Analytics">
-    <template v-if="!loading">
-      <div class="w-full overflow-x-auto mb-4">
-        <template v-if="Object.keys(assets).length < 1">
-          <div class="text-gray-500 text-sm">The List is Empty</div>
-        </template>
-        <template v-else>
-          <!-- Выводим таблицу с активами -->
-          <assets-table-component v-model="assets"></assets-table-component>
-        </template>
-      </div>
-    </template>
-    <preloader-component v-else></preloader-component>
-  </page-component>
-</template>
 <script setup lang="ts">
 import PageComponent from '@/components/PageComponent.vue'
 import useAccounts from '@/composable/useAccounts'
@@ -31,3 +15,22 @@ getAssets()
 provide('accounts', {getAccounts: getAccount})
 
 </script>
+
+<template>
+  <page-component title="Analytics">
+    <template v-if="!loading">
+      <div class="w-full overflow-x-auto mb-4">
+        <template v-if="Object.keys(assets).length < 1">
+          <div class="text-gray-500 text-sm">
+            The List is Empty
+          </div>
+        </template>
+        <template v-else>
+          <!-- Выводим таблицу с активами -->
+          <assets-table-component v-model="assets" />
+        </template>
+      </div>
+    </template>
+    <preloader-component v-else />
+  </page-component>
+</template>

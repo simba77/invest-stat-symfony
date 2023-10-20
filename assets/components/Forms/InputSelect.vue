@@ -1,28 +1,11 @@
-<template>
-  <div>
-    <label :for="elementId" class="block text-sm font-medium text-gray-700">{{ label }}</label>
-    <select
-      :required="required"
-      :disabled="disabled"
-      :name="name"
-      :class="[errorMessage ? 'border-red-500' : '', 'form-select rounded w-full mt-1']"
-      :id="elementId"
-      v-model="value"
-      @change="updateModelValue"
-    >
-      <option v-for="(option, index) in options" :key="index" :value="getValue(option)">{{ getName(option) }}</option>
-    </select>
-    <div class="mt-1 text-sm text-gray-500" v-if="help" v-html="help"></div>
-    <div class="mt-1 text-sm text-red-500" v-if="errorMessage" v-html="errorMessage"></div>
-  </div>
-</template>
-
 <script lang="ts">
 export default {
   name: "InputSelect",
-  emits: ['update:modelValue'],
   props: {
-    modelValue: String,
+    modelValue: {
+      type: String,
+      default: ''
+    },
     label: {
       type: String,
       default: '',
@@ -64,9 +47,11 @@ export default {
       default: 'value',
     },
     options: {
+      type: Array,
       default: () => [],
     },
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       value: this.modelValue,
@@ -97,3 +82,40 @@ export default {
   }
 }
 </script>
+
+<template>
+  <div>
+    <label
+      :for="elementId"
+      class="block text-sm font-medium text-gray-700"
+    >{{ label }}</label>
+    <select
+      :id="elementId"
+      v-model="value"
+      :required="required"
+      :disabled="disabled"
+      :name="name"
+      :class="[errorMessage ? 'border-red-500' : '', 'form-select rounded w-full mt-1']"
+      @change="updateModelValue"
+    >
+      <option
+        v-for="(option, index) in options"
+        :key="index"
+        :value="getValue(option)"
+      >
+        {{ getName(option) }}
+      </option>
+    </select>
+    <div
+      v-if="help"
+      class="mt-1 text-sm text-gray-500"
+      v-html="help"
+    />
+    <div
+      v-if="errorMessage"
+      class="mt-1 text-sm text-red-500"
+      v-html="errorMessage"
+    />
+  </div>
+</template>
+

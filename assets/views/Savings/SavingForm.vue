@@ -21,17 +21,39 @@ function submitForm() {
 <template>
   <page-component title="Add Deposit">
     <div class="card">
-      <form class="space-y-6 w-full md:w-2/3 mx-auto" @submit.prevent="submitForm">
+      <form
+        class="space-y-6 w-full md:w-2/3 mx-auto"
+        @submit.prevent="submitForm"
+      >
         <div>
-          <h3 class="text-lg font-medium text-gray-900">Deposit</h3>
+          <h3 class="text-lg font-medium text-gray-900">
+            Deposit
+          </h3>
         </div>
-        <preloader-component v-if="saving.loadingForm.value"></preloader-component>
-        <div v-else class="w-full md:w-2/4">
-          <form-component v-model="saving.form.value" :errors="saving.formErrors.value"/>
+        <preloader-component v-if="saving.loadingForm.value" />
+        <div
+          v-else
+          class="w-full md:w-2/4"
+        >
+          <form-component
+            v-model="saving.form.value"
+            :errors="saving.formErrors.value"
+          />
         </div>
-        <div class="border-b"></div>
-        <button type="submit" class="btn btn-primary" :disabled="saving.creating.value">Save</button>
-        <router-link :to="{name: 'Savings'}" class="btn btn-secondary ml-3">Back</router-link>
+        <div class="border-b" />
+        <button
+          type="submit"
+          class="btn btn-primary"
+          :disabled="saving.creating.value"
+        >
+          Save
+        </button>
+        <router-link
+          :to="{name: 'Savings'}"
+          class="btn btn-secondary ml-3"
+        >
+          Back
+        </router-link>
       </form>
     </div>
   </page-component>

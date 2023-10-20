@@ -1,51 +1,3 @@
-<template>
-  <page-component title="Add Deposit">
-    <div class="card">
-      <form class="space-y-6 w-full md:w-2/3 mx-auto" action="#" method="POST" @submit.prevent="submitForm">
-        <div>
-          <h3 class="text-lg font-medium text-gray-900">Deposit</h3>
-          <p class="mt-1 text-sm text-gray-600">Enter the date and amount of expense</p>
-        </div>
-        <div class="w-full md:w-2/4">
-          <input-text
-            v-model="form.date"
-            :key="componentKey"
-            :error="errors"
-            type="date"
-            name="date"
-            label="Date"
-            placeholder="Date"
-          />
-          <input-text
-            type="number"
-            class="mt-3"
-            v-model.number="form.sum"
-            :key="componentKey"
-            :error="errors"
-            name="sum"
-            label="Amount of Deposit"
-            placeholder="Amount of Deposit"
-          />
-          <input-select
-            class="mt-3"
-            label="Account"
-            name="account"
-            placeholder="Select Account"
-            field-value="id"
-            :error="errors"
-            v-model.number="form.account"
-            :key="componentKey"
-            :options="accounts"
-          />
-        </div>
-        <div class="border-b"></div>
-        <button type="submit" class="btn btn-primary" :disabled="loading">Save</button>
-        <router-link :to="{name: 'Investments'}" class="btn btn-secondary ml-3">Back</router-link>
-      </form>
-    </div>
-  </page-component>
-</template>
-
 <script lang="ts">
 import PageComponent from "@/components/PageComponent.vue";
 import InputText from "@/components/Forms/InputText.vue";
@@ -75,7 +27,7 @@ export default {
   methods: {
     submitForm() {
       this.loading = true;
-      let requestUrl = this.$route.params.id > 0 ? '/api/investments/edit/' + this.$route.params.id : '/api/investments/create'
+      const requestUrl = this.$route.params.id > 0 ? '/api/investments/edit/' + this.$route.params.id : '/api/investments/create'
       axios.post(requestUrl, this.form)
         .then(() => {
           this.$router.push({name: 'Investments'});
@@ -111,3 +63,71 @@ export default {
   }
 }
 </script>
+
+<template>
+  <page-component title="Add Deposit">
+    <div class="card">
+      <form
+        class="space-y-6 w-full md:w-2/3 mx-auto"
+        action="#"
+        method="POST"
+        @submit.prevent="submitForm"
+      >
+        <div>
+          <h3 class="text-lg font-medium text-gray-900">
+            Deposit
+          </h3>
+          <p class="mt-1 text-sm text-gray-600">
+            Enter the date and amount of expense
+          </p>
+        </div>
+        <div class="w-full md:w-2/4">
+          <input-text
+            :key="componentKey"
+            v-model="form.date"
+            :error="errors"
+            type="date"
+            name="date"
+            label="Date"
+            placeholder="Date"
+          />
+          <input-text
+            :key="componentKey"
+            v-model.number="form.sum"
+            type="number"
+            class="mt-3"
+            :error="errors"
+            name="sum"
+            label="Amount of Deposit"
+            placeholder="Amount of Deposit"
+          />
+          <input-select
+            :key="componentKey"
+            v-model.number="form.account"
+            class="mt-3"
+            label="Account"
+            name="account"
+            placeholder="Select Account"
+            field-value="id"
+            :error="errors"
+            :options="accounts"
+          />
+        </div>
+        <div class="border-b" />
+        <button
+          type="submit"
+          class="btn btn-primary"
+          :disabled="loading"
+        >
+          Save
+        </button>
+        <router-link
+          :to="{name: 'Investments'}"
+          class="btn btn-secondary ml-3"
+        >
+          Back
+        </router-link>
+      </form>
+    </div>
+  </page-component>
+</template>

@@ -84,37 +84,49 @@ onMounted(() => {
 <template>
   <page-component title="Add Asset">
     <div class="card">
-      <form class="space-y-6 w-full md:w-2/3 mx-auto" action="#" method="POST" @submit.prevent="submitForm">
+      <form
+        class="space-y-6 w-full md:w-2/3 mx-auto"
+        action="#"
+        method="POST"
+        @submit.prevent="submitForm"
+      >
         <div>
-          <h3 class="text-lg font-medium text-gray-900">Asset</h3>
-          <p class="mt-1 text-sm text-gray-600">Enter the ticker and other params of asset</p>
+          <h3 class="text-lg font-medium text-gray-900">
+            Asset
+          </h3>
+          <p class="mt-1 text-sm text-gray-600">
+            Enter the ticker and other params of asset
+          </p>
         </div>
         <div class="w-full md:w-2/4">
           <checkbox-component
-            label="Short"
-            name="short"
             :key="componentKey"
             v-model="form.isShort"
+            label="Short"
+            name="short"
           />
 
           <input-text
-            v-model="form.ticker"
             :key="tickerComponentKey"
+            v-model="form.ticker"
             :error="errors"
             class="mt-3"
             name="name"
             label="Ticker"
-            @update:modelValue="getTickerData"
             placeholder="Enter a ticker"
+            @update:model-value="getTickerData"
           />
 
-          <div v-if="tickerData" class="mt-2">
+          <div
+            v-if="tickerData"
+            class="mt-2"
+          >
             {{ tickerData.shortName }}
           </div>
 
           <input-select
-            v-model="form.stockMarket"
             :key="componentKey"
+            v-model="form.stockMarket"
             :error="errors"
             :options="[{value: 'SPB', name: 'SPB'}, {value: 'MOEX', name: 'MOEX'}]"
             name="stock_market"
@@ -122,8 +134,8 @@ onMounted(() => {
             label="Stock Market"
           />
           <input-text
-            v-model.number="form.quantity"
             :key="componentKey"
+            v-model.number="form.quantity"
             :error="errors"
             type="number"
             class="mt-3"
@@ -132,8 +144,8 @@ onMounted(() => {
             placeholder="Quantity"
           />
           <input-text
-            v-model.number="form.buyPrice"
             :key="componentKey"
+            v-model.number="form.buyPrice"
             :error="errors"
             type="number"
             class="mt-3"
@@ -142,8 +154,8 @@ onMounted(() => {
             placeholder="Buy Price"
           />
           <input-text
-            v-model.number="form.targetPrice"
             :key="componentKey"
+            v-model.number="form.targetPrice"
             :error="errors"
             type="number"
             class="mt-3"
@@ -152,9 +164,20 @@ onMounted(() => {
             placeholder="Target Price"
           />
         </div>
-        <div class="border-b"></div>
-        <button type="submit" class="btn btn-primary" :disabled="loading">Save</button>
-        <router-link :to="{name: 'AccountDetail', params: {id: $route.params.account}}" class="btn btn-secondary ml-3">Back</router-link>
+        <div class="border-b" />
+        <button
+          type="submit"
+          class="btn btn-primary"
+          :disabled="loading"
+        >
+          Save
+        </button>
+        <router-link
+          :to="{name: 'AccountDetail', params: {id: $route.params.account}}"
+          class="btn btn-secondary ml-3"
+        >
+          Back
+        </router-link>
       </form>
     </div>
   </page-component>

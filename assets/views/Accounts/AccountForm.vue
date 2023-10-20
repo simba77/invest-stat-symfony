@@ -1,82 +1,3 @@
-<template>
-  <page-component title="Add Account">
-    <div class="card">
-      <form class="space-y-6 w-full md:w-2/3 mx-auto" action="#" method="POST" @submit.prevent="submitForm">
-        <div>
-          <h3 class="text-lg font-medium text-gray-900">Account</h3>
-          <p class="mt-1 text-sm text-gray-600">Enter the name of the account to group your assets</p>
-        </div>
-        <div class="w-full md:w-2/4">
-          <input-text
-            v-model="form.name"
-            :key="componentKey"
-            :error="errors"
-            class="mb-3"
-            name="name"
-            label="Account Name"
-            placeholder="Enter an Account Name"
-          />
-          <input-text
-            v-model.number="form.balance"
-            :key="componentKey"
-            :error="errors"
-            class="mb-3"
-            type="number"
-            name="balance"
-            label="Balance"
-            placeholder="Enter Balance"
-          />
-          <input-text
-            v-model.number="form.usdBalance"
-            :key="componentKey"
-            :error="errors"
-            class="mb-3"
-            type="number"
-            name="usd_balance"
-            label="USD Balance"
-            placeholder="Enter USD Balance"
-          />
-          <input-text
-            v-model.number="form.commission"
-            :key="componentKey"
-            :error="errors"
-            class="mb-3"
-            type="number"
-            name="commission"
-            label="Commission"
-            placeholder="Commission"
-          />
-
-          <input-text
-            v-model.number="form.futuresCommission"
-            :key="componentKey"
-            :error="errors"
-            class="mb-3"
-            type="number"
-            name="futures_commission"
-            label="Futures Commission"
-            placeholder="Futures Commission"
-          />
-
-          <input-text
-            v-model.number="form.sort"
-            :key="componentKey"
-            :error="errors"
-            class="mb-3"
-            type="number"
-            name="sort"
-            label="Sort"
-            placeholder="Sort"
-          />
-        </div>
-        <div class="border-b"></div>
-        <button type="submit" class="btn btn-primary" :disabled="loading">Save</button>
-        <router-link :to="{name: 'Accounts'}" class="btn btn-secondary ml-3">Back</router-link>
-      </form>
-    </div>
-  </page-component>
-</template>
-
 <script lang="ts">
 import PageComponent from "@/components/PageComponent.vue";
 import InputText from "@/components/Forms/InputText.vue";
@@ -108,7 +29,7 @@ export default {
   methods: {
     submitForm() {
       this.loading = true;
-      let requestUrl = this.$route.params.id ? '/api/accounts/update/' + this.$route.params.id : '/api/accounts/create'
+      const requestUrl = this.$route.params.id ? '/api/accounts/update/' + this.$route.params.id : '/api/accounts/create'
       axios.post(requestUrl, this.form)
         .then(() => {
           this.$router.push({name: 'Accounts'});
@@ -142,3 +63,102 @@ export default {
   }
 }
 </script>
+
+<template>
+  <page-component title="Add Account">
+    <div class="card">
+      <form
+        class="space-y-6 w-full md:w-2/3 mx-auto"
+        action="#"
+        method="POST"
+        @submit.prevent="submitForm"
+      >
+        <div>
+          <h3 class="text-lg font-medium text-gray-900">
+            Account
+          </h3>
+          <p class="mt-1 text-sm text-gray-600">
+            Enter the name of the account to group your assets
+          </p>
+        </div>
+        <div class="w-full md:w-2/4">
+          <input-text
+            :key="componentKey"
+            v-model="form.name"
+            :error="errors"
+            class="mb-3"
+            name="name"
+            label="Account Name"
+            placeholder="Enter an Account Name"
+          />
+          <input-text
+            :key="componentKey"
+            v-model.number="form.balance"
+            :error="errors"
+            class="mb-3"
+            type="number"
+            name="balance"
+            label="Balance"
+            placeholder="Enter Balance"
+          />
+          <input-text
+            :key="componentKey"
+            v-model.number="form.usdBalance"
+            :error="errors"
+            class="mb-3"
+            type="number"
+            name="usd_balance"
+            label="USD Balance"
+            placeholder="Enter USD Balance"
+          />
+          <input-text
+            :key="componentKey"
+            v-model.number="form.commission"
+            :error="errors"
+            class="mb-3"
+            type="number"
+            name="commission"
+            label="Commission"
+            placeholder="Commission"
+          />
+
+          <input-text
+            :key="componentKey"
+            v-model.number="form.futuresCommission"
+            :error="errors"
+            class="mb-3"
+            type="number"
+            name="futures_commission"
+            label="Futures Commission"
+            placeholder="Futures Commission"
+          />
+
+          <input-text
+            :key="componentKey"
+            v-model.number="form.sort"
+            :error="errors"
+            class="mb-3"
+            type="number"
+            name="sort"
+            label="Sort"
+            placeholder="Sort"
+          />
+        </div>
+        <div class="border-b" />
+        <button
+          type="submit"
+          class="btn btn-primary"
+          :disabled="loading"
+        >
+          Save
+        </button>
+        <router-link
+          :to="{name: 'Accounts'}"
+          class="btn btn-secondary ml-3"
+        >
+          Back
+        </router-link>
+      </form>
+    </div>
+  </page-component>
+</template>
