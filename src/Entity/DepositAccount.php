@@ -40,6 +40,14 @@ class DepositAccount implements
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    public function __construct(
+        string $name,
+        User $user
+    ) {
+        $this->name = $name;
+        $this->user = $user;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
