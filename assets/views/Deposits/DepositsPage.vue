@@ -14,7 +14,7 @@ getDeposits()
 </script>
 
 <template>
-  <page-component title="Savings">
+  <page-component title="Deposits">
     <div class="mb-4">
       <router-link
         :to="{name: 'DepositCreate'}"

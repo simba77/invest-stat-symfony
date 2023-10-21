@@ -1,25 +1,31 @@
 <script setup lang="ts">
 import PageComponent from "@/components/PageComponent.vue"
 import {XCircleIcon, PencilIcon} from "@heroicons/vue/24/outline"
-import {useSavingAccounts} from '@/composable/useSavingAccounts'
+import {useDepositAccounts} from '@/composable/useDepositAccounts'
+import useAsync from "@/utils/use-async";
+import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
 
-const savingAccount = useSavingAccounts()
+const depositAccount = useDepositAccounts()
+const {loading, run: getAccounts} = useAsync(() => depositAccount.getAccounts())
 
-savingAccount.getAccounts()
-
+getAccounts()
 </script>
 
 <template>
-  <page-component title="Saving Accounts">
+  <page-component title="Deposit Accounts">
     <div class="mb-4">
       <router-link
-        :to="{name: 'SavingAccountsCreate'}"
+        :to="{name: 'DepositAccountsCreate'}"
         class="btn btn-primary"
       >
         Add Account
       </router-link>
     </div>
-    <table class="simple-table">
+    <preloader-component v-if="loading" />
+    <table
+      v-else
+      class="simple-table"
+    >
       <thead>
         <tr>
           <th>#</th>
@@ -31,7 +37,7 @@ savingAccount.getAccounts()
       </thead>
       <tbody>
         <tr
-          v-for="(item, index) in savingAccount.accounts.value.data"
+          v-for="(item, index) in depositAccount.accounts.value?.items"
           :key="index"
         >
           <td>{{ item.id }}</td>
@@ -41,14 +47,13 @@ savingAccount.getAccounts()
               <div class="flex justify-end items-center show-on-row-hover">
                 <router-link
                   class="text-gray-300 hover:text-gray-900 mr-3"
-                  :to="{name: 'SavingAccountsEdit', params: {id: item.id}}"
+                  :to="{name: 'DepositAccountsEdit', params: {id: item.id}}"
                 >
                   <pencil-icon class="h-5 w-5" />
                 </router-link>
                 <button
                   type="button"
                   class="text-gray-300 hover:text-red-500"
-                  @click="savingAccount.confirmDeletion(item, () => savingAccount.getAccounts())"
                 >
                   <x-circle-icon class="h-5 w-5" />
                 </button>
@@ -56,7 +61,7 @@ savingAccount.getAccounts()
             </template>
           </td>
         </tr>
-        <tr v-if="savingAccount.accounts.value.data?.length < 1">
+        <tr v-if="depositAccount.accounts?.value?.items?.length === 0">
           <td
             colspan="3"
             class="text-center"
@@ -69,7 +74,7 @@ savingAccount.getAccounts()
 
     <div class="mt-5">
       <router-link
-        :to="{name: 'Savings'}"
+        :to="{name: 'Deposits'}"
         class="btn btn-secondary"
       >
         Back

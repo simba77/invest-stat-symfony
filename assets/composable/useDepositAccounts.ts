@@ -1,17 +1,17 @@
 import {ref} from "vue";
 import axios from "axios";
 import useAsync from "@/utils/use-async";
-import {Deposit} from '@/models/depositAccount'
+import {DepositAccount} from '@/models/depositAccount'
 
-export const useDeposits = () => {
-  const deposits = ref<{ items: Deposit[] }>()
+export const useDepositAccounts = () => {
+  const accounts = ref<{ items: DepositAccount[] }>()
 
-  async function getDeposits() {
-    deposits.value = await axios.get('/api/deposits').then((response) => response.data);
+  async function getAccounts() {
+    accounts.value = await axios.get('/api/deposits/accounts').then((response) => response.data);
   }
 
-  async function deleteDeposit(id: number) {
-    await axios.post('/api/savings/delete/' + id);
+  async function deleteAccount(id: number) {
+    await axios.post('/api/savings/accounts/delete/' + id).then((response) => response.data);
   }
 
   // Форма создания/редактирования
@@ -21,7 +21,7 @@ export const useDeposits = () => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const {loading: creating, run: create} = useAsync(async (item: any, completeCallback?: (response: any) => void) => {
-    await axios.post('/api/savings/create/' + item.id, item)
+    await axios.post('/api/savings/accounts/create/' + item.id, item)
       .then((response) => {
         if (completeCallback) {
           completeCallback(response)
@@ -37,18 +37,18 @@ export const useDeposits = () => {
   })
 
   const {loading: loadingForm, run: loadForm} = useAsync(async (id: any) => {
-    form.value = await axios.get('/api/savings/create/' + id).then((response) => response.data)
+    form.value = await axios.get('/api/savings/accounts/create/' + id).then((response) => response.data)
   })
 
   return {
-    deposits,
+    accounts,
     creating,
     form,
     formErrors,
     loadingForm,
     create,
     loadForm,
-    getDeposits,
-    deleteDeposit
+    deleteAccount,
+    getAccounts
   }
 }

@@ -1,4 +1,4 @@
-export interface Deposits {
+export interface DepositAccount {
   id: number
   name: string
 }
