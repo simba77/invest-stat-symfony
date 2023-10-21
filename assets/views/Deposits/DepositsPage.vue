@@ -1,29 +1,46 @@
 <script setup lang="ts">
 import PageComponent from "@/components/PageComponent.vue"
-import {XCircleIcon, PencilIcon} from "@heroicons/vue/outline"
-import {useSavingAccounts} from '@/composable/useSavingAccounts'
+import {XCircleIcon, PencilIcon} from "@heroicons/vue/24/outline"
+import {useDeposits} from '@/composable/useDeposits'
+import helpers from '@/helpers'
+import useAsync from "@/utils/use-async";
+import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
 
-const savingAccount = useSavingAccounts()
+const deposits = useDeposits()
+const {loading, run: getDeposits} = useAsync(() => deposits.getDeposits())
 
-savingAccount.getAccounts()
+getDeposits()
 
 </script>
 
 <template>
-  <page-component title="Saving Accounts">
+  <page-component title="Savings">
     <div class="mb-4">
       <router-link
-        :to="{name: 'SavingAccountsCreate'}"
+        :to="{name: 'DepositCreate'}"
         class="btn btn-primary"
       >
-        Add Account
+        Add Deposit
+      </router-link>
+      <router-link
+        :to="{name: 'DepositAccounts'}"
+        class="btn btn-secondary ml-2"
+      >
+        Accounts
       </router-link>
     </div>
-    <table class="simple-table">
+    <preloader-component v-if="loading" />
+    <table
+      v-else
+      class="simple-table"
+    >
       <thead>
         <tr>
           <th>#</th>
-          <th>Name</th>
+          <th>Date</th>
+          <th>Sum</th>
+          <th>Type</th>
+          <th>Account</th>
           <th class="flex justify-end">
             Actions
           </th>
@@ -31,24 +48,26 @@ savingAccount.getAccounts()
       </thead>
       <tbody>
         <tr
-          v-for="(item, index) in savingAccount.accounts.value.data"
+          v-for="(item, index) in deposits.deposits.value?.items"
           :key="index"
         >
           <td>{{ item.id }}</td>
-          <td>{{ item.name }}</td>
+          <td>{{ item.date }}</td>
+          <td>{{ helpers.formatPrice(item.sum) }} ₽</td>
+          <td>{{ item.typeName }}</td>
+          <td>{{ item.accountName }}</td>
           <td class="table-actions">
             <template v-if="item.id">
               <div class="flex justify-end items-center show-on-row-hover">
                 <router-link
                   class="text-gray-300 hover:text-gray-900 mr-3"
-                  :to="{name: 'SavingAccountsEdit', params: {id: item.id}}"
+                  :to="{name: 'DepositEdit', params: {id: item.id}}"
                 >
                   <pencil-icon class="h-5 w-5" />
                 </router-link>
                 <button
                   type="button"
                   class="text-gray-300 hover:text-red-500"
-                  @click="savingAccount.confirmDeletion(item, () => savingAccount.getAccounts())"
                 >
                   <x-circle-icon class="h-5 w-5" />
                 </button>
@@ -56,9 +75,9 @@ savingAccount.getAccounts()
             </template>
           </td>
         </tr>
-        <tr v-if="savingAccount.accounts.value.data?.length < 1">
+        <tr v-if="deposits.deposits.value?.items?.length === 0">
           <td
-            colspan="3"
+            colspan="6"
             class="text-center"
           >
             The list is empty
@@ -66,15 +85,6 @@ savingAccount.getAccounts()
         </tr>
       </tbody>
     </table>
-
-    <div class="mt-5">
-      <router-link
-        :to="{name: 'Savings'}"
-        class="btn btn-secondary"
-      >
-        Back
-      </router-link>
-    </div>
   </page-component>
 </template>
 

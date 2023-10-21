@@ -145,54 +145,54 @@ const routes: Array<RouteRecordRaw> = [
 
   // Savings
   {
-    name: 'SavingAccounts',
-    path: '/savings/accounts',
+    name: 'DepositAccounts',
+    path: '/deposits/accounts',
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Savings/SavingAccountsPage.vue')
+    component: () => import('./views/Deposits/DepositAccountsPage.vue')
   },
   {
-    name: 'SavingAccountsCreate',
-    path: '/savings/accounts/create',
+    name: 'DepositAccountsCreate',
+    path: '/deposits/accounts/create',
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Savings/SavingAccountForm.vue')
+    component: () => import('./views/Deposits/DepositAccountForm.vue')
   },
   {
-    name: 'SavingAccountsEdit',
-    path: '/savings/accounts/edit/:id',
+    name: 'DepositAccountsEdit',
+    path: '/deposits/accounts/edit/:id',
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Savings/SavingAccountForm.vue')
+    component: () => import('./views/Deposits/DepositAccountForm.vue')
   },
 
   // Пополнения и списания с накопительных счетов
   {
-    name: 'Savings',
-    path: '/savings',
+    name: 'Deposits',
+    path: '/deposits',
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Savings/SavingsPage.vue')
+    component: () => import('./views/Deposits/DepositsPage.vue')
   },
   {
-    name: 'SavingCreate',
-    path: '/savings/create',
+    name: 'DepositCreate',
+    path: '/deposits/create',
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Savings/SavingForm.vue')
+    component: () => import('./views/Deposits/DepositForm.vue')
   },
   {
-    name: 'SavingEdit',
-    path: '/savings/edit/:id',
+    name: 'DepositEdit',
+    path: '/deposits/edit/:id',
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Savings/SavingForm.vue')
+    component: () => import('./views/Deposits/DepositForm.vue')
   },
 
   {

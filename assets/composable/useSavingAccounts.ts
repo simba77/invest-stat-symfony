@@ -3,10 +3,10 @@ import axios from "axios";
 import useAsync from "@/utils/use-async";
 import {useModal} from "@/composable/useModal";
 import ConfirmModal from "@/components/Modals/ConfirmModal.vue";
-import {SavingAccount} from '@/models/savingAccount'
+import {Deposits} from '@/models/deposits'
 
 export const useSavingAccounts = () => {
-  const accounts = ref<{ data: SavingAccount[] }>({data: []})
+  const accounts = ref<{ data: Deposits[] }>({data: []})
 
   async function getAccounts() {
     accounts.value = await axios.get('/api/savings/accounts').then((response) => response.data);

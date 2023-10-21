@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PageComponent from "@/components/PageComponent.vue";
-import {useSavings} from '@/composable/useSavings'
+import {useDeposits} from '@/composable/useDeposits'
 import FormComponent from '@/components/Forms/FormComponent.vue'
 import {useRoute, useRouter} from 'vue-router'
 import PreloaderComponent from '@/components/Common/PreloaderComponent.vue'
@@ -8,7 +8,7 @@ import PreloaderComponent from '@/components/Common/PreloaderComponent.vue'
 const router = useRouter()
 const route = useRoute()
 
-const saving = useSavings()
+const saving = useDeposits()
 saving.loadForm(route.params.id ?? 0)
 
 function submitForm() {
