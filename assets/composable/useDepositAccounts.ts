@@ -3,15 +3,15 @@ import axios from "axios";
 import useAsync from "@/utils/use-async";
 import {DepositAccount} from '@/models/depositAccount'
 
-export const useDepositAccounts = () => {
-  const accounts = ref<{ items: DepositAccount[] }>()
+const accounts = ref<{ items: DepositAccount[] }>()
 
+export const useDepositAccounts = () => {
   async function getAccounts() {
     accounts.value = await axios.get('/api/deposits/accounts').then((response) => response.data);
   }
 
   async function deleteAccount(id: number) {
-    await axios.post('/api/savings/accounts/delete/' + id).then((response) => response.data);
+    await axios.post('/api/deposits/accounts/delete/' + id).then((response) => response.data);
   }
 
   // Форма создания/редактирования
