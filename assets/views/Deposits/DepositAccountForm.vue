@@ -13,10 +13,6 @@ const route = useRoute()
 const componentKey = ref(0);
 const savingAccounts = useDepositAccounts()
 
-if (route.params.id) {
-  savingAccounts.loadForm(route.params.id)
-}
-
 const form = reactive({
   formData: {
     name: ''
@@ -24,19 +20,24 @@ const form = reactive({
   errors: undefined
 })
 
-const {loading, run: submitForm} = useAsync(async () => {
-  await axios.post('/api/deposits/accounts/create/', form.formData)
+const {loading, run: submitForm, validationErrors} = useAsync(async () => {
+  const url = route.params.id ? '/api/deposits/accounts/update/' + route.params.id : '/api/deposits/accounts/create/';
+  await axios.post(url, form.formData)
     .then(() => {
       router.push({'name': 'DepositAccounts'})
     })
-    .catch((e) => {
-      if (e?.response?.status === 422) {
-        form.errors = e.response.data.errors;
-      } else {
-        throw e;
-      }
+})
+
+const {loading: loadingForm, run: getFormData} = useAsync(async () => {
+  await axios.get('/api/deposits/accounts/get-form/' + route.params.id)
+    .then((response) => {
+      form.formData.name = response.data.name
     })
 })
+
+if (route.params.id) {
+  getFormData()
+}
 
 </script>
 
@@ -52,7 +53,7 @@ const {loading, run: submitForm} = useAsync(async () => {
             Deposit Account
           </h3>
         </div>
-        <preloader-component v-if="savingAccounts.loadingForm.value" />
+        <preloader-component v-if="savingAccounts.loadingForm.value || loadingForm" />
         <div
           v-else
           class="w-full md:w-2/4"
@@ -60,7 +61,7 @@ const {loading, run: submitForm} = useAsync(async () => {
           <input-text
             :key="componentKey"
             v-model="form.formData.name"
-            :error="form.errors"
+            :error="validationErrors"
             class="mb-3"
             name="name"
             label="Account Name"

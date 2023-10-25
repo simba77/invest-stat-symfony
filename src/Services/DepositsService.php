@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Entity\Deposit;
 use App\Entity\DepositAccount;
 use App\Entity\User;
+use App\Response\DTO\Deposits\DepositAccountEditFormDTO;
 use App\Response\DTO\Deposits\DepositAccountListItemDTO;
 use App\Response\DTO\Deposits\DepositListItemDTO;
 use Doctrine\Common\Collections\Criteria;
@@ -46,5 +47,11 @@ class DepositsService
             );
         }
         return $result;
+    }
+
+    public function getDepositAccountForUser(int $id, User $user): ?DepositAccountEditFormDTO
+    {
+        $account = $this->entityManager->getRepository(DepositAccount::class)->findOneBy(['id' => $id, 'user' => $user]);
+        return $account ? new DepositAccountEditFormDTO($account->getId(), $account->getName()) : null;
     }
 }

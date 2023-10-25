@@ -45,4 +45,28 @@ class DepositsController extends AbstractController
         $this->entityManager->flush();
         return $this->json(['success' => true]);
     }
+
+    #[Route('/deposits/accounts/get-form/{id}', name: 'app_deposits_get_form', methods: ['GET'])]
+    public function getForm(int $id, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $form = $this->depositsService->getDepositAccountForUser($id, $user);
+        if (! $form) {
+            throw $this->createNotFoundException('No accounts found for id ' . $id);
+        }
+        return $this->json($form);
+    }
+
+    #[Route('/deposits/accounts/update/{id}', name: 'app_deposits_update', methods: ['POST'])]
+    public function update(int $id, #[MapRequestPayload] CreateAccountRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $account = $this->entityManager->getRepository(DepositAccount::class)->findOneBy(['user' => $user, 'id' => $id]);
+        if (! $account) {
+            throw $this->createNotFoundException('No accounts found for id ' . $id);
+        }
+
+        $account->setName($dto->name);
+        $this->entityManager->persist($account);
+        $this->entityManager->flush();
+        return $this->json(['success' => true]);
+    }
 }
