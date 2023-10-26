@@ -51,6 +51,21 @@ class Deposit implements
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
+    public function __construct(
+        float $sum,
+        int $type,
+        User $user,
+        DepositAccount $depositAccount,
+        \DateTimeInterface $date
+    ) {
+        $this->sum = $sum;
+        $this->type = $type;
+        $this->user = $user;
+        $this->depositAccount = $depositAccount;
+        $this->date = $date;
+    }
+
+
     public function getId(): ?int
     {
         return $this->id;

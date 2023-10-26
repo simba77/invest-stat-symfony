@@ -11,7 +11,7 @@ export const useDeposits = () => {
   }
 
   async function deleteDeposit(id: number) {
-    await axios.post('/api/savings/delete/' + id);
+    await axios.post('/api/deposits/delete/' + id);
   }
 
   // Форма создания/редактирования

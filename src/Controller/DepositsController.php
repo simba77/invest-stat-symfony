@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Deposit;
 use App\Entity\DepositAccount;
 use App\Entity\User;
-use App\Request\DTO\Deposits\CreateAccountRequestDTO;
+use App\Request\DTO\Deposits\CreateDepositRequestDTO;
+use App\Request\DTO\Deposits\UpdateDepositRequestDTO;
 use App\Services\DepositsService;
+use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,47 +33,53 @@ class DepositsController extends AbstractController
         return $this->json(['items' => $deposits]);
     }
 
-    #[Route('/deposits/accounts', name: 'app_deposit_accounts', methods: ['GET'])]
-    public function accounts(#[CurrentUser] ?User $user): JsonResponse
-    {
-        $accounts = $this->depositsService->getDepositAccountsForUser($user);
-        return $this->json(['items' => $accounts]);
-    }
 
-    #[Route('/deposits/accounts/create/', name: 'app_deposit_accounts_create', methods: ['POST'])]
-    public function createAccount(#[CurrentUser] ?User $user, #[MapRequestPayload] CreateAccountRequestDTO $dto): JsonResponse
+    #[Route('/deposits/create/', name: 'app_deposits_create', methods: ['POST'])]
+    public function create(#[CurrentUser] ?User $user, #[MapRequestPayload] CreateDepositRequestDTO $dto): JsonResponse
     {
-        $account = new DepositAccount($dto->name, $user);
-        $this->entityManager->persist($account);
+        $account = $this->entityManager->getRepository(DepositAccount::class)->findOneBy(['user' => $user, 'id' => $dto->accountId]);
+        if (! $account) {
+            throw $this->createNotFoundException('No accounts found for id ' . $dto->accountId);
+        }
+
+        $deposit = new Deposit($dto->sum, $dto->type, $user, $account, Carbon::parse($dto->date));
+        $this->entityManager->persist($deposit);
         $this->entityManager->flush();
         return $this->json(['success' => true]);
     }
 
-    #[Route('/deposits/accounts/get-form/{id}', name: 'app_deposit_accounts_get_form', methods: ['GET'])]
+    #[Route('/deposits/get-form/{id}', name: 'app_deposits_get_form', methods: ['GET'])]
     public function getForm(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
-        $form = $this->depositsService->getDepositAccountForUser($id, $user);
+        $form = $this->depositsService->getDepositForUser($id, $user);
         if (! $form) {
-            throw $this->createNotFoundException('No accounts found for id ' . $id);
+            throw $this->createNotFoundException('No deposits found for id ' . $id);
         }
         return $this->json($form);
     }
 
-    #[Route('/deposits/accounts/update/{id}', name: 'app_deposit_accounts_update', methods: ['POST'])]
-    public function update(int $id, #[MapRequestPayload] CreateAccountRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
+    #[Route('/deposits/update/{id}', name: 'app_deposits_update', methods: ['POST'])]
+    public function update(int $id, #[MapRequestPayload] UpdateDepositRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
     {
-        $account = $this->entityManager->getRepository(DepositAccount::class)->findOneBy(['user' => $user, 'id' => $id]);
+        $deposit = $this->entityManager->getRepository(Deposit::class)->findOneBy(['user' => $user, 'id' => $id]);
+        if (! $deposit) {
+            throw $this->createNotFoundException('No deposits found for id ' . $id);
+        }
+        $account = $this->entityManager->getRepository(DepositAccount::class)->findOneBy(['user' => $user, 'id' => $dto->accountId]);
         if (! $account) {
-            throw $this->createNotFoundException('No accounts found for id ' . $id);
+            throw $this->createNotFoundException('No accounts found for id ' . $dto->accountId);
         }
 
-        $account->setName($dto->name);
-        $this->entityManager->persist($account);
+        $deposit->setSum($dto->sum);
+        $deposit->setDepositAccount($account);
+        $deposit->setType($dto->type);
+        $deposit->setDate(Carbon::parse($dto->date));
+        $this->entityManager->persist($deposit);
         $this->entityManager->flush();
         return $this->json(['success' => true]);
     }
 
-    #[Route('/deposits/accounts/delete/{id}', name: 'app_deposit_accounts_delete', methods: ['POST'])]
+    #[Route('/deposits/delete/{id}', name: 'app_deposits_delete', methods: ['POST'])]
     public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
         $account = $this->entityManager->getRepository(DepositAccount::class)->findOneBy(['user' => $user, 'id' => $id]);
