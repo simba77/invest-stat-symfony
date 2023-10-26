@@ -5,11 +5,26 @@ import {useDeposits} from '@/composable/useDeposits'
 import helpers from '@/helpers'
 import useAsync from "@/utils/use-async";
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
+import {Deposit, DepositAccount} from "@/models/depositAccount";
+import {useModal} from "@/composable/useModal";
+import DeleteDepositModal from "@/components/Deposits/DeleteDepositModal.vue";
 
 const deposits = useDeposits()
+const modal = useModal()
 const {loading, run: getDeposits} = useAsync(() => deposits.getDeposits())
 
 getDeposits()
+
+function deleteDeposit(deposit: Deposit) {
+  modal.open({
+    component: DeleteDepositModal,
+    modelValue: {
+      id: deposit.id,
+      title: 'Delete Confirmation',
+      text: 'Are you sure you want to delete the deposit <b>#'+ deposit.id + '</b>?',
+    }
+  })
+}
 
 </script>
 
@@ -68,6 +83,7 @@ getDeposits()
                 <button
                   type="button"
                   class="text-gray-300 hover:text-red-500"
+                  @click="deleteDeposit(item)"
                 >
                   <x-circle-icon class="h-5 w-5" />
                 </button>

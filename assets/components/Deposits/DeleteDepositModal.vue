@@ -3,9 +3,7 @@ import {DialogTitle} from '@headlessui/vue'
 import {ExclamationTriangleIcon} from '@heroicons/vue/24/outline'
 import {useModal} from "@/composable/useModal";
 import useAsync from "@/utils/use-async";
-import {useDeals} from "@/composable/useDeals";
-import useAccounts from "@/composable/useAccounts";
-import {useRoute} from "vue-router";
+import {useDeposits} from "@/composable/useDeposits";
 
 interface ConfirmModal {
   id: number
@@ -14,18 +12,14 @@ interface ConfirmModal {
 }
 
 const props = defineProps<{ modelValue: ConfirmModal }>()
-
-const route = useRoute()
 const modal = useModal()
-const deals = useDeals()
-const accounts = useAccounts()
-
-const {loading, run} = useAsync(() => deals.deleteDeal(props.modelValue.id))
+const deposits = useDeposits()
+const {loading, run} = useAsync(() => deposits.deleteDeposit(props.modelValue.id))
 
 function confirmDelete() {
   run().then(() => {
     modal.close()
-    accounts.getAccount(route.params.id)
+    deposits.getDeposits()
   })
 }
 

@@ -3,9 +3,9 @@ import axios from "axios";
 import useAsync from "@/utils/use-async";
 import {Deposit} from '@/models/depositAccount'
 
-export const useDeposits = () => {
-  const deposits = ref<{ items: Deposit[] }>()
+const deposits = ref<{ items: Deposit[] }>()
 
+export const useDeposits = () => {
   async function getDeposits() {
     deposits.value = await axios.get('/api/deposits').then((response) => response.data);
   }

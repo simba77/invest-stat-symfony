@@ -82,12 +82,12 @@ class DepositsController extends AbstractController
     #[Route('/deposits/delete/{id}', name: 'app_deposits_delete', methods: ['POST'])]
     public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
-        $account = $this->entityManager->getRepository(DepositAccount::class)->findOneBy(['user' => $user, 'id' => $id]);
-        if (! $account) {
-            throw $this->createNotFoundException('No accounts found for id ' . $id);
+        $deposit = $this->entityManager->getRepository(Deposit::class)->findOneBy(['user' => $user, 'id' => $id]);
+        if (! $deposit) {
+            throw $this->createNotFoundException('No deposits found for id ' . $id);
         }
 
-        $this->entityManager->remove($account);
+        $this->entityManager->remove($deposit);
         $this->entityManager->flush();
         return $this->json(['success' => true]);
     }
