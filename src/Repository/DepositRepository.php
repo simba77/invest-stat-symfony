@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Deposit;
+use App\Entity\DepositAccount;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,28 +23,15 @@ class DepositRepository extends ServiceEntityRepository
         parent::__construct($registry, Deposit::class);
     }
 
-//    /**
-//     * @return Deposit[] Returns an array of Deposit objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('d')
-//            ->andWhere('d.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('d.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function getSumOfDepositsForUser(User $user)
+    {
+        $data = $this->createQueryBuilder('d')
+            ->andWhere('d.user = :user')
+            ->setParameter('user', $user)
+            ->select("SUM(d.sum) as sum_of_deposits")
+            ->getQuery()
+            ->getOneOrNullResult();
 
-//    public function findOneBySomeField($value): ?Deposit
-//    {
-//        return $this->createQueryBuilder('d')
-//            ->andWhere('d.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return $data['sum_of_deposits'];
+    }
 }

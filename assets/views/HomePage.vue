@@ -1,57 +1,58 @@
-<script lang="ts">
+<script setup lang="ts">
 import PageComponent from "@/components/PageComponent.vue";
 import StatCard from "@/components/Cards/StatCard.vue";
 import axios from "axios";
+import useAsync from "@/utils/use-async";
+import {reactive} from "vue";
+import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
 
-export default {
-  name: "HomePage",
-  components: {StatCard, PageComponent},
-  data() {
-    return {
-      loading: true,
-      data: {},
-      brokers: []
-    }
-  },
-  mounted() {
-    this.getData();
-  },
-  methods: {
-    getData() {
-      this.loading = true;
-      axios.get('/api/dashboard')
-        .then((response) => {
-          this.data = response.data;
-          this.brokers = response.data.brokers;
-        })
-        .catch(() => {
-          alert('An error has occurred');
-        })
-        .finally(() => {
-          this.loading = false;
-        })
-    }
+interface SummaryCard {
+  name: string
+  helpText: string
+  percent: number
+  total: number
+}
+
+interface Dashboard {
+  data: {
+    usd: number,
+    summary: SummaryCard[]
   }
 }
+
+const pageData = reactive<Dashboard>({
+  data: {
+    usd: 0,
+    summary: []
+  }
+})
+
+const {loading, run} = useAsync(async () => {
+  await axios.get('/api/dashboard')
+    .then((response) => {
+      pageData.data = response.data;
+    })
+})
+
+run()
+
 </script>
 
 <template>
   <page-component title="Dashboard">
-    <div v-if="loading">
-      Loading Data...
-    </div>
+    <preloader-component v-if="loading" />
     <template v-else>
       <div class="flex justify-between">
         <div class="text-xl mb-3">
           Investment Result
         </div>
         <div class="text-xl mb-3">
-          1 USD = {{ data.usd }}₽
+          1 USD = {{ pageData.data.usd }}₽
         </div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
         <stat-card
-          v-for="(card, i) in data.summary"
+          v-for="(card, i) in pageData.data.summary"
           :key="i"
           :name="card.name"
           :help-text="card.helpText ?? null"

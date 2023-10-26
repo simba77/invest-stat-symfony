@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Deposit;
 use App\Entity\Investment;
 use App\Entity\User;
 use App\Services\AccountService;
@@ -19,7 +20,7 @@ class HomepageController extends AbstractController
     public function __construct(
         private readonly CurrencyService $currencyService,
         private readonly EntityManagerInterface $entityManager,
-        private readonly AccountService $accountService
+        private readonly AccountService $accountService,
     ) {
     }
 
@@ -28,7 +29,7 @@ class HomepageController extends AbstractController
     {
         $invested = (float) $this->entityManager->getRepository(Investment::class)->getSumByUserId($user->getId());
         $allAssetsSum = 0;
-        $savingAmount = 0; // TODO: Change it
+        $depositsSum = $this->entityManager->getRepository(Deposit::class)->getSumOfDepositsForUser($user);
 
         $accounts = $this->accountService->getAccountsListForUser($user);
         foreach ($accounts as $account) {
@@ -48,14 +49,14 @@ class HomepageController extends AbstractController
                         'currency' => '₽',
                     ],
                     [
-                        'name'     => 'The Saving Amount',
-                        'total'    => $savingAmount,
+                        'name'     => 'Deposits',
+                        'total'    => $depositsSum,
                         'currency' => '₽',
                     ],
                     [
-                        'name'     => 'Savings + Invested',
-                        'helpText' => 'The Saving Amount + The Invested Amount',
-                        'total'    => $invested + $savingAmount,
+                        'name'     => 'Deposits + Investments',
+                        'helpText' => 'Deposits + Investments',
+                        'total'    => $invested + $depositsSum,
                         'currency' => '₽',
                     ],
 
@@ -76,8 +77,8 @@ class HomepageController extends AbstractController
 
                     [
                         'name'     => 'Saving + All Brokers Assets',
-                        'helpText' => 'Assets for The Current Day + The Saving Amount',
-                        'total'    => $allAssetsSum + $savingAmount,
+                        'helpText' => 'Assets for The Current Day + Deposits',
+                        'total'    => $allAssetsSum + $depositsSum,
                         'currency' => '₽',
                     ],
                 ],
