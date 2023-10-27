@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\DepositAccount;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,5 +22,22 @@ class DepositAccountRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, DepositAccount::class);
+    }
+
+    public function getDepositAccountsWithSummary(User $user): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "select *,
+           (select sum(`sum`) as aggregate
+            from `deposits` as s
+            where s.deposit_account_id = deposit_accounts.id
+              and s.`type` = 1) as balance,
+           (select sum(`sum`) as aggregate
+            from `deposits` as s
+            where s.deposit_account_id = deposit_accounts.id
+              and s.`type` = 2) as profit
+           from deposit_accounts where deposit_accounts.user_id = :user";
+
+        return $conn->executeQuery($sql, ['user' => $user->getId()])->fetchAllAssociative();
     }
 }

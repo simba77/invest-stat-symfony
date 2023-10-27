@@ -9,6 +9,7 @@ use App\Entity\DepositAccount;
 use App\Entity\User;
 use App\Response\DTO\Deposits\DepositAccountEditFormDTO;
 use App\Response\DTO\Deposits\DepositAccountListItemDTO;
+use App\Response\DTO\Deposits\DepositAccountSummaryListItemDTO;
 use App\Response\DTO\Deposits\DepositEditFormDTO;
 use App\Response\DTO\Deposits\DepositListItemDTO;
 use Doctrine\Common\Collections\Criteria;
@@ -45,6 +46,21 @@ class DepositsService
             $result[] = new DepositAccountListItemDTO(
                 id:   $account->getId(),
                 name: $account->getName()
+            );
+        }
+        return $result;
+    }
+
+    public function getDepositAccountsWithSummaryForUser(User $user): array
+    {
+        $accounts = $this->entityManager->getRepository(DepositAccount::class)->getDepositAccountsWithSummary($user);
+        $result = [];
+        foreach ($accounts as $account) {
+            $result[] = new DepositAccountSummaryListItemDTO(
+                id:     $account['id'],
+                name:   $account['name'],
+                total:  (float) $account['balance'],
+                profit: (float) $account['profit'],
             );
         }
         return $result;

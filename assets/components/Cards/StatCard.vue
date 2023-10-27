@@ -24,6 +24,10 @@ export default {
     helpText: {
       type: String,
       default: null,
+    },
+    profit: {
+      type: Number,
+      default: null,
     }
   }
 }
@@ -42,7 +46,7 @@ export default {
     </div>
     <div class="flex justify-between items-center mt-1">
       <div class="text-lg md:text-3xl font-bold">
-        {{ new Intl.NumberFormat('ru-RU').format(total) }} {{ currency }}
+        {{ new Intl.NumberFormat('ru-RU').format(Number(total)) }} {{ currency }}
       </div>
       <div
         v-if="percent"
@@ -55,6 +59,18 @@ export default {
           <arrow-small-down-icon class="h-5 mr-0.5 text-red-500" />
         </template>
         {{ Math.abs(percent) }}%
+      </div>
+      <div
+        v-if="profit"
+        :class="[profit > 0 ? 'bg-green-200 text-green-900' : 'bg-red-200 text-red-900', 'rounded-full pr-2 pl-1 flex items-center']"
+      >
+        <template v-if="profit > 0">
+          <arrow-small-up-icon class="h-5 mr-0.5 text-green-500" />
+        </template>
+        <template v-else>
+          <arrow-small-down-icon class="h-5 mr-0.5 text-red-500" />
+        </template>
+        {{ new Intl.NumberFormat('ru-RU').format(profit) }} {{ currency }}
       </div>
     </div>
   </div>

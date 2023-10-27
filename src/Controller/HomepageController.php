@@ -8,6 +8,7 @@ use App\Entity\Deposit;
 use App\Entity\Investment;
 use App\Entity\User;
 use App\Services\AccountService;
+use App\Services\DepositsService;
 use App\Services\MarketData\Currencies\CurrencyService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,6 +22,7 @@ class HomepageController extends AbstractController
         private readonly CurrencyService $currencyService,
         private readonly EntityManagerInterface $entityManager,
         private readonly AccountService $accountService,
+        private readonly DepositsService $depositsService,
     ) {
     }
 
@@ -30,6 +32,8 @@ class HomepageController extends AbstractController
         $invested = (float) $this->entityManager->getRepository(Investment::class)->getSumByUserId($user->getId());
         $allAssetsSum = 0;
         $depositsSum = $this->entityManager->getRepository(Deposit::class)->getSumOfDepositsForUser($user);
+        $depositAccounts = $this->depositsService->getDepositAccountsWithSummaryForUser($user);
+
 
         $accounts = $this->accountService->getAccountsListForUser($user);
         foreach ($accounts as $account) {
@@ -41,8 +45,9 @@ class HomepageController extends AbstractController
 
         return $this->json(
             [
-                'usd'     => $this->currencyService->getUSDRUBRate(),
-                'summary' => [
+                'usd'             => $this->currencyService->getUSDRUBRate(),
+                'depositAccounts' => $depositAccounts,
+                'summary'         => [
                     [
                         'name'     => 'The Invested Amount',
                         'total'    => $invested,

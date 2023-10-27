@@ -13,17 +13,25 @@ interface SummaryCard {
   total: number
 }
 
+interface DepositAccountCard {
+  name: string
+  profit: number
+  total: number
+}
+
 interface Dashboard {
   data: {
-    usd: number,
+    usd: number
     summary: SummaryCard[]
+    depositAccounts: DepositAccountCard[]
   }
 }
 
 const pageData = reactive<Dashboard>({
   data: {
     usd: 0,
-    summary: []
+    summary: [],
+    depositAccounts: []
   }
 })
 
@@ -60,6 +68,21 @@ run()
           :total="card.total"
         />
       </div>
+
+      <template v-if="pageData.data.depositAccounts?.length > 0">
+        <div class="text-2xl font-extrabold mt-6 mb-3">
+          Deposit Accounts
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
+          <stat-card
+            v-for="(card, i) in pageData.data.depositAccounts"
+            :key="i"
+            :name="card.name"
+            :total="card.total"
+            :profit="card.profit"
+          />
+        </div>
+      </template>
     </template>
   </page-component>
 </template>
