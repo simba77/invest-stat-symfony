@@ -30,8 +30,7 @@ class DepositAccountRepository extends ServiceEntityRepository
         $sql = "select *,
            (select sum(`sum`) as aggregate
             from `deposits` as s
-            where s.deposit_account_id = deposit_accounts.id
-              and s.`type` = 1) as balance,
+            where s.deposit_account_id = deposit_accounts.id) as balance,
            (select sum(`sum`) as aggregate
             from `deposits` as s
             where s.deposit_account_id = deposit_accounts.id

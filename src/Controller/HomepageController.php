@@ -33,6 +33,9 @@ class HomepageController extends AbstractController
         $allAssetsSum = 0;
         $depositsSum = $this->entityManager->getRepository(Deposit::class)->getSumOfDepositsForUser($user);
         $depositAccounts = $this->depositsService->getDepositAccountsWithSummaryForUser($user);
+        $depositAccounts = array_filter($depositAccounts, function ($item) {
+            return $item->total > 0;
+        });
 
 
         $accounts = $this->accountService->getAccountsListForUser($user);

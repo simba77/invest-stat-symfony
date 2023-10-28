@@ -69,7 +69,7 @@ run()
         />
       </div>
 
-      <template v-if="pageData.data.depositAccounts?.length > 0">
+      <template v-if="Object.keys(pageData.data.depositAccounts).length > 0">
         <div class="text-2xl font-extrabold mt-6 mb-3">
           Deposit Accounts
         </div>
