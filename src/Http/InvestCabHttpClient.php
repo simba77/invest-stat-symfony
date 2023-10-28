@@ -38,7 +38,7 @@ class InvestCabHttpClient
         $price = $this->parseContent($data)['c'];
         $price = end($price);
         if (empty($price)) {
-            throw new RuntimeException('Unable to get price');
+            throw new RuntimeException('Unable to get price for ticker: ' . $ticker);
         }
         return (float) $price;
     }

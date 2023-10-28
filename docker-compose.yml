@@ -37,6 +37,25 @@ services:
       - default
     labels:
       - traefik.enable=false
+  olddatabase:
+    image: 'mariadb:10'
+    container_name: mariadb_invest_stat_old
+    ports:
+      - '${FORWARD_DB_PORT:-}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD:-johncms}'
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: 'investstatold'
+      MYSQL_USER: '${DB_USERNAME:-johncms}'
+      MYSQL_PASSWORD: '${DB_PASSWORD:-password}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    volumes:
+      - './docker/mariadb/old_db_data:/var/lib/mysql'
+    networks:
+      - web
+      - default
+    labels:
+      - traefik.enable=false
 
 networks:
   web:

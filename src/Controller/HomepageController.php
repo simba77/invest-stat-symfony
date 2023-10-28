@@ -41,7 +41,9 @@ class HomepageController extends AbstractController
         }
 
         $profit = $allAssetsSum - $invested;
-        $profitPercent = round($profit / $invested * 100, 2);
+        if ($invested > 0) {
+            $profitPercent = round($profit / $invested * 100, 2);
+        }
 
         return $this->json(
             [
@@ -75,7 +77,7 @@ class HomepageController extends AbstractController
                     [
                         'name'     => 'Profit',
                         'helpText' => 'Assets for The Current Day - The Invested Amount',
-                        'percent'  => $profitPercent,
+                        'percent'  => $profitPercent ?? 0,
                         'total'    => $profit,
                         'currency' => '₽',
                     ],
