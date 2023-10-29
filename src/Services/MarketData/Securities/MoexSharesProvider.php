@@ -28,7 +28,7 @@ class MoexSharesProvider implements SharesProviderInterface
 
         // TQIF Board
         $tqif = $this->httpClient->getSharesByBoard('TQIF');
-        $tqifShares = $this->parseResult($tqtf);
+        $tqifShares = $this->parseResult($tqif);
 
         return [...$tqbrShares, ...$tqtfShares, ...$tqifShares];
     }
