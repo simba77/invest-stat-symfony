@@ -41,6 +41,19 @@ class AccountRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return array<int, array{account: Account, deposits_sum: string | null}>
+     */
+    public function findWithDeposits(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->select('a as account')
+            ->orderBy('a.sort', 'ASC')
+            ->addSelect('(select sum(inv.sum) from ' . Investment::class . ' as inv where inv.account = a) as deposits_sum')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param int $id
      * @param int $userId
      * @return array{account: Account, deposits_sum: string}
