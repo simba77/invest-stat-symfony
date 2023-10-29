@@ -20,5 +20,6 @@ jobs:
             cd ${{ secrets.PROJECT_PATH }}
             git pull
             php8.1 /usr/local/bin/composer install
+            php8.1 bin/console doctrine:migrations:migrate --no-interaction
             npm ci
             npm run build
