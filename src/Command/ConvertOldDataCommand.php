@@ -9,6 +9,7 @@ use App\Entity\Deal;
 use App\Entity\Deposit;
 use App\Entity\DepositAccount;
 use App\Entity\Investment;
+use App\Entity\Statistic;
 use App\Entity\User;
 use App\Services\Deals\DealStatus;
 use App\Services\Deals\DealType;
@@ -43,6 +44,7 @@ class ConvertOldDataCommand extends Command
         $this->convertDeals();
         $this->convertInvestments();
         $this->convertDeposits();
+        $this->convertStatistic();
 
         $io->success('Success');
 
@@ -164,6 +166,33 @@ class ConvertOldDataCommand extends Command
             );
 
             $this->entityManager->persist($deposit);
+        }
+
+        $this->entityManager->flush();
+    }
+
+    public function convertStatistic(): void
+    {
+        /** @var Connection $connection */
+        $connection = $this->managerRegistry->getConnection('old_database');
+
+        $accountRepo = $this->entityManager->getRepository(Account::class);
+
+        $items = $connection->executeQuery('SELECT statistic.*, accounts.name as account_name FROM `statistic` left join accounts ON statistic.account_id = accounts.id')->fetchAllAssociative();
+        foreach ($items as $item) {
+            $acc = $accountRepo->findOneBy(['name' => $item['account_name']]);
+
+            $stat = new Statistic(
+                $acc,
+                Carbon::parse($item['date']),
+                (float) $item['balance'],
+                (float) $item['usd_balance'],
+                (float) $item['deposits'],
+                (float) $item['current'],
+                (float) $item['profit'],
+            );
+
+            $this->entityManager->persist($stat);
         }
 
         $this->entityManager->flush();
