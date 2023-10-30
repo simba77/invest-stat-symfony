@@ -21,6 +21,7 @@
 
 /.idea
 /docker/mariadb/data/*
+/docker/mariadb/*
 ###> pentatrion/vite-bundle ###
 /node_modules/
 /public/build/
