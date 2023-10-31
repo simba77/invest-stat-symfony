@@ -98,14 +98,7 @@ class DealsController extends AbstractController
             throw $this->createNotFoundException('No deal found for id ' . $id);
         }
 
-        $deal->setTicker($dto->ticker);
-        $deal->setStockMarket($dto->stockMarket);
-        $deal->setType($dto->isShort ? DealType::Short : DealType::Long);
-        $deal->setQuantity($dto->quantity);
-        $deal->setBuyPrice($dto->buyPrice);
-        $deal->setTargetPrice($dto->targetPrice);
-        $this->em->persist($deal);
-        $this->em->flush();
+        $this->dealService->changeDeal($deal, $dto);
 
         return $this->json(['success' => true]);
     }

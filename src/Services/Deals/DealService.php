@@ -8,6 +8,7 @@ use App\Entity\Account;
 use App\Entity\Deal;
 use App\Entity\User;
 use App\Request\DTO\Deals\CreateDealRequestDTO;
+use App\Request\DTO\Deals\EditDealRequestDTO;
 use App\Request\DTO\Deals\SellDealRequestDTO;
 use App\Response\DTO\Securities\SecurityDTO;
 use App\Services\AccountCalculator;
@@ -216,5 +217,20 @@ class DealService
             return ($securityDTO->lotSize * $dealRequestDTO->price * $dealRequestDTO->quantity) - ($deal->getBuyPrice() * $securityDTO->lotSize * $dealRequestDTO->quantity);
         }
         return 0;
+    }
+
+    public function changeDeal(Deal $deal, EditDealRequestDTO $dto): void
+    {
+        $deal->setTicker($dto->ticker);
+        $deal->setStockMarket($dto->stockMarket);
+        $deal->setType($dto->isShort ? DealType::Short : DealType::Long);
+        $deal->setQuantity($dto->quantity);
+        $deal->setBuyPrice($dto->buyPrice);
+        $deal->setTargetPrice($dto->targetPrice);
+        $this->entityManager->persist($deal);
+
+        $this->accountCalculator->recalculateBalanceForAccount($deal->getAccount());
+
+        $this->entityManager->flush();
     }
 }
