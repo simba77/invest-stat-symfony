@@ -37,7 +37,7 @@ class InvestmentRepository extends ServiceEntityRepository
             ->andWhere('inv.userId = :userId')
             ->addSelect(['acc.name as account_name'])
             ->setParameter('userId', $userId)
-            ->orderBy('inv.date')
+            ->orderBy('inv.date', 'DESC')
             ->getQuery()
             ->getResult();
     }
