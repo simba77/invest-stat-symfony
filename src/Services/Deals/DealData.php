@@ -7,6 +7,7 @@ namespace App\Services\Deals;
 use App\Entity\Account;
 use App\Entity\Deal;
 use App\Services\MarketData\Currencies\CurrencyService;
+use App\Services\MarketData\Securities\SecurityTypeEnum;
 
 class DealData
 {
@@ -51,6 +52,17 @@ class DealData
     public function getTicker(): string
     {
         return $this->deal['deal']->getTicker();
+    }
+
+    public function getSecurityType(): SecurityTypeEnum
+    {
+        if ($this->deal['futureName']) {
+            return SecurityTypeEnum::Future;
+        }
+        if ($this->deal['bondName']) {
+            return SecurityTypeEnum::Bond;
+        }
+        return SecurityTypeEnum::Share;
     }
 
     public function getBuyPrice(): float

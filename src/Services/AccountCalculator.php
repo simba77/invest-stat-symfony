@@ -8,6 +8,7 @@ use App\Entity\Account;
 use App\Entity\Deal;
 use App\Services\Deals\DealData;
 use App\Services\MarketData\Currencies\CurrencyService;
+use App\Services\MarketData\Securities\SecurityTypeEnum;
 use Doctrine\ORM\EntityManagerInterface;
 
 class AccountCalculator
@@ -42,8 +43,12 @@ class AccountCalculator
         $fullCurrentPrice = 0;
         foreach ($deals as $deal) {
             $dealData = new DealData($deal, $account, $this->currencyService);
-            $fullBuyPrice += $dealData->getFullBuyPriceInBaseCurrency();
-            $fullCurrentPrice += $dealData->getFullCurrentPriceInBaseCurrency();
+            if ($dealData->getSecurityType() === SecurityTypeEnum::Future) {
+                $fullCurrentPrice += $dealData->getProfitInBaseCurrency();
+            } else {
+                $fullBuyPrice += $dealData->getFullBuyPriceInBaseCurrency();
+                $fullCurrentPrice += $dealData->getFullCurrentPriceInBaseCurrency();
+            }
         }
         return [
             'fullBuyPrice'     => $fullBuyPrice,
