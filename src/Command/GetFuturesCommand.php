@@ -37,6 +37,9 @@ class GetFuturesCommand extends Command
         foreach ($futures as $item) {
             $future = $futureRepository->findOneBy(['ticker' => $item->getTicker()]);
             if ($future) {
+                if (empty($item->getPrice())) {
+                    continue;
+                }
                 $future->setPrice($item->getPrice());
                 $future->setName($item->getName());
                 $future->setLatName($item->getLatName());

@@ -37,6 +37,9 @@ class GetSharesCommand extends Command
         foreach ($shares as $item) {
             $share = $shareRepository->findOneBy(['ticker' => $item->getTicker()]);
             if ($share) {
+                if (empty($item->getPrice())) {
+                    continue;
+                }
                 $share->setPrice($item->getPrice());
                 $share->setName($item->getName());
                 $share->setLatName($item->getLatName());

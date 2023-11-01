@@ -37,6 +37,9 @@ class GetBondsCommand extends Command
         foreach ($bonds as $item) {
             $bond = $bondRepository->findOneBy(['ticker' => $item->getTicker()]);
             if ($bond) {
+                if (empty($item->getPrice())) {
+                    continue;
+                }
                 $bond->setPrice($item->getPrice());
                 $bond->setName($item->getName());
                 $bond->setLatName($item->getLatName());
