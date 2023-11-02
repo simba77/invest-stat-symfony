@@ -30,7 +30,7 @@ class DepositAccountsController extends AbstractController
         return $this->json(['items' => $accounts]);
     }
 
-    #[Route('/deposits/accounts/create/', name: 'app_deposit_accounts_create', methods: ['POST'])]
+    #[Route('/deposits/accounts/create', name: 'app_deposit_accounts_create', methods: ['POST'])]
     public function create(#[CurrentUser] ?User $user, #[MapRequestPayload] CreateAccountRequestDTO $dto): JsonResponse
     {
         $account = new DepositAccount($dto->name, $user);

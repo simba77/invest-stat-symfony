@@ -34,7 +34,7 @@ class DepositsController extends AbstractController
     }
 
 
-    #[Route('/deposits/create/', name: 'app_deposits_create', methods: ['POST'])]
+    #[Route('/deposits/create', name: 'app_deposits_create', methods: ['POST'])]
     public function create(#[CurrentUser] ?User $user, #[MapRequestPayload] CreateDepositRequestDTO $dto): JsonResponse
     {
         $account = $this->entityManager->getRepository(DepositAccount::class)->findOneBy(['user' => $user, 'id' => $dto->accountId]);

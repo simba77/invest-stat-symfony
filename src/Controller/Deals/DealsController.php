@@ -103,7 +103,7 @@ class DealsController extends AbstractController
         return $this->json(['success' => true]);
     }
 
-    #[Route('/deals/sell/', name: 'app_deals_deals_sell', methods: ['POST'])]
+    #[Route('/deals/sell', name: 'app_deals_deals_sell', methods: ['POST'])]
     public function sell(#[MapRequestPayload] SellDealRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
     {
         if ($dto->id) {
