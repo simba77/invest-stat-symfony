@@ -9,8 +9,7 @@ export function useDeals() {
 
   // Sell asset with the specific id
   async function sell(security: SellSecurity) {
-    console.log(security)
-    await axios.post('/api/deals/sell/', {
+    await axios.post('/api/deals/sell', {
       id: security.id,
       accountId: Number(security.accountId),
       ticker: security.ticker,

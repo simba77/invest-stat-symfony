@@ -21,7 +21,7 @@ const form = reactive({
 })
 
 const {loading, run: submitForm, validationErrors} = useAsync(async () => {
-  const url = route.params.id ? '/api/deposits/accounts/update/' + route.params.id : '/api/deposits/accounts/create/';
+  const url = route.params.id ? '/api/deposits/accounts/update/' + route.params.id : '/api/deposits/accounts/create';
   await axios.post(url, form.formData)
     .then(() => {
       router.push({'name': 'DepositAccounts'})

@@ -28,7 +28,7 @@ getAccounts()
 
 
 const {loading, run: submitForm, validationErrors} = useAsync(async () => {
-  const url = route.params.id ? '/api/deposits/update/' + route.params.id : '/api/deposits/create/';
+  const url = route.params.id ? '/api/deposits/update/' + route.params.id : '/api/deposits/create';
   await axios.post(url, form.formData)
     .then(() => {
       router.push({'name': 'Deposits'})
