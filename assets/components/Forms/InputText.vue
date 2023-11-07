@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {computed, reactive} from "vue";
 import {useDebounceFn} from "@vueuse/core";
+import {InputErrors} from "@/types/inputs";
 
 interface InputProps {
   modelValue: number | string,
@@ -11,7 +12,7 @@ interface InputProps {
   type?: string
   enterKeyHint?: string
   autocomplete?: string
-  error?: object
+  error?: InputErrors
   help?: string | number
   disabled?: boolean
   readonly?: boolean
@@ -41,10 +42,11 @@ const inputParams = reactive({
   value: props.modelValue,
   elementId: props.id ? props.id : props.name,
   errorMessage: computed(() => {
-    return props.error?.violations.filter((item: { propertyPath: any; }) => {
-      return item.propertyPath === props.name;
-    })
-      .map((item: { title: any; }) => {
+    return props.error?.violations
+      .filter((item) => {
+        return item.propertyPath === props.name;
+      })
+      .map((item) => {
         return item.title;
       })
       .join('<br>');
@@ -58,7 +60,6 @@ const inputParams = reactive({
 })
 
 const updateModelValue = useDebounceFn(() => {
-  console.log(inputParams.value)
   emits('update:modelValue', inputParams.value)
 }, props.inputDelay)
 
