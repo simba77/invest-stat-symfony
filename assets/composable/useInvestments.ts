@@ -1,7 +1,7 @@
 import useAsync from "@/utils/use-async";
 import {ref} from "vue";
 import axios from "axios";
-import {Investment} from "@/models/investments";
+import {Investment} from "@/types/investments";
 
 const investments = ref<Investment[]>([])
 

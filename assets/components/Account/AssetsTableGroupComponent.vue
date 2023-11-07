@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {LockClosedIcon, BanknotesIcon} from "@heroicons/vue/24/outline";
 import helpers from "../../helpers";
-import type {AssetsGroup} from "@/models/account";
+import type {AssetsGroup} from "@/types/account";
 import {useModal} from "@/composable/useModal";
 import SellModal from "@/components/Modals/SellModal.vue";
 import {useRoute} from "vue-router";

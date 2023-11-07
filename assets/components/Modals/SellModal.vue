@@ -5,7 +5,7 @@ import InputText from "@/components/Forms/InputText.vue";
 import {useModal} from "@/composable/useModal";
 import {ref} from "vue";
 import {useDeals} from "@/composable/useDeals";
-import {SellSecurity} from "@/models/account";
+import {SellSecurity} from "@/types/account";
 import useAsync from "@/utils/use-async";
 import useAccounts from "@/composable/useAccounts";
 

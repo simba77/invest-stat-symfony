@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {Account} from "@/models/account";
+import type {Account} from "@/types/account";
 import helpers from "../../helpers";
 import {PencilIcon, XCircleIcon, PlusCircleIcon} from "@heroicons/vue/24/outline";
 import {useModal} from "@/composable/useModal";

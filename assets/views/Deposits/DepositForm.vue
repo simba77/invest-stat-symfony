@@ -84,6 +84,7 @@ if (route.params.id) {
             :key="componentKey"
             v-model.number="form.formData.sum"
             :error="validationErrors"
+            type="number"
             class="mb-3"
             name="sum"
             label="Sum"

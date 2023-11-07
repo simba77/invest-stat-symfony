@@ -1,6 +1,6 @@
 import {ref} from "vue";
 import axios from "axios";
-import {Dashboard} from "@/models/dashboard";
+import {Dashboard} from "@/types/dashboard";
 import useAsync from "@/utils/use-async";
 
 export function useDashboard() {

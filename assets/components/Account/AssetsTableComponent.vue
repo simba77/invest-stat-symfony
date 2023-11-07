@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import helpers from "../../helpers";
 import AssetsTableRowComponent from "@/components/Account/AssetsTableRowComponent.vue";
-import {AssetsGroupData, GroupSummary} from "@/models/account";
+import {AssetsGroupData, GroupSummary} from "@/types/account";
 import AssetsTableGroupComponent from "@/components/Account/AssetsTableGroupComponent.vue";
 import {useDealsGroup} from "@/composable/useDealsGroup";
 

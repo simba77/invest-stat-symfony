@@ -1,5 +1,5 @@
 import {ref} from "vue";
-import {Account, AccountData} from "@/models/account";
+import {Account, AccountData} from "@/types/account";
 import axios from "axios";
 import useAsync from "@/utils/use-async";
 

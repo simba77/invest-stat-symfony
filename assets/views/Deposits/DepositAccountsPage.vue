@@ -4,7 +4,7 @@ import {XCircleIcon, PencilIcon} from "@heroicons/vue/24/outline"
 import {useDepositAccounts} from '@/composable/useDepositAccounts'
 import useAsync from "@/utils/use-async";
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
-import {DepositAccount} from "@/models/depositAccount";
+import {DepositAccount} from "@/types/depositAccount";
 import {useModal} from "@/composable/useModal";
 import DeleteDepositAccountModal from "@/components/Deposits/DeleteDepositAccountModal.vue";
 

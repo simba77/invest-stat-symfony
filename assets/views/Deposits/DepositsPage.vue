@@ -5,7 +5,7 @@ import {useDeposits} from '@/composable/useDeposits'
 import helpers from '@/helpers'
 import useAsync from "@/utils/use-async";
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
-import {Deposit} from "@/models/depositAccount";
+import {Deposit} from "@/types/depositAccount";
 import {useModal} from "@/composable/useModal";
 import DeleteDepositModal from "@/components/Deposits/DeleteDepositModal.vue";
 

@@ -1,7 +1,7 @@
 import {ref} from "vue";
 import axios from "axios";
 import useAsync from "@/utils/use-async";
-import {Deposit} from '@/models/depositAccount'
+import {Deposit} from '@/types/depositAccount'
 
 const deposits = ref<{ items: Deposit[] }>()
 

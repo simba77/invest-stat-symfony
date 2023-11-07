@@ -1,5 +1,5 @@
 import axios from "axios";
-import {SellSecurity} from "@/models/account";
+import {SellSecurity} from "@/types/account";
 
 export function useDeals() {
   // Delete deal with the specific id

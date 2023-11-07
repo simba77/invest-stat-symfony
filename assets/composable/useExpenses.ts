@@ -1,5 +1,5 @@
 import {ref} from "vue";
-import {Expenses} from "@/models/expenses";
+import {Expenses} from "@/types/expenses";
 import axios from "axios";
 import useAsync from "@/utils/use-async";
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {LockClosedIcon, PencilIcon, XCircleIcon, BanknotesIcon} from "@heroicons/vue/24/outline";
 import helpers from "../../helpers";
-import type {Deal} from "@/models/account";
+import type {Deal} from "@/types/account";
 import {useModal} from "@/composable/useModal";
 import DeleteDealModal from "@/components/Account/DeleteDealModal.vue";
 import SellModal from "@/components/Modals/SellModal.vue";

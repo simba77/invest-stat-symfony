@@ -3,7 +3,7 @@ import {DialogTitle} from '@headlessui/vue'
 import {ExclamationTriangleIcon} from '@heroicons/vue/24/outline'
 import {useModal} from "@/composable/useModal";
 import {useInvestments} from "@/composable/useInvestments";
-import {Investment} from "@/models/investments";
+import {Investment} from "@/types/investments";
 
 const props = defineProps<{ modelValue: Investment }>()
 

@@ -1,3 +1,27 @@
+<script setup lang="ts">
+import PageComponent from "../components/PageComponent.vue";
+import {XCircleIcon, PencilIcon} from "@heroicons/vue/24/outline";
+import helpers from "../helpers";
+import {useInvestments} from "@/composable/useInvestments";
+import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
+import {Investment} from "@/types/investments";
+import {useModal} from "@/composable/useModal";
+import ConfirmDeleteInvestmentModal from "@/components/Investments/ConfirmDeleteInvestmentModal.vue";
+
+const investments = useInvestments()
+const modal = useModal()
+
+investments.getInvestments()
+
+function confirmDelete(item: Investment) {
+  modal.open({
+    component: ConfirmDeleteInvestmentModal,
+    modelValue: item
+  })
+}
+
+</script>
+
 <template>
   <page-component title="Investments">
     <div class="mb-4">
@@ -63,27 +87,3 @@
     </table>
   </page-component>
 </template>
-
-<script setup lang="ts">
-import PageComponent from "../components/PageComponent.vue";
-import {XCircleIcon, PencilIcon} from "@heroicons/vue/24/outline";
-import helpers from "../helpers";
-import {useInvestments} from "@/composable/useInvestments";
-import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
-import {Investment} from "@/models/investments";
-import {useModal} from "@/composable/useModal";
-import ConfirmDeleteInvestmentModal from "@/components/Investments/ConfirmDeleteInvestmentModal.vue";
-
-const investments = useInvestments()
-const modal = useModal()
-
-investments.getInvestments()
-
-function confirmDelete(item: Investment) {
-  modal.open({
-    component: ConfirmDeleteInvestmentModal,
-    modelValue: item
-  })
-}
-
-</script>
