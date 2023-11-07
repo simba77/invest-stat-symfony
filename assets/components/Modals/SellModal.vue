@@ -16,7 +16,7 @@ const accounts = useAccounts()
 const props = defineProps<{ modelValue: SellSecurity }>()
 const security = ref<SellSecurity>(props.modelValue)
 
-const {run: sellSecurity} = useAsync(() => deals.sell(security.value))
+const {run: sellSecurity, validationErrors} = useAsync(() => deals.sell(security.value))
 
 function sell() {
   sellSecurity()
@@ -47,8 +47,12 @@ function sell() {
           <div class="mt-2">
             <input-text
               v-model="security.price"
+              :error="validationErrors"
+              :required="true"
+              autocomplete="off"
+              type="number"
               class="mb-3"
-              name="name"
+              name="price"
               label="Sell Price"
               placeholder="Enter an account name"
             />
@@ -59,7 +63,9 @@ function sell() {
           >
             <input-text
               v-model="security.quantity"
+              :error="validationErrors"
               :required="true"
+              type="number"
               class="mb-3"
               name="quantity"
               label="Quantity"

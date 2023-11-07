@@ -1,105 +1,88 @@
-<script lang="ts">
-export default {
-  name: "InputText",
-  props: {
-    modelValue: {
-      type: [String, Number],
-      default: ''
-    },
-    label: {
-      type: String,
-      default: '',
-    },
-    placeholder: {
-      type: String,
-      default: '',
-    },
-    name: {
-      type: String,
-      default: '',
-    },
-    id: {
-      type: String,
-      default: '',
-    },
-    type: {
-      type: String,
-      default: 'text',
-    },
-    enterKeyHint: {
-      type: String,
-      default: '',
-    },
-    autocomplete: {
-      type: String,
-      default: '',
-    },
-    error: {
-      type: [String, Number, Object],
-      default: null,
-    },
-    help: {
-      type: [String, Number],
-      default: null,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    readonly: {
-      type: Boolean,
-      default: false,
-    },
-    required: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  emits: ['update:modelValue'],
-  data() {
-    return {
-      value: this.modelValue,
-      elementId: this.id ? this.id : this.name
-    }
-  },
-  computed: {
-    errorMessage() {
-      return this.error?.violations.filter((item: { propertyPath: any; }) => {
-        return item.propertyPath === this.name;
-      })
-        .map((item: { title: any; }) => {
-          return item.title;
-        })
-        .join('<br>');
-    }
-  },
-  methods: {
-    updateModelValue(event: { target: { value: any; }; }) {
-      this.$emit('update:modelValue', event.target.value)
-    },
-  }
+<script setup lang="ts">
+import {computed, reactive} from "vue";
+import {useDebounceFn} from "@vueuse/core";
+
+interface InputProps {
+  modelValue: number | string,
+  label: string
+  placeholder: string
+  name: string
+  id?: string
+  type?: string
+  enterKeyHint?: string
+  autocomplete?: string
+  error?: object
+  help?: string | number
+  disabled?: boolean
+  readonly?: boolean
+  required?: boolean
+  inputDelay?: number
 }
+
+const props = withDefaults(defineProps<InputProps>(), {
+  label: '',
+  placeholder: '',
+  name: '',
+  id: '',
+  type: 'text',
+  enterKeyHint: '',
+  autocomplete: '',
+  error: undefined,
+  help: '',
+  disabled: false,
+  readonly: false,
+  required: false,
+  inputDelay: 100
+})
+
+const emits = defineEmits(['update:modelValue'])
+
+const inputParams = reactive({
+  value: props.modelValue,
+  elementId: props.id ? props.id : props.name,
+  errorMessage: computed(() => {
+    return props.error?.violations.filter((item: { propertyPath: any; }) => {
+      return item.propertyPath === props.name;
+    })
+      .map((item: { title: any; }) => {
+        return item.title;
+      })
+      .join('<br>');
+  }),
+  pattern: computed(() => {
+    if (props.type === 'number') {
+      return '[0-9]*'
+    }
+    return undefined
+  })
+})
+
+const updateModelValue = useDebounceFn(() => {
+  console.log(inputParams.value)
+  emits('update:modelValue', inputParams.value)
+}, props.inputDelay)
+
 </script>
 
 <template>
   <div class="">
     <label
-      :for="elementId"
+      :for="inputParams.elementId"
       class="block text-sm font-medium text-gray-700"
     >{{ label }}</label>
     <input
-      :id="elementId"
-      v-model="value"
-      :class="[errorMessage ? 'border-red-500' : '', 'mt-1 form-input']"
+      :id="inputParams.elementId"
+      v-model="inputParams.value"
+      :class="[inputParams.errorMessage ? 'border-red-500' : '', 'mt-1 form-input']"
       :name="name"
       :type="type"
       :placeholder="placeholder"
       :required="required"
       :readonly="readonly"
       :enterkeyhint="enterKeyHint"
-      :pattern="type === 'number' ? '[0-9]*' : null"
+      :pattern="inputParams.pattern"
       step=".0001"
-      :autocomplete="autocomplete !== '' ? autocomplete : null"
+      :autocomplete="autocomplete !== '' ? autocomplete : undefined"
       @input="updateModelValue"
     >
     <div
@@ -108,9 +91,9 @@ export default {
       v-html="help"
     />
     <div
-      v-if="errorMessage"
+      v-if="inputParams.errorMessage"
       class="mt-1 text-sm text-red-500"
-      v-html="errorMessage"
+      v-html="inputParams.errorMessage"
     />
   </div>
 </template>

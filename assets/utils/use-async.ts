@@ -18,12 +18,12 @@ export default function useAsync<T extends (...args: any[]) => unknown>(fn: T): 
       return result as ReturnType<T>
     } catch (error: any) {
       if (error?.response?.status === 422) {
-        validationErrors.value = error.response.data;
+        validationErrors.value = error.response.data
       } else {
-        console.log(error);
-        alert('An Error has Occured');
-        throw error
+        console.log(error)
+        alert('An Error has Occurred')
       }
+      throw error
     } finally {
       loading.value = false
     }
