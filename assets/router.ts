@@ -7,7 +7,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/HomePage.vue')
+    component: () => import('./pages/HomePage.vue')
   },
   {
     name: 'Investments',
@@ -15,7 +15,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/InvestmentsPage.vue')
+    component: () => import('./pages/InvestmentsPage.vue')
   },
   {
     name: 'AddDeposit',
@@ -23,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Investments/DepositForm.vue')
+    component: () => import('@/pages/Investments/DepositForm.vue')
   },
   {
     name: 'EditDeposit',
@@ -31,7 +31,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Investments/DepositForm.vue')
+    component: () => import('@/pages/Investments/DepositForm.vue')
   },
 
   {
@@ -40,7 +40,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/ExpensesPage.vue')
+    component: () => import('./pages/ExpensesPage.vue')
   },
   {
     name: 'CreateCategory',
@@ -48,7 +48,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Expenses/CategoryForm.vue')
+    component: () => import('@/pages/Expenses/CategoryForm.vue')
   },
   {
     name: 'EditCategory',
@@ -56,7 +56,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Expenses/CategoryForm.vue')
+    component: () => import('@/pages/Expenses/CategoryForm.vue')
   },
   {
     name: 'AddExpense',
@@ -64,7 +64,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Expenses/ExpenseForm.vue')
+    component: () => import('@/pages/Expenses/ExpenseForm.vue')
   },
   {
     name: 'EditExpense',
@@ -72,7 +72,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Expenses/ExpenseForm.vue')
+    component: () => import('@/pages/Expenses/ExpenseForm.vue')
   },
   {
     name: 'Login',
@@ -80,7 +80,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       onlyGuests: true,
     },
-    component: () => import('./views/LoginPage.vue')
+    component: () => import('./pages/LoginPage.vue')
   },
 
   // Accounts
@@ -90,7 +90,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Accounts/AccountsPage.vue')
+    component: () => import('./pages/Accounts/AccountsPage.vue')
   },
   {
     name: 'CreateAccount',
@@ -98,7 +98,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Accounts/AccountForm.vue')
+    component: () => import('./pages/Accounts/AccountForm.vue')
   },
   {
     name: 'EditAccount',
@@ -106,7 +106,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Accounts/AccountForm.vue')
+    component: () => import('./pages/Accounts/AccountForm.vue')
   },
   {
     name: 'AccountDetail',
@@ -114,7 +114,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Accounts/AccountDetail.vue')
+    component: () => import('./pages/Accounts/AccountDetail.vue')
   },
 
   // Assets
@@ -124,7 +124,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Accounts/AssetForm.vue')
+    component: () => import('./pages/Accounts/AssetForm.vue')
   },
   {
     name: 'EditAsset',
@@ -132,7 +132,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Accounts/AssetForm.vue')
+    component: () => import('./pages/Accounts/AssetForm.vue')
   },
   {
     name: 'SoldAssets',
@@ -140,7 +140,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Accounts/SoldAssetsPage.vue')
+    component: () => import('./pages/Accounts/SoldAssetsPage.vue')
   },
 
   // Savings
@@ -150,7 +150,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Deposits/DepositAccountsPage.vue')
+    component: () => import('@/pages/Deposits/DepositAccountsPage.vue')
   },
   {
     name: 'DepositAccountsCreate',
@@ -158,7 +158,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Deposits/DepositAccountForm.vue')
+    component: () => import('@/pages/Deposits/DepositAccountForm.vue')
   },
   {
     name: 'DepositAccountsEdit',
@@ -166,7 +166,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Deposits/DepositAccountForm.vue')
+    component: () => import('@/pages/Deposits/DepositAccountForm.vue')
   },
 
   // Пополнения и списания с накопительных счетов
@@ -176,7 +176,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Deposits/DepositsPage.vue')
+    component: () => import('@/pages/Deposits/DepositsPage.vue')
   },
   {
     name: 'DepositCreate',
@@ -184,7 +184,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Deposits/DepositForm.vue')
+    component: () => import('@/pages/Deposits/DepositForm.vue')
   },
   {
     name: 'DepositEdit',
@@ -192,7 +192,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Deposits/DepositForm.vue')
+    component: () => import('@/pages/Deposits/DepositForm.vue')
   },
 
   {
@@ -201,7 +201,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./views/Analytics/AnalyticsPage.vue')
+    component: () => import('@/pages/Analytics/AnalyticsPage.vue')
   },
 
 ];
