@@ -1,101 +1,81 @@
-<script lang="ts">
-export default {
-  name: "InputSelect",
-  props: {
-    modelValue: {
-      type: [String, Number],
-      default: ''
-    },
-    label: {
-      type: String,
-      default: '',
-    },
-    placeholder: {
-      type: String,
-      default: '',
-    },
-    name: {
-      type: String,
-      default: '',
-    },
-    id: {
-      type: String,
-      default: '',
-    },
-    error: {
-      type: [String, Number, Object],
-      default: null,
-    },
-    help: {
-      type: [String, Number],
-      default: null,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    required: {
-      type: Boolean,
-      default: false,
-    },
-    displayName: {
-      type: String,
-      default: 'name',
-    },
-    fieldValue: {
-      type: String,
-      default: 'value',
-    },
-    options: {
-      type: Array,
-      default: () => [],
-    },
-  },
-  emits: ['update:modelValue'],
-  data() {
-    return {
-      value: this.modelValue,
-      elementId: this.id ? this.id : this.name
-    }
-  },
-  computed: {
-    errorMessage() {
-      return this.error?.violations.filter((item: { propertyPath: any; }) => {
-        return item.propertyPath === this.name;
-      })
-        .map((item: { title: any; }) => {
-          return item.title;
-        })
-        .join('<br>');
-    }
-  },
-  methods: {
-    updateModelValue(event: { target: { value: any; }; }) {
-      this.$emit('update:modelValue', event.target.value)
-    },
-    getName(option: string) {
-      return option[this.displayName];
-    },
-    getValue(option: string) {
-      return option[this.fieldValue];
-    },
-  }
+<script setup lang="ts">
+import {InputErrors} from "@/types/inputs";
+import {computed, reactive} from "vue";
+
+interface InputProps {
+  modelValue: number | string,
+  label: string
+  placeholder: string
+  name: string
+  id?: string
+  error?: InputErrors | null
+  help?: string | number
+  disabled?: boolean
+  readonly?: boolean
+  required?: boolean
+  displayName?: string
+  fieldValue?: string
+  options: any[]
 }
+
+const props = withDefaults(defineProps<InputProps>(), {
+  label: '',
+  placeholder: '',
+  name: '',
+  id: '',
+  error: undefined,
+  help: '',
+  disabled: false,
+  readonly: false,
+  required: false,
+  displayName: 'name',
+  fieldValue: 'value'
+})
+
+const emits = defineEmits(['update:modelValue'])
+
+const inputParams = reactive({
+  value: props.modelValue,
+  elementId: props.id ? props.id : props.name,
+  errorMessage: computed(() => {
+    return props.error?.violations
+      .filter((item) => {
+        return item.propertyPath === props.name;
+      })
+      .map((item) => {
+        return item.title;
+      })
+      .join('<br>');
+  }),
+})
+
+const updateModelValue = () => {
+  emits('update:modelValue', inputParams.value)
+}
+
+function getName(option: any) {
+  return option[props.displayName];
+}
+
+function getValue(option: any) {
+  return option[props.fieldValue];
+}
+
 </script>
 
 <template>
   <div>
     <label
-      :for="elementId"
+      :for="inputParams.elementId"
       class="block text-sm font-medium text-gray-700"
     >{{ label }}</label>
     <select
-      :id="elementId"
-      v-model="value"
+      :id="inputParams.elementId"
+      v-model="inputParams.value"
       :required="required"
       :disabled="disabled"
       :name="name"
-      :class="[errorMessage ? 'border-red-500' : '', 'form-select rounded w-full mt-1']"
+      :class="[inputParams.errorMessage ? 'border-red-500' : '', 'form-select rounded w-full mt-1']"
       @change="updateModelValue"
     >
       <option
@@ -112,9 +92,9 @@ export default {
       v-html="help"
     />
     <div
-      v-if="errorMessage"
+      v-if="inputParams.errorMessage"
       class="mt-1 text-sm text-red-500"
-      v-html="errorMessage"
+      v-html="inputParams.errorMessage"
     />
   </div>
 </template>

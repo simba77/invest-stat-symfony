@@ -1,36 +1,24 @@
-<script lang="ts">
+<script setup lang="ts">
 import {QuestionMarkCircleIcon, ArrowSmallUpIcon, ArrowSmallDownIcon} from "@heroicons/vue/24/solid";
 
-export default {
-  name: "StatCard",
-  components: {QuestionMarkCircleIcon, ArrowSmallUpIcon, ArrowSmallDownIcon},
-  props: {
-    name: {
-      type: String,
-      default: '',
-    },
-    percent: {
-      type: Number,
-      default: null,
-    },
-    total: {
-      type: [Number, String],
-      default: 0,
-    },
-    currency: {
-      type: String,
-      default: '₽',
-    },
-    helpText: {
-      type: String,
-      default: null,
-    },
-    profit: {
-      type: Number,
-      default: null,
-    }
-  }
+interface CardProps {
+  name?: string
+  percent?: number
+  total?: number | string
+  currency?: string
+  helpText?: string
+  profit?: number
 }
+
+withDefaults(defineProps<CardProps>(), {
+  name: '',
+  percent: undefined,
+  total: 0,
+  currency: '₽',
+  helpText: '',
+  profit: undefined
+})
+
 </script>
 
 <template>

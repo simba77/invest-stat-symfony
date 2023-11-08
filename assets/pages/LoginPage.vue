@@ -1,49 +1,45 @@
-<script lang="ts">
+<script setup lang="ts">
 import {LockClosedIcon} from '@heroicons/vue/24/solid'
 import axios from "axios";
 import {authStore} from "@/stores/authStore";
+import {reactive} from "vue";
+import {useRouter} from "vue-router";
 
-export default {
-  name: "HomePage",
-  components: {LockClosedIcon},
-  data() {
-    return {
-      form: {
-        username: '',
-        password: '',
-        remember_me: true,
-      },
-      loading: false,
-      error: null,
-    }
+const router = useRouter()
+const data = reactive({
+  form: {
+    username: '',
+    password: '',
+    remember_me: true,
   },
-  methods: {
-    authorize() {
-      this.loading = true;
-      axios.post('/api/login', this.form)
+  loading: false,
+  error: null,
+})
+
+function authorize() {
+  data.loading = true;
+  axios.post('/api/login', data.form)
+    .then(() => {
+      // Check auth and redirect to homepage
+      authStore()
+        .checkAuth()
         .then(() => {
-          // Check auth and redirect to homepage
-          authStore()
-            .checkAuth()
-            .then(() => {
-              this.$router.push({name: 'HomePage'});
-            })
-            .catch(() => {
-              alert('An error has occurred');
-            });
+          router.push({name: 'HomePage'});
         })
-        .catch((error) => {
-          if (error.response.status === 401) {
-            this.error = error.response.data.error;
-          } else {
-            alert('An error has occurred');
-          }
-        })
-        .finally(() => {
-          this.loading = false;
-        })
-    }
-  }
+        .catch(() => {
+          alert('An error has occurred');
+        });
+    })
+    .catch((error) => {
+      if (error.response.status === 401) {
+        data.error = error.response.data.error;
+      } else {
+        alert('An error has occurred');
+      }
+    })
+    .finally(() => {
+      data.loading = false;
+    })
 }
 </script>
 
@@ -67,10 +63,10 @@ export default {
         @submit.prevent="authorize"
       >
         <div
-          v-if="error"
+          v-if="data.error"
           class="bg-red-500 text-white rounded px-4 py-2"
         >
-          {{ error }}
+          {{ data.error }}
         </div>
 
         <div class="rounded-md shadow-sm -space-y-px">
@@ -81,7 +77,7 @@ export default {
             >Email address</label>
             <input
               id="email-address"
-              v-model="form.username"
+              v-model="data.form.username"
               name="email"
               type="email"
               autocomplete="email"
@@ -97,7 +93,7 @@ export default {
             >Password</label>
             <input
               id="password"
-              v-model="form.password"
+              v-model="data.form.password"
               name="password"
               type="password"
               autocomplete="current-password"
@@ -111,7 +107,7 @@ export default {
         <div class="flex items-center">
           <input
             id="remember-me"
-            v-model="form.remember_me"
+            v-model="data.form.remember_me"
             name="remember-me"
             type="checkbox"
             class="form-checkbox"
@@ -125,7 +121,7 @@ export default {
         <button
           type="submit"
           class="btn btn-primary relative w-full"
-          :disabled="loading"
+          :disabled="data.loading"
         >
           <span class="absolute left-0 inset-y-0 flex items-center pl-3">
             <LockClosedIcon

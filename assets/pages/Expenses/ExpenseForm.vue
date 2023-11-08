@@ -1,69 +1,68 @@
-<script lang="ts">
+<script setup lang="ts">
 import PageComponent from "@/components/PageComponent.vue";
 import InputText from "@/components/Forms/InputText.vue";
 import axios from "axios";
+import {onMounted, reactive} from "vue";
+import {useRoute, useRouter} from "vue-router";
 
-export default {
-  name: "ExpenseForm",
-  components: {InputText, PageComponent},
-  data() {
-    return {
-      form: {
-        name: '',
-        sum: '',
-      },
-      loading: false,
-      errors: null,
-      componentKey: 0,
-    }
+const route = useRoute()
+const router = useRouter()
+const data = reactive({
+  form: {
+    name: '',
+    sum: '',
   },
-  mounted() {
-    if (this.$route.params.id) {
-      this.getForm(this.$route.params.id);
-    }
-  },
-  methods: {
-    submitForm() {
-      this.loading = true;
-      let requestUrl = '';
-      if (this.$route.params.id) {
-        requestUrl = '/api/expenses/expense/edit/' + this.$route.params.id
-      } else {
-        requestUrl = '/api/expenses/' + this.$route.params.category + '/create'
-      }
+  loading: false,
+  errors: null,
+  componentKey: 0,
+})
 
-      axios.post(requestUrl, this.form)
-        .then(() => {
-          this.$router.push({name: 'Expenses'});
-        })
-        .catch((error) => {
-          if (error.response.data) {
-            this.errors = error.response.data;
-            this.componentKey += 1;
-          } else {
-            alert('An error has occurred');
-          }
-        })
-        .finally(() => {
-          this.loading = false;
-        })
-    },
-    getForm(id: number) {
-      this.loading = true;
-      axios.get('/api/expenses/expense/' + id)
-        .then((response) => {
-          this.form = response.data;
-          this.componentKey += 1;
-        })
-        .catch(() => {
-          alert('An error has occurred');
-        })
-        .finally(() => {
-          this.loading = false;
-        })
-    }
+function submitForm() {
+  data.loading = true;
+  let requestUrl: string;
+  if (route.params.id) {
+    requestUrl = '/api/expenses/expense/edit/' + route.params.id
+  } else {
+    requestUrl = '/api/expenses/' + route.params.category + '/create'
   }
+
+  axios.post(requestUrl, data.form)
+    .then(() => {
+      router.push({name: 'Expenses'});
+    })
+    .catch((error) => {
+      if (error.response.data) {
+        data.errors = error.response.data;
+        data.componentKey += 1;
+      } else {
+        alert('An error has occurred');
+      }
+    })
+    .finally(() => {
+      data.loading = false;
+    })
 }
+
+function getForm(id: number) {
+  data.loading = true;
+  axios.get('/api/expenses/expense/' + id)
+    .then((response) => {
+      data.form = response.data;
+      data.componentKey += 1;
+    })
+    .catch(() => {
+      alert('An error has occurred');
+    })
+    .finally(() => {
+      data.loading = false;
+    })
+}
+
+onMounted(() => {
+  if (route.params.id) {
+    getForm(Number(route.params.id));
+  }
+})
 </script>
 
 <template>
@@ -85,19 +84,19 @@ export default {
         </div>
         <div class="w-full md:w-2/4">
           <input-text
-            :key="componentKey"
-            v-model="form.name"
-            :error="errors"
+            :key="data.componentKey"
+            v-model="data.form.name"
+            :error="data.errors"
             name="name"
             label="Category Name"
             placeholder="Enter a category name"
           />
           <input-text
-            :key="componentKey"
-            v-model.number="form.sum"
+            :key="data.componentKey"
+            v-model.number="data.form.sum"
             type="number"
             class="mt-3"
-            :error="errors"
+            :error="data.errors"
             name="sum"
             label="Amount of expense"
             placeholder="Amount of expense"
@@ -107,7 +106,7 @@ export default {
         <button
           type="submit"
           class="btn btn-primary"
-          :disabled="loading"
+          :disabled="data.loading"
         >
           Save
         </button>

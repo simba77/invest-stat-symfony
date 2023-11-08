@@ -12,7 +12,7 @@ interface InputProps {
   type?: string
   enterKeyHint?: string
   autocomplete?: string
-  error?: InputErrors
+  error?: InputErrors | null
   help?: string | number
   disabled?: boolean
   readonly?: boolean

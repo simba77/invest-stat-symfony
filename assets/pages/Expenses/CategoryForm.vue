@@ -1,68 +1,68 @@
-<script lang="ts">
+<script setup lang="ts">
 import PageComponent from "@/components/PageComponent.vue";
 import InputText from "@/components/Forms/InputText.vue";
 import axios from "axios";
+import {onMounted, reactive} from "vue";
+import {useRoute, useRouter} from "vue-router";
 
-export default {
-  name: "CategoryForm",
-  components: {InputText, PageComponent},
-  data() {
-    return {
-      form: {
-        name: '',
-      },
-      loading: false,
-      errors: null,
-      componentKey: 0,
-    }
+const route = useRoute()
+const router = useRouter()
+const data = reactive({
+  form: {
+    name: '',
   },
-  mounted() {
-    if (this.$route.params.id) {
-      this.getForm(this.$route.params.id);
-    }
-  },
-  methods: {
-    submitForm() {
-      this.loading = true;
-      let requestUrl;
-      if (this.$route.params.id) {
-        requestUrl = '/api/expenses/category/edit/' + this.$route.params.id
-      } else {
-        requestUrl = '/api/expenses/category/create'
-      }
+  loading: false,
+  errors: undefined,
+  componentKey: 0,
+})
 
-      axios.post(requestUrl, this.form)
-        .then(() => {
-          this.$router.push({name: 'Expenses'});
-        })
-        .catch((error) => {
-          if (error.response.data) {
-            this.errors = error.response.data;
-            this.componentKey += 1;
-          } else {
-            alert('An error has occurred');
-          }
-        })
-        .finally(() => {
-          this.loading = false;
-        })
-    },
-    getForm(id: number) {
-      this.loading = true;
-      axios.get('/api/expenses/category/' + id)
-        .then((response) => {
-          this.form = response.data;
-          this.componentKey += 1;
-        })
-        .catch(() => {
-          alert('An error has occurred');
-        })
-        .finally(() => {
-          this.loading = false;
-        })
-    }
+function submitForm() {
+  data.loading = true;
+  let requestUrl;
+  if (route.params.id) {
+    requestUrl = '/api/expenses/category/edit/' + route.params.id
+  } else {
+    requestUrl = '/api/expenses/category/create'
   }
+
+  axios.post(requestUrl, data.form)
+    .then(() => {
+      router.push({name: 'Expenses'});
+    })
+    .catch((error) => {
+      if (error.response.data) {
+        data.errors = error.response.data;
+        data.componentKey += 1;
+      } else {
+        alert('An error has occurred');
+      }
+    })
+    .finally(() => {
+      data.loading = false;
+    })
 }
+
+function getForm(id: number) {
+  data.loading = true;
+  axios.get('/api/expenses/category/' + id)
+    .then((response) => {
+      data.form = response.data;
+      data.componentKey += 1;
+    })
+    .catch(() => {
+      alert('An error has occurred');
+    })
+    .finally(() => {
+      data.loading = false;
+    })
+}
+
+onMounted(() => {
+  if (route.params.id) {
+    getForm(Number(route.params.id));
+  }
+})
+
 </script>
 
 <template>
@@ -84,9 +84,9 @@ export default {
         </div>
         <div class="w-full md:w-2/4">
           <input-text
-            :key="componentKey"
-            v-model="form.name"
-            :error="errors"
+            :key="data.componentKey"
+            v-model="data.form.name"
+            :error="data.errors"
             name="name"
             label="Category Name"
             placeholder="Enter a category name"
@@ -96,7 +96,7 @@ export default {
         <button
           type="submit"
           class="btn btn-primary"
-          :disabled="loading"
+          :disabled="data.loading"
         >
           Save
         </button>
