@@ -72,6 +72,7 @@ class DealRepository extends ServiceEntityRepository
             ->orderBy('d.status', 'ASC')
             ->addOrderBy('s.type', 'DESC')
             ->addOrderBy('s.currency', 'ASC')
+            ->addOrderBy('d.id', 'ASC')
             ->getQuery()
             ->getResult();
     }
