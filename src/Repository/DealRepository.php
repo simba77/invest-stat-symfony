@@ -69,7 +69,9 @@ class DealRepository extends ServiceEntityRepository
             ->leftJoin(Share::class, 's', Join::WITH, 's.ticker = d.ticker AND s.stockMarket = d.stockMarket')
             ->leftJoin(Bond::class, 'b', Join::WITH, 'b.ticker = d.ticker AND b.stockMarket = d.stockMarket')
             ->leftJoin(Future::class, 'f', Join::WITH, 'f.ticker = d.ticker AND f.stockMarket = d.stockMarket')
-            ->orderBy('d.id', 'ASC')
+            ->orderBy('d.status', 'ASC')
+            ->addOrderBy('s.type', 'DESC')
+            ->addOrderBy('s.currency', 'ASC')
             ->getQuery()
             ->getResult();
     }
