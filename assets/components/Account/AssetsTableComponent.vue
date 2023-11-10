@@ -47,11 +47,11 @@ const dealsGroup = useDealsGroup()
         <assets-table-group-component
           :item="asset.groupData"
           :clickable="true"
-          @show-children="dealsGroup.toggleGroup(i)"
+          @show-children="dealsGroup.toggleGroup(asset.groupData.ticker)"
         />
 
         <!-- Children table -->
-        <tr v-if="dealsGroup.openedGroups.value[i]">
+        <tr v-if="dealsGroup.openedGroups.value[asset.groupData.ticker]">
           <td
             colspan="111"
             class="!p-2 !bg-white"

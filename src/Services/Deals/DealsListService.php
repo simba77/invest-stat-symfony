@@ -62,7 +62,7 @@ class DealsListService
         }
 
         return [
-            'dealsList'       => $result,
+            'dealsList'       => $this->resortTickers($result),
             'statuses'        => $statuses,
             'instrumentTypes' => $instrumentTypes,
             'currencies'      => $currencies,
@@ -138,5 +138,25 @@ class DealsListService
         ];
 
         return $statuses[$status->name];
+    }
+
+    private function resortTickers(array $result): array
+    {
+        foreach ($result as $statusCode => $groupByStatus) {
+            foreach ($groupByStatus as $instrumentTypeCode => $groupByInstrumentType) {
+                foreach ($groupByInstrumentType as $currencyCode => $groupByCurrency) {
+                    usort($result[$statusCode][$instrumentTypeCode][$currencyCode], function (GroupByTicker $a, GroupByTicker $b) {
+                        if ($a->getGroupData()->percent > $b->getGroupData()->percent) {
+                            return -1;
+                        } elseif ($a->getGroupData()->percent < $b->getGroupData()->percent) {
+                            return 1;
+                        }
+                        return 0;
+                    });
+                }
+            }
+        }
+
+        return $result;
     }
 }
