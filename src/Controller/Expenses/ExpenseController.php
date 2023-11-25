@@ -81,7 +81,7 @@ class ExpenseController extends AbstractController
                 'summary' => [
                     [
                         'name'  => 'Salary',
-                        'total' => $this->getParameter('app.expenses.salary'),
+                        'total' => $user->getSalary(),
                     ],
                     [
                         'name'  => 'All Expenses',
@@ -90,7 +90,7 @@ class ExpenseController extends AbstractController
                     [
                         'name'     => 'Salary - Expenses',
                         'helpText' => 'Free Money for Investments',
-                        'total'    => $this->getParameter('app.expenses.salary') - $expenses,
+                        'total'    => $user->getSalary() - $expenses,
                     ],
                 ],
             ]
