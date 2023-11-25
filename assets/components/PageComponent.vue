@@ -48,7 +48,7 @@ const navigation = [
   }
 ]
 const userNavigation = [
-  {name: 'Sign out', href: '#'},
+  {name: 'Logout', href: '/api/logout'},
 ]
 </script>
 

@@ -22,4 +22,9 @@ class AuthController extends AbstractController
 
         return $this->json($user, context: ['groups' => 'authUserData']);
     }
+
+    #[Route('/logout', name: 'app_logout', methods: ['GET'])]
+    public function logout()
+    {
+    }
 }
