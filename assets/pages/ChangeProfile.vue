@@ -13,6 +13,7 @@ const componentKey = ref(0)
 const form = reactive({
   name: userData?.name,
   email: userData?.email,
+  salary: userData?.salary,
   password: '',
 })
 
@@ -71,6 +72,17 @@ const {loading, run: submitForm} = useAsync(() => {
             name="email"
             label="E-mail"
             placeholder="E-mail"
+          />
+          <input-text
+            :key="componentKey"
+            v-model="form.salary"
+            :error="errors"
+            :required="true"
+            class="mt-3"
+            type="number"
+            name="salary"
+            label="Salary"
+            placeholder="Salary"
           />
           <input-text
             :key="componentKey"

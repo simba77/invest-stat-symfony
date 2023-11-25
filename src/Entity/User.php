@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -38,6 +39,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Deal::class, orphanRemoval: true)]
     private Collection $deals;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
+    #[Groups(['authUserData'])]
+    private ?float $salary = null;
 
     public function __construct()
     {
@@ -159,6 +164,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $deal->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSalary(): ?float
+    {
+        return $this->salary;
+    }
+
+    public function setSalary(?float $salary): static
+    {
+        $this->salary = $salary;
 
         return $this;
     }

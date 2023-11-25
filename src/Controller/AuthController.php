@@ -43,6 +43,7 @@ class AuthController extends AbstractController
     {
         $user->setName($DTO->name);
         $user->setEmail($DTO->email);
+        $user->setSalary($DTO->salary);
 
         if (! empty($DTO->password)) {
             $password = $this->passwordHasher->hashPassword($user, $DTO->password);

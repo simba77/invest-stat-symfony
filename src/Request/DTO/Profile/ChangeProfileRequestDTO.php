@@ -17,4 +17,7 @@ class ChangeProfileRequestDTO
     public string $email;
 
     public ?string $password;
+
+    #[Assert\NotBlank]
+    public float $salary;
 }
