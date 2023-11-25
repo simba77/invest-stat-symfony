@@ -204,6 +204,15 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/pages/Analytics/AnalyticsPage.vue')
   },
 
+  {
+    name: 'ChangeProfile',
+    path: '/change-profile',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('@/pages/ChangeProfile.vue')
+  },
+
 ];
 
 const router = createRouter({

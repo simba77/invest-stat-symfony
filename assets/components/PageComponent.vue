@@ -48,6 +48,7 @@ const navigation = [
   }
 ]
 const userNavigation = [
+  {name: 'Change Profile', href: '/change-profile'},
   {name: 'Logout', href: '/api/logout'},
 ]
 </script>
