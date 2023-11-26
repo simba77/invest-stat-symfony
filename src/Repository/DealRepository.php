@@ -132,6 +132,17 @@ class DealRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getAllTickersByStockMarket(string $stockMarket)
+    {
+        return $this->createQueryBuilder('d')
+            ->select('d.ticker')
+            ->where("d.stockMarket = :stock_market")
+            ->groupBy('d.ticker')
+            ->setParameter('stock_market', $stockMarket)
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @return array<int, array{deal: Deal}>
      */
