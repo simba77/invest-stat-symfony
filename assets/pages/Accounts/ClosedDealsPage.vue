@@ -16,7 +16,10 @@ run()
   <page-component title="Closed Deals">
     <preloader-component v-if="loading" />
     <div v-else-if="closedDeals">
-      <closed-deals-table-component :assets="closedDeals.deals" />
+      <closed-deals-table-component
+        :assets="closedDeals.deals"
+        :summary="closedDeals.summary"
+      />
     </div>
   </page-component>
 </template>

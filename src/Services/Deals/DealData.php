@@ -246,9 +246,22 @@ class DealData
         return $this->getBuyPrice() * $this->currencyService->getUSDRUBRate();
     }
 
+    public function getSellPriceInBaseCurrency(): float
+    {
+        if ($this->getCurrency() === 'RUB') {
+            return $this->getSellPrice();
+        }
+        return $this->getSellPrice() * $this->currencyService->getUSDRUBRate();
+    }
+
     public function getFullBuyPriceInBaseCurrency(): float
     {
         return $this->getBuyPriceInBaseCurrency() * $this->getQuantity();
+    }
+
+    public function getFullSellPriceInBaseCurrency(): float
+    {
+        return $this->getSellPriceInBaseCurrency() * $this->getQuantity();
     }
 
     public function getCurrentPriceInBaseCurrency(): float

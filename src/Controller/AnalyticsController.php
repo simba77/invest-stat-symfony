@@ -22,6 +22,6 @@ class AnalyticsController extends AbstractController
         #[CurrentUser] ?User $user,
     ): JsonResponse {
         $deals = $dealsService->getDeals($user, $filter);
-        return $this->json(['deals' => $deals]);
+        return $this->json($deals);
     }
 }

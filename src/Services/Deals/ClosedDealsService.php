@@ -7,6 +7,7 @@ namespace App\Services\Deals;
 use App\Entity\User;
 use App\Repository\DealRepository;
 use App\Request\DTO\Deals\DealsFilterRequestDTO;
+use App\Response\DTO\Deals\SummaryForClosedDealsDTO;
 use App\Services\MarketData\Currencies\CurrencyService;
 
 class ClosedDealsService
@@ -20,6 +21,10 @@ class ClosedDealsService
     public function getDeals(User $user, ?DealsFilterRequestDTO $filterRequestDTO): array
     {
         $dealsByTickers = [];
+        $summaryBuyPrice = 0;
+        $summarySellPrice = 0;
+        $summaryProfit = 0;
+
         $deals = $this->dealRepository->getClosedDealsForUserByFilter($user);
         foreach ($deals as $deal) {
             $dealData = new DealData($deal, $deal['deal']->getAccount(), $this->currencyService);
@@ -32,8 +37,19 @@ class ClosedDealsService
             }
 
             $group->addDeal($dealData);
+
+            $summaryBuyPrice += $dealData->getFullBuyPriceInBaseCurrency();
+            $summarySellPrice += $dealData->getFullSellPriceInBaseCurrency();
+            $summaryProfit += $dealData->getProfitInBaseCurrency();
         }
 
-        return $dealsByTickers;
+        $summary = new SummaryForClosedDealsDTO(
+            round($summaryBuyPrice, 2),
+            round($summarySellPrice, 2),
+            round($summaryProfit, 2),
+            round($summaryProfit / $summaryBuyPrice * 100, 2)
+        );
+
+        return ['deals' => $dealsByTickers, 'summary' => $summary];
     }
 }

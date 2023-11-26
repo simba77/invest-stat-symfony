@@ -3,6 +3,13 @@ export interface ClosedDealsListItem {
   deals: ClosedDeal[]
 }
 
+export interface ClosedDealsSummary {
+  buyPrice: number
+  sellPrice: number
+  profit: number
+  profitPercent: number
+}
+
 export interface ClosedDealsGroup {
   ticker: string
   shortName: string

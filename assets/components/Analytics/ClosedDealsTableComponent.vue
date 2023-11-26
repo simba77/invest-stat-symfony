@@ -3,9 +3,10 @@ import {useDealsGroup} from "@/composable/useDealsGroup";
 
 import ClosedDealsGroupComponent from "@/components/Analytics/ClosedDealsGroupComponent.vue";
 import ClosedDealsItemComponent from "@/components/Analytics/ClosedDealsItemComponent.vue";
-import {ClosedDealsListItem} from "@/types/analytics";
+import {ClosedDealsListItem, ClosedDealsSummary} from "@/types/analytics";
+import helpers from "../../helpers";
 
-defineProps<{ assets: ClosedDealsListItem[] }>()
+defineProps<{ assets: ClosedDealsListItem[], summary: ClosedDealsSummary }>()
 
 const dealsGroup = useDealsGroup()
 
@@ -76,35 +77,22 @@ const dealsGroup = useDealsGroup()
       </template>
 
       <!-- Total row -->
-      <!--      <tr class="font-bold">
-        <td>Subtotal:</td>
+      <tr class="font-bold">
+        <td>Total (base currency):</td>
         <td />
         <td>
-          <div v-if="!summary.isBaseCurrency">
-            {{ helpers.formatPrice(summary.buyPrice) }} $
-          </div>
-          <div>{{ helpers.formatPrice(summary.buyPriceInBaseCurrency) }} ₽</div>
+          <div>{{ helpers.formatPrice(summary.buyPrice) }} ₽</div>
         </td>
         <td>
-          <div v-if="!summary.isBaseCurrency">
-            {{ helpers.formatPrice(summary.currentPrice) }} $
-          </div>
-          <div>{{ helpers.formatPrice(summary.currentPriceInBaseCurrency) }} ₽</div>
+          <div>{{ helpers.formatPrice(summary.sellPrice) }} ₽</div>
         </td>
-        <td />
         <td :class="[summary.profit > 0 ? 'text-green-600' : 'text-red-700']">
-          <div v-if="!summary.isBaseCurrency">
-            {{ helpers.formatPrice(summary.profit) }} $
-          </div>
-          <div>{{ helpers.formatPrice(summary.profitInBaseCurrency) }} ₽</div>
+          <div>{{ helpers.formatPrice(summary.profit) }} ₽</div>
           <div class="text-xs">
             ({{ summary.profitPercent }}%)
           </div>
         </td>
-        <td />
-        <td />
-        <td class="table-actions" />
-      </tr>-->
+      </tr>
     </tbody>
   </table>
 </template>

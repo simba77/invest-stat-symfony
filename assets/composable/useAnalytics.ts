@@ -1,8 +1,8 @@
 import {ref} from "vue";
 import axios from "axios";
-import {ClosedDealsListItem} from "@/types/analytics";
+import {ClosedDealsListItem, ClosedDealsSummary} from "@/types/analytics";
 
-const closedDeals = ref<{deals: ClosedDealsListItem[]}>()
+const closedDeals = ref<{deals: ClosedDealsListItem[], summary: ClosedDealsSummary}>()
 
 export default function () {
   async function getClosedDeals() {
