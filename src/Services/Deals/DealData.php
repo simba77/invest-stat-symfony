@@ -90,6 +90,26 @@ class DealData
         return $this->getBuyPrice() * $this->getQuantity();
     }
 
+    public function getSellPrice(): float
+    {
+        // Futures price
+        if ($this->deal['futureName']) {
+            return (float) ($this->deal['deal']->getSellPrice() * $this->deal['futureStepPrice'] * $this->deal['futureLotSize']);
+        }
+
+        // Bond price
+        if ($this->deal['bondName']) {
+            return (float) ($this->deal['deal']->getSellPrice() * $this->deal['bondLotSize'] / 100);
+        }
+
+        return (float) $this->deal['deal']->getSellPrice();
+    }
+
+    public function getFullSellPrice(): float
+    {
+        return $this->getSellPrice() * $this->getQuantity();
+    }
+
     public function getCurrentPrice(): float
     {
         if ($this->deal['futurePrice']) {
@@ -133,6 +153,13 @@ class DealData
 
     public function getProfit(): float
     {
+        if ($this->deal['deal']->getStatus() === DealStatus::Closed) {
+            if ($this->deal['deal']->getType() === DealType::Short) {
+                return round($this->getFullBuyPrice() - $this->getFullSellPrice() - $this->getCommission(), 2);
+            }
+            return round($this->getFullSellPrice() - $this->getFullBuyPrice() - $this->getCommission(), 2);
+        }
+
         if ($this->deal['deal']->getType() === DealType::Short) {
             return round($this->getFullBuyPrice() - $this->getFullCurrentPrice() - $this->getCommission(), 2);
         }

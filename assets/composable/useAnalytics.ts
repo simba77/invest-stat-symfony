@@ -1,20 +1,16 @@
 import {ref} from "vue";
-import {AssetsGroup} from "@/types/account";
 import axios from "axios";
-import useAsync from "@/utils/use-async";
+import {ClosedDealsListItem} from "@/types/analytics";
 
-const assets = ref<AssetsGroup[]>([])
+const closedDeals = ref<{deals: ClosedDealsListItem[]}>()
 
 export default function () {
-  async function getAssets() {
-    assets.value = await axios.get('/api/analytics').then((response) => response.data);
+  async function getClosedDeals() {
+    closedDeals.value = await axios.get('/api/analytics/closed-deals').then((response) => response.data);
   }
 
-  const {loading, run: asyncGetAssets} = useAsync(getAssets)
-
   return {
-    assets,
-    loading,
-    getAssets: asyncGetAssets
+    getClosedDeals,
+    closedDeals
   }
 }

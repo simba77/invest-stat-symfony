@@ -42,9 +42,9 @@ const navigation = [
     current: route.name === 'Accounts'
   },
   {
-    name: 'Sold Assets',
-    routeName: 'SoldAssets',
-    current: route.name === 'SoldAssets'
+    name: 'Closed Deals',
+    routeName: 'ClosedDeals',
+    current: route.name === 'ClosedDeals'
   }
 ]
 const userNavigation = [
