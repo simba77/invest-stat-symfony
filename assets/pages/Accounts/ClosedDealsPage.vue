@@ -21,7 +21,6 @@ run()
 
 <template>
   <page-component title="Closed Deals">
-    {{ filter }}
     <div class="mb-6 grid grid-flow-col auto-cols-max gap-4">
       <div>
         <input-date-component v-model="filter.startDate" name="startDate" label="Start Date" @update:model-value="run()" />
