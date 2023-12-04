@@ -45,7 +45,7 @@ function showSellModal(item: Deal) {
 
 <template>
   <tr>
-    <td v-tooltip="{html: true, content: 'Created At: ' + item.createdAt + '<br>Updated At: ' + item.createdAt}">
+    <td v-tooltip="{html: true, content: 'Created: ' + item.createdAt + '<br>Updated: ' + item.updatedAt}">
       <div class="font-extrabold">
         <lock-closed-icon
           v-if="item.isBlocked"
