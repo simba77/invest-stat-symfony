@@ -25,7 +25,7 @@ class ClosedDealsService
         $summarySellPrice = 0;
         $summaryProfit = 0;
 
-        $deals = $this->dealRepository->getClosedDealsForUserByFilter($user);
+        $deals = $this->dealRepository->getClosedDealsForUserByFilter($user, $filterRequestDTO);
         foreach ($deals as $deal) {
             $dealData = new DealData($deal, $deal['deal']->getAccount(), $this->currencyService);
 
@@ -43,12 +43,16 @@ class ClosedDealsService
             $summaryProfit += $dealData->getProfitInBaseCurrency();
         }
 
-        $summary = new SummaryForClosedDealsDTO(
-            round($summaryBuyPrice, 2),
-            round($summarySellPrice, 2),
-            round($summaryProfit, 2),
-            round($summaryProfit / $summaryBuyPrice * 100, 2)
-        );
+        if ($summaryBuyPrice > 0) {
+            $summary = new SummaryForClosedDealsDTO(
+                round($summaryBuyPrice, 2),
+                round($summarySellPrice, 2),
+                round($summaryProfit, 2),
+                round($summaryProfit / $summaryBuyPrice * 100, 2)
+            );
+        } else {
+            $summary = new SummaryForClosedDealsDTO(0, 0, 0, 0);
+        }
 
         return ['deals' => $dealsByTickers, 'summary' => $summary];
     }

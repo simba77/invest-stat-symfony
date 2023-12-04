@@ -30,6 +30,7 @@
   "dependencies": {
     "@headlessui/vue": "^1.7",
     "@heroicons/vue": "^2.0",
+    "@vuepic/vue-datepicker": "^7.3.0",
     "@vueuse/core": "^10.5",
     "floating-vue": "^2.0.0-beta.20",
     "pinia": "^2.1",

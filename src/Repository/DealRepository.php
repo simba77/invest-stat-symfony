@@ -10,7 +10,9 @@ use App\Entity\Deal;
 use App\Entity\Future;
 use App\Entity\Share;
 use App\Entity\User;
+use App\Request\DTO\Deals\DealsFilterRequestDTO;
 use App\Services\Deals\DealStatus;
+use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
@@ -146,9 +148,9 @@ class DealRepository extends ServiceEntityRepository
     /**
      * @return array<int, array{deal: Deal}>
      */
-    public function getClosedDealsForUserByFilter(User $user, array $filter = []): array
+    public function getClosedDealsForUserByFilter(User $user, ?DealsFilterRequestDTO $filter = null): array
     {
-        return $this->createQueryBuilder('d')
+        $builder = $this->createQueryBuilder('d')
             ->select(
                 [
                     'd as deal',
@@ -176,15 +178,28 @@ class DealRepository extends ServiceEntityRepository
             ->andWhere('d.user = :user')
             ->andWhere('d.status = :status')
             ->setParameter('user', $user)
-            ->setParameter('status', DealStatus::Closed)
-            ->leftJoin(Share::class, 's', Join::WITH, 's.ticker = d.ticker AND s.stockMarket = d.stockMarket')
+            ->setParameter('status', DealStatus::Closed);
+
+        if ($filter) {
+            if (! empty($filter->startDate)) {
+                $builder->andWhere('d.updatedAt >= :updated_at')
+                    ->setParameter('updated_at', Carbon::createFromFormat('d.m.Y', $filter->startDate)->setTime(0, 0));
+            }
+            if (! empty($filter->endDate)) {
+                $builder->andWhere('d.updatedAt >= :updated_at')
+                    ->setParameter('updated_at', Carbon::createFromFormat('d.m.Y', $filter->startDate)->setTime(23, 59, 59));
+            }
+        }
+
+
+        $builder->leftJoin(Share::class, 's', Join::WITH, 's.ticker = d.ticker AND s.stockMarket = d.stockMarket')
             ->leftJoin(Bond::class, 'b', Join::WITH, 'b.ticker = d.ticker AND b.stockMarket = d.stockMarket')
             ->leftJoin(Future::class, 'f', Join::WITH, 'f.ticker = d.ticker AND f.stockMarket = d.stockMarket')
             ->orderBy('d.status', 'ASC')
             ->addOrderBy('s.type', 'DESC')
             ->addOrderBy('s.currency', 'ASC')
-            ->addOrderBy('d.id', 'ASC')
-            ->getQuery()
-            ->getResult();
+            ->addOrderBy('d.id', 'ASC');
+
+        return $builder->getQuery()->getResult();
     }
 }

@@ -12,10 +12,10 @@ class DealsFilterRequestDTO
         #[Assert\Length(min: 0)]
         public ?int $accountId = null,
 
-        #[Assert\Date]
+        #[Assert\DateTime(options: ['format' => 'd.m.Y'])]
         public ?string $startDate = null,
 
-        #[Assert\Date]
+        #[Assert\DateTime(options: ['format' => 'd.m.Y'])]
         public ?string $endDate = null,
     ) {
     }

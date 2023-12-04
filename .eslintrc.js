@@ -19,6 +19,14 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     'vue/no-v-text-v-html-on-component': 'off',
     'vue/no-v-html': 'off',
+    'vue/max-attributes-per-line': ['error', {
+      'singleline': {
+        'max': 4
+      },
+      'multiline': {
+        'max': 1
+      }
+    }],
   },
   overrides: [
     {
