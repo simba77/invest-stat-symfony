@@ -186,7 +186,7 @@ class DealRepository extends ServiceEntityRepository
                     ->setParameter('updated_at', Carbon::createFromFormat('d.m.Y', $filter->startDate)->setTime(0, 0));
             }
             if (! empty($filter->endDate)) {
-                $builder->andWhere('d.updatedAt >= :updated_at')
+                $builder->andWhere('d.updatedAt <= :updated_at')
                     ->setParameter('updated_at', Carbon::createFromFormat('d.m.Y', $filter->startDate)->setTime(23, 59, 59));
             }
         }
