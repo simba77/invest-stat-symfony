@@ -14,7 +14,7 @@ defineProps<{
 
 <template>
   <tr>
-    <td v-tooltip="{html: true, content: 'Buy: ' + item.createdAt + '<br>Sell: ' + item.updatedAt}">
+    <td v-tooltip="{html: true, content: 'Buy: ' + item.createdAt + '<br>Closed: ' + item.closingDate}">
       <div class="font-extrabold">
         <lock-closed-icon
           v-if="item.isBlocked"

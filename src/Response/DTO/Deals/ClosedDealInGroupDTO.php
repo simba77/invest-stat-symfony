@@ -24,6 +24,7 @@ class ClosedDealInGroupDTO
         public bool $isBlocked,
         public string $createdAt,
         public string $updatedAt,
+        public string $closingDate,
     ) {
     }
 }

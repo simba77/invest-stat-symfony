@@ -238,6 +238,11 @@ class DealData
         return $this->deal['deal']->updatedAt()?->format('d.m.Y H:i');
     }
 
+    public function getClosingDate(): ?string
+    {
+        return $this->deal['deal']->getClosingDate()?->format('d.m.Y H:i');
+    }
+
     public function getBuyPriceInBaseCurrency(): float
     {
         if ($this->getCurrency() === 'RUB') {

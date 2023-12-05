@@ -77,6 +77,7 @@ class ClosedDealsGroupedByTicker
                 isBlocked:     $deal->getStatus() === DealStatus::Blocked,
                 createdAt:     $deal->getCreatedAt(),
                 updatedAt:     $deal->getUpdatedAt() ?? '',
+                closingDate:   $deal->getClosingDate() ?? '',
             ),
             $this->deals
         );

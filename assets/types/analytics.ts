@@ -44,4 +44,5 @@ export interface ClosedDeal {
   isBlocked: boolean
   createdAt: string
   updatedAt: string
+  closingDate: string
 }
