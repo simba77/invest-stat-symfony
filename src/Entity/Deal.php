@@ -68,6 +68,9 @@ class Deal implements
     #[ORM\Column(type: Types::SMALLINT, enumType: DealType::class)]
     private ?DealType $type = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $closingDate = null;
+
     public function __construct(
         User       $user,
         Account    $account,
@@ -214,6 +217,18 @@ class Deal implements
     public function setType(DealType $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getClosingDate(): ?\DateTimeInterface
+    {
+        return $this->closingDate;
+    }
+
+    public function setClosingDate(?\DateTimeInterface $closingDate): static
+    {
+        $this->closingDate = $closingDate;
 
         return $this;
     }

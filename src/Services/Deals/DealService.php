@@ -15,6 +15,7 @@ use App\Services\AccountCalculator;
 use App\Services\Deals\Exceptions\NoDealsException;
 use App\Services\MarketData\Securities\SecuritiesService;
 use App\Services\MarketData\Securities\SecurityTypeEnum;
+use Carbon\Carbon;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
@@ -55,6 +56,7 @@ class DealService
     {
         $deal->setStatus(DealStatus::Closed);
         $deal->setSellPrice($dto->price);
+        $deal->setClosingDate(Carbon::now());
         $this->entityManager->persist($deal);
 
         $this->changeAccountBalance($deal, $dto);
@@ -91,6 +93,7 @@ class DealService
                 // Set the sell status and set the quantity
                 $deal->setQuantity($needToSell);
                 $deal->setStatus(DealStatus::Closed);
+                $deal->setClosingDate(Carbon::now());
                 $deal->setSellPrice($dto->price);
                 $this->entityManager->persist($deal);
                 $needToSell = 0;
@@ -99,6 +102,7 @@ class DealService
 
             // Set the sell status and reduce quantity that need to sell
             $deal->setStatus(DealStatus::Closed);
+            $deal->setClosingDate(Carbon::now());
             $deal->setSellPrice($dto->price);
             $this->entityManager->persist($deal);
             $needToSell -= $deal->getQuantity();
@@ -113,6 +117,7 @@ class DealService
             $additionalDeal = clone $deal;
             $additionalDeal->setQuantity($needToSell);
             $additionalDeal->setStatus(DealStatus::Closed);
+            $additionalDeal->setClosingDate(Carbon::now());
             $additionalDeal->setSellPrice($dto->price);
             $this->entityManager->persist($additionalDeal);
         }
