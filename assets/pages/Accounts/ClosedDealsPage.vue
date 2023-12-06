@@ -6,8 +6,9 @@ import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
 import ClosedDealsTableComponent from "@/components/Analytics/ClosedDealsTableComponent.vue";
 import InputDateComponent from "@/components/Forms/InputDateComponent.vue";
 import { reactive } from "vue";
+import ClosedDealsByMonthsChart from "@/components/Analytics/ClosedDealsByMonthsChart.vue";
 
-const {closedDeals, getClosedDeals} = useAnalytics()
+const {closedDeals, closedDealsByMonths, getClosedDeals, getClosedDealsByMonths} = useAnalytics()
 
 const filter = reactive({
   startDate: '',
@@ -15,12 +16,20 @@ const filter = reactive({
 })
 
 const {loading, run} = useAsync(() => getClosedDeals(filter))
+const {run: closedDealsByMonthsRun} = useAsync(() => getClosedDealsByMonths({}))
 
 run()
+
+closedDealsByMonthsRun()
+
 </script>
 
 <template>
   <page-component title="Closed Deals">
+    <div v-if="closedDealsByMonths?.profitByMonths">
+      <closed-deals-by-months-chart :profit-by-months="closedDealsByMonths?.profitByMonths" />
+    </div>
+
     <div class="mb-6 grid grid-flow-col auto-cols-max gap-4">
       <div>
         <input-date-component v-model="filter.startDate" name="startDate" label="Start Date" @update:model-value="run()" />

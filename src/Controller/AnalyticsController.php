@@ -24,4 +24,14 @@ class AnalyticsController extends AbstractController
         $deals = $dealsService->getDeals($user, $filter);
         return $this->json($deals);
     }
+
+    #[Route('/analytics/monthly-closed-deals', name: 'app_analytics_monthly_closed_deals', methods: 'GET')]
+    public function monthlyClosedDeals(
+        ClosedDealsService $dealsService,
+        #[MapQueryString] ?DealsFilterRequestDTO $filter,
+        #[CurrentUser] ?User $user,
+    ): JsonResponse {
+        $deals = $dealsService->getMonthlyDealsStat($user, $filter);
+        return $this->json($deals);
+    }
 }

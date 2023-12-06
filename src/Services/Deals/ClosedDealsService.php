@@ -56,4 +56,28 @@ class ClosedDealsService
 
         return ['deals' => $dealsByTickers, 'summary' => $summary];
     }
+
+    public function getMonthlyDealsStat(User $user, ?DealsFilterRequestDTO $filterRequestDTO): array
+    {
+        $profitByMonths = [];
+        $deals = $this->dealRepository->getClosedDealsForUserByFilter($user, $filterRequestDTO);
+        foreach ($deals as $deal) {
+            $dealData = new DealData($deal, $deal['deal']->getAccount(), $this->currencyService);
+            $date = $deal['deal']->getClosingDate()?->format('Y.m') ?? '0';
+
+            if (isset($profitByMonths[$date])) {
+                $profitByMonths[$date] += $dealData->getProfitInBaseCurrency();
+            } else {
+                $profitByMonths[$date] = $dealData->getProfitInBaseCurrency();
+            }
+        }
+
+        foreach ($profitByMonths as $key => $profitByMonth) {
+            $profitByMonths[$key] = round($profitByMonth, 2);
+        }
+
+        ksort($profitByMonths);
+
+        return ['profitByMonths' => $profitByMonths];
+    }
 }

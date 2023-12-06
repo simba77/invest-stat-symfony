@@ -32,6 +32,7 @@
     "@heroicons/vue": "^2.0",
     "@vuepic/vue-datepicker": "^7.3.0",
     "@vueuse/core": "^10.5",
+    "chart.js": "^4.4.1",
     "floating-vue": "^2.0.0-beta.20",
     "pinia": "^2.1",
     "vite-plugin-symfony": "^4.3.4",
