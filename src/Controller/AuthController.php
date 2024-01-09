@@ -14,6 +14,7 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class AuthController extends AbstractController
 {
@@ -39,6 +40,7 @@ class AuthController extends AbstractController
     }
 
     #[Route('/change-profile', name: 'app_auth_change_profile', methods: ['POST'])]
+    #[IsGranted('IS_AUTHENTICATED', statusCode: 403)]
     public function changeProfile(#[CurrentUser] ?User $user, #[MapRequestPayload] ChangeProfileRequestDTO $DTO): JsonResponse
     {
         $user->setName($DTO->name);
