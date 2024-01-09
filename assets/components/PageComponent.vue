@@ -45,6 +45,11 @@ const navigation = [
     name: 'Closed Deals',
     routeName: 'ClosedDeals',
     current: route.name === 'ClosedDeals'
+  },
+  {
+    name: 'Portfolio',
+    routeName: 'Portfolio',
+    current: route.name === 'Portfolio'
   }
 ]
 const userNavigation = [

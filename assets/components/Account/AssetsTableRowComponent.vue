@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {LockClosedIcon, PencilIcon, XCircleIcon, BanknotesIcon} from "@heroicons/vue/24/outline";
+import { LockClosedIcon, PencilIcon, XCircleIcon, BanknotesIcon } from "@heroicons/vue/24/outline";
 import helpers from "../../helpers";
-import type {Deal} from "@/types/account";
-import {useModal} from "@/composable/useModal";
+import type { Deal } from "@/types/account";
+import { useModal } from "@/composable/useModal";
 import DeleteDealModal from "@/components/Account/DeleteDealModal.vue";
 import SellModal from "@/components/Modals/SellModal.vue";
 
@@ -12,6 +12,7 @@ function formatProfit(asset: { profit: number; currency: string; }) {
 
 defineProps<{
   item: Deal,
+  hideActions?: boolean
 }>();
 
 const modal = useModal();
@@ -103,7 +104,7 @@ function showSellModal(item: Deal) {
       </template>
     </td>
     <td>{{ item.percent }}%</td>
-    <td class="table-actions">
+    <td v-if="!hideActions" class="table-actions">
       <div class="flex justify-end items-center show-on-row-hover">
         <router-link
           :to="{name: 'EditAsset', params: {account: item.accountId, id: item.id}}"

@@ -8,6 +8,7 @@ use App\Entity\Account;
 use App\Entity\User;
 use App\Repository\DealRepository;
 use App\Services\AccountCalculator;
+use App\Services\AccountService;
 use App\Services\MarketData\Currencies\CurrencyService;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
@@ -18,6 +19,7 @@ class DealsListService
         private readonly PropertyAccessorInterface $propertyAccess,
         private readonly AccountCalculator $accountCalculator,
         private readonly CurrencyService $currencyService,
+        private readonly AccountService $accountService,
     ) {
     }
 
@@ -158,5 +160,59 @@ class DealsListService
         }
 
         return $result;
+    }
+
+    public function getFullPortfolio(User $user): array
+    {
+        $result = [];
+        $statuses = [];
+        $instrumentTypes = [];
+        $currencies = [];
+        $deals = $this->dealRepository->findForUser($user);
+        $summary = new SummaryForGroup();
+
+        $accountsValue = 0;
+        $accounts = $this->accountService->getAccountsListForUser($user);
+        foreach ($accounts as $account) {
+            $accountsValue += $account->currentValue;
+        }
+
+        foreach ($deals as $deal) {
+            // Statuses
+            $status = $this->getStatus($deal);
+            $statuses[$status['code']] = $status;
+
+            // Type
+            $instrumentType = $this->getInstrumentType($deal);
+            $instrumentTypes[$instrumentType['code']] = $instrumentType;
+
+            // Currency
+            $currency = $this->getCurrency($deal);
+            $currencies[$currency['code']] = $currency;
+
+            $ticker = $deal['deal']->getTicker();
+
+            $dealData = new DealData($deal, $deal['deal']->getAccount(), $this->currencyService);
+
+            /** @var ?GroupByTicker $group */
+            $group = $this->propertyAccess->getValue($result, '[' . $status['code'] . '][' . $instrumentType['code'] . '][' . $currency['code'] . '][' . $ticker . ']');
+            if ($group) {
+                $group->addDeal($dealData);
+            } else {
+                $group = new GroupByTicker($accountsValue);
+                $group->addDeal($dealData);
+                $result[$status['code']][$instrumentType['code']][$currency['code']][$ticker] = $group;
+            }
+
+            $summary->addDeal($status['code'], $instrumentType['code'], $currency['code'], $dealData);
+        }
+
+        return [
+            'dealsList'       => $this->resortTickers($result),
+            'statuses'        => $statuses,
+            'instrumentTypes' => $instrumentTypes,
+            'currencies'      => $currencies,
+            'summary'         => $summary->getSummary(),
+        ];
     }
 }

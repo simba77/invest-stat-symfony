@@ -35,8 +35,15 @@ class DealsController extends AbstractController
     ) {
     }
 
+    #[Route('/deals', name: 'app_deals_index')]
+    public function index(#[CurrentUser] ?User $user): Response
+    {
+        $deals = $this->dealsListService->getFullPortfolio($user);
+        return $this->json(['deals' => $deals]);
+    }
+
     #[Route('/deals/{accountId}', name: 'app_deals_deals_index', requirements: ['accountId' => '\d+'])]
-    public function index(int $accountId, #[CurrentUser] ?User $user): Response
+    public function dealListByAccount(int $accountId, #[CurrentUser] ?User $user): Response
     {
         $acc = $this->em->getRepository(Account::class)->findOneBy(['id' => $accountId, 'userId' => $user->getId()]);
         $deals = $this->dealsListService->getListWithGroups($user, $acc);

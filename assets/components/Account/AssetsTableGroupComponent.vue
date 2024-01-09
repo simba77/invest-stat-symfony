@@ -16,7 +16,8 @@ function formatProfit(asset: { profit: number; currency: string; }) {
 const emits = defineEmits<{ showChildren: [] }>()
 
 defineProps<{
-  item: AssetsGroup
+  item: AssetsGroup,
+  hideActions?: boolean
 }>();
 
 function showSellModal(item: AssetsGroup) {
@@ -97,7 +98,7 @@ function showSellModal(item: AssetsGroup) {
       </template>
     </td>
     <td>{{ item.percent }}%</td>
-    <td class="table-actions">
+    <td v-if="!hideActions" class="table-actions">
       <div class="flex justify-end items-center show-on-row-hover">
         <div
           class="text-gray-300 hover:text-gray-600 mr-2 cursor-pointer"

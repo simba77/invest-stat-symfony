@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import helpers from "../../helpers";
 import AssetsTableRowComponent from "@/components/Account/AssetsTableRowComponent.vue";
-import {AssetsGroupData, GroupSummary} from "@/types/account";
+import { AssetsGroupData, GroupSummary } from "@/types/account";
 import AssetsTableGroupComponent from "@/components/Account/AssetsTableGroupComponent.vue";
-import {useDealsGroup} from "@/composable/useDealsGroup";
+import { useDealsGroup } from "@/composable/useDealsGroup";
 
-defineProps<{ assets: { [key: string]: AssetsGroupData }, summary: GroupSummary }>()
+defineProps<{
+  assets: { [key: string]: AssetsGroupData },
+  summary: GroupSummary,
+  hideActions?: boolean
+}>()
 
 const dealsGroup = useDealsGroup()
 
@@ -29,6 +33,7 @@ const dealsGroup = useDealsGroup()
         <th>Target Profit</th>
         <th>Percent</th>
         <th
+          v-if="!hideActions"
           class="flex justify-end"
           style="min-width: 115px;"
         >
@@ -46,6 +51,7 @@ const dealsGroup = useDealsGroup()
         <!-- Parent row with assets -->
         <assets-table-group-component
           :item="asset.groupData"
+          :hide-actions="hideActions"
           :clickable="true"
           @show-children="dealsGroup.toggleGroup(asset.groupData.ticker)"
         />
@@ -73,6 +79,7 @@ const dealsGroup = useDealsGroup()
                   <th>Target Profit</th>
                   <th>Percent</th>
                   <th
+                    v-if="!hideActions"
                     class="flex justify-end"
                     style="min-width: 115px;"
                   >
@@ -85,7 +92,7 @@ const dealsGroup = useDealsGroup()
                   v-for="(subItem, subIndex) in asset.deals"
                   :key="'sub' + subIndex"
                 >
-                  <assets-table-row-component :item="subItem" />
+                  <assets-table-row-component :hide-actions="hideActions" :item="subItem" />
                 </template>
               </tbody>
             </table>
@@ -121,7 +128,7 @@ const dealsGroup = useDealsGroup()
         </td>
         <td />
         <td />
-        <td class="table-actions" />
+        <td v-if="!hideActions" class="table-actions" />
       </tr>
     </tbody>
   </table>

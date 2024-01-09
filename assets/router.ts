@@ -205,6 +205,15 @@ const routes: Array<RouteRecordRaw> = [
   },
 
   {
+    name: 'Portfolio',
+    path: '/portfolio',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('@/pages/Accounts/FullPortfolioPage.vue')
+  },
+
+  {
     name: 'ChangeProfile',
     path: '/change-profile',
     meta: {
