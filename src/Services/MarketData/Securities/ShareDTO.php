@@ -17,6 +17,7 @@ class ShareDTO implements ShareInterface
         public ?string $latName,
         public ?float $lotSize,
         public ?string $isin,
+        public ?float $prevPrice,
     ) {
     }
 
@@ -59,6 +60,11 @@ class ShareDTO implements ShareInterface
     public function getPrice(): float
     {
         return $this->price;
+    }
+
+    public function getPrevPrice(): float
+    {
+        return $this->prevPrice;
     }
 
     public function getLotSize(): ?float

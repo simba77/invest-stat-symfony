@@ -18,7 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'securities:get-moex-shares',
     description: 'Get Moex Shares',
 )]
-class GetSharesCommand extends Command
+class GetMoexSharesCommand extends Command
 {
     public function __construct(
         private readonly MoexSharesProvider $sharesProvider,
@@ -44,6 +44,7 @@ class GetSharesCommand extends Command
                 $share->setName($item->getName());
                 $share->setLatName($item->getLatName());
                 $share->setShortName($item->getShortName());
+                $share->setPrevPrice((string) $item->getPrevPrice());
             } else {
                 $share = new Share(
                     $item->getTicker(),
@@ -55,7 +56,8 @@ class GetSharesCommand extends Command
                     $item->getShortName(),
                     $item->getLatName(),
                     $item->getLotSize(),
-                    $item->getIsin()
+                    $item->getIsin(),
+                    (string) $item->getPrevPrice()
                 );
             }
             $this->em->persist($share);

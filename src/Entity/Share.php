@@ -56,6 +56,9 @@ class Share implements
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $type = null;
 
+    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
+    private ?string $prevPrice = null;
+
     public function __construct(
         string $ticker,
         string $name,
@@ -67,6 +70,7 @@ class Share implements
         string $latName = '',
         float  $lotSize = 1,
         string $isin = '',
+        string $prevPrice = '0',
     )
     {
         $this->ticker = $ticker;
@@ -79,6 +83,7 @@ class Share implements
         $this->lotSize = $lotSize;
         $this->isin = $isin;
         $this->type = $type;
+        $this->prevPrice = $prevPrice;
     }
 
     public function getId(): ?int
@@ -202,6 +207,18 @@ class Share implements
     public function setType(int $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getPrevPrice(): ?string
+    {
+        return $this->prevPrice;
+    }
+
+    public function setPrevPrice(?string $prevPrice): static
+    {
+        $this->prevPrice = $prevPrice;
 
         return $this;
     }

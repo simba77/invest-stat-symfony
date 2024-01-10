@@ -33,7 +33,7 @@ class MoexSharesProvider implements SharesProviderInterface
         return [...$tqbrShares, ...$tqtfShares, ...$tqifShares];
     }
 
-    private function parseResult(array $boardData)
+    private function parseResult(array $boardData): array
     {
         $result = [];
         foreach ($boardData['shares'] as $share) {
@@ -50,7 +50,8 @@ class MoexSharesProvider implements SharesProviderInterface
                 shortName:   $share['SHORTNAME'],
                 latName:     $share['LATNAME'],
                 lotSize:     (float) $share['LOTSIZE'],
-                isin:        $share['ISIN']
+                isin:        $share['ISIN'],
+                prevPrice:   (float) $share['PREVPRICE']
             );
         }
 
