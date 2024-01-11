@@ -35,6 +35,7 @@ class MoexBondsProvider implements BondsProviderInterface
                 stockMarket:       'MOEX',
                 currency:          'RUB',
                 price:             (float) (! empty($price) ? $price : 0),
+                prevPrice:         (float) $bond['PREVPRICE'],
                 shortName:         $bond['SHORTNAME'],
                 latName:           $bond['LATNAME'],
                 lotSize:           (float) $bond['LOTVALUE'],

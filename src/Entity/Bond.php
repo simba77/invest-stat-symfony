@@ -68,6 +68,8 @@ class Bond implements
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $maturityDate = null;
 
+    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
+    private ?string $prevPrice = null;
 
     public function __construct(
         string $ticker,
@@ -75,6 +77,7 @@ class Bond implements
         string $stockMarket,
         string $currency,
         float $price,
+        string $prevPrice = '',
         string $shortName = '',
         string $latName = '',
         float $lotSize = 1,
@@ -92,6 +95,7 @@ class Bond implements
         $this->stockMarket = $stockMarket;
         $this->currency = $currency;
         $this->price = $price;
+        $this->prevPrice = $prevPrice;
         $this->lotSize = $lotSize;
         $this->stepPrice = $stepPrice;
         $this->couponPercent = $couponPercent;
@@ -270,6 +274,18 @@ class Bond implements
     public function setMaturityDate(?\DateTimeInterface $maturityDate): static
     {
         $this->maturityDate = $maturityDate;
+
+        return $this;
+    }
+
+    public function getPrevPrice(): ?string
+    {
+        return $this->prevPrice;
+    }
+
+    public function setPrevPrice(?string $prevPrice): static
+    {
+        $this->prevPrice = $prevPrice;
 
         return $this;
     }

@@ -12,6 +12,7 @@ class BondDTO implements BondInterface
         public string $stockMarket,
         public string $currency,
         public float $price,
+        public ?float $prevPrice,
         public ?string $shortName,
         public ?string $latName,
         public ?float $lotSize,
@@ -63,6 +64,11 @@ class BondDTO implements BondInterface
     public function getPrice(): float
     {
         return $this->price;
+    }
+
+    public function getPrevPrice(): ?float
+    {
+        return $this->prevPrice;
     }
 
     public function getLotSize(): ?float

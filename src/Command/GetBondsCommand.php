@@ -33,6 +33,8 @@ class GetBondsCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $bondRepository = $this->em->getRepository(Bond::class);
 
+        ini_set('memory_limit', '1G');
+
         $bonds = $this->bondsProvider->getBonds();
         foreach ($bonds as $item) {
             $bond = $bondRepository->findOneBy(['ticker' => $item->getTicker()]);
@@ -41,6 +43,7 @@ class GetBondsCommand extends Command
                     continue;
                 }
                 $bond->setPrice($item->getPrice());
+                $bond->setPrevPrice((string) $item->getPrevPrice());
                 $bond->setName($item->getName());
                 $bond->setLatName($item->getLatName());
                 $bond->setShortName($item->getShortName());
@@ -56,6 +59,7 @@ class GetBondsCommand extends Command
                     $item->getStockMarket(),
                     $item->getCurrency(),
                     $item->getPrice(),
+                    (string) $item->getPrevPrice(),
                     $item->getShortName(),
                     $item->getLatName(),
                     $item->getLotSize(),
