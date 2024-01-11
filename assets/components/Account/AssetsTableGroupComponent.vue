@@ -74,14 +74,13 @@ function getPercent(resultPrice: number, currentPrice: number) {
       <div>
         {{ helpers.formatPrice(item.currentPrice) }} {{ item.currency }}
         <span v-tooltip="'Prev price: ' + helpers.formatPrice(item.prevPrice) +' '+ item.currency" :class="item.dailyProfit > 0 ? 'text-green-600' : 'text-red-700'">
-          ({{ item.dailyProfit > 0 ? '+' : '-' }}{{ getPercent(item.dailyProfit, item.currentPrice) }}, {{ helpers.formatPrice(Math.abs(item.dailyProfit)) }}{{ item.currency }})
+          ({{ item.dailyProfit > 0 ? '+' : '-' }}{{ getPercent(item.dailyProfit, item.prevPrice) }}, {{ helpers.formatPrice(Math.abs(item.dailyProfit)) }}{{ item.currency }})
         </span>
       </div>
       <div class="text-xs text-gray-500">
         {{ helpers.formatPrice(item.fullCurrentPrice) }} {{ item.currency }}
-        <span v-tooltip="'Prev full price: ' + helpers.formatPrice(item.fullPrevPrice) +' '+ item.currency" :class="item.fullDailyProfit > 0 ? 'text-green-600' : 'text-red-700'">({{
-            item.fullDailyProfit > 0 ? '+' : ''
-          }}{{ helpers.formatPrice(item.fullDailyProfit) }}{{ item.currency }})</span>
+        <span v-tooltip="'Prev full price: ' + helpers.formatPrice(item.fullPrevPrice) +' '+ item.currency" :class="item.fullDailyProfit > 0 ? 'text-green-600' : 'text-red-700'">
+          ({{item.fullDailyProfit > 0 ? '+' : '' }}{{ helpers.formatPrice(item.fullDailyProfit) }}{{ item.currency }})</span>
       </div>
     </td>
     <td>
