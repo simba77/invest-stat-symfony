@@ -75,7 +75,7 @@ function showSellModal(item: Deal) {
       </div>
       <div class="text-xs text-gray-500">
         {{ helpers.formatPrice(item.fullCurrentPrice) }} {{ item.currency }}
-        <span v-if="item.fullDailyProfit > 0" :class="item.fullDailyProfit > 0 ? 'text-green-600' : 'text-red-700'">({{ item.fullDailyProfit }}{{ item.currency }})</span>
+        <span v-if="item.fullDailyProfit > 0" :class="item.fullDailyProfit > 0 ? 'text-green-600' : 'text-red-700'">({{ helpers.formatPrice(item.fullDailyProfit) }}{{ item.currency }})</span>
       </div>
     </td>
     <td>
