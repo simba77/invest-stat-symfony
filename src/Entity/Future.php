@@ -56,12 +56,16 @@ class Future implements
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?float $stepPrice = null;
 
+    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
+    private ?string $prevPrice = null;
+
     public function __construct(
         string $ticker,
         string $name,
         string $stockMarket,
         string $currency,
         float $price,
+        string $prevPrice = '0',
         string $shortName = '',
         string $latName = '',
         float $lotSize = 1,
@@ -75,6 +79,7 @@ class Future implements
         $this->stockMarket = $stockMarket;
         $this->currency = $currency;
         $this->price = $price;
+        $this->prevPrice = $prevPrice;
         $this->lotSize = $lotSize;
         $this->expiration = $expiration;
         $this->stepPrice = $stepPrice;
@@ -201,6 +206,18 @@ class Future implements
     public function setStepPrice(?float $stepPrice): static
     {
         $this->stepPrice = $stepPrice;
+        return $this;
+    }
+
+    public function getPrevPrice(): ?string
+    {
+        return $this->prevPrice;
+    }
+
+    public function setPrevPrice(?string $prevPrice): static
+    {
+        $this->prevPrice = $prevPrice;
+
         return $this;
     }
 }

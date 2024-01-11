@@ -32,6 +32,7 @@ class MoexFuturesProvider implements FuturesProviderInterface
                 stockMarket: 'MOEX',
                 currency:    'RUB',
                 price:       (float) (! empty($price) ? $price : 0),
+                prevPrice:   (float) $future['PREVPRICE'],
                 shortName:   $future['SHORTNAME'],
                 latName:     $future['LATNAME'],
                 lotSize:     (float) $future['LOTVOLUME'],

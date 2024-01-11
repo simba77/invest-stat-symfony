@@ -26,6 +26,8 @@ interface FutureInterface
 
     public function getPrice(): float;
 
+    public function getPrevPrice(): ?float;
+
     public function getLotSize(): ?float;
 
     public function getExpiration(): ?\DateTimeInterface;

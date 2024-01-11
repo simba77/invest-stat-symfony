@@ -41,6 +41,7 @@ class GetFuturesCommand extends Command
                     continue;
                 }
                 $future->setPrice($item->getPrice());
+                $future->setPrevPrice((string) $item->getPrevPrice());
                 $future->setName($item->getName());
                 $future->setLatName($item->getLatName());
                 $future->setShortName($item->getShortName());
@@ -51,6 +52,7 @@ class GetFuturesCommand extends Command
                     $item->getStockMarket(),
                     $item->getCurrency(),
                     $item->getPrice(),
+                    (string) $item->getPrevPrice(),
                     $item->getShortName(),
                     $item->getLatName(),
                     $item->getLotSize(),
