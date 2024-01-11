@@ -19,8 +19,10 @@ class DealData
      *     sharePrice?: string,
      *     sharePrevPrice?: string,
      *     bondPrice?: string,
+     *     bondPrevPrice?: string,
      *     bondLotSize?: string,
      *     futurePrice?: string,
+     *     futurePrevPrice?: string,
      *     futureStepPrice?: string,
      *     futureLotSize?: string,
      *     shareCurrency?: string,
@@ -126,15 +128,15 @@ class DealData
 
     public function getPrevPrice(): float
     {
-        /*        if ($this->deal['futurePrice']) {
-                    return (float) ($this->deal['futurePrice'] * $this->deal['futureStepPrice'] * $this->deal['futureLotSize']);
-                }
+        /*if ($this->deal['futurePrevPrice']) {
+            return (float) ($this->deal['futurePrevPrice'] * $this->deal['futureStepPrice'] * $this->deal['futureLotSize']);
+        }*/
 
-                if ($this->deal['bondPrice']) {
-                    return (float) ($this->deal['bondPrice'] * $this->deal['bondLotSize'] / 100);
-                }*/
+        if ($this->deal['bondPrevPrice']) {
+            return (float) ($this->deal['bondPrevPrice'] * $this->deal['bondLotSize'] / 100);
+        }
 
-        return (float) $this->deal['sharePrevPrice'] ?? $this->deal['bondPrice'] ?? 0;
+        return (float) $this->deal['sharePrevPrice'] ?? $this->deal['bondPrevPrice'] ?? 0;
     }
 
     public function getFullCurrentPrice(): float

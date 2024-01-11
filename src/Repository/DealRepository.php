@@ -52,6 +52,7 @@ class DealRepository extends ServiceEntityRepository
                     // Bond
                     'b.shortName bondName',
                     'b.price bondPrice',
+                    'b.prevPrice bondPrevPrice',
                     'b.currency bondCurrency',
                     'b.lotSize bondLotSize',
 
@@ -98,6 +99,7 @@ class DealRepository extends ServiceEntityRepository
                     // Bond
                     'b.shortName bondName',
                     'b.price bondPrice',
+                    'b.prevPrice bondPrevPrice',
                     'b.currency bondCurrency',
                     'b.lotSize bondLotSize',
 
@@ -146,6 +148,7 @@ class DealRepository extends ServiceEntityRepository
                     // Bond
                     'b.shortName bondName',
                     'b.price bondPrice',
+                    'b.prevPrice bondPrevPrice',
                     'b.currency bondCurrency',
                     'b.lotSize bondLotSize',
 
