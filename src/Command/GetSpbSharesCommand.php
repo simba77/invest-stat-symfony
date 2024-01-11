@@ -9,6 +9,7 @@ use App\Entity\Share;
 use App\Http\InvestCabHttpClient;
 use App\Services\AccountCalculator;
 use App\Services\MarketData\Securities\ShareTypeEnum;
+use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -38,6 +39,7 @@ class GetSpbSharesCommand extends Command
         $shareRepository = $this->em->getRepository(Share::class);
         $dealsRepository = $this->em->getRepository(Deal::class);
 
+        $currentDay = Carbon::now()->format('d');
         $tickers = $dealsRepository->getTickersByStockMarket('SPB');
 
         foreach ($tickers as $k => $ticker) {
@@ -50,6 +52,9 @@ class GetSpbSharesCommand extends Command
                 $price = $this->httpClient->getPriceByTicker($ticker['ticker']);
 
                 if ($share) {
+                    if ($currentDay !== $share->updatedAt()->format('d')) {
+                        $share->setPrevPrice((string) $share->getPrice());
+                    }
                     $share->setPrice($price);
                 } else {
                     $tickerData = $this->httpClient->getDataAboutTicker($ticker['ticker']);
