@@ -45,6 +45,7 @@ class DealRepository extends ServiceEntityRepository
                     // Share
                     's.shortName shareName',
                     's.price sharePrice',
+                    's.prevPrice sharePrevPrice',
                     's.currency shareCurrency',
                     's.type shareType',
 
@@ -90,6 +91,7 @@ class DealRepository extends ServiceEntityRepository
                     // Share
                     's.shortName shareName',
                     's.price sharePrice',
+                    's.prevPrice sharePrevPrice',
                     's.currency shareCurrency',
                     's.type shareType',
 
@@ -137,6 +139,7 @@ class DealRepository extends ServiceEntityRepository
                     // Share
                     's.shortName shareName',
                     's.price sharePrice',
+                    's.prevPrice sharePrevPrice',
                     's.currency shareCurrency',
                     's.type shareType',
 

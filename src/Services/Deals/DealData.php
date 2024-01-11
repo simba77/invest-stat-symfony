@@ -17,6 +17,7 @@ class DealData
      *     bondName?: string,
      *     futureName?: string,
      *     sharePrice?: string,
+     *     sharePrevPrice?: string,
      *     bondPrice?: string,
      *     bondLotSize?: string,
      *     futurePrice?: string,
@@ -123,9 +124,37 @@ class DealData
         return (float) $this->deal['sharePrice'] ?? $this->deal['bondPrice'] ?? 0;
     }
 
+    public function getPrevPrice(): float
+    {
+        /*        if ($this->deal['futurePrice']) {
+                    return (float) ($this->deal['futurePrice'] * $this->deal['futureStepPrice'] * $this->deal['futureLotSize']);
+                }
+
+                if ($this->deal['bondPrice']) {
+                    return (float) ($this->deal['bondPrice'] * $this->deal['bondLotSize'] / 100);
+                }*/
+
+        return (float) $this->deal['sharePrevPrice'] ?? $this->deal['bondPrice'] ?? 0;
+    }
+
     public function getFullCurrentPrice(): float
     {
         return $this->getCurrentPrice() * $this->getQuantity();
+    }
+
+    public function getFullPrevPrice(): float
+    {
+        return round($this->getPrevPrice() * $this->getQuantity(), 2);
+    }
+
+    public function getDailyProfit(): float
+    {
+        return round($this->getCurrentPrice() - $this->getPrevPrice(), 2);
+    }
+
+    public function getFullDailyProfit(): float
+    {
+        return round($this->getFullCurrentPrice() - $this->getFullPrevPrice(), 2);
     }
 
     public function getTargetPrice(): float

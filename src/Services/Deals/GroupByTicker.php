@@ -31,17 +31,21 @@ class GroupByTicker
         $fullBuyPrice = 0;
         $fullCurrentPrice = 0;
         $fullCurrentPriceInBaseCurrency = 0;
+        $fullPrevPrice = 0;
         $fullTargetPrice = 0;
         $profit = 0;
         $fullTargetProfit = 0;
+        $fullDailyProfit = 0;
         $commission = 0;
         foreach ($this->deals as $deal) {
             $quantity += $deal->getQuantity();
             $fullBuyPrice += $deal->getFullBuyPrice();
             $fullCurrentPrice += $deal->getFullCurrentPrice();
             $fullCurrentPriceInBaseCurrency += $deal->getFullCurrentPriceInBaseCurrency();
+            $fullPrevPrice += $deal->getFullPrevPrice();
             $fullTargetPrice += $deal->getFullTargetPrice();
             $profit += $deal->getProfit();
+            $fullDailyProfit += $deal->getFullDailyProfit();
             $commission += $deal->getCommission();
             $fullTargetProfit += $deal->getFullTargetProfit();
         }
@@ -53,11 +57,15 @@ class GroupByTicker
             buyPrice:            round($fullBuyPrice / $quantity, 4),
             fullBuyPrice:        $fullBuyPrice,
             currentPrice:        $firstDeal->getCurrentPrice(),
+            prevPrice:           $firstDeal->getPrevPrice(),
             fullCurrentPrice:    $fullCurrentPrice,
+            fullPrevPrice:       $fullPrevPrice,
             targetPrice:         round($fullTargetPrice / $quantity, 4),
             fullTargetPrice:     $fullTargetPrice,
             profit:              $profit,
             profitPercent:       round($profit / $fullBuyPrice * 100, 2),
+            dailyProfit:         $firstDeal->getDailyProfit(),
+            fullDailyProfit:     round($fullDailyProfit, 2),
             commission:          round($commission, 2),
             targetProfit:        round($fullTargetProfit / $quantity, 4),
             fullTargetProfit:    $fullTargetProfit,
@@ -81,11 +89,15 @@ class GroupByTicker
                 buyPrice:                $deal->getBuyPrice(),
                 fullBuyPrice:            $deal->getFullBuyPrice(),
                 currentPrice:            $deal->getCurrentPrice(),
+                prevPrice:               $deal->getPrevPrice(),
                 fullCurrentPrice:        $deal->getFullCurrentPrice(),
+                fullPrevPrice:           $deal->getFullPrevPrice(),
                 targetPrice:             $deal->getTargetPrice(),
                 fullTargetPrice:         $deal->getFullTargetPrice(),
                 profit:                  $deal->getProfit(),
                 profitPercent:           $deal->getProfitPercent(),
+                dailyProfit:             $deal->getDailyProfit(),
+                fullDailyProfit:         $deal->getFullDailyProfit(),
                 commission:              $deal->getCommission(),
                 targetProfit:            $deal->getTargetProfit(),
                 fullTargetProfit:        $deal->getFullTargetProfit(),

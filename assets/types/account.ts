@@ -31,13 +31,17 @@ export interface AssetsGroup {
   shortName: string
   quantity: number
   buyPrice: number
+  prevPrice: number
   fullBuyPrice: number
   currentPrice: number
   fullCurrentPrice: number
+  fullPrevPrice: number
   targetPrice: number
   fullTargetPrice: number
   profit: number
   profitPercent: number
+  dailyProfit: number
+  fullDailyProfit: number
   commission: number
   targetProfit: number
   fullTargetProfit: number
@@ -55,6 +59,7 @@ export interface Deal {
   shortName: string
   quantity: number
   buyPrice: number
+  prevPrice: number
   fullBuyPrice: number
   currentPrice: number
   fullCurrentPrice: number
@@ -62,6 +67,8 @@ export interface Deal {
   fullTargetPrice: number
   profit: number
   profitPercent: number
+  dailyProfit: number
+  fullDailyProfit: number
   commission: number
   targetProfit: number
   fullTargetProfit: number
