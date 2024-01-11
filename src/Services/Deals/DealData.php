@@ -128,9 +128,9 @@ class DealData
 
     public function getPrevPrice(): float
     {
-        /*if ($this->deal['futurePrevPrice']) {
+        if ($this->deal['futurePrevPrice']) {
             return (float) ($this->deal['futurePrevPrice'] * $this->deal['futureStepPrice'] * $this->deal['futureLotSize']);
-        }*/
+        }
 
         if ($this->deal['bondPrevPrice']) {
             return (float) ($this->deal['bondPrevPrice'] * $this->deal['bondLotSize'] / 100);

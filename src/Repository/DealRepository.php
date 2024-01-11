@@ -59,6 +59,7 @@ class DealRepository extends ServiceEntityRepository
                     // Future
                     'f.shortName futureName',
                     'f.price futurePrice',
+                    'f.prevPrice futurePrevPrice',
                     'f.currency futureCurrency',
                     'f.stepPrice futureStepPrice',
                     'f.lotSize futureLotSize',
@@ -106,6 +107,7 @@ class DealRepository extends ServiceEntityRepository
                     // Future
                     'f.shortName futureName',
                     'f.price futurePrice',
+                    'f.prevPrice futurePrevPrice',
                     'f.currency futureCurrency',
                     'f.stepPrice futureStepPrice',
                     'f.lotSize futureLotSize',
@@ -155,6 +157,7 @@ class DealRepository extends ServiceEntityRepository
                     // Future
                     'f.shortName futureName',
                     'f.price futurePrice',
+                    'f.prevPrice futurePrevPrice',
                     'f.currency futureCurrency',
                     'f.stepPrice futureStepPrice',
                     'f.lotSize futureLotSize',
