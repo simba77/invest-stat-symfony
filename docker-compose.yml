@@ -33,7 +33,7 @@ services:
       ofelia.enabled: "true"
       ofelia.job-exec.php-cli.schedule: "@every 1m"
       ofelia.job-exec.php-cli.user: www-data
-      ofelia.job-exec.php-cli.command: "php /var/www/html/bin/console schedule:run"
+      ofelia.job-exec.php-cli.command: "php /app/bin/console schedule:run"
   mariadb:
     image: 'mariadb:11'
     ports:
