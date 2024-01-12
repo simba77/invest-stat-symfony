@@ -10,6 +10,7 @@ interface SummaryCard {
   name: string
   helpText: string
   percent: number
+  dailyChange?: number
   total: number
 }
 
@@ -65,6 +66,8 @@ run()
           :name="card.name"
           :help-text="card.helpText ?? null"
           :percent="card.percent ?? null"
+          :profit="card.dailyChange ?? null"
+          :profit-help-text="card.dailyChange ? 'Daily profit' : null"
           :total="card.total"
         />
       </div>

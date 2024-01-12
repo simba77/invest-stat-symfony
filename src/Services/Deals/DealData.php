@@ -159,6 +159,14 @@ class DealData
         return round($this->getFullCurrentPrice() - $this->getFullPrevPrice(), 2);
     }
 
+    public function getFullDailyProfitInBaseCurrency(): float
+    {
+        if ($this->getCurrency() === 'RUB') {
+            return $this->getFullDailyProfit();
+        }
+        return $this->getFullDailyProfit() * $this->currencyService->getUSDRUBRate();
+    }
+
     public function getTargetPrice(): float
     {
         return (float) $this->deal['deal']->getTargetPrice();

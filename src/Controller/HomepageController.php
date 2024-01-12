@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Deal;
 use App\Entity\Deposit;
 use App\Entity\Investment;
 use App\Entity\User;
 use App\Services\AccountService;
+use App\Services\Deals\DealData;
 use App\Services\DepositsService;
 use App\Services\MarketData\Currencies\CurrencyService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,6 +40,13 @@ class HomepageController extends AbstractController
         $depositAccounts = array_filter($depositAccounts, function ($item) {
             return $item->total > 0;
         });
+
+        $dailyChange = 0;
+        $allActiveDeals = $this->entityManager->getRepository(Deal::class)->findForUser($user);
+        foreach ($allActiveDeals as $deal) {
+            $dealData = new DealData($deal, $deal['deal']->getAccount(), $this->currencyService);
+            $dailyChange += $dealData->getFullDailyProfitInBaseCurrency();
+        }
 
 
         $accounts = $this->accountService->getAccountsListForUser($user);
@@ -73,10 +82,11 @@ class HomepageController extends AbstractController
                     ],
 
                     [
-                        'name'     => 'All Assets',
-                        'helpText' => 'The sum of all assets held by brokers',
-                        'total'    => $allAssetsSum,
-                        'currency' => '₽',
+                        'name'        => 'All Assets',
+                        'helpText'    => 'The sum of all assets held by brokers',
+                        'dailyChange' => round($dailyChange, 2),
+                        'total'       => $allAssetsSum,
+                        'currency'    => '₽',
                     ],
 
                     [

@@ -7,7 +7,8 @@ interface CardProps {
   total?: number | string
   currency?: string
   helpText?: string
-  profit?: number
+  profit?: number | null
+  profitHelpText?: string | null
 }
 
 withDefaults(defineProps<CardProps>(), {
@@ -16,7 +17,8 @@ withDefaults(defineProps<CardProps>(), {
   total: 0,
   currency: '₽',
   helpText: '',
-  profit: undefined
+  profit: undefined,
+  profitHelpText: ''
 })
 
 </script>
@@ -50,6 +52,7 @@ withDefaults(defineProps<CardProps>(), {
       </div>
       <div
         v-if="profit"
+        v-tooltip="profitHelpText"
         :class="[profit > 0 ? 'bg-green-200 text-green-900' : 'bg-red-200 text-red-900', 'rounded-full pr-2 pl-1 flex items-center']"
       >
         <template v-if="profit > 0">
