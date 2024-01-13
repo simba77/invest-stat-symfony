@@ -8,11 +8,11 @@ import {useModal} from "@/composable/useModal";
 import ConfirmDeleteInvestmentModal from "@/components/Investments/ConfirmDeleteInvestmentModal.vue";
 import { useNumbers } from "@/composable/useNumbers";
 
-const investments = useInvestments()
+const {investments, getInvestments, loadingInvestments} = useInvestments()
 const modal = useModal()
 const {formatPrice} = useNumbers()
 
-investments.getInvestments()
+getInvestments()
 
 function confirmDelete(item: Investment) {
   modal.open({
@@ -33,7 +33,7 @@ function confirmDelete(item: Investment) {
         Add
       </router-link>
     </div>
-    <preloader-component v-if="investments.loadingInvestments.value" />
+    <preloader-component v-if="loadingInvestments" />
     <table
       v-else
       class="simple-table"
@@ -50,7 +50,7 @@ function confirmDelete(item: Investment) {
       </thead>
       <tbody>
         <tr
-          v-for="(investment, index) in investments.investments.value.items"
+          v-for="(investment, index) in investments.items"
           :key="index"
         >
           <td>{{ investment.date }}</td>
@@ -76,7 +76,7 @@ function confirmDelete(item: Investment) {
             </template>
           </td>
         </tr>
-        <tr v-if="investments.investments.value?.length < 1">
+        <tr v-if="investments.items.length < 1">
           <td
             colspan="4"
             class="text-center"

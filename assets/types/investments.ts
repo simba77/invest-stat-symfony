@@ -1,6 +1,7 @@
 export interface Investment {
   id: number
-  date: string
   sum: number
+  date: string
   account: string
+  currency: string
 }

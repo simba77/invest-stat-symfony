@@ -3,7 +3,7 @@ import {ref} from "vue";
 import axios from "axios";
 import {Investment} from "@/types/investments";
 
-const investments = ref<Investment[]>([])
+const investments = ref<{items: Investment[]}>({items: []})
 
 export const useInvestments = () => {
 
