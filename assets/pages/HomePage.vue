@@ -67,7 +67,7 @@ run()
           :help-text="card.helpText ?? null"
           :percent="card.percent ?? null"
           :profit="card.dailyChange ?? null"
-          :profit-help-text="card.dailyChange ? 'Daily profit' : null"
+          :profit-help-text="card.dailyChange ? 'Daily Profit' : null"
           :total="card.total"
         />
       </div>

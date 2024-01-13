@@ -85,6 +85,7 @@ class HomepageController extends AbstractController
                         'name'        => 'All Assets',
                         'helpText'    => 'The sum of all assets held by brokers',
                         'dailyChange' => round($dailyChange, 2),
+                        'percent'     => round($dailyChange / $allAssetsSum * 100, 2),
                         'total'       => $allAssetsSum,
                         'currency'    => '₽',
                     ],
