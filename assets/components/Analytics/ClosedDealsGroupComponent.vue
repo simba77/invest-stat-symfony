@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import {LockClosedIcon} from "@heroicons/vue/24/outline";
-import helpers from "../../helpers";
 import {ClosedDealsGroup} from "@/types/analytics";
+import { useNumbers } from "@/composable/useNumbers";
 
-function formatProfit(asset: { profit: number; currency: string; }) {
-  return (asset.profit > 0 ? '+' : '-') + ' ' + helpers.formatPrice(Math.abs(asset.profit)) + ' ' + asset.currency;
-}
+const {formatPrice, formatPriceWithSign, formatPercent} = useNumbers()
 
 const emits = defineEmits<{ showChildren: [] }>()
 
@@ -38,21 +36,21 @@ defineProps<{
     </td>
     <td>{{ item.quantity }}</td>
     <td>
-      <div>{{ helpers.formatPrice(item.buyPrice) }} {{ item.currency }}</div>
+      <div>{{ formatPrice(item.buyPrice, item.currency) }}</div>
       <div class="text-xs text-gray-500">
-        {{ helpers.formatPrice(item.fullBuyPrice) }} {{ item.currency }}
+        {{ formatPrice(item.fullBuyPrice, item.currency) }}
       </div>
     </td>
     <td>
-      <div>{{ helpers.formatPrice(item.sellPrice) }} {{ item.currency }}</div>
+      <div>{{ formatPrice(item.sellPrice, item.currency) }}</div>
       <div class="text-xs text-gray-500">
-        {{ helpers.formatPrice(item.fullSellPrice) }} {{ item.currency }}
+        {{ formatPrice(item.fullSellPrice, item.currency) }}
       </div>
     </td>
     <td :class="[item.profit > 0 ? 'text-green-600' : 'text-red-700']">
-      <div>{{ formatProfit(item) }}</div>
+      <div>{{ formatPriceWithSign(item.profit, item.currency) }}</div>
       <div class="text-xs">
-        ({{ item.profitPercent }}%, {{ item.commission }} {{ item.currency }})
+        ({{ formatPercent(item.profitPercent) }}, {{ formatPrice(item.commission, item.currency) }})
       </div>
     </td>
   </tr>

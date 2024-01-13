@@ -2,16 +2,17 @@
 import PageComponent from "@/components/PageComponent.vue"
 import {XCircleIcon, PencilIcon} from "@heroicons/vue/24/outline"
 import {useDeposits} from '@/composable/useDeposits'
-import helpers from '@/helpers'
 import useAsync from "@/utils/use-async";
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
 import {Deposit} from "@/types/depositAccount";
 import {useModal} from "@/composable/useModal";
 import DeleteDepositModal from "@/components/Deposits/DeleteDepositModal.vue";
+import { useNumbers } from "@/composable/useNumbers";
 
 const deposits = useDeposits()
 const modal = useModal()
 const {loading, run: getDeposits} = useAsync(() => deposits.getDeposits())
+const {formatPrice} = useNumbers()
 
 getDeposits()
 
@@ -68,7 +69,7 @@ function deleteDeposit(deposit: Deposit) {
         >
           <td>{{ item.id }}</td>
           <td>{{ item.date }}</td>
-          <td>{{ helpers.formatPrice(item.sum) }} ₽</td>
+          <td>{{ formatPrice(item.sum, '₽') }}</td>
           <td>{{ item.typeName }}</td>
           <td>{{ item.accountName }}</td>
           <td class="table-actions">

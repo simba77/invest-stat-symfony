@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { LockClosedIcon, PencilIcon, XCircleIcon, BanknotesIcon } from "@heroicons/vue/24/outline";
-import helpers from "../../helpers";
 import type { Deal } from "@/types/account";
 import { useModal } from "@/composable/useModal";
 import DeleteDealModal from "@/components/Account/DeleteDealModal.vue";
 import SellModal from "@/components/Modals/SellModal.vue";
+import { useNumbers } from "@/composable/useNumbers";
 
-function formatProfit(asset: { profit: number; currency: string; }) {
-  return (asset.profit > 0 ? '+' : '-') + ' ' + helpers.formatPrice(Math.abs(asset.profit)) + ' ' + asset.currency;
-}
+const {formatPriceWithSign, formatPrice, formatPercent} = useNumbers()
 
 defineProps<{
   item: Deal,
@@ -64,49 +62,51 @@ function showSellModal(item: Deal) {
     </td>
     <td>{{ item.quantity }}</td>
     <td>
-      <div>{{ helpers.formatPrice(item.buyPrice) }} {{ item.currency }}</div>
+      <div>{{ formatPrice(item.buyPrice, item.currency) }}</div>
       <div class="text-xs text-gray-500">
-        {{ helpers.formatPrice(item.fullBuyPrice) }} {{ item.currency }}
+        {{ formatPrice(item.fullBuyPrice, item.currency) }}
       </div>
     </td>
     <td>
       <div>
-        {{ helpers.formatPrice(item.currentPrice) }} {{ item.currency }}
+        {{ formatPrice(item.currentPrice, item.currency) }}
       </div>
       <div class="text-xs text-gray-500">
-        {{ helpers.formatPrice(item.fullCurrentPrice) }} {{ item.currency }}
-        <span v-if="item.fullDailyProfit > 0" :class="item.fullDailyProfit > 0 ? 'text-green-600' : 'text-red-700'">({{ helpers.formatPrice(item.fullDailyProfit) }}{{ item.currency }})</span>
+        {{ formatPrice(item.fullCurrentPrice, item.currency) }}
+        <span v-if="item.fullDailyProfit != 0" :class="{'text-green-600': item.fullDailyProfit > 0, 'text-red-700': item.fullDailyProfit < 0}">
+          ({{ formatPrice(item.fullDailyProfit, item.currency) }})
+        </span>
       </div>
     </td>
     <td>
       <template v-if="item.targetPrice">
-        <div>{{ helpers.formatPrice(item.targetPrice) }} {{ item.currency }}</div>
+        <div>{{ formatPrice(item.targetPrice, item.currency) }}</div>
         <div class="text-xs text-gray-500">
-          {{ helpers.formatPrice(item.fullTargetPrice) }} {{ item.currency }}
+          {{ formatPrice(item.fullTargetPrice, item.currency) }}
         </div>
       </template>
       <template v-else>
         &mdash;
       </template>
     </td>
-    <td :class="[item.profit > 0 ? 'text-green-600' : 'text-red-700']">
-      <div>{{ formatProfit(item) }}</div>
+    <td :class="{'text-green-600': item.profit > 0, 'text-red-700': item.profit < 0}">
+      <div>{{ formatPriceWithSign(item.profit, item.currency) }}</div>
       <div class="text-xs">
-        ({{ item.profitPercent }}%, {{ item.commission }} {{ item.currency }})
+        ({{ formatPercent(item.profitPercent) }}, {{ formatPrice(item.commission, item.currency) }})
       </div>
     </td>
     <td>
       <template v-if="item.targetProfit !== 0">
-        {{ item.targetProfit }} {{ item.currency }}
+        {{ formatPrice(item.targetProfit, item.currency) }}
         <div class="text-xs">
-          ({{ helpers.formatPrice(item.fullTargetProfit) }} {{ item.currency }}, {{ item.fullTargetProfitPercent }}%)
+          ({{ formatPrice(item.fullTargetProfit, item.currency) }}, {{ formatPercent(item.fullTargetProfitPercent) }})
         </div>
       </template>
       <template v-else>
         &mdash;
       </template>
     </td>
-    <td>{{ item.percent }}%</td>
+    <td>{{ formatPercent(item.percent) }}</td>
     <td v-if="!hideActions" class="table-actions">
       <div class="flex justify-end items-center show-on-row-hover">
         <router-link

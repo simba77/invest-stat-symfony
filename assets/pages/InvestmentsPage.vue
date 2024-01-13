@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import PageComponent from "../components/PageComponent.vue";
 import {XCircleIcon, PencilIcon} from "@heroicons/vue/24/outline";
-import helpers from "../helpers";
 import {useInvestments} from "@/composable/useInvestments";
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
 import {Investment} from "@/types/investments";
 import {useModal} from "@/composable/useModal";
 import ConfirmDeleteInvestmentModal from "@/components/Investments/ConfirmDeleteInvestmentModal.vue";
+import { useNumbers } from "@/composable/useNumbers";
 
 const investments = useInvestments()
 const modal = useModal()
+const {formatPrice} = useNumbers()
 
 investments.getInvestments()
 
@@ -53,7 +54,7 @@ function confirmDelete(item: Investment) {
           :key="index"
         >
           <td>{{ investment.date }}</td>
-          <td>{{ helpers.formatPrice(investment.sum) }} {{ investment.currency }}</td>
+          <td>{{ formatPrice(investment.sum, investment.currency) }}</td>
           <td>{{ investment.account }}</td>
           <td class="table-actions">
             <template v-if="investment.id">

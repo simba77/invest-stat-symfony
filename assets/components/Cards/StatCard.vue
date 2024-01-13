@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import {QuestionMarkCircleIcon, ArrowSmallUpIcon, ArrowSmallDownIcon} from "@heroicons/vue/24/solid";
+import { QuestionMarkCircleIcon, ArrowSmallUpIcon, ArrowSmallDownIcon } from "@heroicons/vue/24/solid";
+import { useNumbers } from "@/composable/useNumbers";
+
+const {formatPrice, formatPercent} = useNumbers()
 
 interface CardProps {
   name?: string
@@ -36,7 +39,7 @@ withDefaults(defineProps<CardProps>(), {
     </div>
     <div class="mt-1">
       <div class="text-lg md:text-3xl font-extrabold">
-        {{ new Intl.NumberFormat('ru-RU').format(Number(total)) }} {{ currency }}
+        {{ formatPrice(Number(total), currency) }}
       </div>
     </div>
     <div v-if="profit || percent" class="flex text-sm mt-1">
@@ -51,7 +54,7 @@ withDefaults(defineProps<CardProps>(), {
         <template v-else>
           <arrow-small-down-icon class="h-4 mr-0.5 text-red-500 -rotate-45" />
         </template>
-        {{ new Intl.NumberFormat('ru-RU').format(profit) }} {{ currency }}
+        {{ formatPrice(profit, currency) }}
       </div>
       <div
         v-if="percent"
@@ -64,10 +67,10 @@ withDefaults(defineProps<CardProps>(), {
           <arrow-small-down-icon class="h-4 mr-0.5 text-red-500 -rotate-45" />
         </template>
         <template v-if="profit">
-          ({{ Math.abs(percent) }}%)
+          ({{ formatPercent(percent) }})
         </template>
         <template v-else>
-          {{ Math.abs(percent) }}%
+          {{ formatPercent(percent) }}
         </template>
       </div>
     </div>

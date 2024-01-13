@@ -4,7 +4,9 @@ import {useDealsGroup} from "@/composable/useDealsGroup";
 import ClosedDealsGroupComponent from "@/components/Analytics/ClosedDealsGroupComponent.vue";
 import ClosedDealsItemComponent from "@/components/Analytics/ClosedDealsItemComponent.vue";
 import {ClosedDealsListItem, ClosedDealsSummary} from "@/types/analytics";
-import helpers from "../../helpers";
+import { useNumbers } from "@/composable/useNumbers";
+
+const {formatPrice, formatPercent} = useNumbers()
 
 defineProps<{ assets: ClosedDealsListItem[], summary: ClosedDealsSummary }>()
 
@@ -81,15 +83,15 @@ const dealsGroup = useDealsGroup()
         <td>Total (base currency):</td>
         <td />
         <td>
-          <div>{{ helpers.formatPrice(summary.buyPrice) }} ₽</div>
+          <div>{{ formatPrice(summary.buyPrice, '₽') }}</div>
         </td>
         <td>
-          <div>{{ helpers.formatPrice(summary.sellPrice) }} ₽</div>
+          <div>{{ formatPrice(summary.sellPrice, '₽') }}</div>
         </td>
         <td :class="[summary.profit > 0 ? 'text-green-600' : 'text-red-700']">
-          <div>{{ helpers.formatPrice(summary.profit) }} ₽</div>
+          <div>{{ formatPrice(summary.profit, '₽') }}</div>
           <div class="text-xs">
-            ({{ summary.profitPercent }}%)
+            ({{ formatPercent(summary.profitPercent) }})
           </div>
         </td>
       </tr>

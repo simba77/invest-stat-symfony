@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import type {Account} from "@/types/account";
-import helpers from "../../helpers";
-import {PencilIcon, XCircleIcon, PlusCircleIcon} from "@heroicons/vue/24/outline";
-import {useModal} from "@/composable/useModal";
+import type { Account } from "@/types/account";
+import { PencilIcon, XCircleIcon, PlusCircleIcon } from "@heroicons/vue/24/outline";
+import { useModal } from "@/composable/useModal";
 import ConfirmDeleteAccountModal from "@/components/Account/ConfirmDeleteAccountModal.vue";
+import { useNumbers } from "@/composable/useNumbers";
 
 defineProps<{
   account: Account
 }>();
 
 const modal = useModal()
+const {formatPrice} = useNumbers()
 
 function confirmDeletion(account: Account) {
   modal.open({
@@ -33,12 +34,12 @@ function confirmDeletion(account: Account) {
         </router-link>
       </div>
       <div class="text-sm">
-        <span class="font-light">Balance:</span> <span>{{ helpers.formatPrice(account.balance) }} ₽</span> / <span>{{ helpers.formatPrice(account.usdBalance) }} $</span>
-        <span class="font-light ml-3">Deposits:</span> <span>{{ helpers.formatPrice(account.deposits) }} ₽</span>
-        <span class="font-light ml-3">Current Value:</span> <span>{{ helpers.formatPrice(account.currentValue) }} ₽</span>
+        <span class="font-light">Balance:</span> <span>{{ formatPrice(account.balance, '₽') }}</span> / <span>{{ formatPrice(account.usdBalance, '$') }}</span>
+        <span class="font-light ml-3">Deposits:</span> <span>{{ formatPrice(account.deposits, '₽') }}</span>
+        <span class="font-light ml-3">Current Value:</span> <span>{{ formatPrice(account.currentValue, '₽') }}</span>
         <span class="font-light ml-3">Profit: </span>
         <span :class="[account.fullProfit > 0 ? 'text-green-600' : 'text-red-700']">
-          {{ helpers.formatPrice(account.fullProfit) }} ₽
+          {{ formatPrice(account.fullProfit, '₽') }}
         </span>
       </div>
     </div>

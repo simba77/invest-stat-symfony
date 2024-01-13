@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import helpers from "../../helpers";
 import AssetsTableRowComponent from "@/components/Account/AssetsTableRowComponent.vue";
 import { AssetsGroupData, GroupSummary } from "@/types/account";
 import AssetsTableGroupComponent from "@/components/Account/AssetsTableGroupComponent.vue";
 import { useDealsGroup } from "@/composable/useDealsGroup";
+import { useNumbers } from "@/composable/useNumbers";
+
+const {formatPrice, formatPercent} = useNumbers()
 
 defineProps<{
   assets: { [key: string]: AssetsGroupData },
@@ -106,24 +108,24 @@ const dealsGroup = useDealsGroup()
         <td />
         <td>
           <div v-if="!summary.isBaseCurrency">
-            {{ helpers.formatPrice(summary.buyPrice) }} $
+            {{ formatPrice(summary.buyPrice, '$') }}
           </div>
-          <div>{{ helpers.formatPrice(summary.buyPriceInBaseCurrency) }} ₽</div>
+          <div>{{ formatPrice(summary.buyPriceInBaseCurrency, '₽') }}</div>
         </td>
         <td>
           <div v-if="!summary.isBaseCurrency">
-            {{ helpers.formatPrice(summary.currentPrice) }} $
+            {{ formatPrice(summary.currentPrice, '$') }}
           </div>
-          <div>{{ helpers.formatPrice(summary.currentPriceInBaseCurrency) }} ₽</div>
+          <div>{{ formatPrice(summary.currentPriceInBaseCurrency, '₽') }} </div>
         </td>
         <td />
         <td :class="[summary.profit > 0 ? 'text-green-600' : 'text-red-700']">
           <div v-if="!summary.isBaseCurrency">
-            {{ helpers.formatPrice(summary.profit) }} $
+            {{ formatPrice(summary.profit, '$') }}
           </div>
-          <div>{{ helpers.formatPrice(summary.profitInBaseCurrency) }} ₽</div>
+          <div>{{ formatPrice(summary.profitInBaseCurrency, '₽') }}</div>
           <div class="text-xs">
-            ({{ summary.profitPercent }}%)
+            ({{ formatPercent(summary.profitPercent) }})
           </div>
         </td>
         <td />

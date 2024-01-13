@@ -6,9 +6,11 @@ import {useModal} from "@/composable/useModal";
 import DeleteExpenseCategoryModal from "@/components/Expenses/DeleteExpenseCategoryModal.vue";
 import {useExpenses} from "@/composable/useExpenses";
 import DeleteExpenseModal from "@/components/Expenses/DeleteExpenseModal.vue";
+import { useNumbers } from "@/composable/useNumbers";
 
 const modal = useModal();
 const expenses = useExpenses()
+const {formatPrice} = useNumbers()
 
 expenses.getExpenses()
 expenses.getSummary()
@@ -113,7 +115,7 @@ function confirmDeleteExpense(item: any) {
               <td :class="[expense.isSubTotal || expense.isTotal ? 'text-right' : '']">
                 {{ expense.name }}
               </td>
-              <td>{{ new Intl.NumberFormat('ru-RU').format(expense.sum) }} {{ expense.currency }}</td>
+              <td>{{ formatPrice(expense.sum, expense.currency) }}</td>
               <td class="table-actions">
                 <template v-if="expense.id">
                   <div class="flex justify-end items-center show-on-row-hover">
