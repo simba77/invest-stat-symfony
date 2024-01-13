@@ -9,7 +9,8 @@ use App\Repository\CurrencyRateRepository;
 class CurrencyService
 {
     public function __construct(
-        private readonly CurrencyRateRepository $currencyRateRepository
+        private readonly CurrencyRateRepository $currencyRateRepository,
+        private ?float $usdRubRate = null
     ) {
     }
 
@@ -18,7 +19,11 @@ class CurrencyService
      */
     public function getUSDRUBRate(): float
     {
+        if ($this->usdRubRate !== null) {
+            return $this->usdRubRate;
+        }
         $currencyRate = $this->currencyRateRepository->findOneBy(['baseCurrency' => 'RUB', 'targetCurrency' => 'USD']);
-        return $currencyRate?->getRate() ?? 0;
+        $this->usdRubRate = $currencyRate?->getRate() ?? 0;
+        return $this->usdRubRate;
     }
 }

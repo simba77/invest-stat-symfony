@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ShareRepository::class)]
 #[ORM\Table(name: 'shares')]
+#[ORM\Index(columns: ['ticker', 'stock_market'], name: 'ticker_market')]
 class Share implements
     CreatedDateProviderInterface,
     UpdatedDateProviderInterface
@@ -64,15 +65,14 @@ class Share implements
         string $name,
         string $stockMarket,
         string $currency,
-        float  $price,
-        int    $type,
+        float $price,
+        int $type,
         string $shortName = '',
         string $latName = '',
-        float  $lotSize = 1,
+        float $lotSize = 1,
         string $isin = '',
         string $prevPrice = '0',
-    )
-    {
+    ) {
         $this->ticker = $ticker;
         $this->name = $name;
         $this->shortName = $shortName;

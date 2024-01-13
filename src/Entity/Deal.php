@@ -20,6 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DealRepository::class)]
 #[ORM\Table(name: 'deals')]
+#[ORM\Index(columns: ['user_id', 'status'], name: 'user_status')]
 class Deal implements
     CreatedDateProviderInterface,
     UpdatedDateProviderInterface,

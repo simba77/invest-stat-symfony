@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FutureRepository::class)]
 #[ORM\Table(name: 'futures')]
+#[ORM\Index(columns: ['ticker', 'stock_market'], name: 'ticker_market')]
 class Future implements
     CreatedDateProviderInterface,
     UpdatedDateProviderInterface

@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BondRepository::class)]
 #[ORM\Table(name: 'bonds')]
+#[ORM\Index(columns: ['ticker', 'stock_market'], name: 'ticker_market')]
 class Bond implements
     CreatedDateProviderInterface,
     UpdatedDateProviderInterface
