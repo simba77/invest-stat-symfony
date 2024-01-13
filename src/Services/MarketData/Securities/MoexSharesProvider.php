@@ -38,7 +38,7 @@ class MoexSharesProvider implements SharesProviderInterface
         $result = [];
         foreach ($boardData['shares'] as $share) {
             $marketData = array_filter($boardData['marketData'], fn($item) => $item['SECID'] === $share['SECID']);
-            $price = $marketData[array_key_first($marketData)]['LCURRENTPRICE'] ?? '';
+            $price = $marketData[array_key_first($marketData)]['LAST'] ?? '';
 
             $result[] = new ShareDTO(
                 ticker:      $share['SECID'],
