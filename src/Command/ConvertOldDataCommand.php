@@ -61,10 +61,10 @@ class ConvertOldDataCommand extends Command
             $newAcc = new Account(
                 1,
                 $account['name'],
-                (float) $account['balance'],
-                (float) $account['usd_balance'],
-                (float) $account['commission'],
-                (float) $account['futures_commission'],
+                (string) $account['balance'],
+                (string) $account['usd_balance'],
+                (string) $account['commission'],
+                (string) $account['futures_commission'],
                 $account['sort'],
             );
 
@@ -102,9 +102,9 @@ class ConvertOldDataCommand extends Command
                 $dealStatus,
                 $asset['type'] === 1 ? DealType::Short : DealType::Long,
                 $asset['quantity'],
-                (float) $asset['buy_price'],
-                (float) $asset['target_price'],
-                (float) $asset['sell_price'],
+                $asset['buy_price'],
+                $asset['target_price'],
+                $asset['sell_price'],
             );
 
             $this->entityManager->persist($newDeal);
@@ -124,7 +124,7 @@ class ConvertOldDataCommand extends Command
         foreach ($items as $item) {
             $acc = $accountRepo->findOneBy(['name' => $item['account_name']]);
             $investment = new Investment(
-                (float) $item['sum'],
+                $item['sum'],
                 Carbon::parse($item['date'])->toImmutable(),
                 $acc,
                 1
@@ -158,7 +158,7 @@ class ConvertOldDataCommand extends Command
         foreach ($items as $item) {
             $acc = $accountRepo->findOneBy(['name' => $item['account_name']]);
             $deposit = new Deposit(
-                (float) $item['sum'],
+                $item['sum'],
                 $item['type'],
                 $user,
                 $acc,
@@ -185,11 +185,11 @@ class ConvertOldDataCommand extends Command
             $stat = new Statistic(
                 $acc,
                 Carbon::parse($item['date']),
-                (float) $item['balance'],
-                (float) $item['usd_balance'],
-                (float) $item['deposits'],
-                (float) $item['current'],
-                (float) $item['profit'],
+                $item['balance'],
+                $item['usd_balance'],
+                $item['deposits'],
+                $item['current'],
+                $item['profit'],
             );
 
             $this->entityManager->persist($stat);

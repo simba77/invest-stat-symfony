@@ -10,10 +10,10 @@ export default {
     return {
       form: {
         name: '',
-        balance: '',
-        usdBalance: '',
-        commission: '',
-        futuresCommission: '',
+        balance: '0',
+        usdBalance: '0',
+        commission: '0',
+        futuresCommission: '0',
         sort: 100,
       },
       loading: false,
@@ -93,30 +93,27 @@ export default {
           />
           <input-text
             :key="componentKey"
-            v-model.number="form.balance"
+            v-model.trim="form.balance"
             :error="errors"
             class="mb-3"
-            type="number"
             name="balance"
             label="Balance"
             placeholder="Enter Balance"
           />
           <input-text
             :key="componentKey"
-            v-model.number="form.usdBalance"
+            v-model.trim="form.usdBalance"
             :error="errors"
             class="mb-3"
-            type="number"
-            name="usd_balance"
+            name="usdBalance"
             label="USD Balance"
             placeholder="Enter USD Balance"
           />
           <input-text
             :key="componentKey"
-            v-model.number="form.commission"
+            v-model.trim="form.commission"
             :error="errors"
             class="mb-3"
-            type="number"
             name="commission"
             label="Commission"
             placeholder="Commission"
@@ -124,11 +121,10 @@ export default {
 
           <input-text
             :key="componentKey"
-            v-model.number="form.futuresCommission"
+            v-model.trim="form.futuresCommission"
             :error="errors"
             class="mb-3"
-            type="number"
-            name="futures_commission"
+            name="futuresCommission"
             label="Futures Commission"
             placeholder="Futures Commission"
           />

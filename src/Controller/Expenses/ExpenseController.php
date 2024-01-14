@@ -49,7 +49,7 @@ class ExpenseController extends AbstractController
     #[Route('/expenses/expense/edit/{id}', name: 'app_expenses_expense_edit', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function edit(int $id, #[MapRequestPayload] CreateExpenseRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
     {
-        $expense = $this->em->getRepository(Expense::class)->findOneBy(['id' => $id, 'userId' => $user?->getId()]);
+        $expense = $this->em->getRepository(Expense::class)->findOneBy(['id' => $id, 'userId' => $user->getId()]);
         if (! $expense) {
             throw $this->createNotFoundException('No expense found for id ' . $id);
         }
@@ -64,7 +64,7 @@ class ExpenseController extends AbstractController
     #[Route('/expenses/expense/delete/{id}', name: 'app_expenses_expense_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
-        $expense = $this->em->getRepository(Expense::class)->findOneBy(['id' => $id, 'userId' => $user?->getId()]);
+        $expense = $this->em->getRepository(Expense::class)->findOneBy(['id' => $id, 'userId' => $user->getId()]);
         if (! $expense) {
             throw $this->createNotFoundException('No expense found for id ' . $id);
         }
@@ -77,7 +77,7 @@ class ExpenseController extends AbstractController
     #[Route('/expenses/summary', name: 'app_expenses_summary')]
     public function summary(#[CurrentUser] ?User $user): JsonResponse
     {
-        $expenses = $this->em->getRepository(Expense::class)->getSumForUser($user?->getId() ?? 0);
+        $expenses = $this->em->getRepository(Expense::class)->getSumForUser($user->getId());
         return $this->json(
             [
                 'summary' => [
@@ -92,7 +92,7 @@ class ExpenseController extends AbstractController
                     [
                         'name'     => 'Salary - Expenses',
                         'helpText' => 'Free Money for Investments',
-                        'total'    => $user->getSalary() - $expenses,
+                        'total'    => bcsub($user->getSalary(), $expenses, 2),
                     ],
                 ],
             ]

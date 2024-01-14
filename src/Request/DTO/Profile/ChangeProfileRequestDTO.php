@@ -18,6 +18,6 @@ class ChangeProfileRequestDTO
 
     public ?string $password;
 
-    #[Assert\NotBlank]
-    public float $salary;
+    #[Assert\Type(['type' => ['numeric']])]
+    public string $salary;
 }

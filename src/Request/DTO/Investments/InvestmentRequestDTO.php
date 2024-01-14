@@ -14,8 +14,8 @@ class InvestmentRequestDTO
         public string $date,
 
         #[Assert\NotBlank]
-        #[Assert\Range(['min' => 0, 'max' => PHP_INT_MAX])]
-        public float $sum,
+        #[Assert\Type(['type' => ['numeric']])]
+        public string $sum,
 
         #[Assert\NotBlank]
         public int $account

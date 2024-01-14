@@ -46,16 +46,16 @@ class Future implements
     private ?string $currency = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4)]
-    private ?float $price = null;
+    private ?string $price = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?float $lotSize = null;
+    private ?string $lotSize = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $expiration = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?float $stepPrice = null;
+    private ?string $stepPrice = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $prevPrice = null;
@@ -65,13 +65,13 @@ class Future implements
         string $name,
         string $stockMarket,
         string $currency,
-        float $price,
+        string $price,
         string $prevPrice = '0',
         string $shortName = '',
         string $latName = '',
-        float $lotSize = 1,
+        string $lotSize = '1',
         ?\DateTimeInterface $expiration = null,
-        ?float $stepPrice = null,
+        ?string $stepPrice = null,
     ) {
         $this->ticker = $ticker;
         $this->name = $name;
@@ -163,24 +163,24 @@ class Future implements
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): ?string
     {
         return $this->price;
     }
 
-    public function setPrice(float $price): static
+    public function setPrice(string $price): static
     {
         $this->price = $price;
 
         return $this;
     }
 
-    public function getLotSize(): ?float
+    public function getLotSize(): ?string
     {
         return $this->lotSize;
     }
 
-    public function setLotSize(?float $lotSize): static
+    public function setLotSize(?string $lotSize): static
     {
         $this->lotSize = $lotSize;
 
@@ -199,12 +199,12 @@ class Future implements
         return $this;
     }
 
-    public function getStepPrice(): ?float
+    public function getStepPrice(): ?string
     {
         return $this->stepPrice;
     }
 
-    public function setStepPrice(?float $stepPrice): static
+    public function setStepPrice(?string $stepPrice): static
     {
         $this->stepPrice = $stepPrice;
         return $this;

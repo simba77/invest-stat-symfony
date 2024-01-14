@@ -7,13 +7,13 @@ namespace App\Response\DTO\Deals;
 class SummaryForGroupDTO
 {
     public function __construct(
-        public float $buyPrice,
-        public float $buyPriceInBaseCurrency,
-        public float $currentPrice,
-        public float $currentPriceInBaseCurrency,
-        public float $profit,
-        public float $profitInBaseCurrency,
-        public float $profitPercent,
+        public string $buyPrice,
+        public string $buyPriceInBaseCurrency,
+        public string $currentPrice,
+        public string $currentPriceInBaseCurrency,
+        public string $profit,
+        public string $profitInBaseCurrency,
+        public string $profitPercent,
         public bool $isBaseCurrency,
     ) {
     }

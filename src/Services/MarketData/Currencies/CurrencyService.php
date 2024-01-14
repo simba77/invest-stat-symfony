@@ -10,20 +10,20 @@ class CurrencyService
 {
     public function __construct(
         private readonly CurrencyRateRepository $currencyRateRepository,
-        private ?float $usdRubRate = null
+        private ?string $usdRubRate = null
     ) {
     }
 
     /**
      * Get RUB per USD rate
      */
-    public function getUSDRUBRate(): float
+    public function getUSDRUBRate(): string
     {
         if ($this->usdRubRate !== null) {
             return $this->usdRubRate;
         }
         $currencyRate = $this->currencyRateRepository->findOneBy(['baseCurrency' => 'RUB', 'targetCurrency' => 'USD']);
-        $this->usdRubRate = $currencyRate?->getRate() ?? 0;
+        $this->usdRubRate = $currencyRate?->getRate() ?? '0';
         return $this->usdRubRate;
     }
 }

@@ -11,13 +11,13 @@ class FutureDTO implements FutureInterface
         public string $name,
         public string $stockMarket,
         public string $currency,
-        public float $price,
-        public ?float $prevPrice,
+        public string $price,
+        public ?string $prevPrice,
         public ?string $shortName,
         public ?string $latName,
-        public ?float $lotSize,
+        public ?string $lotSize,
         public ?\DateTimeInterface $expiration,
-        public ?float $stepPrice
+        public ?string $stepPrice
     ) {
     }
 
@@ -57,17 +57,17 @@ class FutureDTO implements FutureInterface
         return $this->currency;
     }
 
-    public function getPrice(): float
+    public function getPrice(): string
     {
         return $this->price;
     }
 
-    public function getPrevPrice(): ?float
+    public function getPrevPrice(): ?string
     {
         return $this->prevPrice;
     }
 
-    public function getLotSize(): ?float
+    public function getLotSize(): ?string
     {
         return $this->lotSize;
     }
@@ -77,7 +77,7 @@ class FutureDTO implements FutureInterface
         return $this->expiration;
     }
 
-    public function getStepPrice(): ?float
+    public function getStepPrice(): ?string
     {
         return $this->stepPrice;
     }

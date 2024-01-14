@@ -15,7 +15,8 @@ class SellDealRequestDTO
         #[Assert\NotBlank]
         public string $ticker,
         #[Assert\NotBlank]
-        public float $price,
+        #[Assert\Type(['type' => ['numeric']])]
+        public string $price,
         #[Assert\NotBlank]
         public int $quantity,
     ) {

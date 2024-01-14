@@ -21,20 +21,20 @@ class SummaryForGroup
         foreach ($this->deals as $status => $statusGroup) {
             foreach ($statusGroup as $type => $typeGroup) {
                 foreach ($typeGroup as $currency => $currencyGroup) {
-                    $buyPrice = 0;
-                    $buyPriceInBaseCurrency = 0;
-                    $currentPrice = 0;
-                    $currentPriceInBaseCurrency = 0;
-                    $profit = 0;
-                    $profitInBaseCurrency = 0;
+                    $buyPrice = '0';
+                    $buyPriceInBaseCurrency = '0';
+                    $currentPrice = '0';
+                    $currentPriceInBaseCurrency = '0';
+                    $profit = '0';
+                    $profitInBaseCurrency = '0';
 
                     foreach ($currencyGroup as $deal) {
-                        $buyPrice += $deal->getFullBuyPrice();
-                        $buyPriceInBaseCurrency += $deal->getFullBuyPriceInBaseCurrency();
-                        $currentPrice += $deal->getFullCurrentPrice();
-                        $currentPriceInBaseCurrency += $deal->getFullCurrentPriceInBaseCurrency();
-                        $profit += $deal->getProfit();
-                        $profitInBaseCurrency += $deal->getProfitInBaseCurrency();
+                        $buyPrice = bcadd($buyPrice, $deal->getFullBuyPrice(), 4);
+                        $buyPriceInBaseCurrency = bcadd($buyPriceInBaseCurrency, $deal->getFullBuyPriceInBaseCurrency(), 4);
+                        $currentPrice = bcadd($currentPrice, $deal->getFullCurrentPrice(), 4);
+                        $currentPriceInBaseCurrency = bcadd($currentPriceInBaseCurrency, $deal->getFullCurrentPriceInBaseCurrency(), 4);
+                        $profit = bcadd($profit, $deal->getProfit(), 4);
+                        $profitInBaseCurrency = bcadd($profitInBaseCurrency, $deal->getProfitInBaseCurrency(), 4);
                     }
 
                     $summary[$status][$type][$currency] = new SummaryForGroupDTO(
@@ -44,7 +44,7 @@ class SummaryForGroup
                         currentPriceInBaseCurrency: $currentPriceInBaseCurrency,
                         profit:                     $profit,
                         profitInBaseCurrency:       $profitInBaseCurrency,
-                        profitPercent:              round($profit / $buyPrice * 100, 2),
+                        profitPercent:              bcmul(bcadd($profit, $buyPrice, 4), '100', 2),
                         isBaseCurrency:             $currency === 'RUB',
                     );
                 }

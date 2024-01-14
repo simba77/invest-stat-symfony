@@ -39,15 +39,15 @@ class AccountCalculator
     public function calculateSumOfAllDealsForAccount(Account $account): array
     {
         $deals = $this->entityManager->getRepository(Deal::class)->findForAccount($account);
-        $fullBuyPrice = 0;
-        $fullCurrentPrice = 0;
+        $fullBuyPrice = '0';
+        $fullCurrentPrice = '0';
         foreach ($deals as $deal) {
             $dealData = new DealData($deal, $account, $this->currencyService);
             if ($dealData->getSecurityType() === SecurityTypeEnum::Future) {
-                $fullCurrentPrice += $dealData->getProfitInBaseCurrency();
+                $fullCurrentPrice = bcadd($fullCurrentPrice, $dealData->getProfitInBaseCurrency(), 4);
             } else {
-                $fullBuyPrice += $dealData->getFullBuyPriceInBaseCurrency();
-                $fullCurrentPrice += $dealData->getFullCurrentPriceInBaseCurrency();
+                $fullBuyPrice = bcadd($fullBuyPrice, $dealData->getFullBuyPriceInBaseCurrency(), 4);
+                $fullCurrentPrice = bcadd($fullCurrentPrice, $dealData->getFullCurrentPriceInBaseCurrency(), 4);
             }
         }
         return [
@@ -59,10 +59,11 @@ class AccountCalculator
     /**
      * Balance in all currencies + all deals
      */
-    public function getAccountValue(Account $account): float
+    public function getAccountValue(Account $account): string
     {
         $usdRate = $this->currencyService->getUSDRUBRate();
-        $currentValue = $account->getCurrentSumOfAssets() + $account->getBalance() + ($account->getUsdBalance() * $usdRate);
-        return round($currentValue, 2);
+        $currentValue = bcadd($account->getCurrentSumOfAssets(), $account->getBalance(), 2);
+        $usdBalance = bcmul($account->getUsdBalance(), $usdRate, 2);
+        return bcadd($currentValue, $usdBalance, 2);
     }
 }

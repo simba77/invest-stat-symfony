@@ -24,19 +24,19 @@ interface BondInterface
      */
     public function getCurrency(): string;
 
-    public function getPrice(): float;
+    public function getPrice(): string;
 
-    public function getPrevPrice(): ?float;
+    public function getPrevPrice(): ?string;
 
-    public function getLotSize(): ?float;
+    public function getLotSize(): ?string;
 
-    public function getStepPrice(): ?float;
+    public function getStepPrice(): ?string;
 
-    public function getCouponPercent(): ?float;
+    public function getCouponPercent(): ?string;
 
-    public function getCouponValue(): ?float;
+    public function getCouponValue(): ?string;
 
-    public function getCouponAccumulated(): ?float;
+    public function getCouponAccumulated(): ?string;
 
     public function getNextCouponDate(): ?\DateTimeInterface;
 

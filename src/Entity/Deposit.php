@@ -35,7 +35,7 @@ class Deposit implements
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2)]
-    private ?float $sum = null;
+    private ?string $sum = null;
 
     #[ORM\Column]
     private ?int $type = null;
@@ -52,7 +52,7 @@ class Deposit implements
     private ?\DateTimeInterface $date = null;
 
     public function __construct(
-        float $sum,
+        string $sum,
         int $type,
         User $user,
         DepositAccount $depositAccount,
@@ -71,12 +71,12 @@ class Deposit implements
         return $this->id;
     }
 
-    public function getSum(): ?float
+    public function getSum(): ?string
     {
         return $this->sum;
     }
 
-    public function setSum(float $sum): static
+    public function setSum(string $sum): static
     {
         $this->sum = $sum;
 

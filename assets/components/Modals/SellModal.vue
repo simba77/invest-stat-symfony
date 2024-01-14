@@ -46,11 +46,10 @@ function sell() {
           </DialogTitle>
           <div class="mt-2">
             <input-text
-              v-model="security.price"
+              v-model.trim="security.price"
               :error="validationErrors"
               :required="true"
               autocomplete="off"
-              type="number"
               class="mb-3"
               name="price"
               label="Sell Price"

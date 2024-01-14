@@ -11,7 +11,7 @@ class CurrencyRateDTO implements CurrencyRateInterface
     public function __construct(
         public string $baseCurrency,
         public string $targetCurrency,
-        public float $rate,
+        public string $rate,
     ) {
     }
 
@@ -34,7 +34,7 @@ class CurrencyRateDTO implements CurrencyRateInterface
     /**
      * @inheritDoc
      */
-    public function getRate(): float
+    public function getRate(): string
     {
         return $this->rate;
     }

@@ -31,13 +31,13 @@ class MoexFuturesProvider implements FuturesProviderInterface
                 name:        $future['SECNAME'],
                 stockMarket: 'MOEX',
                 currency:    'RUB',
-                price:       (float) (! empty($price) ? $price : 0),
-                prevPrice:   (float) $future['PREVPRICE'],
+                price:       ! empty($price) ? $price : '0',
+                prevPrice:   ! empty($future['PREVPRICE']) ? $future['PREVPRICE'] : '0',
                 shortName:   $future['SHORTNAME'],
                 latName:     $future['LATNAME'],
-                lotSize:     (float) $future['LOTVOLUME'],
+                lotSize:     ! empty($future['LOTVOLUME']) ? $future['LOTVOLUME'] : '0',
                 expiration:  Carbon::parse($future['LASTDELDATE']),
-                stepPrice:   (float) $future['STEPPRICE']
+                stepPrice:   ! empty($future['STEPPRICE']) ? $future['STEPPRICE'] : '0'
             );
         }
 

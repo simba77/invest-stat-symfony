@@ -68,19 +68,19 @@ class DealData
         return SecurityTypeEnum::Share;
     }
 
-    public function getBuyPrice(): float
+    public function getBuyPrice(): string
     {
         // Futures price
         if ($this->deal['futureName']) {
-            return (float) ($this->deal['deal']->getBuyPrice() * $this->deal['futureStepPrice'] * $this->deal['futureLotSize']);
+            return bcmul(bcmul($this->deal['deal']->getBuyPrice(), $this->deal['futureStepPrice'], 4), $this->deal['futureLotSize'], 4);
         }
 
         // Bond price
         if ($this->deal['bondName']) {
-            return (float) ($this->deal['deal']->getBuyPrice() * $this->deal['bondLotSize'] / 100);
+            return bcdiv(bcmul($this->deal['deal']->getBuyPrice(), $this->deal['bondLotSize'], 4), '100', 4);
         }
 
-        return (float) $this->deal['deal']->getBuyPrice();
+        return $this->deal['deal']->getBuyPrice();
     }
 
     public function getQuantity(): int
@@ -88,158 +88,159 @@ class DealData
         return (int) $this->deal['deal']->getQuantity();
     }
 
-    public function getFullBuyPrice(): float
+    public function getFullBuyPrice(): string
     {
-        return $this->getBuyPrice() * $this->getQuantity();
+        return bcmul($this->getBuyPrice(), (string) $this->getQuantity(), 4);
     }
 
-    public function getSellPrice(): float
+    public function getSellPrice(): string
     {
         // Futures price
         if ($this->deal['futureName']) {
-            return (float) ($this->deal['deal']->getSellPrice() * $this->deal['futureStepPrice'] * $this->deal['futureLotSize']);
+            return bcmul(bcmul($this->deal['deal']->getSellPrice(), $this->deal['futureStepPrice'], 4), $this->deal['futureLotSize'], 4);
         }
 
         // Bond price
         if ($this->deal['bondName']) {
-            return (float) ($this->deal['deal']->getSellPrice() * $this->deal['bondLotSize'] / 100);
+            return bcdiv(bcmul($this->deal['deal']->getSellPrice(), $this->deal['bondLotSize'], 4), '100', 4);
         }
 
-        return (float) $this->deal['deal']->getSellPrice();
+        return $this->deal['deal']->getSellPrice();
     }
 
-    public function getFullSellPrice(): float
+    public function getFullSellPrice(): string
     {
-        return $this->getSellPrice() * $this->getQuantity();
+        return bcmul($this->getSellPrice(), (string) $this->getQuantity(), 4);
     }
 
-    public function getCurrentPrice(): float
+    public function getCurrentPrice(): string
     {
         if ($this->deal['futurePrice']) {
-            return (float) ($this->deal['futurePrice'] * $this->deal['futureStepPrice'] * $this->deal['futureLotSize']);
+            return bcmul(bcmul($this->deal['futurePrice'], $this->deal['futureStepPrice'], 4), $this->deal['futureLotSize'], 4);
         }
 
         if ($this->deal['bondPrice']) {
-            return (float) ($this->deal['bondPrice'] * $this->deal['bondLotSize'] / 100);
+            return bcdiv(bcmul($this->deal['bondPrice'], $this->deal['bondLotSize'], 4), '100', 4);
         }
 
-        return (float) $this->deal['sharePrice'] ?? $this->deal['bondPrice'] ?? 0;
+        return $this->deal['sharePrice'] ?? $this->deal['bondPrice'] ?? '0';
     }
 
-    public function getPrevPrice(): float
+    public function getPrevPrice(): string
     {
         if ($this->deal['futurePrevPrice']) {
-            return (float) ($this->deal['futurePrevPrice'] * $this->deal['futureStepPrice'] * $this->deal['futureLotSize']);
+            return bcmul(bcmul($this->deal['futurePrevPrice'], $this->deal['futureStepPrice'], 4), $this->deal['futureLotSize'], 4);
         }
 
         if ($this->deal['bondPrevPrice']) {
-            return (float) ($this->deal['bondPrevPrice'] * $this->deal['bondLotSize'] / 100);
+            return bcdiv(bcmul($this->deal['bondPrevPrice'], $this->deal['bondLotSize'], 4), '100', 4);
         }
 
-        return (float) $this->deal['sharePrevPrice'] ?? $this->deal['bondPrevPrice'] ?? 0;
+        return $this->deal['sharePrevPrice'] ?? $this->deal['bondPrevPrice'] ?? '0';
     }
 
-    public function getFullCurrentPrice(): float
+    public function getFullCurrentPrice(): string
     {
-        return $this->getCurrentPrice() * $this->getQuantity();
+        return bcmul($this->getCurrentPrice(), (string) $this->getQuantity(), 4);
     }
 
-    public function getFullPrevPrice(): float
+    public function getFullPrevPrice(): string
     {
-        return round($this->getPrevPrice() * $this->getQuantity(), 2);
+        return bcmul($this->getPrevPrice(), (string) $this->getQuantity(), 4);
     }
 
-    public function getDailyProfit(): float
+    public function getDailyProfit(): string
     {
-        return round($this->getCurrentPrice() - $this->getPrevPrice(), 2);
+        return bcsub($this->getCurrentPrice(), $this->getPrevPrice(), 4);
     }
 
-    public function getFullDailyProfit(): float
+    public function getFullDailyProfit(): string
     {
-        return round($this->getFullCurrentPrice() - $this->getFullPrevPrice(), 2);
+        return bcsub($this->getFullCurrentPrice(), $this->getFullPrevPrice(), 4);
     }
 
-    public function getFullDailyProfitInBaseCurrency(): float
+    public function getFullDailyProfitInBaseCurrency(): string
     {
         if ($this->getCurrency() === 'RUB') {
             return $this->getFullDailyProfit();
         }
-        return $this->getFullDailyProfit() * $this->currencyService->getUSDRUBRate();
+        return bcmul($this->getFullDailyProfit(), $this->currencyService->getUSDRUBRate(), 4);
     }
 
-    public function getTargetPrice(): float
+    public function getTargetPrice(): string
     {
-        return (float) $this->deal['deal']->getTargetPrice();
+        return $this->deal['deal']->getTargetPrice();
     }
 
-    public function getFullTargetPrice(): float
+    public function getFullTargetPrice(): string
     {
-        return $this->getTargetPrice() * $this->getQuantity();
+        return bcmul($this->getTargetPrice(), (string) $this->getQuantity(), 4);
     }
 
-    public function getCommission(): float | int
+    public function getCommission(): string
     {
         if (! empty($this->deal['futurePrice'])) {
             // TODO: Change commission
-            return 5 * $this->getQuantity();
+            return bcmul('5', (string) $this->getQuantity(), 4);
         }
         if (! empty($this->deal['bondPrice'])) {
             // TODO: Change commission
-            return 0.5 * $this->getQuantity();
+            return bcmul('0.5', (string) $this->getQuantity(), 4);
         }
-        return round($this->getFullCurrentPrice() * ($this->account->getCommission() / 100), 2);
+
+        return bcmul($this->getFullCurrentPrice(), bcdiv($this->account->getCommission(), '100', 4), 4);
     }
 
-    public function getProfit(): float
+    public function getProfit(): string
     {
         if ($this->deal['deal']->getStatus() === DealStatus::Closed) {
             if ($this->deal['deal']->getType() === DealType::Short) {
-                return round($this->getFullBuyPrice() - $this->getFullSellPrice() - $this->getCommission(), 2);
+                return bcsub(bcsub($this->getFullBuyPrice(), $this->getFullSellPrice(), 4), $this->getCommission(), 4);
             }
-            return round($this->getFullSellPrice() - $this->getFullBuyPrice() - $this->getCommission(), 2);
+            return bcsub(bcsub($this->getFullSellPrice(), $this->getFullBuyPrice(), 4), $this->getCommission(), 4);
         }
 
         if ($this->deal['deal']->getType() === DealType::Short) {
-            return round($this->getFullBuyPrice() - $this->getFullCurrentPrice() - $this->getCommission(), 2);
+            return bcsub(bcsub($this->getFullBuyPrice(), $this->getFullCurrentPrice(), 4), $this->getCommission(), 4);
         }
-        return round($this->getFullCurrentPrice() - $this->getFullBuyPrice() - $this->getCommission(), 2);
+        return bcsub(bcsub($this->getFullCurrentPrice(), $this->getFullBuyPrice(), 4), $this->getCommission(), 4);
     }
 
-    public function getProfitPercent(): float
+    public function getProfitPercent(): string
     {
-        return round($this->getProfit() / $this->getFullBuyPrice() * 100, 2);
+        return bcmul(bcdiv($this->getProfit(), $this->getFullBuyPrice(), 4), '100', 4);
     }
 
-    public function getTargetProfit(): float | int
-    {
-        if (! $this->getTargetPrice()) {
-            return 0;
-        }
-
-        if ($this->deal['deal']->getType() === DealType::Short) {
-            return round($this->getBuyPrice() - $this->getTargetPrice(), 2);
-        }
-        return round($this->getTargetPrice() - $this->getBuyPrice(), 2);
-    }
-
-    public function getFullTargetProfit(): float | int
+    public function getTargetProfit(): string
     {
         if (! $this->getTargetPrice()) {
-            return 0;
+            return '0';
         }
 
         if ($this->deal['deal']->getType() === DealType::Short) {
-            return round($this->getFullBuyPrice() - $this->getFullTargetPrice(), 2);
+            return bcsub($this->getBuyPrice(), $this->getTargetPrice(), 4);
         }
-        return round($this->getFullTargetPrice() - $this->getFullBuyPrice(), 2);
+        return bcsub($this->getTargetPrice(), $this->getBuyPrice(), 4);
     }
 
-    public function getTargetProfitPercent(): float
+    public function getFullTargetProfit(): string
+    {
+        if (! $this->getTargetPrice()) {
+            return '0';
+        }
+
+        if ($this->deal['deal']->getType() === DealType::Short) {
+            return bcsub($this->getFullBuyPrice(), $this->getFullTargetPrice(), 4);
+        }
+        return bcsub($this->getFullTargetPrice(), $this->getFullBuyPrice(), 4);
+    }
+
+    public function getTargetProfitPercent(): string
     {
         if (! $this->getFullTargetPrice()) {
-            return 0;
+            return '0';
         }
-        return round($this->getFullTargetProfit() / $this->getFullBuyPrice() * 100, 2);
+        return bcmul(bcdiv($this->getFullTargetProfit(), $this->getFullBuyPrice(), 4), '100', 4);
     }
 
     public function getCurrency(): string
@@ -282,50 +283,50 @@ class DealData
         return $this->deal['deal']->getClosingDate()?->format('d.m.Y H:i');
     }
 
-    public function getBuyPriceInBaseCurrency(): float
+    public function getBuyPriceInBaseCurrency(): string
     {
         if ($this->getCurrency() === 'RUB') {
             return $this->getBuyPrice();
         }
-        return $this->getBuyPrice() * $this->currencyService->getUSDRUBRate();
+        return bcmul($this->getBuyPrice(), $this->currencyService->getUSDRUBRate(), 4);
     }
 
-    public function getSellPriceInBaseCurrency(): float
+    public function getSellPriceInBaseCurrency(): string
     {
         if ($this->getCurrency() === 'RUB') {
             return $this->getSellPrice();
         }
-        return $this->getSellPrice() * $this->currencyService->getUSDRUBRate();
+        return bcmul($this->getSellPrice(), $this->currencyService->getUSDRUBRate(), 4);
     }
 
-    public function getFullBuyPriceInBaseCurrency(): float
+    public function getFullBuyPriceInBaseCurrency(): string
     {
-        return $this->getBuyPriceInBaseCurrency() * $this->getQuantity();
+        return bcmul($this->getBuyPriceInBaseCurrency(), (string) $this->getQuantity(), 4);
     }
 
-    public function getFullSellPriceInBaseCurrency(): float
+    public function getFullSellPriceInBaseCurrency(): string
     {
-        return $this->getSellPriceInBaseCurrency() * $this->getQuantity();
+        return bcmul($this->getSellPriceInBaseCurrency(), (string) $this->getQuantity(), 4);
     }
 
-    public function getCurrentPriceInBaseCurrency(): float
+    public function getCurrentPriceInBaseCurrency(): string
     {
         if ($this->getCurrency() === 'RUB') {
             return $this->getCurrentPrice();
         }
-        return $this->getCurrentPrice() * $this->currencyService->getUSDRUBRate();
+        return bcmul($this->getCurrentPrice(), $this->currencyService->getUSDRUBRate(), 4);
     }
 
-    public function getFullCurrentPriceInBaseCurrency(): float
+    public function getFullCurrentPriceInBaseCurrency(): string
     {
-        return $this->getCurrentPriceInBaseCurrency() * $this->getQuantity();
+        return bcmul($this->getCurrentPriceInBaseCurrency(), (string) $this->getQuantity(), 4);
     }
 
-    public function getProfitInBaseCurrency(): float | int
+    public function getProfitInBaseCurrency(): string
     {
         if ($this->getCurrency() === 'RUB') {
             return $this->getProfit();
         }
-        return $this->getProfit() * $this->currencyService->getUSDRUBRate();
+        return bcmul($this->getProfit(), $this->currencyService->getUSDRUBRate(), 4);
     }
 }

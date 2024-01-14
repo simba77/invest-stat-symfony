@@ -53,7 +53,7 @@ class GetSpbSharesCommand extends Command
 
                 if ($share) {
                     if ($currentDay !== $share->updatedAt()->format('d')) {
-                        $share->setPrevPrice((string) $share->getPrice());
+                        $share->setPrevPrice($share->getPrice());
                     }
                     $share->setPrice($price);
                 } else {
@@ -67,7 +67,7 @@ class GetSpbSharesCommand extends Command
                         ShareTypeEnum::Stock->value,
                         $tickerData['description'] ?? $ticker['ticker'],
                         $tickerData['description'] ?? $ticker['ticker'],
-                        1,
+                        '1',
                         ''
                     );
                 }

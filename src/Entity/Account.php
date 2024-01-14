@@ -49,22 +49,22 @@ class Account implements
     private Collection $investments;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?float $balance = null;
+    private ?string $balance = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?float $usdBalance = null;
+    private ?string $usdBalance = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?float $startSumOfAssets = null;
+    private ?string $startSumOfAssets = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?float $currentSumOfAssets = null;
+    private ?string $currentSumOfAssets = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
-    private ?float $commission = null;
+    private ?string $commission = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
-    private ?float $futuresCommission = null;
+    private ?string $futuresCommission = null;
 
     #[ORM\OneToMany(mappedBy: 'account', targetEntity: Deal::class)]
     private Collection $deals;
@@ -72,10 +72,10 @@ class Account implements
     public function __construct(
         int $userId,
         string $name,
-        float $balance = 0,
-        float $usdBalance = 0,
-        float $commission = 0,
-        float $futuresCommission = 0,
+        string $balance = '0',
+        string $usdBalance = '0',
+        string $commission = '0',
+        string $futuresCommission = '0',
         int $sort = 100
     ) {
         $this->investments = new ArrayCollection();
@@ -144,72 +144,72 @@ class Account implements
         return $this->investments;
     }
 
-    public function getBalance(): float
+    public function getBalance(): string
     {
-        return $this->balance ?? 0;
+        return $this->balance ?? '0';
     }
 
-    public function setBalance(?float $balance): static
+    public function setBalance(?string $balance): static
     {
         $this->balance = $balance;
 
         return $this;
     }
 
-    public function getUsdBalance(): float
+    public function getUsdBalance(): string
     {
-        return $this->usdBalance ?? 0;
+        return $this->usdBalance ?? '0';
     }
 
-    public function setUsdBalance(?float $usdBalance): static
+    public function setUsdBalance(?string $usdBalance): static
     {
         $this->usdBalance = $usdBalance;
 
         return $this;
     }
 
-    public function getStartSumOfAssets(): float
+    public function getStartSumOfAssets(): string
     {
-        return $this->startSumOfAssets ?? 0;
+        return $this->startSumOfAssets ?? '0';
     }
 
-    public function setStartSumOfAssets(?float $startSumOfAssets): static
+    public function setStartSumOfAssets(?string $startSumOfAssets): static
     {
         $this->startSumOfAssets = $startSumOfAssets;
 
         return $this;
     }
 
-    public function getCurrentSumOfAssets(): float
+    public function getCurrentSumOfAssets(): string
     {
-        return $this->currentSumOfAssets ?? 0;
+        return $this->currentSumOfAssets ?? '0';
     }
 
-    public function setCurrentSumOfAssets(?float $currentSumOfAssets): static
+    public function setCurrentSumOfAssets(?string $currentSumOfAssets): static
     {
         $this->currentSumOfAssets = $currentSumOfAssets;
 
         return $this;
     }
 
-    public function getCommission(): float
+    public function getCommission(): string
     {
-        return $this->commission ?? 0;
+        return $this->commission ?? '0';
     }
 
-    public function setCommission(?float $commission): static
+    public function setCommission(?string $commission): static
     {
         $this->commission = $commission;
 
         return $this;
     }
 
-    public function getFuturesCommission(): float
+    public function getFuturesCommission(): string
     {
-        return $this->futuresCommission ?? 0;
+        return $this->futuresCommission ?? '0';
     }
 
-    public function setFuturesCommission(?float $futuresCommission): static
+    public function setFuturesCommission(?string $futuresCommission): static
     {
         $this->futuresCommission = $futuresCommission;
 

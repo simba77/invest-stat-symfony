@@ -13,7 +13,7 @@ class GroupByTicker
      * @param DealData[] $deals
      */
     public function __construct(
-        private readonly float $accountValue = 0,
+        private readonly string $accountValue = '0',
         private array $deals = [],
     ) {
     }
@@ -28,49 +28,49 @@ class GroupByTicker
         $firstDeal = $this->deals[0];
 
         $quantity = 0;
-        $fullBuyPrice = 0;
-        $fullCurrentPrice = 0;
-        $fullCurrentPriceInBaseCurrency = 0;
-        $fullPrevPrice = 0;
-        $fullTargetPrice = 0;
-        $profit = 0;
-        $fullTargetProfit = 0;
-        $fullDailyProfit = 0;
-        $commission = 0;
+        $fullBuyPrice = '0';
+        $fullCurrentPrice = '0';
+        $fullCurrentPriceInBaseCurrency = '0';
+        $fullPrevPrice = '0';
+        $fullTargetPrice = '0';
+        $profit = '0';
+        $fullTargetProfit = '0';
+        $fullDailyProfit = '0';
+        $commission = '0';
         foreach ($this->deals as $deal) {
             $quantity += $deal->getQuantity();
-            $fullBuyPrice += $deal->getFullBuyPrice();
-            $fullCurrentPrice += $deal->getFullCurrentPrice();
-            $fullCurrentPriceInBaseCurrency += $deal->getFullCurrentPriceInBaseCurrency();
-            $fullPrevPrice += $deal->getFullPrevPrice();
-            $fullTargetPrice += $deal->getFullTargetPrice();
-            $profit += $deal->getProfit();
-            $fullDailyProfit += $deal->getFullDailyProfit();
-            $commission += $deal->getCommission();
-            $fullTargetProfit += $deal->getFullTargetProfit();
+            $fullBuyPrice = bcadd($fullBuyPrice, $deal->getFullBuyPrice(), 4);
+            $fullCurrentPrice = bcadd($fullCurrentPrice, $deal->getFullCurrentPrice(), 4);
+            $fullCurrentPriceInBaseCurrency = bcadd($fullCurrentPriceInBaseCurrency, $deal->getFullCurrentPriceInBaseCurrency(), 4);
+            $fullPrevPrice = bcadd($fullPrevPrice, $deal->getFullPrevPrice(), 4);
+            $fullTargetPrice = bcadd($fullTargetPrice, $deal->getFullTargetPrice(), 4);
+            $profit = bcadd($profit, $deal->getProfit(), 4);
+            $fullDailyProfit = bcadd($fullDailyProfit, $deal->getFullDailyProfit(), 2);
+            $commission = bcadd($commission, $deal->getCommission(), 2);
+            $fullTargetProfit = bcadd($fullTargetProfit, $deal->getFullTargetProfit(), 4);
         }
 
         return new DealListGroupByTickerDTO(
             ticker:              $firstDeal->getTicker(),
             shortName:           $firstDeal->getName(),
             quantity:            $quantity,
-            buyPrice:            round($fullBuyPrice / $quantity, 4),
+            buyPrice:            bcdiv($fullBuyPrice, (string) $quantity, 4),
             fullBuyPrice:        $fullBuyPrice,
             currentPrice:        $firstDeal->getCurrentPrice(),
             prevPrice:           $firstDeal->getPrevPrice(),
             fullCurrentPrice:    $fullCurrentPrice,
             fullPrevPrice:       $fullPrevPrice,
-            targetPrice:         round($fullTargetPrice / $quantity, 4),
+            targetPrice:         bcdiv($fullTargetPrice, (string) $quantity, 4),
             fullTargetPrice:     $fullTargetPrice,
             profit:              $profit,
-            profitPercent:       round($profit / $fullBuyPrice * 100, 2),
+            profitPercent:       bcmul(bcdiv($profit, $fullBuyPrice, 4), '100', 2),
             dailyProfit:         $firstDeal->getDailyProfit(),
-            fullDailyProfit:     round($fullDailyProfit, 2),
-            commission:          round($commission, 2),
-            targetProfit:        round($fullTargetProfit / $quantity, 4),
+            fullDailyProfit:     $fullDailyProfit,
+            commission:          $commission,
+            targetProfit:        bcdiv($fullTargetProfit, (string) $quantity, 4),
             fullTargetProfit:    $fullTargetProfit,
-            targetProfitPercent: round($fullTargetProfit / $fullBuyPrice * 100, 2),
-            percent:             round($fullCurrentPriceInBaseCurrency / $this->accountValue * 100, 2),
+            targetProfitPercent: bcmul(bcdiv($fullTargetProfit, $fullBuyPrice, 4), '100', 2),
+            percent:             bcmul(bcdiv($fullCurrentPriceInBaseCurrency, $this->accountValue, 4), '100', 2),
             currency:            $firstDeal->getCurrencyName(),
             isShort:             $firstDeal->getType() === DealType::Short,
             isBlocked:           $firstDeal->getStatus() === DealStatus::Blocked,
@@ -102,7 +102,7 @@ class GroupByTicker
                 targetProfit:            $deal->getTargetProfit(),
                 fullTargetProfit:        $deal->getFullTargetProfit(),
                 fullTargetProfitPercent: $deal->getTargetProfitPercent(), // Maybe bug
-                percent:                 round($deal->getFullCurrentPrice() / $this->accountValue * 100, 2),
+                percent:                 bcmul(bcdiv($deal->getFullCurrentPrice(), $this->accountValue, 4), '100', 2),
                 currency:                $deal->getCurrencyName(),
                 isShort:                 $deal->getType() === DealType::Short,
                 isBlocked:               $deal->getStatus() === DealStatus::Blocked,

@@ -37,7 +37,7 @@ class AccountService
             $account = $item['account'];
 
             $currentValue = $this->accountCalculator->getAccountValue($account);
-            $sumDeposits = (float) $item['deposits_sum'] ?? 0;
+            $sumDeposits = $item['deposits_sum'] ?? '0';
 
             $result[] = new AccountListItemResponseDTO(
                 id:           $account->getId(),
@@ -46,7 +46,7 @@ class AccountService
                 usdBalance:   $account->getUsdBalance(),
                 deposits:     $sumDeposits,
                 currentValue: $currentValue,
-                fullProfit:   round($currentValue - $sumDeposits, 2),
+                fullProfit:   bcsub($currentValue, $sumDeposits, 2),
             );
         }
         return $result;
@@ -84,7 +84,7 @@ class AccountService
         $account = $accountData['account'];
 
         $currentValue = $this->accountCalculator->getAccountValue($account);
-        $sumDeposits = (float) $accountData['deposits_sum'] ?? 0;
+        $sumDeposits = $accountData['deposits_sum'] ?? '0';
 
         return new AccountDetailResponseDTO(
             id:           $account->getId(),
@@ -93,7 +93,7 @@ class AccountService
             usdBalance:   $account->getUsdBalance(),
             deposits:     $sumDeposits,
             currentValue: $currentValue,
-            fullProfit:   round($currentValue - $sumDeposits, 2),
+            fullProfit:   bcsub($currentValue, $sumDeposits, 2),
         );
     }
 }

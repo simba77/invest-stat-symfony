@@ -43,7 +43,7 @@ class GetBondsCommand extends Command
                     continue;
                 }
                 $bond->setPrice($item->getPrice());
-                $bond->setPrevPrice((string) $item->getPrevPrice());
+                $bond->setPrevPrice($item->getPrevPrice());
                 $bond->setName($item->getName());
                 $bond->setLatName($item->getLatName());
                 $bond->setShortName($item->getShortName());
@@ -59,7 +59,7 @@ class GetBondsCommand extends Command
                     $item->getStockMarket(),
                     $item->getCurrency(),
                     $item->getPrice(),
-                    (string) $item->getPrevPrice(),
+                    $item->getPrevPrice(),
                     $item->getShortName(),
                     $item->getLatName(),
                     $item->getLotSize(),

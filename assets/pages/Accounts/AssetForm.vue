@@ -25,7 +25,7 @@ const form = ref({
   quantity: 1,
   buyPrice: '',
   isShort: false,
-  targetPrice: 0,
+  targetPrice: '0',
 })
 const errors = ref(null)
 const componentKey = ref(0)
@@ -68,7 +68,7 @@ const getTickerData = useDebounceFn(async () => {
     form.value.buyPrice = data.value.security.price;
     form.value.quantity = data.value.security.lotSize;
     // Добавляем 5% к текущей стоимости
-    form.value.targetPrice = Math.round(parseFloat(data.value.security.price) + (parseFloat(data.value.security.price) * 0.05));
+    form.value.targetPrice = String(Math.round(parseFloat(data.value.security.price) + (parseFloat(data.value.security.price) * 0.05)));
     componentKey.value += 1
   }
 }, 300)
@@ -129,7 +129,7 @@ onMounted(() => {
             v-model="form.stockMarket"
             :error="errors"
             :options="[{value: 'SPB', name: 'SPB'}, {value: 'MOEX', name: 'MOEX'}]"
-            name="stock_market"
+            name="stockMarket"
             class="mt-3"
             label="Stock Market"
           />
@@ -145,21 +145,19 @@ onMounted(() => {
           />
           <input-text
             :key="componentKey"
-            v-model.number="form.buyPrice"
+            v-model.trim="form.buyPrice"
             :error="errors"
-            type="number"
             class="mt-3"
-            name="buy_price"
+            name="buyPrice"
             label="Buy Price"
             placeholder="Buy Price"
           />
           <input-text
             :key="componentKey"
-            v-model.number="form.targetPrice"
+            v-model.trim="form.targetPrice"
             :error="errors"
-            type="number"
             class="mt-3"
-            name="target_price"
+            name="targetPrice"
             label="Target Price"
             placeholder="Target Price"
           />

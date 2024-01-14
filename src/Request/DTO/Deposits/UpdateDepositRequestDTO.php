@@ -13,8 +13,8 @@ class UpdateDepositRequestDTO
         public int $accountId,
 
         #[Assert\NotBlank]
-        #[Assert\Range(['min' => PHP_INT_MIN, 'max' => PHP_INT_MAX])]
-        public float $sum,
+        #[Assert\Type(['type' => ['numeric']])]
+        public string $sum,
 
         #[Assert\NotBlank]
         public int $type,

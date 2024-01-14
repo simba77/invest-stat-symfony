@@ -24,28 +24,28 @@ class Statistic
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
-    private ?float $balance = null;
+    private ?string $balance = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
-    private ?float $usdBalance = null;
+    private ?string $usdBalance = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
-    private ?float $investments = null;
+    private ?string $investments = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
-    private ?float $currentValue = null;
+    private ?string $currentValue = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
-    private ?float $profit = null;
+    private ?string $profit = null;
 
     public function __construct(
         Account $account,
         \DateTimeInterface $date,
-        float $balance,
-        float $usdBalance,
-        float $investments,
-        float $currentValue,
-        float $profit
+        string $balance,
+        string $usdBalance,
+        string $investments,
+        string $currentValue,
+        string $profit
     ) {
         $this->account = $account;
         $this->date = $date;
@@ -86,60 +86,60 @@ class Statistic
         return $this;
     }
 
-    public function getBalance(): ?float
+    public function getBalance(): ?string
     {
         return $this->balance;
     }
 
-    public function setBalance(?float $balance): static
+    public function setBalance(?string $balance): static
     {
         $this->balance = $balance;
 
         return $this;
     }
 
-    public function getUsdBalance(): ?float
+    public function getUsdBalance(): ?string
     {
         return $this->usdBalance;
     }
 
-    public function setUsdBalance(?float $usdBalance): static
+    public function setUsdBalance(?string $usdBalance): static
     {
         $this->usdBalance = $usdBalance;
 
         return $this;
     }
 
-    public function getInvestments(): ?float
+    public function getInvestments(): ?string
     {
         return $this->investments;
     }
 
-    public function setInvestments(?float $investments): static
+    public function setInvestments(?string $investments): static
     {
         $this->investments = $investments;
 
         return $this;
     }
 
-    public function getCurrentValue(): ?float
+    public function getCurrentValue(): ?string
     {
         return $this->currentValue;
     }
 
-    public function setCurrentValue(?float $currentValue): static
+    public function setCurrentValue(?string $currentValue): static
     {
         $this->currentValue = $currentValue;
 
         return $this;
     }
 
-    public function getProfit(): ?float
+    public function getProfit(): ?string
     {
         return $this->profit;
     }
 
-    public function setProfit(?float $profit): static
+    public function setProfit(?string $profit): static
     {
         $this->profit = $profit;
 

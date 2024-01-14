@@ -14,8 +14,8 @@ final class CreateExpenseRequestDTO
         public string $name,
 
         #[Assert\NotBlank]
-        #[Assert\Range(['min' => 0, 'max' => PHP_INT_MAX])]
-        public float $sum,
+        #[Assert\Type(['type' => ['numeric']])]
+        public string $sum,
     ) {
     }
 }

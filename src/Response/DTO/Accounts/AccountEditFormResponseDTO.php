@@ -8,10 +8,10 @@ class AccountEditFormResponseDTO
 {
     public function __construct(
         public string $name,
-        public float $balance,
-        public float $usdBalance,
-        public float $commission,
-        public float $futuresCommission,
+        public string $balance,
+        public string $usdBalance,
+        public string $commission,
+        public string $futuresCommission,
         public int $sort,
     ) {
     }

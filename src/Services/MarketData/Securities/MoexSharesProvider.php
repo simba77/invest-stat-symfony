@@ -45,13 +45,13 @@ class MoexSharesProvider implements SharesProviderInterface
                 name:        $share['SECNAME'],
                 stockMarket: 'MOEX',
                 currency:    'RUB',
-                price:       (float) (! empty($price) ? $price : 0),
+                price:       ! empty($price) ? $price : '0',
                 type:        ShareTypeEnum::Stock->value,
                 shortName:   $share['SHORTNAME'],
                 latName:     $share['LATNAME'],
-                lotSize:     (float) $share['LOTSIZE'],
+                lotSize:     ! empty($share['LOTSIZE']) ? $share['LOTSIZE'] : '0',
                 isin:        $share['ISIN'],
-                prevPrice:   (float) $share['PREVPRICE']
+                prevPrice:   ! empty($share['PREVPRICE']) ? $share['PREVPRICE'] : '0'
             );
         }
 

@@ -12,11 +12,11 @@ class SecurityDTO
         public string $ticker,
         public string $shortName,
         public string $stockMarket,
-        public float $price,
-        public int | float $lotSize,
+        public string $price,
+        public string $lotSize,
         public string $currency,
         public SecurityTypeEnum $securityType,
-        public float $bondAccumulatedCoupon = 0,
+        public string $bondAccumulatedCoupon = '0',
     ) {
     }
 }

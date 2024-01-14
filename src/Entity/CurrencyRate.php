@@ -31,9 +31,9 @@ class CurrencyRate implements CreatedDateProviderInterface, UpdatedDateProviderI
     private ?string $targetCurrency = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4)]
-    private ?float $rate = null;
+    private ?string $rate = null;
 
-    public function __construct(string $baseCurrency, string $targetCurrency, float $rate)
+    public function __construct(string $baseCurrency, string $targetCurrency, string $rate)
     {
         $this->baseCurrency = $baseCurrency;
         $this->targetCurrency = $targetCurrency;
@@ -69,12 +69,12 @@ class CurrencyRate implements CreatedDateProviderInterface, UpdatedDateProviderI
         return $this;
     }
 
-    public function getRate(): float
+    public function getRate(): string
     {
-        return $this->rate ?? 0;
+        return $this->rate ?? '0';
     }
 
-    public function setRate(float $rate): static
+    public function setRate(string $rate): static
     {
         $this->rate = $rate;
 

@@ -11,8 +11,8 @@ class EditDealDTO
         public string $ticker,
         public string $stockMarket,
         public int $quantity,
-        public float $buyPrice,
-        public float $targetPrice,
+        public string $buyPrice,
+        public string $targetPrice,
         public bool $isShort,
     ) {
     }

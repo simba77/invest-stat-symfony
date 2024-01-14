@@ -36,7 +36,7 @@ class CollectAccountsStatisticCommand extends Command
         foreach ($items as $item) {
             $account = $item['account'];
             $currentValue = $this->accountCalculator->getAccountValue($account);
-            $sumDeposits = (float) $item['deposits_sum'] ?? 0;
+            $sumDeposits = $item['deposits_sum'] ?? '0';
 
             $stat = new Statistic(
                 $account,
@@ -45,7 +45,7 @@ class CollectAccountsStatisticCommand extends Command
                 $account->getUsdBalance(),
                 $sumDeposits,
                 $currentValue,
-                round($currentValue - $sumDeposits, 2)
+                bcsub($currentValue, $sumDeposits, 2)
             );
 
             $this->entityManager->persist($stat);

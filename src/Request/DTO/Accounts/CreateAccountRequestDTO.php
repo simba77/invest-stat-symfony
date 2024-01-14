@@ -12,11 +12,15 @@ class CreateAccountRequestDTO
         #[Assert\NotBlank]
         #[Assert\Length(min: 3, max: 200)]
         public string $name,
-        public float $balance,
-        public float $usdBalance,
-        public float $commission,
-        public float $futuresCommission,
-        public int $sort,
+        #[Assert\NotBlank]
+        public string $balance = '0',
+        #[Assert\NotBlank]
+        public string $usdBalance = '0',
+        #[Assert\NotBlank]
+        public string $commission = '0',
+        #[Assert\NotBlank]
+        public string $futuresCommission = '0',
+        public int $sort = 100,
     ) {
     }
 }

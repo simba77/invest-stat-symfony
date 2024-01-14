@@ -42,7 +42,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
     #[Groups(['authUserData'])]
-    private ?float $salary = null;
+    private ?string $salary = null;
 
     public function __construct()
     {
@@ -168,12 +168,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getSalary(): ?float
+    public function getSalary(): ?string
     {
         return $this->salary;
     }
 
-    public function setSalary(?float $salary): static
+    public function setSalary(?string $salary): static
     {
         $this->salary = $salary;
 

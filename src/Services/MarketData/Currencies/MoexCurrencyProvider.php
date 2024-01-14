@@ -33,7 +33,7 @@ class MoexCurrencyProvider implements CurrencyProviderInterface
             $currency = explode('/', $item['secid']);
 
             $result[] = new CurrencyRateDTO(
-                $currency[1], $currency[0], (float) $item['rate']
+                $currency[1], $currency[0], $item['rate']
             );
         }
 

@@ -171,10 +171,10 @@ class DealsListService
         $deals = $this->dealRepository->findForUser($user);
         $summary = new SummaryForGroup();
 
-        $accountsValue = 0;
+        $accountsValue = '0';
         $accounts = $this->accountService->getAccountsListForUser($user);
         foreach ($accounts as $account) {
-            $accountsValue += $account->currentValue;
+            $accountsValue = bcadd($accountsValue, $account->currentValue, 2);
         }
 
         foreach ($deals as $deal) {

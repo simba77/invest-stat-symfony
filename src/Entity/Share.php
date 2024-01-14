@@ -46,10 +46,10 @@ class Share implements
     private ?string $currency = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4)]
-    private ?float $price = null;
+    private ?string $price = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?float $lotSize = null;
+    private ?string $lotSize = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $isin = null;
@@ -65,11 +65,11 @@ class Share implements
         string $name,
         string $stockMarket,
         string $currency,
-        float $price,
+        string $price,
         int $type,
         string $shortName = '',
         string $latName = '',
-        float $lotSize = 1,
+        string $lotSize = '1',
         string $isin = '',
         string $prevPrice = '0',
     ) {
@@ -163,24 +163,24 @@ class Share implements
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): ?string
     {
         return $this->price;
     }
 
-    public function setPrice(float $price): static
+    public function setPrice(string $price): static
     {
         $this->price = $price;
 
         return $this;
     }
 
-    public function getLotSize(): ?float
+    public function getLotSize(): ?string
     {
         return $this->lotSize;
     }
 
-    public function setLotSize(?float $lotSize): static
+    public function setLotSize(?string $lotSize): static
     {
         $this->lotSize = $lotSize;
 

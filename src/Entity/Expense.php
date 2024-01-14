@@ -39,12 +39,12 @@ class Expense implements
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2)]
-    private ?float $sum = null;
+    private ?string $sum = null;
 
     #[ORM\ManyToOne(targetEntity: ExpensesCategory::class, inversedBy: 'expenses')]
     private ExpensesCategory $category;
 
-    public function __construct(string $name, float $sum, int $userId)
+    public function __construct(string $name, string $sum, int $userId)
     {
         $this->name = $name;
         $this->sum = $sum;
@@ -80,12 +80,12 @@ class Expense implements
         return $this;
     }
 
-    public function getSum(): ?float
+    public function getSum(): ?string
     {
         return $this->sum;
     }
 
-    public function setSum(float $sum): static
+    public function setSum(string $sum): static
     {
         $this->sum = $sum;
 

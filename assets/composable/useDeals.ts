@@ -13,7 +13,7 @@ export function useDeals() {
       id: security.id,
       accountId: Number(security.accountId),
       ticker: security.ticker,
-      price: Number(security.price),
+      price: security.price,
       quantity: Number(security.quantity),
     })
   }

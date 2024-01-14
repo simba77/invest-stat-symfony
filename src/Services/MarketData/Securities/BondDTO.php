@@ -11,15 +11,15 @@ class BondDTO implements BondInterface
         public string $name,
         public string $stockMarket,
         public string $currency,
-        public float $price,
-        public ?float $prevPrice,
+        public string $price,
+        public ?string $prevPrice,
         public ?string $shortName,
         public ?string $latName,
-        public ?float $lotSize,
-        public ?float $stepPrice,
-        public ?float $couponPercent,
-        public ?float $couponValue,
-        public ?float $couponAccumulated,
+        public ?string $lotSize,
+        public ?string $stepPrice,
+        public ?string $couponPercent,
+        public ?string $couponValue,
+        public ?string $couponAccumulated,
         public ?\DateTimeInterface $nextCouponDate,
         public ?\DateTimeInterface $maturityDate,
     ) {
@@ -61,37 +61,37 @@ class BondDTO implements BondInterface
         return $this->currency;
     }
 
-    public function getPrice(): float
+    public function getPrice(): string
     {
         return $this->price;
     }
 
-    public function getPrevPrice(): ?float
+    public function getPrevPrice(): ?string
     {
         return $this->prevPrice;
     }
 
-    public function getLotSize(): ?float
+    public function getLotSize(): ?string
     {
         return $this->lotSize;
     }
 
-    public function getStepPrice(): ?float
+    public function getStepPrice(): ?string
     {
         return $this->stepPrice;
     }
 
-    public function getCouponPercent(): ?float
+    public function getCouponPercent(): ?string
     {
         return $this->couponPercent;
     }
 
-    public function getCouponValue(): ?float
+    public function getCouponValue(): ?string
     {
         return $this->couponValue;
     }
 
-    public function getCouponAccumulated(): ?float
+    public function getCouponAccumulated(): ?string
     {
         return $this->couponAccumulated;
     }

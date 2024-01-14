@@ -20,6 +20,8 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
 
+use function Symfony\Component\String\s;
+
 class DealService
 {
     public function __construct(
@@ -134,14 +136,17 @@ class DealService
     private function changeAccountBalanceWhenAddDeal(Account $account, CreateDealRequestDTO $dealRequestDTO): void
     {
         $security = $this->securitiesService->getSecurityByTickerAndStockMarket($dealRequestDTO->ticker, $dealRequestDTO->stockMarket);
-        $dealSum = 0;
+        $dealSum = '0';
         $currency = 'RUB';
 
         if ($security) {
             if ($security->securityType === SecurityTypeEnum::Share) {
-                $dealSum = $dealRequestDTO->buyPrice * $dealRequestDTO->quantity;
+                $dealSum = bcmul($dealRequestDTO->buyPrice, (string) $dealRequestDTO->quantity, 4);
             } elseif ($security->securityType === SecurityTypeEnum::Bond) {
-                $dealSum = ($security->lotSize * $dealRequestDTO->buyPrice / 100 * $dealRequestDTO->quantity) + ($security->bondAccumulatedCoupon * $dealRequestDTO->quantity);
+                $dealSum = bcmul($security->lotSize, $dealRequestDTO->buyPrice, 4);
+                $dealSum = bcdiv($dealSum, '100', 4);
+                $dealSum = bcmul($dealSum, (string) $dealRequestDTO->quantity, 4);
+                $dealSum = bcadd($dealSum, bcmul($security->bondAccumulatedCoupon, (string) $dealRequestDTO->quantity, 4), 4);
             }
 
             if ($security->currency !== 'RUB') {
@@ -149,7 +154,7 @@ class DealService
             }
         } else {
             // If no data on the security is found, then we set the expected data for calculating the price
-            $dealSum = $dealRequestDTO->buyPrice * $dealRequestDTO->quantity;
+            $dealSum = bcmul($dealRequestDTO->buyPrice, (string) $dealRequestDTO->quantity, 4);
             if ($dealRequestDTO->stockMarket !== 'MOEX') {
                 $currency = 'USD';
             }
@@ -160,18 +165,18 @@ class DealService
 
             // Depends on the type of deal we decide to increase or decrease the balance.
             if (! $dealRequestDTO->isShort) {
-                $account->setBalance($balanceToChange - $dealSum);
+                $account->setBalance(bcsub($balanceToChange, $dealSum, 4));
             } else {
-                $account->setBalance($balanceToChange + $dealSum);
+                $account->setBalance(bcadd($balanceToChange, $dealSum, 4));
             }
         } else {
             $balanceToChange = $account->getUsdBalance();
 
             // Depends on the type of deal we decide to increase or decrease the balance.
             if (! $dealRequestDTO->isShort) {
-                $account->setUsdBalance($balanceToChange - $dealSum);
+                $account->setUsdBalance(bcsub($balanceToChange, $dealSum, 4));
             } else {
-                $account->setUsdBalance($balanceToChange + $dealSum);
+                $account->setUsdBalance(bcadd($balanceToChange, $dealSum, 4));
             }
         }
 
@@ -193,18 +198,18 @@ class DealService
 
             // Depends on the type of deal we decide to increase or decrease the balance.
             if ($deal->getType() === DealType::Long) {
-                $account->setBalance($balanceToChange + $dealSum);
+                $account->setBalance(bcadd($balanceToChange, $dealSum, 4));
             } elseif ($deal->getType() === DealType::Short) {
-                $account->setBalance($balanceToChange - $dealSum);
+                $account->setBalance(bcsub($balanceToChange, $dealSum, 4));
             }
         } else {
             $balanceToChange = $account->getUsdBalance();
 
             // Depends on the type of deal we decide to increase or decrease the balance.
             if ($deal->getType() === DealType::Long) {
-                $account->setUsdBalance($balanceToChange + $dealSum);
+                $account->setUsdBalance(bcadd($balanceToChange, $dealSum, 4));
             } elseif ($deal->getType() === DealType::Short) {
-                $account->setUsdBalance($balanceToChange - $dealSum);
+                $account->setUsdBalance(bcsub($balanceToChange, $dealSum, 4));
             }
         }
 
@@ -212,16 +217,21 @@ class DealService
         $this->entityManager->flush();
     }
 
-    private function getDealSum(SecurityDTO $securityDTO, SellDealRequestDTO $dealRequestDTO, Deal $deal): float | int
+    private function getDealSum(SecurityDTO $securityDTO, SellDealRequestDTO $dealRequestDTO, Deal $deal): string
     {
         if ($securityDTO->securityType === SecurityTypeEnum::Share) {
-            return $dealRequestDTO->price * $dealRequestDTO->quantity;
+            return bcmul($dealRequestDTO->price, (string) $dealRequestDTO->quantity, 4);
         } elseif ($securityDTO->securityType === SecurityTypeEnum::Bond) {
-            return ($securityDTO->lotSize * $dealRequestDTO->price / 100 * $dealRequestDTO->quantity) + ($securityDTO->bondAccumulatedCoupon * $dealRequestDTO->quantity);
+            $result = bcmul($securityDTO->lotSize, $dealRequestDTO->price, 4);
+            $result = bcdiv($result, '100', 4);
+            $result = bcmul($result, (string) $dealRequestDTO->quantity, 4);
+            return bcadd($result, bcmul($securityDTO->bondAccumulatedCoupon, (string) $dealRequestDTO->quantity, 4), 4);
         } elseif ($securityDTO->securityType === SecurityTypeEnum::Future) {
-            return ($securityDTO->lotSize * $dealRequestDTO->price * $dealRequestDTO->quantity) - ($deal->getBuyPrice() * $securityDTO->lotSize * $dealRequestDTO->quantity);
+            $result = bcmul($securityDTO->lotSize, $dealRequestDTO->price, 4);
+            $result = bcmul($result, (string) $dealRequestDTO->quantity, 4);
+            return bcsub($result, bcmul(bcmul($deal->getBuyPrice(), $securityDTO->lotSize, 4), (string) $dealRequestDTO->quantity, 4));
         }
-        return 0;
+        return '0';
     }
 
     public function changeDeal(Deal $deal, EditDealRequestDTO $dto): void

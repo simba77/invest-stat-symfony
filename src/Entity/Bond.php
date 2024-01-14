@@ -46,22 +46,22 @@ class Bond implements
     private ?string $currency = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?float $lotSize = null;
+    private ?string $lotSize = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4)]
-    private ?float $price = null;
+    private ?string $price = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?float $stepPrice = null;
+    private ?string $stepPrice = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?float $couponPercent = null;
+    private ?string $couponPercent = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?float $couponValue = null;
+    private ?string $couponValue = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?float $couponAccumulated = null;
+    private ?string $couponAccumulated = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $nextCouponDate = null;
@@ -77,15 +77,15 @@ class Bond implements
         string $name,
         string $stockMarket,
         string $currency,
-        float $price,
+        string $price,
         string $prevPrice = '',
         string $shortName = '',
         string $latName = '',
-        float $lotSize = 1,
-        ?float $stepPrice = null,
-        ?float $couponPercent = null,
-        ?float $couponValue = null,
-        ?float $couponAccumulated = null,
+        string $lotSize = '1',
+        ?string $stepPrice = null,
+        ?string $couponPercent = null,
+        ?string $couponValue = null,
+        ?string $couponAccumulated = null,
         ?\DateTimeInterface $nextCouponDate = null,
         ?\DateTimeInterface $maturityDate = null,
     ) {
@@ -183,72 +183,72 @@ class Bond implements
         return $this;
     }
 
-    public function getLotSize(): ?float
+    public function getLotSize(): ?string
     {
         return $this->lotSize;
     }
 
-    public function setLotSize(?float $lotSize): static
+    public function setLotSize(?string $lotSize): static
     {
         $this->lotSize = $lotSize;
 
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): ?string
     {
         return $this->price;
     }
 
-    public function setPrice(float $price): static
+    public function setPrice(string $price): static
     {
         $this->price = $price;
 
         return $this;
     }
 
-    public function getStepPrice(): ?float
+    public function getStepPrice(): ?string
     {
         return $this->stepPrice;
     }
 
-    public function setStepPrice(?float $stepPrice): static
+    public function setStepPrice(?string $stepPrice): static
     {
         $this->stepPrice = $stepPrice;
 
         return $this;
     }
 
-    public function getCouponPercent(): ?float
+    public function getCouponPercent(): ?string
     {
         return $this->couponPercent;
     }
 
-    public function setCouponPercent(?float $couponPercent): static
+    public function setCouponPercent(?string $couponPercent): static
     {
         $this->couponPercent = $couponPercent;
 
         return $this;
     }
 
-    public function getCouponValue(): ?float
+    public function getCouponValue(): ?string
     {
         return $this->couponValue;
     }
 
-    public function setCouponValue(?float $couponValue): static
+    public function setCouponValue(?string $couponValue): static
     {
         $this->couponValue = $couponValue;
 
         return $this;
     }
 
-    public function getCouponAccumulated(): ?float
+    public function getCouponAccumulated(): ?string
     {
         return $this->couponAccumulated;
     }
 
-    public function setCouponAccumulated(?float $couponAccumulated): static
+    public function setCouponAccumulated(?string $couponAccumulated): static
     {
         $this->couponAccumulated = $couponAccumulated;
 

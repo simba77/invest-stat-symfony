@@ -7,10 +7,10 @@ namespace App\Response\DTO\Deals;
 class SummaryForClosedDealsDTO
 {
     public function __construct(
-        public float $buyPrice,
-        public float $sellPrice,
-        public float $profit,
-        public float $profitPercent,
+        public string $buyPrice,
+        public string $sellPrice,
+        public string $profit,
+        public string $profitPercent,
     ) {
     }
 }

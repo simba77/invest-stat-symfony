@@ -31,7 +31,7 @@ class InvestCabHttpClient
         return $this->parseContent($data);
     }
 
-    public function getPriceByTicker(string $ticker): float
+    public function getPriceByTicker(string $ticker): string
     {
         $url = 'chistory?symbol=' . $ticker . '&resolution=30&from=' . (time() - 86400 * 3) . '&to=' . time();
         $data = $this->client->request('GET', $url)->getContent();
@@ -40,6 +40,6 @@ class InvestCabHttpClient
         if (empty($price)) {
             throw new RuntimeException('Unable to get price for ticker: ' . $ticker);
         }
-        return (float) $price;
+        return (string) $price;
     }
 }

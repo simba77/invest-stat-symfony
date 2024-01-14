@@ -79,7 +79,6 @@ const {loading, run: submitForm} = useAsync(() => {
             :error="errors"
             :required="true"
             class="mt-3"
-            type="number"
             name="salary"
             label="Salary"
             placeholder="Salary"

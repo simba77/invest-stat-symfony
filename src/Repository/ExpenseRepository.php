@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Expense;
@@ -21,38 +23,13 @@ class ExpenseRepository extends ServiceEntityRepository
         parent::__construct($registry, Expense::class);
     }
 
-    public function getSumForUser(int $userId): float
+    public function getSumForUser(int $userId): string
     {
         return $this->createQueryBuilder('e')
             ->andWhere('e.userId = :userId')
             ->setParameter('userId', $userId)
             ->select('sum(e.sum) as allExpenses')
             ->getQuery()
-            ->getOneOrNullResult()['allExpenses'] ?? 0;
+            ->getOneOrNullResult()['allExpenses'] ?? '0';
     }
-
-//    /**
-//     * @return Expense[] Returns an array of Expense objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Expense
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

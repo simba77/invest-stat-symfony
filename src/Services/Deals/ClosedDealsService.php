@@ -21,9 +21,9 @@ class ClosedDealsService
     public function getDeals(User $user, ?DealsFilterRequestDTO $filterRequestDTO): array
     {
         $dealsByTickers = [];
-        $summaryBuyPrice = 0;
-        $summarySellPrice = 0;
-        $summaryProfit = 0;
+        $summaryBuyPrice = '0';
+        $summarySellPrice = '0';
+        $summaryProfit = '0';
 
         $deals = $this->dealRepository->getClosedDealsForUserByFilter($user, $filterRequestDTO);
         foreach ($deals as $deal) {
@@ -38,20 +38,20 @@ class ClosedDealsService
 
             $group->addDeal($dealData);
 
-            $summaryBuyPrice += $dealData->getFullBuyPriceInBaseCurrency();
-            $summarySellPrice += $dealData->getFullSellPriceInBaseCurrency();
-            $summaryProfit += $dealData->getProfitInBaseCurrency();
+            $summaryBuyPrice = bcadd($summaryBuyPrice, $dealData->getFullBuyPriceInBaseCurrency(), 2);
+            $summarySellPrice = bcadd($summarySellPrice, $dealData->getFullSellPriceInBaseCurrency(), 2);
+            $summaryProfit = bcadd($summaryProfit, $dealData->getProfitInBaseCurrency(), 2);
         }
 
         if ($summaryBuyPrice > 0) {
             $summary = new SummaryForClosedDealsDTO(
-                round($summaryBuyPrice, 2),
-                round($summarySellPrice, 2),
-                round($summaryProfit, 2),
-                round($summaryProfit / $summaryBuyPrice * 100, 2)
+                $summaryBuyPrice,
+                $summarySellPrice,
+                $summaryProfit,
+                bcmul(bcdiv($summaryProfit, $summaryBuyPrice, 4), '100', 2)
             );
         } else {
-            $summary = new SummaryForClosedDealsDTO(0, 0, 0, 0);
+            $summary = new SummaryForClosedDealsDTO('0', '0', '0', '0');
         }
 
         return ['deals' => $dealsByTickers, 'summary' => $summary];
@@ -66,14 +66,10 @@ class ClosedDealsService
             $date = $deal['deal']->getClosingDate()?->format('Y.m') ?? '0';
 
             if (isset($profitByMonths[$date])) {
-                $profitByMonths[$date] += $dealData->getProfitInBaseCurrency();
+                $profitByMonths[$date] = bcadd($profitByMonths[$date], $dealData->getProfitInBaseCurrency(), 2);
             } else {
                 $profitByMonths[$date] = $dealData->getProfitInBaseCurrency();
             }
-        }
-
-        foreach ($profitByMonths as $key => $profitByMonth) {
-            $profitByMonths[$key] = round($profitByMonth, 2);
         }
 
         ksort($profitByMonths);

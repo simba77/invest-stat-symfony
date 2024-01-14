@@ -11,13 +11,13 @@ class ShareDTO implements ShareInterface
         public string $name,
         public string $stockMarket,
         public string $currency,
-        public float $price,
+        public string $price,
         public int $type,
         public ?string $shortName,
         public ?string $latName,
-        public ?float $lotSize,
+        public ?string $lotSize,
         public ?string $isin,
-        public ?float $prevPrice,
+        public ?string $prevPrice,
     ) {
     }
 
@@ -57,17 +57,17 @@ class ShareDTO implements ShareInterface
         return $this->currency;
     }
 
-    public function getPrice(): float
+    public function getPrice(): string
     {
         return $this->price;
     }
 
-    public function getPrevPrice(): float
+    public function getPrevPrice(): string
     {
         return $this->prevPrice;
     }
 
-    public function getLotSize(): ?float
+    public function getLotSize(): ?string
     {
         return $this->lotSize;
     }

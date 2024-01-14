@@ -9,11 +9,11 @@ class AccountListItemResponseDTO
     public function __construct(
         public int $id,
         public string $name,
-        public float $balance,
-        public float $usdBalance,
-        public float $deposits,
-        public float $currentValue,
-        public float $fullProfit,
+        public string $balance,
+        public string $usdBalance,
+        public string $deposits,
+        public string $currentValue,
+        public string $fullProfit,
     ) {
     }
 }

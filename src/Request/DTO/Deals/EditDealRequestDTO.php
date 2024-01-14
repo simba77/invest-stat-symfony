@@ -16,8 +16,10 @@ class EditDealRequestDTO
         #[Assert\NotBlank]
         public int $quantity,
         #[Assert\NotBlank]
-        public float $buyPrice,
-        public float $targetPrice,
+        #[Assert\Type(['type' => ['numeric']])]
+        public string $buyPrice,
+        #[Assert\Type(['type' => ['numeric']])]
+        public string $targetPrice,
         public bool $isShort
     ) {
     }

@@ -24,13 +24,13 @@ interface FutureInterface
      */
     public function getCurrency(): string;
 
-    public function getPrice(): float;
+    public function getPrice(): string;
 
-    public function getPrevPrice(): ?float;
+    public function getPrevPrice(): ?string;
 
-    public function getLotSize(): ?float;
+    public function getLotSize(): ?string;
 
     public function getExpiration(): ?\DateTimeInterface;
 
-    public function getStepPrice(): ?float;
+    public function getStepPrice(): ?string;
 }

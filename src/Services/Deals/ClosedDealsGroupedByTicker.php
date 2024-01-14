@@ -27,29 +27,29 @@ class ClosedDealsGroupedByTicker
         $firstDeal = $this->deals[0];
 
         $quantity = 0;
-        $fullBuyPrice = 0;
-        $fullSellPrice = 0;
-        $profit = 0;
-        $commission = 0;
+        $fullBuyPrice = '0';
+        $fullSellPrice = '0';
+        $profit = '0';
+        $commission = '0';
         foreach ($this->deals as $deal) {
             $quantity += $deal->getQuantity();
-            $fullBuyPrice += $deal->getFullBuyPrice();
-            $profit += $deal->getProfit();
-            $commission += $deal->getCommission();
-            $fullSellPrice += $deal->getFullSellPrice();
+            $fullBuyPrice = bcadd($fullBuyPrice, $deal->getFullBuyPrice(), 2);
+            $profit = bcadd($profit, $deal->getProfit(), 2);
+            $commission = bcadd($commission, $deal->getCommission(), 2);
+            $fullSellPrice = bcadd($fullSellPrice, $deal->getFullSellPrice(), 2);
         }
 
         return new ClosedDealListGroupByTickerDTO(
             ticker:        $firstDeal->getTicker(),
             shortName:     $firstDeal->getName(),
             quantity:      $quantity,
-            buyPrice:      round($fullBuyPrice / $quantity, 4),
+            buyPrice:      bcdiv($fullBuyPrice, (string) $quantity, 4),
             fullBuyPrice:  $fullBuyPrice,
-            sellPrice:     round($fullSellPrice / $quantity, 4),
+            sellPrice:     bcdiv($fullSellPrice, (string) $quantity, 4),
             fullSellPrice: $fullSellPrice,
-            profit:        round($profit, 4),
-            profitPercent: round($profit / $fullBuyPrice * 100, 2),
-            commission:    round($commission, 2),
+            profit:        $profit,
+            profitPercent: bcmul(bcdiv($profit, $fullBuyPrice, 4), '100', 2),
+            commission:    $commission,
             currency:      $firstDeal->getCurrencyName(),
             isShort:       $firstDeal->getType() === DealType::Short,
             isBlocked:     $firstDeal->getStatus() === DealStatus::Blocked,

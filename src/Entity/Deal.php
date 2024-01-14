@@ -55,13 +55,13 @@ class Deal implements
     private ?int $quantity = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4)]
-    private ?float $buyPrice = null;
+    private ?string $buyPrice = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?float $targetPrice = null;
+    private ?string $targetPrice = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?float $sellPrice = null;
+    private ?string $sellPrice = null;
 
     #[ORM\Column(type: Types::SMALLINT, enumType: DealStatus::class)]
     private ?DealStatus $status = null;
@@ -80,9 +80,9 @@ class Deal implements
         DealStatus $status,
         DealType   $type,
         int        $quantity,
-        float      $buyPrice,
-        float      $targetPrice = 0,
-        float      $sellPrice = 0,
+        string      $buyPrice,
+        string      $targetPrice = '0',
+        string      $sellPrice = '0',
     )
     {
         $this->user = $user;
@@ -162,36 +162,36 @@ class Deal implements
         return $this;
     }
 
-    public function getBuyPrice(): ?float
+    public function getBuyPrice(): ?string
     {
         return $this->buyPrice;
     }
 
-    public function setBuyPrice(float $buyPrice): static
+    public function setBuyPrice(string $buyPrice): static
     {
         $this->buyPrice = $buyPrice;
 
         return $this;
     }
 
-    public function getTargetPrice(): ?float
+    public function getTargetPrice(): ?string
     {
         return $this->targetPrice;
     }
 
-    public function setTargetPrice(?float $targetPrice): static
+    public function setTargetPrice(?string $targetPrice): static
     {
         $this->targetPrice = $targetPrice;
 
         return $this;
     }
 
-    public function getSellPrice(): ?float
+    public function getSellPrice(): ?string
     {
         return $this->sellPrice;
     }
 
-    public function setSellPrice(?float $sellPrice): static
+    public function setSellPrice(?string $sellPrice): static
     {
         $this->sellPrice = $sellPrice;
 

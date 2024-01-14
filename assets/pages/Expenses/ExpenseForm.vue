@@ -93,8 +93,7 @@ onMounted(() => {
           />
           <input-text
             :key="data.componentKey"
-            v-model.number="data.form.sum"
-            type="number"
+            v-model.trim="data.form.sum"
             class="mt-3"
             :error="data.errors"
             name="sum"
