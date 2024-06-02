@@ -1,7 +1,7 @@
 # invest-stat
 
-[![CI-BUILD-TEST](https://github.com/simba77/invest-stat-symfony/workflows/CI-BUILD-TEST/badge.svg?branch=master)](https://github.com/simba77/invest-stat-symfony/actions)
-[![DEPLOY](https://github.com/simba77/invest-stat-symfony/workflows/DEPLOY/badge.svg?branch=master)](https://github.com/simba77/invest-stat-symfony/actions)
+[![CI-BUILD-TEST](https://github.com/simba77/invest-stat-symfony/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/simba77/invest-stat-symfony/actions/workflows/tests.yml)
+[![DEPLOY](https://github.com/simba77/invest-stat-symfony/actions/workflows/deploy.yml/badge.svg)](https://github.com/simba77/invest-stat-symfony/actions/workflows/deploy.yml)
 
 The personal project for tracking investment statistics
 
