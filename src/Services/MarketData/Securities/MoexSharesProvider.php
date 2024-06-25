@@ -51,7 +51,8 @@ class MoexSharesProvider implements SharesProviderInterface
                 latName:     $share['LATNAME'],
                 lotSize:     ! empty($share['LOTSIZE']) ? $share['LOTSIZE'] : '0',
                 isin:        $share['ISIN'],
-                prevPrice:   ! empty($share['PREVPRICE']) ? $share['PREVPRICE'] : '0'
+                prevPrice:   ! empty($share['PREVPRICE']) ? $share['PREVPRICE'] : '0',
+                classCode:   $share['BOARDID'],
             );
         }
 

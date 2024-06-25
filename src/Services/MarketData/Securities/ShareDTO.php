@@ -18,6 +18,7 @@ class ShareDTO implements ShareInterface
         public ?string $lotSize,
         public ?string $isin,
         public ?string $prevPrice,
+        public ?string $classCode,
     ) {
     }
 
@@ -83,5 +84,10 @@ class ShareDTO implements ShareInterface
     public function getType(): int
     {
         return $this->type;
+    }
+
+    public function getClassCode(): string
+    {
+        return $this->classCode;
     }
 }

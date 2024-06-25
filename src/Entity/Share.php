@@ -60,6 +60,9 @@ class Share implements
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $prevPrice = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $classCode = null;
+
     public function __construct(
         string $ticker,
         string $name,
@@ -219,6 +222,18 @@ class Share implements
     public function setPrevPrice(?string $prevPrice): static
     {
         $this->prevPrice = $prevPrice;
+
+        return $this;
+    }
+
+    public function getClassCode(): ?string
+    {
+        return $this->classCode;
+    }
+
+    public function setClassCode(?string $classCode): static
+    {
+        $this->classCode = $classCode;
 
         return $this;
     }

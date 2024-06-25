@@ -42,6 +42,7 @@ class GetMoexSharesCommand extends Command
                 }
                 $share->setPrice($item->getPrice());
                 $share->setName($item->getName());
+                $share->setClassCode($item->getClassCode());
                 $share->setLatName($item->getLatName());
                 $share->setShortName($item->getShortName());
                 $share->setPrevPrice((string) $item->getPrevPrice());
@@ -57,7 +58,8 @@ class GetMoexSharesCommand extends Command
                     $item->getLatName(),
                     $item->getLotSize(),
                     $item->getIsin(),
-                    (string) $item->getPrevPrice()
+                    (string) $item->getPrevPrice(),
+                    $item->getClassCode(),
                 );
             }
             $this->em->persist($share);

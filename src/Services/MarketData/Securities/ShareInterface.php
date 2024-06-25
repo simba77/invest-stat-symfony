@@ -36,4 +36,9 @@ interface ShareInterface
      * Type constant. Stock, ETF etc.
      */
     public function getType(): int;
+
+    /**
+     * Type constant. TQBR, TQTF etc.
+     */
+    public function getClassCode(): string;
 }
