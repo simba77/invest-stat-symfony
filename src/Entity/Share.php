@@ -63,6 +63,12 @@ class Share implements
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $classCode = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $figi = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $sector = null;
+
     public function __construct(
         string $ticker,
         string $name,
@@ -234,6 +240,30 @@ class Share implements
     public function setClassCode(?string $classCode): static
     {
         $this->classCode = $classCode;
+
+        return $this;
+    }
+
+    public function getFigi(): ?string
+    {
+        return $this->figi;
+    }
+
+    public function setFigi(?string $figi): static
+    {
+        $this->figi = $figi;
+
+        return $this;
+    }
+
+    public function getSector(): ?string
+    {
+        return $this->sector;
+    }
+
+    public function setSector(?string $sector): static
+    {
+        $this->sector = $sector;
 
         return $this;
     }
