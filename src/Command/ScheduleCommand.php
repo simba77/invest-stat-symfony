@@ -32,7 +32,8 @@ class ScheduleCommand extends Command
             $scheduler->php($rootDir . '/bin/console currency:get-rates')->everyMinute();
             $scheduler->php($rootDir . '/bin/console securities:get-moex-futures')->everyMinute(5);
             $scheduler->php($rootDir . '/bin/console securities:get-moex-shares')->everyMinute(5);
-            $scheduler->php($rootDir . '/bin/console securities:get-spb-shares')->everyMinute(5);
+            // $scheduler->php($rootDir . '/bin/console securities:get-spb-shares')->everyMinute(5);
+            $scheduler->php($rootDir . '/bin/console securities:get-tinvest-shares')->daily(22);
 
             $list = $scheduler->run();
             foreach ($list as $item) {
