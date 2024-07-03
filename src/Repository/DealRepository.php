@@ -199,6 +199,23 @@ class DealRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getAllActiveFigi()
+    {
+        return $this->createQueryBuilder('d')
+            ->select([
+                         'd.ticker as ticker',
+                         'd.stockMarket as stockMarket',
+                         's.figi as figi'
+                     ])
+            ->leftJoin(Share::class, 's', Join::WITH, 's.ticker = d.ticker AND s.stockMarket = d.stockMarket')
+            ->andWhere("d.status != :status")
+            ->andWhere("s.figi is not null")
+            ->groupBy('d.ticker')
+            ->setParameter('status', DealStatus::Closed)
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @return array<int, array{deal: Deal}>
      */
