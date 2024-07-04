@@ -44,7 +44,7 @@ class SummaryForGroup
                         currentPriceInBaseCurrency: $currentPriceInBaseCurrency,
                         profit:                     $profit,
                         profitInBaseCurrency:       $profitInBaseCurrency,
-                        profitPercent:              bcmul(bcadd($profit, $buyPrice, 4), '100', 2),
+                        profitPercent:              bcmul(bcdiv($profit, $buyPrice, 4), '100', 2),
                         isBaseCurrency:             $currency === 'RUB',
                     );
                 }
