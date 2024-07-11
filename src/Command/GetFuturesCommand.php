@@ -45,6 +45,7 @@ class GetFuturesCommand extends Command
                 $future->setName($item->getName());
                 $future->setLatName($item->getLatName());
                 $future->setShortName($item->getShortName());
+                $future->setLotSize($item->getLotSize());
             } else {
                 $future = new Future(
                     $item->getTicker(),

@@ -52,6 +52,7 @@ class GetBondsCommand extends Command
                 $bond->setCouponAccumulated($item->getCouponAccumulated());
                 $bond->setNextCouponDate($item->getNextCouponDate());
                 $bond->setMaturityDate($item->getMaturityDate());
+                $bond->setLotSize($item->getLotSize());
             } else {
                 $bond = new Bond(
                     $item->getTicker(),

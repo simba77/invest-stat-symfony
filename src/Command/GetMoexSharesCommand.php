@@ -45,6 +45,7 @@ class GetMoexSharesCommand extends Command
                 $share->setLatName($item->getLatName());
                 $share->setShortName($item->getShortName());
                 $share->setPrevPrice((string) $item->getPrevPrice());
+                $share->setLotSize($item->getLotSize());
             } else {
                 $share = new Share(
                     $item->getTicker(),

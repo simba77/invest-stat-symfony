@@ -58,6 +58,7 @@ class TInvestUpdateShares extends Command
             if ($share) {
                 $share->setName($item->getName());
                 $share->setIsin($item->getIsin());
+                $share->setLotSize((string) $item->getLot());
             } else {
                 $this->logger->info('Instrument not found: ' . $item->getTicker(), [$item->getExchange(), $item->getName(), $item->getTicker(), $item->getFigi(), $item->getCurrency()]);
 
