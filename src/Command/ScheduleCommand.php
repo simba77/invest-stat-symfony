@@ -36,6 +36,9 @@ class ScheduleCommand extends Command
             $scheduler->php($rootDir . '/bin/console securities:get-tinvest-shares')->daily(22);
             $scheduler->php($rootDir . '/bin/console securities:get-market-data')->everyMinute(2);
 
+            // Set daily profit to 0. (Set current prices as prev)
+            $scheduler->php($rootDir . '/bin/console securities:update-prev-prices')->daily(6);
+
             $list = $scheduler->run();
             foreach ($list as $item) {
                 $io->success('Task ' . $item->getId() . ' is completed');
