@@ -28,10 +28,10 @@ class ScheduleCommand extends Command
 
             // Tasks
             $scheduler->php($rootDir . '/bin/console accounts:save-stat')->everyMinute(30);
-            $scheduler->php($rootDir . '/bin/console securities:get-moex-bonds')->everyMinute(5);
+            $scheduler->php($rootDir . '/bin/console securities:get-moex-bonds')->everyMinute(15);
             $scheduler->php($rootDir . '/bin/console currency:get-rates')->everyMinute();
-            $scheduler->php($rootDir . '/bin/console securities:get-moex-futures')->everyMinute(5);
-            $scheduler->php($rootDir . '/bin/console securities:get-moex-shares')->everyMinute(5);
+            $scheduler->php($rootDir . '/bin/console securities:get-moex-futures')->everyMinute(15);
+            $scheduler->php($rootDir . '/bin/console securities:get-moex-shares')->everyMinute(15);
             // $scheduler->php($rootDir . '/bin/console securities:get-spb-shares')->everyMinute(5);
             $scheduler->php($rootDir . '/bin/console securities:get-tinvest-shares')->daily(22);
             $scheduler->php($rootDir . '/bin/console securities:get-market-data')->everyMinute(2);

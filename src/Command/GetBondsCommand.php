@@ -7,6 +7,7 @@ namespace App\Command;
 use App\Entity\Bond;
 use App\Services\AccountCalculator;
 use App\Services\MarketData\Securities\MoexBondsProvider;
+use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -39,6 +40,14 @@ class GetBondsCommand extends Command
         foreach ($bonds as $item) {
             $bond = $bondRepository->findOneBy(['ticker' => $item->getTicker()]);
             if ($bond) {
+                $updatePeriodStart = Carbon::now()->subMinutes(5);
+                $updated = $bond->updatedAt();
+
+                // If the share has been updated by another service, skip this update
+                if($updatePeriodStart->diffInMinutes($updated) < 5) {
+                    continue;
+                }
+
                 if (empty($item->getPrice())) {
                     continue;
                 }

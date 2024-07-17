@@ -7,6 +7,7 @@ namespace App\Command;
 use App\Entity\Share;
 use App\Services\AccountCalculator;
 use App\Services\MarketData\Securities\MoexSharesProvider;
+use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -37,6 +38,15 @@ class GetMoexSharesCommand extends Command
         foreach ($shares as $item) {
             $share = $shareRepository->findOneBy(['ticker' => $item->getTicker()]);
             if ($share) {
+
+                $updatePeriodStart = Carbon::now()->subMinutes(5);
+                $updated = $share->updatedAt();
+
+                // If the share has been updated by another service, skip this update
+                if($updatePeriodStart->diffInMinutes($updated) < 5) {
+                    continue;
+                }
+
                 if (empty($item->getPrice())) {
                     continue;
                 }

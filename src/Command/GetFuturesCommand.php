@@ -7,6 +7,7 @@ namespace App\Command;
 use App\Entity\Future;
 use App\Services\AccountCalculator;
 use App\Services\MarketData\Securities\MoexFuturesProvider;
+use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -37,6 +38,16 @@ class GetFuturesCommand extends Command
         foreach ($futures as $item) {
             $future = $futureRepository->findOneBy(['ticker' => $item->getTicker()]);
             if ($future) {
+
+                $updatePeriodStart = Carbon::now()->subMinutes(5);
+                $updated = $future->updatedAt();
+
+                // If the share has been updated by another service, skip this update
+                if($updatePeriodStart->diffInMinutes($updated) < 5) {
+                    continue;
+                }
+
+
                 if (empty($item->getPrice())) {
                     continue;
                 }
