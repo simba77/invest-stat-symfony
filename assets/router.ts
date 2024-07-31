@@ -222,6 +222,15 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/pages/ChangeProfile.vue')
   },
 
+  {
+    name: 'Dividends',
+    path: '/dividends',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('@/pages/Dividends/IndexPage.vue')
+  },
+
 ];
 
 const router = createRouter({

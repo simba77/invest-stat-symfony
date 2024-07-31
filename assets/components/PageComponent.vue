@@ -17,9 +17,19 @@ const user = authStore().userData;
 
 const navigation = [
   {
-    name: 'Dashboard',
-    routeName: 'HomePage',
-    current: route.name === 'HomePage'
+    name: 'Portfolio',
+    routeName: 'Portfolio',
+    current: route.name === 'Portfolio'
+  },
+  {
+    name: 'Accounts',
+    routeName: 'Accounts',
+    current: route.name === 'Accounts'
+  },
+  {
+    name: 'Closed Deals',
+    routeName: 'ClosedDeals',
+    current: route.name === 'ClosedDeals'
   },
   {
     name: 'Expenses',
@@ -37,19 +47,9 @@ const navigation = [
     current: route.name === 'Investments'
   },
   {
-    name: 'Accounts',
-    routeName: 'Accounts',
-    current: route.name === 'Accounts'
-  },
-  {
-    name: 'Closed Deals',
-    routeName: 'ClosedDeals',
-    current: route.name === 'ClosedDeals'
-  },
-  {
-    name: 'Portfolio',
-    routeName: 'Portfolio',
-    current: route.name === 'Portfolio'
+    name: 'Dividends',
+    routeName: 'Dividends',
+    current: route.name === 'Dividends'
   }
 ]
 const userNavigation = [
