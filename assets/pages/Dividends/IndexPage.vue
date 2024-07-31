@@ -3,12 +3,12 @@ import PageComponent from "../../components/PageComponent.vue";
 import {XCircleIcon, PencilIcon} from "@heroicons/vue/24/outline";
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
 import {useModal} from "@/composable/useModal";
-import ConfirmDeleteInvestmentModal from "@/components/Investments/ConfirmDeleteInvestmentModal.vue";
 import {useNumbers} from "@/composable/useNumbers";
 import {ref} from "vue";
 import useAsync from "@/utils/use-async";
 import {useDividends} from "@/composable/useDividends";
 import {Dividend, DividendsPage} from "@/types/dividends";
+import ConfirmDeleteDividendModal from "@/components/Dividends/ConfirmDeleteDividendModal.vue";
 
 const modal = useModal()
 const {formatPrice} = useNumbers()
@@ -24,8 +24,11 @@ getItems()
 
 function confirmDelete(item: Dividend) {
   modal.open({
-    component: ConfirmDeleteInvestmentModal,
-    modelValue: item
+    component: ConfirmDeleteDividendModal,
+    modelValue: {
+      item,
+      callback: () => getItems()
+    },
   })
 }
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Account;
+use App\Entity\Dividend;
 use App\Entity\Investment;
 use App\Entity\User;
 use App\Request\DTO\Investments\InvestmentRequestDTO;
@@ -86,9 +87,9 @@ class DividendsController extends AbstractController
     #[Route('/dividends/delete/{id}', name: 'app_dividends_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
-        $investment = $this->em->getRepository(Investment::class)->findOneBy(['id' => $id, 'userId' => $user?->getId()]);
+        $investment = $this->em->getRepository(Dividend::class)->findOneBy(['id' => $id, 'user' => $user]);
         if (! $investment) {
-            throw $this->createNotFoundException('No investment found for id ' . $id);
+            throw $this->createNotFoundException('No dividend found for id ' . $id);
         }
         $this->em->remove($investment);
         $this->em->flush();
