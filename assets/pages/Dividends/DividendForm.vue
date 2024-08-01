@@ -84,16 +84,6 @@ if (route.params.id) {
 
           <input-text
             :key="componentKey"
-            v-model.trim="form.fields.amount"
-            :error="validationErrors"
-            class="mb-3"
-            name="amount"
-            label="Amount"
-            placeholder="Amount"
-          />
-
-          <input-text
-            :key="componentKey"
             v-model.trim="form.fields.ticker"
             :error="validationErrors"
             class="mb-3"
@@ -111,6 +101,16 @@ if (route.params.id) {
             placeholder="Stock Market"
             :error="validationErrors"
             :options="[{value: 'SPB', name: 'SPB'}, {value: 'MOEX', name: 'MOEX'}]"
+          />
+
+          <input-text
+            :key="componentKey"
+            v-model.trim="form.fields.amount"
+            :error="validationErrors"
+            class="mb-3"
+            name="amount"
+            label="Amount"
+            placeholder="Amount"
           />
 
           <input-text
