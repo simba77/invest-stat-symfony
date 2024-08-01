@@ -6,6 +6,7 @@ namespace App\Services\Deals;
 
 use App\Entity\User;
 use App\Repository\DealRepository;
+use App\Repository\DividendRepository;
 use App\Request\DTO\Deals\DealsFilterRequestDTO;
 use App\Response\DTO\Deals\SummaryForClosedDealsDTO;
 use App\Services\MarketData\Currencies\CurrencyService;
@@ -15,6 +16,7 @@ class ClosedDealsService
     public function __construct(
         private readonly DealRepository $dealRepository,
         private readonly CurrencyService $currencyService,
+        private readonly DividendRepository $dividendRepository,
     ) {
     }
 
@@ -69,6 +71,16 @@ class ClosedDealsService
                 $profitByMonths[$date] = bcadd($profitByMonths[$date], $dealData->getProfitInBaseCurrency(), 2);
             } else {
                 $profitByMonths[$date] = $dealData->getProfitInBaseCurrency();
+            }
+        }
+
+        $dividends = $this->dividendRepository->findAll();
+        foreach ($dividends as $dividend) {
+            $date = $dividend->getDate()?->format('Y.m') ?? '0';
+            if (isset($profitByMonths[$date])) {
+                $profitByMonths[$date] = bcadd($profitByMonths[$date], $dividend->getAmount(), 2);
+            } else {
+                $profitByMonths[$date] = $dividend->getAmount();
             }
         }
 
