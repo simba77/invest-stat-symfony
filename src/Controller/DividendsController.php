@@ -6,11 +6,9 @@ namespace App\Controller;
 
 use App\Entity\Account;
 use App\Entity\Dividend;
-use App\Entity\Investment;
 use App\Entity\User;
 use App\Request\DTO\Dividends\CreateDividendRequestDTO;
-use App\Request\DTO\Investments\InvestmentRequestDTO;
-use App\Services\AccountService;
+use App\Request\DTO\Dividends\UpdateDividendRequestDTO;
 use App\Services\DividendsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,8 +24,7 @@ class DividendsController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly DividendsService $dividendsService,
-        private readonly AccountService $accountService
+        private readonly DividendsService $dividendsService
     ) {
     }
 
@@ -61,33 +58,36 @@ class DividendsController extends AbstractController
     {
         $form = [];
         if ($id > 0) {
-            $investment = $this->em->getRepository(Investment::class)->findOneBy(['id' => $id, 'userId' => $user?->getId()]);
-            if (! $investment) {
-                throw $this->createNotFoundException('No investment found for id ' . $id);
+            $dividend = $this->em->getRepository(Dividend::class)->findOneBy(['id' => $id, 'user' => $user]);
+            if (! $dividend) {
+                throw $this->createNotFoundException('No dividend found for id ' . $id);
             }
             $form = [
-                'id'      => $investment->getId(),
-                'sum'     => $investment->getSum(),
-                'date'    => $investment->getDate()->format('Y-m-d'),
-                'account' => $investment->getAccount()->getId(),
+                'id'          => $dividend->getId(),
+                'amount'      => $dividend->getAmount(),
+                'date'        => $dividend->getDate()->format('Y-m-d'),
+                'accountId'   => $dividend->getAccount()->getId(),
+                'ticker'      => $dividend->getTicker(),
+                'stockMarket' => $dividend->getStockMarket(),
             ];
         }
 
-        $accounts = $this->accountService->getSimpleListOfAccountsForUser($user);
-        return $this->json(['form' => $form, 'accounts' => $accounts]);
+        return $this->json($form);
     }
 
-    #[Route('/dividends/edit/{id}', name: 'app_dividends_edit', requirements: ['id' => '\d+'], methods: ['POST'])]
-    public function edit(int $id, #[MapRequestPayload] InvestmentRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
+    #[Route('/dividends/update/{id}', name: 'app_dividends_edit', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function edit(int $id, #[MapRequestPayload] UpdateDividendRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
     {
-        $investment = $this->em->getRepository(Investment::class)->findOneBy(['id' => $id, 'userId' => $user?->getId()]);
-        if (! $investment) {
-            throw $this->createNotFoundException('No investment found for id ' . $id);
+        $dividend = $this->em->getRepository(Dividend::class)->findOneBy(['id' => $id, 'user' => $user]);
+        if (! $dividend) {
+            throw $this->createNotFoundException('No dividend found for id ' . $id);
         }
-        $account = $this->em->getRepository(Account::class)->find($dto->account);
-        $investment->setDate(new \DateTimeImmutable($dto->date));
-        $investment->setSum($dto->sum);
-        $investment->setAccount($account);
+        $account = $this->em->getRepository(Account::class)->find($dto->accountId);
+        $dividend->setDate(new \DateTimeImmutable($dto->date));
+        $dividend->setAmount($dto->amount);
+        $dividend->setTicker($dto->ticker);
+        $dividend->setStockMarket($dto->stockMarket);
+        $dividend->setAccount($account);
         $this->em->flush();
 
         return $this->json(['success' => true]);

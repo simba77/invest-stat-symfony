@@ -74,7 +74,7 @@ function confirmDelete(item: Dividend) {
               <div class="flex justify-end items-center show-on-row-hover">
                 <router-link
                   class="text-gray-300 hover:text-gray-900 mr-3"
-                  :to="{name: 'EditDeposit', params: {id: dividend.id}}"
+                  :to="{name: 'DividendEdit', params: {id: dividend.id}}"
                 >
                   <pencil-icon class="h-5 w-5" />
                 </router-link>
