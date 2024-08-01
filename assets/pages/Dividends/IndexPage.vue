@@ -38,7 +38,7 @@ function confirmDelete(item: Dividend) {
   <page-component title="Dividends">
     <div class="mb-4">
       <router-link
-        :to="{name: 'AddDeposit'}"
+        :to="{name: 'DividendCreate'}"
         class="btn btn-primary"
       >
         Add

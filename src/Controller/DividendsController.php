@@ -8,6 +8,7 @@ use App\Entity\Account;
 use App\Entity\Dividend;
 use App\Entity\Investment;
 use App\Entity\User;
+use App\Request\DTO\Dividends\CreateDividendRequestDTO;
 use App\Request\DTO\Investments\InvestmentRequestDTO;
 use App\Services\AccountService;
 use App\Services\DividendsService;
@@ -38,11 +39,19 @@ class DividendsController extends AbstractController
     }
 
     #[Route('/dividends/create', name: 'app_dividends_create', requirements: ['categoryId' => '\d+'], methods: ['POST'])]
-    public function create(#[MapRequestPayload] InvestmentRequestDTO $dto, #[CurrentUser] ?User $user): Response
+    public function create(#[MapRequestPayload] CreateDividendRequestDTO $dto, #[CurrentUser] ?User $user): Response
     {
-        $account = $this->em->getRepository(Account::class)->find($dto->account);
-        $inv = new Investment($dto->sum, new \DateTimeImmutable($dto->date), $account, $user->getId());
-        $this->em->persist($inv);
+        $account = $this->em->getRepository(Account::class)->find($dto->accountId);
+        $dividend = new Dividend(
+            user:        $user,
+            account:     $account,
+            ticker:      $dto->ticker,
+            stockMarket: $dto->stockMarket,
+            amount:      $dto->amount,
+            date:        new \DateTimeImmutable($dto->date),
+        );
+
+        $this->em->persist($dividend);
         $this->em->flush();
         return $this->json(['success' => true]);
     }

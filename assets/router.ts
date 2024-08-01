@@ -230,7 +230,22 @@ const routes: Array<RouteRecordRaw> = [
     },
     component: () => import('@/pages/Dividends/IndexPage.vue')
   },
-
+  {
+    name: 'DividendCreate',
+    path: '/dividends/create',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('@/pages/Dividends/DividendForm.vue')
+  },
+  {
+    name: 'DividendEdit',
+    path: '/dividends/edit/:id',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('@/pages/Dividends/DividendForm.vue')
+  },
 ];
 
 const router = createRouter({

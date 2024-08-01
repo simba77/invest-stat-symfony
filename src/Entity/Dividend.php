@@ -54,6 +54,23 @@ class Dividend implements
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
+    public function __construct(
+        ?User $user,
+        ?Account $account,
+        ?string $ticker,
+        ?string $stockMarket,
+        ?string $amount,
+        ?\DateTimeInterface $date
+    ) {
+        $this->user = $user;
+        $this->account = $account;
+        $this->ticker = $ticker;
+        $this->stockMarket = $stockMarket;
+        $this->amount = $amount;
+        $this->date = $date;
+    }
+
+
     public function getId(): ?int
     {
         return $this->id;
