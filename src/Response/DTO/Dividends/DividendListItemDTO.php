@@ -10,6 +10,7 @@ class DividendListItemDTO
         public int $id,
         public string $date,
         public string $ticker,
+        public string $stockMarket,
         public string $amount,
         public string $accountName
     ) {

@@ -29,6 +29,7 @@ class DividendsService
                 id:          $dividend->getId(),
                 date:        $dividend->getDate()->format('d.m.Y'),
                 ticker:      $dividend->getTicker(),
+                stockMarket: $dividend->getStockMarket(),
                 amount:      $dividend->getAmount(),
                 accountName: $dividend->getAccount()->getName()
             );

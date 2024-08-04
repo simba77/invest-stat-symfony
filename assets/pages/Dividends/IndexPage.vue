@@ -54,6 +54,7 @@ function confirmDelete(item: Dividend) {
           <th>Date</th>
           <th>Sum</th>
           <th>Ticker</th>
+          <th>Stock Market</th>
           <th>Account</th>
           <th class="flex justify-end">
             Actions
@@ -68,6 +69,7 @@ function confirmDelete(item: Dividend) {
           <td>{{ dividend.date }}</td>
           <td>{{ formatPrice(dividend.amount) }}</td>
           <td>{{ dividend.ticker }}</td>
+          <td>{{ dividend.stockMarket }}</td>
           <td>{{ dividend.accountName }}</td>
           <td class="table-actions">
             <template v-if="dividend.id">
