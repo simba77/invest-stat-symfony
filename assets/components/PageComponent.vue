@@ -50,6 +50,11 @@ const navigation = [
     name: 'Dividends',
     routeName: 'Dividends',
     current: route.name === 'Dividends'
+  },
+  {
+    name: 'Coupons',
+    routeName: 'Coupons',
+    current: route.name === 'Coupons'
   }
 ]
 const userNavigation = [

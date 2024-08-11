@@ -246,6 +246,31 @@ const routes: Array<RouteRecordRaw> = [
     },
     component: () => import('@/pages/Dividends/DividendForm.vue')
   },
+
+  {
+    name: 'Coupons',
+    path: '/coupons',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('@/pages/Coupons/IndexPage.vue')
+  },
+  {
+    name: 'CouponCreate',
+    path: '/coupons/create',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('@/pages/Coupons/CouponForm.vue')
+  },
+  {
+    name: 'CouponEdit',
+    path: '/coupons/edit/:id',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('@/pages/Coupons/CouponForm.vue')
+  },
 ];
 
 const router = createRouter({
