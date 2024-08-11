@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Deals;
 
 use App\Entity\User;
+use App\Repository\CouponRepository;
 use App\Repository\DealRepository;
 use App\Repository\DividendRepository;
 use App\Request\DTO\Deals\DealsFilterRequestDTO;
@@ -17,6 +18,7 @@ class ClosedDealsService
         private readonly DealRepository $dealRepository,
         private readonly CurrencyService $currencyService,
         private readonly DividendRepository $dividendRepository,
+        private readonly CouponRepository $couponRepository,
     ) {
     }
 
@@ -81,6 +83,16 @@ class ClosedDealsService
                 $profitByMonths[$date] = bcadd($profitByMonths[$date], $dividend->getAmount(), 2);
             } else {
                 $profitByMonths[$date] = $dividend->getAmount();
+            }
+        }
+
+        $coupons = $this->couponRepository->findAll();
+        foreach ($coupons as $coupon) {
+            $date = $coupon->getDate()?->format('Y.m') ?? '0';
+            if (isset($profitByMonths[$date])) {
+                $profitByMonths[$date] = bcadd($profitByMonths[$date], $coupon->getAmount(), 2);
+            } else {
+                $profitByMonths[$date] = $coupon->getAmount();
             }
         }
 
