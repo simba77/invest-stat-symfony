@@ -227,9 +227,16 @@ class DealService
             $result = bcmul($result, (string) $dealRequestDTO->quantity, 4);
             return bcadd($result, bcmul($securityDTO->bondAccumulatedCoupon, (string) $dealRequestDTO->quantity, 4), 4);
         } elseif ($securityDTO->securityType === SecurityTypeEnum::Future) {
-            $result = bcmul($securityDTO->lotSize, $dealRequestDTO->price, 4);
-            $result = bcmul($result, (string) $dealRequestDTO->quantity, 4);
-            return bcsub($result, bcmul(bcmul($deal->getBuyPrice(), $securityDTO->lotSize, 4), (string) $dealRequestDTO->quantity, 4));
+            if ($securityDTO->lotSize < $dealRequestDTO->price) {
+                $sellLotPrice = $dealRequestDTO->price;
+                $buyLotPrice = $deal->getBuyPrice();
+            } else {
+                $sellLotPrice = bcmul($securityDTO->lotSize, $dealRequestDTO->price, 4);
+                $buyLotPrice = bcmul($deal->getBuyPrice(), $securityDTO->lotSize, 4);
+            }
+            $sellFullPrice = bcmul($sellLotPrice, (string) $dealRequestDTO->quantity, 4);
+            $buyFullPrice = bcmul($buyLotPrice, (string) $dealRequestDTO->quantity, 4);
+            return bcsub($sellFullPrice, $buyFullPrice);
         }
         return '0';
     }
