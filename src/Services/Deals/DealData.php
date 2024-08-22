@@ -6,11 +6,17 @@ namespace App\Services\Deals;
 
 use App\Entity\Account;
 use App\Entity\Deal;
+use App\Services\Deals\Strategy\BondStrategy;
+use App\Services\Deals\Strategy\DealStrategyInterface;
+use App\Services\Deals\Strategy\FutureStrategy;
+use App\Services\Deals\Strategy\ShareStrategy;
 use App\Services\MarketData\Currencies\CurrencyService;
 use App\Services\MarketData\Securities\SecurityTypeEnum;
 
 class DealData
 {
+    private DealStrategyInterface $strategy;
+
     /** @param array{
      *     deal: Deal,
      *     shareName?: string,
@@ -35,6 +41,18 @@ class DealData
         private readonly Account $account,
         private readonly CurrencyService $currencyService,
     ) {
+        if ($this->deal['futureName']) {
+            $this->setStrategy(new FutureStrategy($this->deal, $this->account));
+        } elseif ($this->deal['bondName']) {
+            $this->setStrategy(new BondStrategy($this->deal, $this->account));
+        } else {
+            $this->setStrategy(new ShareStrategy($this->deal, $this->account));
+        }
+    }
+
+    public function setStrategy(DealStrategyInterface $strategy): void
+    {
+        $this->strategy = $strategy;
     }
 
     public function getId(): int
@@ -49,7 +67,7 @@ class DealData
 
     public function getName(): string
     {
-        return $this->deal['shareName'] ?? $this->deal['bondName'] ?? $this->deal['futureName'] ?? '';
+        return $this->strategy->getName();
     }
 
     public function getTicker(): string
@@ -59,32 +77,12 @@ class DealData
 
     public function getSecurityType(): SecurityTypeEnum
     {
-        if ($this->deal['futureName']) {
-            return SecurityTypeEnum::Future;
-        }
-        if ($this->deal['bondName']) {
-            return SecurityTypeEnum::Bond;
-        }
-        return SecurityTypeEnum::Share;
+        return $this->strategy->getSecurityType();
     }
 
     public function getBuyPrice(): string
     {
-        // Futures price
-        if ($this->deal['futureName']) {
-            if($this->deal['deal']->getBuyPrice() > $this->deal['futureLotSize']) {
-                return bcmul($this->deal['deal']->getBuyPrice(), $this->deal['futureStepPrice'], 4);
-            }
-
-            return bcmul(bcmul($this->deal['deal']->getBuyPrice(), $this->deal['futureStepPrice'], 4), $this->deal['futureLotSize'], 4);
-        }
-
-        // Bond price
-        if ($this->deal['bondName']) {
-            return bcdiv(bcmul($this->deal['deal']->getBuyPrice(), $this->deal['bondLotSize'], 4), '100', 4);
-        }
-
-        return $this->deal['deal']->getBuyPrice();
+        return $this->strategy->getBuyPrice();
     }
 
     public function getQuantity(): int
@@ -99,20 +97,7 @@ class DealData
 
     public function getSellPrice(): string
     {
-        // Futures price
-        if ($this->deal['futureName']) {
-            if($this->deal['deal']->getSellPrice() > $this->deal['futureLotSize']) {
-                return bcmul($this->deal['deal']->getSellPrice(), $this->deal['futureLotSize'], 4);
-            }
-            return bcmul(bcmul($this->deal['deal']->getSellPrice(), $this->deal['futureStepPrice'], 4), $this->deal['futureLotSize'], 4);
-        }
-
-        // Bond price
-        if ($this->deal['bondName']) {
-            return bcdiv(bcmul($this->deal['deal']->getSellPrice(), $this->deal['bondLotSize'], 4), '100', 4);
-        }
-
-        return $this->deal['deal']->getSellPrice();
+        return $this->strategy->getSellPrice();
     }
 
     public function getFullSellPrice(): string
@@ -122,35 +107,12 @@ class DealData
 
     public function getCurrentPrice(): string
     {
-        if ($this->deal['futurePrice']) {
-            if ($this->deal['futurePrice'] > $this->deal['futureLotSize']) {
-                return bcmul($this->deal['futurePrice'], $this->deal['futureStepPrice'], 4);
-            }
-            return bcmul(bcmul($this->deal['futurePrice'], $this->deal['futureStepPrice'], 4), $this->deal['futureLotSize'], 4);
-        }
-
-        if ($this->deal['bondPrice']) {
-            return bcdiv(bcmul($this->deal['bondPrice'], $this->deal['bondLotSize'], 4), '100', 4);
-        }
-
-        return $this->deal['sharePrice'] ?? $this->deal['bondPrice'] ?? '0';
+        return $this->strategy->getCurrentPrice();
     }
 
     public function getPrevPrice(): string
     {
-        if ($this->deal['futurePrevPrice']) {
-            if ($this->deal['futurePrevPrice'] > $this->deal['futureLotSize']) {
-                return bcmul($this->deal['futurePrevPrice'], $this->deal['futureStepPrice'], 4);
-            }
-
-            return bcmul(bcmul($this->deal['futurePrevPrice'], $this->deal['futureStepPrice'], 4), $this->deal['futureLotSize'], 4);
-        }
-
-        if ($this->deal['bondPrevPrice']) {
-            return bcdiv(bcmul($this->deal['bondPrevPrice'], $this->deal['bondLotSize'], 4), '100', 4);
-        }
-
-        return $this->deal['sharePrevPrice'] ?? $this->deal['bondPrevPrice'] ?? '0';
+        return $this->strategy->getPrevPrice();
     }
 
     public function getFullCurrentPrice(): string
@@ -193,16 +155,7 @@ class DealData
 
     public function getCommission(): string
     {
-        if (! empty($this->deal['futurePrice'])) {
-            // TODO: Change commission
-            return bcmul('5', (string) $this->getQuantity(), 4);
-        }
-        if (! empty($this->deal['bondPrice'])) {
-            // TODO: Change commission
-            return bcmul('0.5', (string) $this->getQuantity(), 4);
-        }
-
-        return bcmul($this->getFullCurrentPrice(), bcdiv($this->account->getCommission(), '100', 4), 4);
+        return $this->strategy->getCommission($this->getFullCurrentPrice(), (string) $this->getQuantity());
     }
 
     public function getProfit(): string
@@ -259,14 +212,12 @@ class DealData
 
     public function getCurrency(): string
     {
-        return $this->deal['shareCurrency'] ?? $this->deal['bondCurrency'] ?? $this->deal['futureCurrency'] ?? 'RUB';
+        return $this->strategy->getCurrency();
     }
 
     public function getCurrencyName(): string
     {
-        $currency = $this->deal['shareCurrency'] ?? $this->deal['bondCurrency'] ?? $this->deal['futureCurrency'] ?? 'RUB';
-
-        if ($currency === 'RUB') {
+        if ($this->getCurrency() === 'RUB') {
             return '₽';
         }
         return '$';
