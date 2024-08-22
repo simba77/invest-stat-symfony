@@ -38,7 +38,7 @@ class FutureStrategy implements DealStrategyInterface
     public function getSellPrice(): string
     {
         if ($this->deal['deal']->getSellPrice() > $this->deal['futureLotSize']) {
-            return bcmul($this->deal['deal']->getSellPrice(), $this->deal['futureLotSize'], 4);
+            return bcmul($this->deal['deal']->getSellPrice(), $this->deal['futureStepPrice'], 4);
         }
         return bcmul(bcmul($this->deal['deal']->getSellPrice(), $this->deal['futureStepPrice'], 4), $this->deal['futureLotSize'], 4);
     }
