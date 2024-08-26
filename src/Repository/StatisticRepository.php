@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Statistic;
@@ -21,28 +23,27 @@ class StatisticRepository extends ServiceEntityRepository
         parent::__construct($registry, Statistic::class);
     }
 
-//    /**
-//     * @return Statistic[] Returns an array of Statistic objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function getLatestStatistic(): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
+        $resultSet = $connection->executeQuery(
+            "SELECT * FROM statistic stat
+            inner join (select account_id, MAX(date) as max_date from statistic group by account_id) s_date
+            on stat.account_id = s_date.account_id and stat.date = s_date.max_date"
+        );
 
-//    public function findOneBySomeField($value): ?Statistic
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return $resultSet->fetchAllAssociative();
+    }
+
+    public function getStatisticByYears(): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
+        $resultSet = $connection->executeQuery(
+            "SELECT * FROM statistic stat
+            inner join (select account_id, MIN(date) as max_date from statistic group by account_id, YEAR(statistic.date)) s_date
+            on stat.account_id = s_date.account_id and stat.date = s_date.max_date ORDER BY stat.date"
+        );
+
+        return $resultSet->fetchAllAssociative();
+    }
 }

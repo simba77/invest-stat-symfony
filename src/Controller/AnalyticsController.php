@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Request\DTO\Deals\DealsFilterRequestDTO;
 use App\Services\Deals\ClosedDealsService;
+use App\Services\StatisticService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
@@ -34,6 +35,14 @@ class AnalyticsController extends AbstractController
         #[CurrentUser] ?User $user,
     ): JsonResponse {
         $deals = $dealsService->getMonthlyDealsStat($user, $filter);
+        return $this->json($deals);
+    }
+
+    #[Route('/analytics/annual-stat', name: 'app_analytics_annual_statistic', methods: 'GET')]
+    public function annualStatistic(
+        StatisticService $statisticService
+    ): JsonResponse {
+        $deals = $statisticService->getStatisticByYears();
         return $this->json($deals);
     }
 }

@@ -12,6 +12,7 @@ use App\Services\AccountService;
 use App\Services\Deals\DealData;
 use App\Services\DepositsService;
 use App\Services\MarketData\Currencies\CurrencyService;
+use App\Services\StatisticService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +28,7 @@ class HomepageController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly AccountService $accountService,
         private readonly DepositsService $depositsService,
+        private readonly StatisticService $statisticService
     ) {
     }
 
@@ -61,9 +63,9 @@ class HomepageController extends AbstractController
 
         return $this->json(
             [
-                'usd'             => $this->currencyService->getUSDRUBRate(),
-                'depositAccounts' => $depositAccounts,
-                'summary'         => [
+                'usd'              => $this->currencyService->getUSDRUBRate(),
+                'depositAccounts'  => $depositAccounts,
+                'summary'          => [
                     [
                         'name'     => 'The Invested Amount',
                         'total'    => $invested,
@@ -105,6 +107,7 @@ class HomepageController extends AbstractController
                         'currency' => '₽',
                     ],
                 ],
+                'statisticByYears' => $this->statisticService->getStatisticByYears(),
             ]
         );
     }

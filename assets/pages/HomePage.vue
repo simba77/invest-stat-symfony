@@ -5,6 +5,9 @@ import axios from "axios";
 import useAsync from "@/utils/use-async";
 import {reactive} from "vue";
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
+import {useNumbers} from "@/composable/useNumbers";
+
+const {formatPrice, formatPercent} = useNumbers()
 
 interface SummaryCard {
   name: string
@@ -85,6 +88,31 @@ run()
             :profit="card.profit"
           />
         </div>
+      </template>
+
+      <template v-if="pageData.data.statisticByYears">
+        <div class="text-2xl font-extrabold mt-6 mb-3">
+          Profit By Years
+        </div>
+        <table class="simple-table">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Start Year Profit (1 Jan)</th>
+              <th>Percent</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(item, index) in pageData.data.statisticByYears"
+              :key="index"
+            >
+              <td>{{ item.year }}</td>
+              <td>{{ formatPrice(item.profit) }}</td>
+              <td>{{ formatPercent(item.profitPercent) }}</td>
+            </tr>
+          </tbody>
+        </table>
       </template>
     </template>
   </page-component>
