@@ -19,10 +19,8 @@ interface StatisticYear {
 }
 
 export interface Dashboard {
-  data: {
-    usd: number
-    summary: SummaryCard[]
-    depositAccounts: DepositAccountCard[]
-    statisticByYears: StatisticYear[]
-  }
+  usd: number
+  summary: SummaryCard[]
+  depositAccounts: DepositAccountCard[]
+  statisticByYears: StatisticYear[]
 }

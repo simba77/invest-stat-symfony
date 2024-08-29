@@ -2,7 +2,7 @@
 import PageComponent from "@/components/PageComponent.vue";
 import StatCard from "@/components/Cards/StatCard.vue";
 import useAsync from "@/utils/use-async";
-import {reactive} from "vue";
+import {ref} from "vue";
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
 import {useNumbers} from "@/composable/useNumbers";
 import {useDashboard} from "@/composable/useDashboard";
@@ -11,17 +11,15 @@ import {Dashboard} from "@/types/dashboard";
 const {formatPrice, formatPercent} = useNumbers()
 const {getDashboard} = useDashboard()
 
-const pageData = reactive<Dashboard>({
-  data: {
-    usd: 0,
-    summary: [],
-    depositAccounts: [],
-    statisticByYears: []
-  }
+const pageData = ref<Dashboard>({
+  usd: 0,
+  summary: [],
+  depositAccounts: [],
+  statisticByYears: []
 })
 
 const {loading, run} = useAsync(() => getDashboard().then((response) => {
-  pageData.data = response.data
+  pageData.value = response.data
 }))
 
 run()
@@ -37,12 +35,12 @@ run()
           Investment Result
         </div>
         <div class="text-xl mb-3">
-          1 USD = {{ pageData.data.usd }}₽
+          1 USD = {{ pageData.usd }}₽
         </div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
         <stat-card
-          v-for="(card, i) in pageData.data.summary"
+          v-for="(card, i) in pageData.summary"
           :key="i"
           :name="card.name"
           :help-text="card.helpText ?? null"
@@ -53,13 +51,13 @@ run()
         />
       </div>
 
-      <template v-if="Object.keys(pageData.data.depositAccounts).length > 0">
+      <template v-if="Object.keys(pageData.depositAccounts).length > 0">
         <div class="text-2xl font-extrabold mt-6 mb-3">
           Deposit Accounts
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
           <stat-card
-            v-for="(card, i) in pageData.data.depositAccounts"
+            v-for="(card, i) in pageData.depositAccounts"
             :key="i"
             :name="card.name"
             :total="card.total"
@@ -68,7 +66,7 @@ run()
         </div>
       </template>
 
-      <template v-if="pageData.data.statisticByYears">
+      <template v-if="pageData.statisticByYears">
         <div class="text-2xl font-extrabold mt-6 mb-3">
           Profit By Years
         </div>
@@ -82,7 +80,7 @@ run()
           </thead>
           <tbody>
             <tr
-              v-for="(item, index) in pageData.data.statisticByYears"
+              v-for="(item, index) in pageData.statisticByYears"
               :key="index"
             >
               <td>{{ item.year }}</td>
