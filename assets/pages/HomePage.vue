@@ -1,50 +1,28 @@
 <script setup lang="ts">
 import PageComponent from "@/components/PageComponent.vue";
 import StatCard from "@/components/Cards/StatCard.vue";
-import axios from "axios";
 import useAsync from "@/utils/use-async";
 import {reactive} from "vue";
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
 import {useNumbers} from "@/composable/useNumbers";
+import {useDashboard} from "@/composable/useDashboard";
+import {Dashboard} from "@/types/dashboard";
 
 const {formatPrice, formatPercent} = useNumbers()
-
-interface SummaryCard {
-  name: string
-  helpText: string
-  percent: number
-  dailyChange?: number
-  total: number
-}
-
-interface DepositAccountCard {
-  name: string
-  profit: number
-  total: number
-}
-
-interface Dashboard {
-  data: {
-    usd: number
-    summary: SummaryCard[]
-    depositAccounts: DepositAccountCard[]
-  }
-}
+const {getDashboard} = useDashboard()
 
 const pageData = reactive<Dashboard>({
   data: {
     usd: 0,
     summary: [],
-    depositAccounts: []
+    depositAccounts: [],
+    statisticByYears: []
   }
 })
 
-const {loading, run} = useAsync(async () => {
-  await axios.get('/api/dashboard')
-    .then((response) => {
-      pageData.data = response.data;
-    })
-})
+const {loading, run} = useAsync(() => getDashboard().then((response) => {
+  pageData.data = response.data
+}))
 
 run()
 
