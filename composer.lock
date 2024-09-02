@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c182d68f79319b3e15ee53c8adf05044",
+    "content-hash": "c3c0e3087b3b45e487c6a58a0647f58b",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -1956,31 +1956,35 @@
         },
         {
             "name": "pentatrion/vite-bundle",
-            "version": "v4.3.0",
+            "version": "v7.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lhapaipai/vite-bundle.git",
-                "reference": "6f10979bf6cb879536aab64be2480db64e755bb0"
+                "reference": "3b3f12546bab03d569b241ee95d4c1d6971bbf01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lhapaipai/vite-bundle/zipball/6f10979bf6cb879536aab64be2480db64e755bb0",
-                "reference": "6f10979bf6cb879536aab64be2480db64e755bb0",
+                "url": "https://api.github.com/repos/lhapaipai/vite-bundle/zipball/3b3f12546bab03d569b241ee95d4c1d6971bbf01",
+                "reference": "3b3f12546bab03d569b241ee95d4c1d6971bbf01",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4 || ^8.0",
-                "symfony/asset": "^4.4 || ^5.0 || ^6.0",
-                "symfony/config": "^4.4 || ^5.0 || ^6.0",
-                "symfony/dependency-injection": "^4.4 || ^5.0 || ^6.0",
-                "symfony/framework-bundle": "^4.4 || ^5.0 || ^6.0",
-                "symfony/http-client": "^4.4 || ^5.0 || ^6.0",
-                "symfony/http-kernel": "^4.4 || ^5.0 || ^6.0",
-                "symfony/twig-bundle": "^4.4 || ^5.0 || ^6.0"
+                "php": "^8.0",
+                "symfony/asset": "^4.4 || ^5.0 || ^6.0 || ^7.0",
+                "symfony/config": "^4.4 || ^5.0 || ^6.0 || ^7.0",
+                "symfony/dependency-injection": "^4.4 || ^5.0 || ^6.0 || ^7.0",
+                "symfony/framework-bundle": "^4.4 || ^5.0 || ^6.0 || ^7.0",
+                "symfony/http-client": "^4.4 || ^5.0 || ^6.0 || ^7.0",
+                "symfony/http-kernel": "^4.4 || ^5.0 || ^6.0 || ^7.0",
+                "symfony/twig-bundle": "^4.4 || ^5.0 || ^6.0 || ^7.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.9",
-                "phpstan/phpstan": "^1.8"
+                "phpstan/phpstan": "^1.8",
+                "phpstan/phpstan-symfony": "^1.3",
+                "phpunit/phpunit": "^9.5",
+                "symfony/phpunit-bridge": "^4.4 || ^5.0 || ^6.0 || ^7.0",
+                "symfony/web-link": "^4.4 || ^5.0 || ^6.0 || ^7.0"
             },
             "type": "symfony-bundle",
             "autoload": {
@@ -2007,9 +2011,9 @@
             ],
             "support": {
                 "issues": "https://github.com/lhapaipai/vite-bundle/issues",
-                "source": "https://github.com/lhapaipai/vite-bundle/tree/v4.3.0"
+                "source": "https://github.com/lhapaipai/vite-bundle/tree/v7.0.4"
             },
-            "time": "2023-10-06T13:04:12+00:00"
+            "time": "2024-08-27T18:32:41+00:00"
         },
         {
             "name": "peppeocchi/php-cron-scheduler",
