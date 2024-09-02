@@ -22,7 +22,7 @@ class DepositRepository extends ServiceEntityRepository
         parent::__construct($registry, Deposit::class);
     }
 
-    public function getSumOfDepositsForUser(User $user)
+    public function getSumOfDepositsForUser(User $user): string
     {
         $data = $this->createQueryBuilder('d')
             ->andWhere('d.user = :user')
@@ -31,6 +31,6 @@ class DepositRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
 
-        return $data['sum_of_deposits'];
+        return (string) $data['sum_of_deposits'];
     }
 }

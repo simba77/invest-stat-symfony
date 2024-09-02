@@ -42,9 +42,9 @@ class InvestmentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getSumByUserId(int $userId)
+    public function getSumByUserId(int $userId): string
     {
-        return $this->createQueryBuilder('inv')
+        return (string) $this->createQueryBuilder('inv')
             ->select('SUM(inv.sum) as allInvestments')
             ->where('inv.userId = :user_id')
             ->setParameter('user_id', $userId)

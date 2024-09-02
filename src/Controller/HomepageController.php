@@ -35,30 +35,30 @@ class HomepageController extends AbstractController
     #[Route('/dashboard', name: 'app_homepage_index')]
     public function index(#[CurrentUser] ?User $user): Response
     {
-        $invested = (float) $this->entityManager->getRepository(Investment::class)->getSumByUserId($user->getId());
-        $allAssetsSum = 0;
+        $invested = $this->entityManager->getRepository(Investment::class)->getSumByUserId($user->getId());
+        $allAssetsSum = '0';
         $depositsSum = $this->entityManager->getRepository(Deposit::class)->getSumOfDepositsForUser($user);
         $depositAccounts = $this->depositsService->getDepositAccountsWithSummaryForUser($user);
         $depositAccounts = array_filter($depositAccounts, function ($item) {
             return $item->total > 0;
         });
 
-        $dailyChange = 0;
+        $dailyChange = '0';
         $allActiveDeals = $this->entityManager->getRepository(Deal::class)->findForUser($user);
         foreach ($allActiveDeals as $deal) {
             $dealData = new DealData($deal, $deal['deal']->getAccount(), $this->currencyService);
-            $dailyChange += $dealData->getFullDailyProfitInBaseCurrency();
+            $dailyChange = bcadd($dailyChange, $dealData->getFullDailyProfitInBaseCurrency(), 2);
         }
 
 
         $accounts = $this->accountService->getAccountsListForUser($user);
         foreach ($accounts as $account) {
-            $allAssetsSum += $account->currentValue;
+            $allAssetsSum = bcadd($account->currentValue, $allAssetsSum, 2);
         }
 
-        $profit = $allAssetsSum - $invested;
+        $profit = bcsub($allAssetsSum, $invested, 2);
         if ($invested > 0) {
-            $profitPercent = round($profit / $invested * 100, 2);
+            $profitPercent = bcmul(bcdiv($profit, $invested, 5), '100', 2);
         }
 
         return $this->json(
@@ -79,15 +79,15 @@ class HomepageController extends AbstractController
                     [
                         'name'     => 'Deposits + Investments',
                         'helpText' => 'Deposits + Investments',
-                        'total'    => $invested + $depositsSum,
+                        'total'    => bcadd($invested, $depositsSum, 2),
                         'currency' => '₽',
                     ],
 
                     [
                         'name'        => 'All Assets',
                         'helpText'    => 'The sum of all assets held by brokers',
-                        'dailyChange' => round($dailyChange, 2),
-                        'percent'     => round($dailyChange / $allAssetsSum * 100, 2),
+                        'dailyChange' => $dailyChange,
+                        'percent'     => bcmul(bcdiv($dailyChange, $allAssetsSum, 5), '100', 2),
                         'total'       => $allAssetsSum,
                         'currency'    => '₽',
                     ],
@@ -95,7 +95,7 @@ class HomepageController extends AbstractController
                     [
                         'name'     => 'Profit',
                         'helpText' => 'Assets for The Current Day - The Invested Amount',
-                        'percent'  => $profitPercent ?? 0,
+                        'percent'  => $profitPercent ?? '0',
                         'total'    => $profit,
                         'currency' => '₽',
                     ],
@@ -103,7 +103,7 @@ class HomepageController extends AbstractController
                     [
                         'name'     => 'Saving + All Brokers Assets',
                         'helpText' => 'Assets for The Current Day + Deposits',
-                        'total'    => $allAssetsSum + $depositsSum,
+                        'total'    => bcadd($allAssetsSum, $depositsSum, 2),
                         'currency' => '₽',
                     ],
                 ],

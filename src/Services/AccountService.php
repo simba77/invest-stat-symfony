@@ -19,6 +19,9 @@ class AccountService
     ) {
     }
 
+    /**
+     * @return array<AccountResponseDTO>
+     */
     public function getSimpleListOfAccountsForUser(?User $user): array
     {
         $accounts = $this->accountRepository->findBy(['userId' => $user->getId()]);
@@ -29,6 +32,9 @@ class AccountService
         return $result;
     }
 
+    /**
+     * @return array<AccountListItemResponseDTO>
+     */
     public function getAccountsListForUser(?User $user): array
     {
         $items = $this->accountRepository->findByUserIdWithDeposits($user->getId() ?? 0);

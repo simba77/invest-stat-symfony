@@ -51,6 +51,9 @@ class DepositsService
         return $result;
     }
 
+    /**
+     * @return array<DepositAccountSummaryListItemDTO>
+     */
     public function getDepositAccountsWithSummaryForUser(User $user): array
     {
         $accounts = $this->entityManager->getRepository(DepositAccount::class)->getDepositAccountsWithSummary($user);
