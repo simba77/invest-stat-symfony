@@ -5,5 +5,7 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/forms'),
+    require('tailwindcss-primeui'),
   ],
+  darkMode: ['selector', '.app-dark'],
 }

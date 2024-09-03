@@ -9,11 +9,26 @@ import {authStore} from "./stores/authStore";
 import FloatingVue from 'floating-vue';
 import './scss/app.scss';
 import 'floating-vue/dist/style.css';
+import PrimeVue from 'primevue/config';
+import Aura from '@primevue/themes/aura';
 
 const app = createApp(AppComponent)
 app.use(createPinia())
 
 app.use(FloatingVue)
+
+app.use(PrimeVue, {
+  theme: {
+    preset: Aura,
+    options: {
+      cssLayer: {
+        name: 'primevue',
+        order: 'tailwind-base, primevue, tailwind-utilities',
+      },
+      darkModeSelector: '.app-dark',
+    },
+  }
+})
 
 // Check auth
 router.beforeEach((to) => {

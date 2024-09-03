@@ -64,7 +64,7 @@ const userNavigation = [
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 dark:bg-transparent">
     <Disclosure
       v-slot="{ open }"
       as="nav"
@@ -205,10 +205,10 @@ const userNavigation = [
 
     <header
       v-if="title"
-      class="bg-white shadow"
+      class="shadow bg-white dark:bg-surface-900"
     >
       <div class="max-w-7xl mx-auto py-3.5 px-4 sm:px-6 lg:px-8">
-        <h1 class="text-xl font-bold text-gray-900">
+        <h1 class="text-xl font-bold">
           {{ props.title }}
         </h1>
       </div>

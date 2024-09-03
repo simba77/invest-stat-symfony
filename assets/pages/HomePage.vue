@@ -7,6 +7,8 @@ import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
 import {useNumbers} from "@/composable/useNumbers";
 import {useDashboard} from "@/composable/useDashboard";
 import {Dashboard} from "@/types/dashboard";
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
 
 const {formatPrice, formatPercent} = useNumbers()
 const {getDashboard} = useDashboard()
@@ -67,28 +69,23 @@ run()
       </template>
 
       <template v-if="pageData.statisticByYears">
-        <div class="text-2xl font-extrabold mt-6 mb-3">
+        <div class="text-2xl font-extrabold mt-6 mb-7">
           Profit By Years
         </div>
-        <table class="simple-table">
-          <thead>
-            <tr>
-              <th>Year</th>
-              <th>Start Year Profit (1 Jan)</th>
-              <th>Percent</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="(item, index) in pageData.statisticByYears"
-              :key="index"
-            >
-              <td>{{ item.year }}</td>
-              <td>{{ formatPrice(item.profit) }}</td>
-              <td>{{ formatPercent(item.profitPercent) }}</td>
-            </tr>
-          </tbody>
-        </table>
+
+        <DataTable :value="pageData.statisticByYears" class="simple-table">
+          <Column field="year" header="Year" />
+          <Column header="Start Year Profit (1 Jan)">
+            <template #body="{ data }">
+              {{ formatPrice(data.profit) }}
+            </template>
+          </Column>
+          <Column header="Percent">
+            <template #body="{ data }">
+              {{ formatPercent(data.profitPercent) }}
+            </template>
+          </Column>
+        </DataTable>
       </template>
     </template>
   </page-component>
