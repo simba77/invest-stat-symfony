@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import BaseModal from "@/components/Modals/BaseModal.vue";
 import {useTemplate} from "@/composable/useTemplate";
+import {onMounted} from "vue";
 
-const {currentTheme} = useTemplate()
+const {setCurrentTheme} = useTemplate()
+
+onMounted(() => {
+  setCurrentTheme()
+})
+
 </script>
 
 <template>
-  <div :class="{'app-dark': currentTheme === 'dark'}">
+  <div>
     <router-view />
     <base-modal />
   </div>
