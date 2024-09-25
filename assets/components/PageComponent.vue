@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import {Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
-import {Bars3Icon, XMarkIcon, UserIcon} from '@heroicons/vue/24/outline'
+import {Bars3Icon, XMarkIcon, UserIcon, SunIcon, MoonIcon} from '@heroicons/vue/24/outline'
 import {authStore} from "@/stores/authStore";
 import {useRoute} from "vue-router";
+import Button from 'primevue/button';
+import {useTemplate} from "@/composable/useTemplate";
+const {toggleTheme, currentTheme} = useTemplate()
 
 const route = useRoute()
 
@@ -101,6 +104,18 @@ const userNavigation = [
           </div>
           <div class="hidden md:block">
             <div class="ml-4 flex items-center md:ml-6">
+              <div class="flex-shrink-0 ms-0">
+                <Button
+                  rounded
+                  size="small"
+                  text
+                  class="border-0 switch-theme-btn"
+                  @click="toggleTheme()"
+                >
+                  <sun-icon v-if="currentTheme === 'light'" class="h-5 w-5" />
+                  <moon-icon v-else class="h-5 w-5" />
+                </Button>
+              </div>
               <!-- Profile dropdown -->
               <Menu
                 as="div"
@@ -224,3 +239,9 @@ const userNavigation = [
     </main>
   </div>
 </template>
+
+<style scoped lang="scss">
+.switch-theme-btn {
+
+}
+</style>
