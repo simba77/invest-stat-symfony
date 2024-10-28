@@ -57,9 +57,11 @@ class TInvestGetMarketData extends Command
         foreach ($response->getLastPrices() as $item) {
             /** @var LastPrice $item */
             $share = $shareRepository->findOneBy(['figi' => $item->getFigi()]);
-            $share->setPrice($item->getPrice()->getUnits() . '.' . $item->getPrice()->getNano());
-            $this->em->persist($share);
-
+            $price = $item->getPrice()->getUnits() . '.' . $item->getPrice()->getNano();
+            if ($price > 0) {
+                $share->setPrice($price);
+                $this->em->persist($share);
+            }
             $io->success($share->getStockMarket() . ':' . $share->getTicker() . ' - ' . $share->getPrice());
         }
 
