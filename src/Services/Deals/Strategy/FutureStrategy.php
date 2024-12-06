@@ -5,15 +5,19 @@ declare(strict_types=1);
 namespace App\Services\Deals\Strategy;
 
 use App\Entity\Account;
+use App\Services\FuturesMultipliers;
 use App\Services\MarketData\Securities\SecurityTypeEnum;
 
 class FutureStrategy implements DealStrategyInterface
 {
+    public readonly FuturesMultipliers $futuresMultipliers;
+
     /**
      * @inheritDoc
      */
     public function __construct(private readonly array $deal, Account $account)
     {
+        $this->futuresMultipliers = new FuturesMultipliers();
     }
 
     public function getName(): string
@@ -28,36 +32,22 @@ class FutureStrategy implements DealStrategyInterface
 
     public function getBuyPrice(): string
     {
-        if ($this->deal['deal']->getBuyPrice() > $this->deal['futureLotSize']) {
-            return bcmul($this->deal['deal']->getBuyPrice(), $this->deal['futureStepPrice'], 4);
-        }
-
-        return bcmul(bcmul($this->deal['deal']->getBuyPrice(), $this->deal['futureStepPrice'], 4), $this->deal['futureLotSize'], 4);
+        return bcmul(bcmul($this->deal['deal']->getBuyPrice(), $this->getMultiplier(), 4), $this->deal['futureLotSize'], 4);
     }
 
     public function getSellPrice(): string
     {
-        if ($this->deal['deal']->getSellPrice() > $this->deal['futureLotSize']) {
-            return bcmul($this->deal['deal']->getSellPrice(), $this->deal['futureStepPrice'], 4);
-        }
-        return bcmul(bcmul($this->deal['deal']->getSellPrice(), $this->deal['futureStepPrice'], 4), $this->deal['futureLotSize'], 4);
+        return bcmul(bcmul($this->deal['deal']->getSellPrice(), $this->getMultiplier(), 4), $this->deal['futureLotSize'], 4);
     }
 
     public function getCurrentPrice(): string
     {
-        if ($this->deal['futurePrice'] > $this->deal['futureLotSize']) {
-            return bcmul($this->deal['futurePrice'], $this->deal['futureStepPrice'], 4);
-        }
-        return bcmul(bcmul($this->deal['futurePrice'], $this->deal['futureStepPrice'], 4), $this->deal['futureLotSize'], 4);
+        return bcmul(bcmul($this->deal['futurePrice'], $this->getMultiplier(), 4), $this->deal['futureLotSize'], 4);
     }
 
     public function getPrevPrice(): string
     {
-        if ($this->deal['futurePrevPrice'] > $this->deal['futureLotSize']) {
-            return bcmul($this->deal['futurePrevPrice'], $this->deal['futureStepPrice'], 4);
-        }
-
-        return bcmul(bcmul($this->deal['futurePrevPrice'], $this->deal['futureStepPrice'], 4), $this->deal['futureLotSize'], 4);
+        return bcmul(bcmul($this->deal['futurePrevPrice'], $this->getMultiplier(), 4), $this->deal['futureLotSize'], 4);
     }
 
     public function getCommission(string $price, string $quantity): string
@@ -68,5 +58,14 @@ class FutureStrategy implements DealStrategyInterface
     public function getCurrency(): string
     {
         return $this->deal['futureCurrency'] ?? 'RUB';
+    }
+
+    private function getMultiplier(): string
+    {
+        $multiplier = $this->futuresMultipliers->getMultiplierForTicker($this->deal['deal']->getTicker());
+        if (! is_null($multiplier)) {
+            return $multiplier;
+        }
+        return $this->deal['futureStepPrice'] ?? '1';
     }
 }
