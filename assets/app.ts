@@ -12,6 +12,7 @@ import 'floating-vue/dist/style.css';
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
 import {definePreset} from "@primevue/themes";
+import 'primeicons/primeicons.css';
 
 const app = createApp(AppComponent)
 app.use(createPinia())

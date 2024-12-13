@@ -5,6 +5,8 @@ import axios from "axios";
 import {reactive, ref} from 'vue'
 import useAsync from '@/utils/use-async'
 import {authStore} from "@/stores/authStore";
+import Panel from 'primevue/panel';
+import Button from 'primevue/button';
 
 const {userData, checkAuth } = authStore();
 const errors = ref(null)
@@ -18,7 +20,7 @@ const form = reactive({
 })
 
 const {loading, run: submitForm} = useAsync(() => {
-  axios.post('/api/change-profile', form)
+  return axios.post('/api/change-profile', form)
     .then(() => {
       checkAuth()
       success.value = true
@@ -37,7 +39,7 @@ const {loading, run: submitForm} = useAsync(() => {
 
 <template>
   <page-component title="Change Profile">
-    <div class="card">
+    <Panel>
       <form
         class="space-y-6 w-full md:w-2/3 mx-auto"
         action="#"
@@ -96,13 +98,12 @@ const {loading, run: submitForm} = useAsync(() => {
           />
         </div>
         <div class="border-b" />
-        <button
+        <Button
           type="submit"
           class="btn btn-primary"
-          :disabled="loading"
-        >
-          Save
-        </button>
+          :loading="loading"
+          label="Save"
+        />
         <router-link
           to="/"
           class="btn btn-secondary ml-3"
@@ -110,6 +111,6 @@ const {loading, run: submitForm} = useAsync(() => {
           Back
         </router-link>
       </form>
-    </div>
+    </Panel>
   </page-component>
 </template>

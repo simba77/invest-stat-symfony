@@ -20,9 +20,17 @@ export const useNumbers = () => {
     return percent + '%'
   }
 
+  function getPercent(resultPrice: number, currentPrice: number) {
+    if (currentPrice > 0) {
+      return parseFloat(String(Math.abs(resultPrice) / currentPrice * 100)).toFixed(2) + '%';
+    }
+    return '';
+  }
+
   return {
     formatPrice,
     formatPriceWithSign,
-    formatPercent
+    formatPercent,
+    getPercent
   }
 }
