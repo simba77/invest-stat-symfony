@@ -2,9 +2,11 @@
 import {computed, reactive} from "vue";
 import {useDebounceFn} from "@vueuse/core";
 import {InputErrors} from "@/types/inputs";
+import InputText from 'primevue/inputtext';
+import Message from 'primevue/message';
 
 interface InputProps {
-  modelValue: number | string,
+  modelValue: number | string | null,
   label: string
   placeholder: string
   name: string
@@ -18,6 +20,7 @@ interface InputProps {
   readonly?: boolean
   required?: boolean
   inputDelay?: number
+  step?: string
 }
 
 const props = withDefaults(defineProps<InputProps>(), {
@@ -33,7 +36,8 @@ const props = withDefaults(defineProps<InputProps>(), {
   disabled: false,
   readonly: false,
   required: false,
-  inputDelay: 100
+  inputDelay: 100,
+  step: '.0001'
 })
 
 const emits = defineEmits(['update:modelValue'])
@@ -55,7 +59,7 @@ const inputParams = reactive({
     if (props.type === 'number') {
       return '[0-9]*'
     }
-    return undefined
+    return null
   })
 })
 
@@ -66,31 +70,26 @@ const updateModelValue = useDebounceFn(() => {
 </script>
 
 <template>
-  <div class="">
-    <label
-      :for="inputParams.elementId"
-      class="block text-sm font-medium text-gray-700"
-    >{{ label }}</label>
-    <input
+  <div class="flex flex-col gap-2">
+    <label :for="inputParams.elementId">{{ label }}</label>
+    <InputText
       :id="inputParams.elementId"
       v-model="inputParams.value"
-      :class="[inputParams.errorMessage ? 'border-red-500' : '', 'mt-1 form-input']"
-      :name="name"
-      :type="type"
       :placeholder="placeholder"
+      :invalid="!!(inputParams.errorMessage && inputParams.errorMessage.length > 0)"
+      :pattern="inputParams.pattern"
+      :autocomplete="autocomplete"
+      :name="name"
+      :enterkeyhint="enterKeyHint"
+      :type="type"
       :required="required"
       :readonly="readonly"
-      :enterkeyhint="enterKeyHint"
-      :pattern="inputParams.pattern"
-      step=".0001"
-      :autocomplete="autocomplete !== '' ? autocomplete : undefined"
-      @input="updateModelValue"
-    >
-    <div
-      v-if="help"
-      class="mt-1 text-sm text-gray-500"
-      v-html="help"
+      :step="step"
+      @update:model-value="updateModelValue"
     />
+    <Message v-if="help" size="small" severity="secondary" variant="simple">
+      <span v-html="help" />
+    </Message>
     <div
       v-if="inputParams.errorMessage"
       class="mt-1 text-sm text-red-500"

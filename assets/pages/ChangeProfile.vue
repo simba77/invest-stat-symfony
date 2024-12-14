@@ -53,7 +53,6 @@ const {loading, run: submitForm} = useAsync(() => {
           >
             Your profile has been successfully changed
           </div>
-
           <input-text
             :key="componentKey"
             v-model="form.name"
@@ -80,6 +79,8 @@ const {loading, run: submitForm} = useAsync(() => {
             v-model="form.salary"
             :error="errors"
             :required="true"
+            type="number"
+            step="1"
             class="mt-3"
             name="salary"
             label="Salary"
