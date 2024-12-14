@@ -73,7 +73,7 @@ run()
           Profit By Years
         </div>
 
-        <DataTable :value="pageData.statisticByYears" class="simple-table">
+        <DataTable :value="pageData.statisticByYears">
           <Column field="year" header="Year" />
           <Column header="Start Year Profit (1 Jan)">
             <template #body="{ data }">

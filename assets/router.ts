@@ -140,7 +140,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./pages/Accounts/ClosedDealsPage.vue')
+    component: () => import('./pages/ClosedDealsPage.vue')
   },
 
   // Savings
@@ -193,15 +193,6 @@ const routes: Array<RouteRecordRaw> = [
       requiresAuth: true,
     },
     component: () => import('@/pages/Deposits/DepositForm.vue')
-  },
-
-  {
-    name: 'Analytics',
-    path: '/analytics',
-    meta: {
-      requiresAuth: true,
-    },
-    component: () => import('@/pages/Analytics/AnalyticsPage.vue')
   },
 
   {

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import PageComponent from "../../components/PageComponent.vue";
+import PageComponent from "../components/PageComponent.vue";
 import useAnalytics from "@/composable/useAnalytics";
 import useAsync from "@/utils/use-async";
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
-import ClosedDealsTableComponent from "@/components/Analytics/ClosedDealsTableComponent.vue";
 import InputDateComponent from "@/components/Forms/InputDateComponent.vue";
 import { reactive } from "vue";
 import ClosedDealsByMonthsChart from "@/components/Analytics/ClosedDealsByMonthsChart.vue";
+import ClosedDealsTable from "@/components/Analytics/ClosedDealsTable.vue";
 
 const {closedDeals, closedDealsByMonths, getClosedDeals, getClosedDealsByMonths} = useAnalytics()
 
@@ -41,7 +41,7 @@ closedDealsByMonthsRun()
 
     <preloader-component v-if="loading" />
     <div v-else-if="closedDeals">
-      <closed-deals-table-component
+      <closed-deals-table
         :assets="closedDeals.deals"
         :summary="closedDeals.summary"
       />

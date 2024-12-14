@@ -58,7 +58,7 @@ class ClosedDealsService
             $summary = new SummaryForClosedDealsDTO('0', '0', '0', '0');
         }
 
-        return ['deals' => $dealsByTickers, 'summary' => $summary];
+        return ['deals' => array_values($dealsByTickers), 'summary' => $summary];
     }
 
     public function getMonthlyDealsStat(User $user, ?DealsFilterRequestDTO $filterRequestDTO): array
