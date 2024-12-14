@@ -71,7 +71,7 @@ provide('accounts', {getAccounts: getAccount})
               <div class="font-bold text-sm mb-4">
                 {{ data.deals.currencies[groupedByCurrencyIndex]['name'] }}
               </div>
-              <div class="flex-grow mb-4 ml-3 border-b" />
+              <div class="flex-grow mb-4 ml-3 border-b dark:border-zinc-800" />
             </div>
 
             <div class="w-full overflow-x-auto mb-4">
