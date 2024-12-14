@@ -44,7 +44,7 @@ defineProps<{
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <DialogPanel
-              class="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:w-full"
+              class="relative bg-white dark:bg-zinc-900 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:w-full"
               :class="[large ? 'w-full md:max-w-7xl' : 'w-full md:max-w-lg']"
             >
               <!-- dynamic components, using model to share values payload -->
