@@ -49,7 +49,7 @@ if (route.params.id) {
         @submit.prevent="submitForm"
       >
         <div>
-          <h3 class="text-lg font-medium text-gray-900">
+          <h3 class="form-title">
             Deposit Account
           </h3>
         </div>
@@ -68,7 +68,7 @@ if (route.params.id) {
             placeholder="Enter an Account Name"
           />
         </div>
-        <div class="border-b" />
+        <div class="buttons-divider" />
         <button
           type="submit"
           class="btn btn-primary"

@@ -1,0 +1,9 @@
+@layer components {
+  .form-title {
+    @apply text-lg font-bold text-gray-900 dark:text-white
+  }
+
+  .buttons-divider {
+    @apply border-b dark:border-zinc-800
+  }
+}

@@ -4,11 +4,10 @@ import InputText from "@/components/Forms/InputText.vue";
 import axios from "axios";
 import Panel from "primevue/panel";
 import Button from "primevue/button";
-import Divider from 'primevue/divider';
 
 export default {
   name: "CategoryForm",
-  components: {Button, Divider, Panel, InputText, PageComponent},
+  components: {Button, Panel, InputText, PageComponent},
   data() {
     return {
       form: {
@@ -77,7 +76,7 @@ export default {
         @submit.prevent="submitForm"
       >
         <div>
-          <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+          <h3 class="form-title">
             Account
           </h3>
           <p class="mt-1 text-sm text-gray-600">
@@ -143,7 +142,7 @@ export default {
             placeholder="Sort"
           />
         </div>
-        <Divider />
+        <div class="buttons-divider" />
         <Button
           type="submit"
           class="btn btn-primary"

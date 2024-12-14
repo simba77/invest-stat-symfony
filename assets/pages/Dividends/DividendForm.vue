@@ -61,7 +61,7 @@ if (route.params.id) {
         @submit.prevent="submitForm"
       >
         <div>
-          <h3 class="text-lg font-medium text-gray-900">
+          <h3 class="form-title">
             Dividend
           </h3>
         </div>
@@ -124,7 +124,7 @@ if (route.params.id) {
             placeholder="Date"
           />
         </div>
-        <div class="border-b" />
+        <div class="buttons-divider" />
         <button
           type="submit"
           class="btn btn-primary"

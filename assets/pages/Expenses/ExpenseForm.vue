@@ -75,7 +75,7 @@ onMounted(() => {
         @submit.prevent="submitForm"
       >
         <div>
-          <h3 class="text-lg font-medium text-gray-900">
+          <h3 class="form-title">
             Expense
           </h3>
           <p class="mt-1 text-sm text-gray-600">
@@ -101,7 +101,7 @@ onMounted(() => {
             placeholder="Amount of expense"
           />
         </div>
-        <div class="border-b" />
+        <div class="buttons-divider" />
         <button
           type="submit"
           class="btn btn-primary"
