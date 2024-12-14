@@ -26,15 +26,15 @@
   }
 
   .simple-table {
-    @apply bg-white shadow rounded-lg w-full ring-1 ring-gray-200 dark:ring-black overflow-hidden;
+    @apply bg-white dark:bg-zinc-900 shadow rounded-lg w-full ring-1 ring-gray-200 dark:ring-black overflow-hidden;
 
     thead {
-      @apply border-b bg-gray-50;
+      @apply border-b bg-gray-50 dark:bg-zinc-900 dark:border-zinc-800;
     }
 
     &.white-header {
       thead {
-        @apply border-b bg-white;
+        @apply border-b bg-white dark:bg-zinc-900 dark:border-zinc-800;
       }
     }
 
@@ -52,7 +52,7 @@
 
     tbody {
       tr {
-        @apply border-b hover:bg-gray-200;
+        @apply border-b hover:bg-gray-200 dark:hover:bg-zinc-800 dark:border-zinc-800;
 
         &:hover {
           > td > .show-on-row-hover {
@@ -66,7 +66,7 @@
       }
 
       td {
-        @apply px-4 py-3;
+        @apply px-4 py-4;
 
         &.has-sub-table {
           @apply px-2 py-2 bg-gray-100;
@@ -75,19 +75,19 @@
     }
 
     .table-subtitle {
-      @apply cursor-text text-left font-medium bg-gray-50 hover:bg-gray-50 border-b-gray-300;
+      @apply cursor-text text-left font-medium bg-gray-50 hover:bg-gray-50 dark:bg-zinc-950 dark:hover:bg-zinc-950;
     }
 
     .table-subtitle {
       td {
-        @apply px-4 py-1.5;
+        @apply px-4 py-4;
       }
     }
   }
 
   .sub-table {
     th {
-      @apply px-3 py-2 text-left;
+      @apply px-3 py-3 text-left;
     }
 
     thead {
