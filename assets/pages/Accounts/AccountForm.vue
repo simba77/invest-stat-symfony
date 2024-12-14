@@ -2,10 +2,13 @@
 import PageComponent from "@/components/PageComponent.vue";
 import InputText from "@/components/Forms/InputText.vue";
 import axios from "axios";
+import Panel from "primevue/panel";
+import Button from "primevue/button";
+import Divider from 'primevue/divider';
 
 export default {
   name: "CategoryForm",
-  components: {InputText, PageComponent},
+  components: {Button, Divider, Panel, InputText, PageComponent},
   data() {
     return {
       form: {
@@ -66,7 +69,7 @@ export default {
 
 <template>
   <page-component title="Add Account">
-    <div class="card">
+    <Panel>
       <form
         class="space-y-6 w-full md:w-2/3 mx-auto"
         action="#"
@@ -74,7 +77,7 @@ export default {
         @submit.prevent="submitForm"
       >
         <div>
-          <h3 class="text-lg font-medium text-gray-900">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white">
             Account
           </h3>
           <p class="mt-1 text-sm text-gray-600">
@@ -140,14 +143,13 @@ export default {
             placeholder="Sort"
           />
         </div>
-        <div class="border-b" />
-        <button
+        <Divider />
+        <Button
           type="submit"
           class="btn btn-primary"
-          :disabled="loading"
-        >
-          Save
-        </button>
+          :loading="loading"
+          label="Save"
+        />
         <router-link
           :to="{name: 'Accounts'}"
           class="btn btn-secondary ml-3"
@@ -155,6 +157,6 @@ export default {
           Back
         </router-link>
       </form>
-    </div>
+    </Panel>
   </page-component>
 </template>
