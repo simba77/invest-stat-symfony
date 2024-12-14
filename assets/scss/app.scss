@@ -1,3 +1,5 @@
+@use "buttons";
+
 @layer tailwind-base, primevue, tailwind-utilities;
 
 @layer tailwind-base {
@@ -10,8 +12,6 @@
 }
 
 @layer components {
-  @import "buttons";
-
   // Inputs
   .form-input {
     @apply rounded w-full;
