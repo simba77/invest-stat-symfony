@@ -9,6 +9,8 @@ import useAsync from '@/utils/use-async'
 import {useRoute} from 'vue-router'
 import router from '@/router'
 import {useDebounceFn, useFetch} from '@vueuse/core'
+import Button from 'primevue/button';
+import Divider from 'primevue/divider';
 
 interface SecurityData {
   ticker: string
@@ -91,7 +93,7 @@ onMounted(() => {
         @submit.prevent="submitForm"
       >
         <div>
-          <h3 class="text-lg font-medium text-gray-900">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white">
             Asset
           </h3>
           <p class="mt-1 text-sm text-gray-600">
@@ -107,7 +109,7 @@ onMounted(() => {
           />
 
           <input-text
-            :key="tickerComponentKey"
+            :key="'ticker' + tickerComponentKey"
             v-model="form.ticker"
             :error="errors"
             class="mt-3"
@@ -125,16 +127,17 @@ onMounted(() => {
           </div>
 
           <input-select
-            :key="componentKey"
+            :key="'stockMarket' + componentKey"
             v-model="form.stockMarket"
             :error="errors"
             :options="[{value: 'SPB', name: 'SPB'}, {value: 'MOEX', name: 'MOEX'}]"
             name="stockMarket"
             class="mt-3"
             label="Stock Market"
+            placeholder="Stock Market"
           />
           <input-text
-            :key="componentKey"
+            :key="'quantity' + componentKey"
             v-model.number="form.quantity"
             :error="errors"
             type="number"
@@ -144,7 +147,7 @@ onMounted(() => {
             placeholder="Quantity"
           />
           <input-text
-            :key="componentKey"
+            :key="'buyPrice' + componentKey"
             v-model.trim="form.buyPrice"
             :error="errors"
             class="mt-3"
@@ -153,7 +156,7 @@ onMounted(() => {
             placeholder="Buy Price"
           />
           <input-text
-            :key="componentKey"
+            :key="'targetPrice' + componentKey"
             v-model.trim="form.targetPrice"
             :error="errors"
             class="mt-3"
@@ -162,14 +165,13 @@ onMounted(() => {
             placeholder="Target Price"
           />
         </div>
-        <div class="border-b" />
-        <button
+        <Divider />
+        <Button
           type="submit"
           class="btn btn-primary"
-          :disabled="loading"
-        >
-          Save
-        </button>
+          :loading="loading"
+          label="Save"
+        />
         <router-link
           :to="{name: 'AccountDetail', params: {id: $route.params.account}}"
           class="btn btn-secondary ml-3"

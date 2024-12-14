@@ -67,7 +67,7 @@ function getValue(option: any) {
   <div>
     <label
       :for="inputParams.elementId"
-      class="block text-sm font-medium text-gray-700"
+      class="block text-gray-700 dark:text-white"
     >{{ label }}</label>
     <select
       :id="inputParams.elementId"
@@ -75,6 +75,7 @@ function getValue(option: any) {
       :required="required"
       :disabled="disabled"
       :name="name"
+      class="dark:bg-zinc-950 dark:focus:border-zinc-400 dark:focus:ring-0"
       :class="[inputParams.errorMessage ? 'border-red-500' : '', 'form-select rounded w-full mt-1']"
       @change="updateModelValue"
     >

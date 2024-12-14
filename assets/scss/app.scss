@@ -22,7 +22,7 @@
   }
 
   .form-checkbox-label {
-    @apply ml-2 block text-sm text-gray-900 cursor-pointer;
+    @apply ml-2 block text-sm text-gray-900 dark:text-white cursor-pointer;
   }
 
   .simple-table {
@@ -114,6 +114,6 @@
   }
 
   .card {
-    @apply bg-white shadow rounded p-6;
+    @apply bg-white dark:bg-zinc-900 dark:border dark:border-zinc-700 shadow rounded p-6;
   }
 }
