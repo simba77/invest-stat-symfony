@@ -4,6 +4,7 @@ import PreloaderComponent from "@/components/Common/PreloaderComponent.vue"
 import {provide} from "vue"
 import AccountComponent from "@/components/Account/AccountComponent.vue"
 import useAccounts from "@/composable/useAccounts"
+import {usePage} from "@/composable/usePage";
 
 const {
   getAccounts,
@@ -11,9 +12,13 @@ const {
   loading
 } = useAccounts()
 
+const {setPageTitle} = usePage()
+
 provide('accounts', {getAccounts})
 
 getAccounts()
+
+setPageTitle('Accounts')
 </script>
 
 <template>

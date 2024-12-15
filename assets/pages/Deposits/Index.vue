@@ -8,11 +8,13 @@ import {Deposit} from "@/types/depositAccount";
 import {useModal} from "@/composable/useModal";
 import DeleteDepositModal from "@/components/Deposits/DeleteDepositModal.vue";
 import { useNumbers } from "@/composable/useNumbers";
+import {usePage} from "@/composable/usePage";
 
 const deposits = useDeposits()
 const modal = useModal()
 const {loading, run: getDeposits} = useAsync(() => deposits.getDeposits())
 const {formatPrice} = useNumbers()
+const {setPageTitle} = usePage()
 
 getDeposits()
 
@@ -26,6 +28,8 @@ function deleteDeposit(deposit: Deposit) {
     }
   })
 }
+
+setPageTitle('Deposits')
 
 </script>
 

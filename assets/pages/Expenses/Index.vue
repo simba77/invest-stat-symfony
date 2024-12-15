@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PageComponent from "../components/PageComponent.vue";
+import PageComponent from "../../components/PageComponent.vue";
 import {PencilIcon, XCircleIcon, PlusCircleIcon} from "@heroicons/vue/24/outline";
 import StatCard from "@/components/Cards/StatCard.vue";
 import {useModal} from "@/composable/useModal";
@@ -7,10 +7,12 @@ import DeleteExpenseCategoryModal from "@/components/Expenses/DeleteExpenseCateg
 import {useExpenses} from "@/composable/useExpenses";
 import DeleteExpenseModal from "@/components/Expenses/DeleteExpenseModal.vue";
 import { useNumbers } from "@/composable/useNumbers";
+import {usePage} from "@/composable/usePage";
 
 const modal = useModal();
 const expenses = useExpenses()
 const {formatPrice} = useNumbers()
+const {setPageTitle} = usePage()
 
 expenses.getExpenses()
 expenses.getSummary()
@@ -36,6 +38,8 @@ function confirmDeleteExpense(item: any) {
     }
   })
 }
+
+setPageTitle('Expenses')
 
 </script>
 

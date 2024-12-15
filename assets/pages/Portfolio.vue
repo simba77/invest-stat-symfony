@@ -1,14 +1,18 @@
 <script setup lang="ts">
-import PageComponent from "../../components/PageComponent.vue";
+import PageComponent from "../components/PageComponent.vue";
 import useAsync from "@/utils/use-async";
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
 import { usePortfolio } from "@/composable/usePortfolio";
 import AssetsTableComponent from "@/components/Account/AssetsTableComponent.vue";
+import {usePage} from "@/composable/usePage";
+const {setPageTitle} = usePage()
 
 const {getPortfolio, portfolio} = usePortfolio()
 
 const {loading, run} = useAsync(() => getPortfolio())
 run()
+
+setPageTitle("Portfolio")
 
 </script>
 

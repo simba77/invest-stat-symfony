@@ -7,7 +7,9 @@ import InputDateComponent from "@/components/Forms/InputDateComponent.vue";
 import { reactive } from "vue";
 import ClosedDealsByMonthsChart from "@/components/Analytics/ClosedDealsByMonthsChart.vue";
 import ClosedDealsTable from "@/components/Analytics/ClosedDealsTable.vue";
+import {usePage} from "@/composable/usePage";
 
+const {setPageTitle} = usePage()
 const {closedDeals, closedDealsByMonths, getClosedDeals, getClosedDealsByMonths} = useAnalytics()
 
 const filter = reactive({
@@ -21,6 +23,8 @@ const {run: closedDealsByMonthsRun} = useAsync(() => getClosedDealsByMonths({}))
 run()
 
 closedDealsByMonthsRun()
+
+setPageTitle("Closed Deals")
 
 </script>
 

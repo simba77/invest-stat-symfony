@@ -1,50 +1,42 @@
 <script setup lang="ts">
 import PageComponent from "../../components/PageComponent.vue";
 import {XCircleIcon, PencilIcon} from "@heroicons/vue/24/outline";
+import {useInvestments} from "@/composable/useInvestments";
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
+import {Investment} from "@/types/investments";
 import {useModal} from "@/composable/useModal";
-import {useNumbers} from "@/composable/useNumbers";
-import {ref} from "vue";
-import useAsync from "@/utils/use-async";
-import {Coupon, CouponsPage} from "@/types/coupons";
-import ConfirmDeleteCouponModal from "@/components/Coupons/ConfirmDeleteCouponModal.vue";
-import {useCoupons} from "@/composable/useCoupons";
+import ConfirmDeleteInvestmentModal from "@/components/Investments/ConfirmDeleteInvestmentModal.vue";
+import { useNumbers } from "@/composable/useNumbers";
+import {usePage} from "@/composable/usePage";
 
+const {investments, getInvestments, loadingInvestments} = useInvestments()
 const modal = useModal()
 const {formatPrice} = useNumbers()
+const {setPageTitle} = usePage()
 
-const {getCoupons} = useCoupons()
+getInvestments()
 
-const coupons = ref<CouponsPage>({items: []})
-const {loading, run: getItems} = useAsync(() => getCoupons().then((response) => {
-  coupons.value = response.data
-}))
-
-getItems()
-
-function confirmDelete(item: Coupon) {
+function confirmDelete(item: Investment) {
   modal.open({
-    component: ConfirmDeleteCouponModal,
-    modelValue: {
-      item,
-      callback: () => getItems()
-    },
+    component: ConfirmDeleteInvestmentModal,
+    modelValue: item
   })
 }
 
+setPageTitle("Investments")
 </script>
 
 <template>
-  <page-component title="Coupons">
+  <page-component title="Investments">
     <div class="mb-4">
       <router-link
-        :to="{name: 'CouponCreate'}"
+        :to="{name: 'AddDeposit'}"
         class="btn btn-primary"
       >
         Add
       </router-link>
     </div>
-    <preloader-component v-if="loading" />
+    <preloader-component v-if="loadingInvestments" />
     <table
       v-else
       class="simple-table"
@@ -53,8 +45,6 @@ function confirmDelete(item: Coupon) {
         <tr>
           <th>Date</th>
           <th>Sum</th>
-          <th>Ticker</th>
-          <th>Stock Market</th>
           <th>Account</th>
           <th class="flex justify-end">
             Actions
@@ -63,27 +53,25 @@ function confirmDelete(item: Coupon) {
       </thead>
       <tbody>
         <tr
-          v-for="(dividend, index) in coupons.items"
+          v-for="(investment, index) in investments.items"
           :key="index"
         >
-          <td>{{ dividend.date }}</td>
-          <td>{{ formatPrice(dividend.amount) }}</td>
-          <td>{{ dividend.ticker }}</td>
-          <td>{{ dividend.stockMarket }}</td>
-          <td>{{ dividend.accountName }}</td>
+          <td>{{ investment.date }}</td>
+          <td>{{ formatPrice(investment.sum, investment.currency) }}</td>
+          <td>{{ investment.account }}</td>
           <td class="table-actions">
-            <template v-if="dividend.id">
+            <template v-if="investment.id">
               <div class="flex justify-end items-center show-on-row-hover">
                 <router-link
                   class="text-gray-300 hover:text-gray-900 mr-3"
-                  :to="{name: 'CouponEdit', params: {id: dividend.id}}"
+                  :to="{name: 'EditDeposit', params: {id: investment.id}}"
                 >
                   <pencil-icon class="h-5 w-5" />
                 </router-link>
                 <button
                   type="button"
                   class="text-gray-300 hover:text-red-500"
-                  @click="confirmDelete(dividend)"
+                  @click="confirmDelete(investment)"
                 >
                   <x-circle-icon class="h-5 w-5" />
                 </button>
@@ -91,9 +79,9 @@ function confirmDelete(item: Coupon) {
             </template>
           </td>
         </tr>
-        <tr v-if="coupons.items.length < 1">
+        <tr v-if="investments.items.length < 1">
           <td
-            colspan="20"
+            colspan="4"
             class="text-center"
           >
             The list is empty

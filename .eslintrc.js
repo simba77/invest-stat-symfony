@@ -26,7 +26,7 @@ module.exports = {
       'multiline': {
         'max': 1
       }
-    }],
+    }]
   },
   overrides: [
     {
@@ -37,6 +37,12 @@ module.exports = {
       env: {
         jest: true
       }
-    }
+    },
+    {
+      files: ['assets/pages/**/*.vue'],
+      rules: {
+        'vue/multi-word-component-names': 'off',
+      },
+    },
   ]
 }

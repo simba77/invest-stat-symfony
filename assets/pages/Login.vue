@@ -24,7 +24,7 @@ function authorize() {
       authStore()
         .checkAuth()
         .then(() => {
-          router.push({name: 'HomePage'});
+          router.push({name: 'Dashboard'});
         })
         .catch(() => {
           alert('An error has occurred');
@@ -52,7 +52,7 @@ function authorize() {
           src="../images/workflow-mark-indigo-600.svg"
           alt="Workflow"
         >
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
           Sign in to your account
         </h2>
       </div>

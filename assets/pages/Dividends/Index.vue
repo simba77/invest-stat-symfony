@@ -9,11 +9,13 @@ import useAsync from "@/utils/use-async";
 import {useDividends} from "@/composable/useDividends";
 import {Dividend, DividendsPage} from "@/types/dividends";
 import ConfirmDeleteDividendModal from "@/components/Dividends/ConfirmDeleteDividendModal.vue";
+import {usePage} from "@/composable/usePage";
 
 const modal = useModal()
 const {formatPrice} = useNumbers()
 
 const {getDividends} = useDividends()
+const {setPageTitle} = usePage()
 
 const dividends = ref<DividendsPage>({items: []})
 const {loading, run: getItems} = useAsync(() => getDividends().then((response) => {
@@ -32,6 +34,7 @@ function confirmDelete(item: Dividend) {
   })
 }
 
+setPageTitle("Dividends")
 </script>
 
 <template>

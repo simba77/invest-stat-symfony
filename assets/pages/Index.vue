@@ -9,9 +9,11 @@ import {useDashboard} from "@/composable/useDashboard";
 import {Dashboard} from "@/types/dashboard";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import {usePage} from "@/composable/usePage";
 
 const {formatPrice, formatPercent} = useNumbers()
 const {getDashboard} = useDashboard()
+const {setPageTitle} = usePage()
 
 const pageData = ref<Dashboard>({
   usd: 0,
@@ -25,6 +27,8 @@ const {loading, run} = useAsync(() => getDashboard().then((response) => {
 }))
 
 run()
+
+setPageTitle('')
 
 </script>
 

@@ -40,7 +40,7 @@ const {loading, run: confirmDelete} = useAsync((id: number) => deleteDividend(id
             as="h3"
             class="text-lg leading-6 font-medium text-gray-900 dark:text-white"
           >
-            Deletion <Confirmation></Confirmation>
+            Deletion Confirmation
           </DialogTitle>
           <div class="mt-2">
             <p class="text-sm text-gray-500">

@@ -2,12 +2,12 @@ import {createRouter, createWebHistory, RouteRecordRaw} from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
   {
-    name: 'HomePage',
+    name: 'Dashboard',
     path: '/',
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./pages/HomePage.vue')
+    component: () => import('./pages/Index.vue')
   },
   {
     name: 'Investments',
@@ -15,7 +15,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./pages/InvestmentsPage.vue')
+    component: () => import('./pages/Investments/Index.vue')
   },
   {
     name: 'AddDeposit',
@@ -40,7 +40,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./pages/ExpensesPage.vue')
+    component: () => import('./pages/Expenses/Index.vue')
   },
   {
     name: 'CreateCategory',
@@ -80,7 +80,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       onlyGuests: true,
     },
-    component: () => import('./pages/LoginPage.vue')
+    component: () => import('./pages/Login.vue')
   },
 
   // Accounts
@@ -90,7 +90,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./pages/Accounts/AccountsPage.vue')
+    component: () => import('./pages/Accounts/Index.vue')
   },
   {
     name: 'CreateAccount',
@@ -140,7 +140,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('./pages/ClosedDealsPage.vue')
+    component: () => import('./pages/ClosedDeals.vue')
   },
 
   // Savings
@@ -176,7 +176,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('@/pages/Deposits/DepositsPage.vue')
+    component: () => import('@/pages/Deposits/Index.vue')
   },
   {
     name: 'DepositCreate',
@@ -201,7 +201,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('@/pages/Accounts/FullPortfolioPage.vue')
+    component: () => import('@/pages/Portfolio.vue')
   },
 
   {
@@ -219,7 +219,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('@/pages/Dividends/IndexPage.vue')
+    component: () => import('@/pages/Dividends/Index.vue')
   },
   {
     name: 'DividendCreate',
@@ -244,7 +244,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('@/pages/Coupons/IndexPage.vue')
+    component: () => import('@/pages/Coupons/Index.vue')
   },
   {
     name: 'CouponCreate',
