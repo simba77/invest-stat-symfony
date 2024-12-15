@@ -138,7 +138,7 @@ const userNavigation = [
                   leave-from-class="transform opacity-100 scale-100"
                   leave-to-class="transform opacity-0 scale-95"
                 >
-                  <MenuItems class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <MenuItems class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-zinc-800 ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <MenuItem
                       v-for="item in userNavigation"
                       :key="item.name"
@@ -146,7 +146,7 @@ const userNavigation = [
                     >
                       <a
                         :href="item.href"
-                        :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
+                        :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 dark:text-white dark:hover:bg-gray-700']"
                       >{{ item.name }}</a>
                     </MenuItem>
                   </MenuItems>
