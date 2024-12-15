@@ -29,7 +29,7 @@ onMounted(() => {
         alignWithLabel: true
       },
       axisLabel: {
-        rotate: 60
+        rotate: 50
       }
     },
     yAxis: {
@@ -39,6 +39,7 @@ onMounted(() => {
       left: '2%',
       right: '2%',
       bottom: '2%',
+      top: '3%',
       containLabel: true
     },
     series: [
