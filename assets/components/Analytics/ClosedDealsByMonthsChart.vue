@@ -58,7 +58,7 @@ onMounted(() => {
 <template>
   <div>
     <div class="mb-7">
-      <div ref="chartRef" style="width: 100%; height: 700px;" />
+      <div ref="chartRef" style="width: 100%; height: 600px;" />
     </div>
   </div>
 </template>

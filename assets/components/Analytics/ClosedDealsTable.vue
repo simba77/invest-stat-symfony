@@ -19,7 +19,7 @@ const dealsGroup = useDealsGroup()
 
 <template>
   <DataTable
-    v-model:expandedRows="dealsGroup.openedGroups.value"
+    v-model:expanded-rows="dealsGroup.openedGroups.value"
     :value="assets"
     data-key="groupData.ticker"
     table-style="min-width: 60rem"
