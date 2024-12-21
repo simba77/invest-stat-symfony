@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Domain\Shared\CreatedByProvider;
+use App\Domain\Shared\CreatedDateProvider;
+use App\Domain\Shared\CreatedDateProviderInterface;
+use App\Domain\Shared\CreatedUserProviderInterface;
+use App\Domain\Shared\UpdatedByProvider;
+use App\Domain\Shared\UpdatedDateProvider;
+use App\Domain\Shared\UpdatedDateProviderInterface;
+use App\Domain\Shared\UpdatedUserProviderInterface;
 use App\Repository\DealRepository;
 use App\Services\Deals\DealStatus;
 use App\Services\Deals\DealType;
-use App\Shared\CreatedByProvider;
-use App\Shared\CreatedDateProvider;
-use App\Shared\CreatedDateProviderInterface;
-use App\Shared\CreatedUserProviderInterface;
-use App\Shared\UpdatedByProvider;
-use App\Shared\UpdatedDateProvider;
-use App\Shared\UpdatedDateProviderInterface;
-use App\Shared\UpdatedUserProviderInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 

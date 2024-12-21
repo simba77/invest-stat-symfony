@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Domain\Deposits\Deposit;
+use App\Domain\Deposits\DepositAccount;
 use App\Entity\Account;
 use App\Entity\Deal;
-use App\Entity\Deposit;
-use App\Entity\DepositAccount;
 use App\Entity\Investment;
 use App\Entity\Statistic;
 use App\Entity\User;

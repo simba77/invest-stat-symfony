@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Domain\Deposits;
 
 use App\Domain\Shared\CreatedByProvider;
 use App\Domain\Shared\CreatedDateProvider;
@@ -12,13 +12,14 @@ use App\Domain\Shared\UpdatedByProvider;
 use App\Domain\Shared\UpdatedDateProvider;
 use App\Domain\Shared\UpdatedDateProviderInterface;
 use App\Domain\Shared\UpdatedUserProviderInterface;
-use App\Repository\DividendRepository;
+use App\Entity\User;
+use App\Infrastructure\Persistence\Repository\DepositRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: DividendRepository::class)]
-#[ORM\Table(name: 'dividends')]
-class Dividend implements
+#[ORM\Entity(repositoryClass: DepositRepository::class)]
+#[ORM\Table(name: 'deposits')]
+class Deposit implements
     CreatedDateProviderInterface,
     UpdatedDateProviderInterface,
     CreatedUserProviderInterface,
@@ -34,39 +35,34 @@ class Dividend implements
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2)]
+    private ?string $sum = null;
+
+    #[ORM\Column]
+    private ?int $type = null;
+
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Account $account = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $ticker = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $stockMarket = null;
-
-    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4)]
-    private ?string $amount = null;
+    private ?DepositAccount $depositAccount = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
     public function __construct(
-        ?User $user,
-        ?Account $account,
-        ?string $ticker,
-        ?string $stockMarket,
-        ?string $amount,
-        ?\DateTimeInterface $date
+        string $sum,
+        int $type,
+        User $user,
+        DepositAccount $depositAccount,
+        \DateTimeInterface $date
     ) {
+        $this->sum = $sum;
+        $this->type = $type;
         $this->user = $user;
-        $this->account = $account;
-        $this->ticker = $ticker;
-        $this->stockMarket = $stockMarket;
-        $this->amount = $amount;
+        $this->depositAccount = $depositAccount;
         $this->date = $date;
     }
 
@@ -74,6 +70,30 @@ class Dividend implements
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getSum(): ?string
+    {
+        return $this->sum;
+    }
+
+    public function setSum(string $sum): static
+    {
+        $this->sum = $sum;
+
+        return $this;
+    }
+
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    public function setType(int $type): static
+    {
+        $this->type = $type;
+
+        return $this;
     }
 
     public function getUser(): ?User
@@ -88,50 +108,14 @@ class Dividend implements
         return $this;
     }
 
-    public function getAccount(): ?Account
+    public function getDepositAccount(): ?DepositAccount
     {
-        return $this->account;
+        return $this->depositAccount;
     }
 
-    public function setAccount(?Account $account): static
+    public function setDepositAccount(?DepositAccount $depositAccount): static
     {
-        $this->account = $account;
-
-        return $this;
-    }
-
-    public function getTicker(): ?string
-    {
-        return $this->ticker;
-    }
-
-    public function setTicker(string $ticker): static
-    {
-        $this->ticker = $ticker;
-
-        return $this;
-    }
-
-    public function getStockMarket(): ?string
-    {
-        return $this->stockMarket;
-    }
-
-    public function setStockMarket(string $stockMarket): static
-    {
-        $this->stockMarket = $stockMarket;
-
-        return $this;
-    }
-
-    public function getAmount(): ?string
-    {
-        return $this->amount;
-    }
-
-    public function setAmount(string $amount): static
-    {
-        $this->amount = $amount;
+        $this->depositAccount = $depositAccount;
 
         return $this;
     }

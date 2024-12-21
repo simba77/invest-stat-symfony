@@ -5,6 +5,13 @@ controllers:
   type: attribute
   prefix: '/api'
 
+controllersNew:
+  resource:
+    path: ../src/Application/Controller
+    namespace: App\Application\Controller
+  type: attribute
+  prefix: '/api'
+
 spa:
   controller: App\Controller\SpaController::index
   path: '/{page}'

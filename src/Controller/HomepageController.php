@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Domain\Deposits\Deposit;
+use App\Domain\Deposits\Deposits;
 use App\Entity\Deal;
-use App\Entity\Deposit;
 use App\Entity\Investment;
 use App\Entity\User;
 use App\Services\AccountService;
 use App\Services\Deals\DealData;
-use App\Services\DepositsService;
 use App\Services\MarketData\Currencies\CurrencyService;
 use App\Services\StatisticService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,7 +27,7 @@ class HomepageController extends AbstractController
         private readonly CurrencyService $currencyService,
         private readonly EntityManagerInterface $entityManager,
         private readonly AccountService $accountService,
-        private readonly DepositsService $depositsService,
+        private readonly Deposits $depositsService,
         private readonly StatisticService $statisticService
     ) {
     }

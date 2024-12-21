@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Domain\Shared\CreatedDateProvider;
+use App\Domain\Shared\CreatedDateProviderInterface;
+use App\Domain\Shared\UpdatedDateProvider;
+use App\Domain\Shared\UpdatedDateProviderInterface;
 use App\Repository\FutureRepository;
-use App\Shared\CreatedDateProvider;
-use App\Shared\CreatedDateProviderInterface;
-use App\Shared\UpdatedDateProvider;
-use App\Shared\UpdatedDateProviderInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
