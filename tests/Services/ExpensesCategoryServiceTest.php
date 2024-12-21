@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Services;
 
-use App\Entity\ExpensesCategory;
+use App\Domain\Expenses\ExpensesCategory;
+use App\Domain\Expenses\ExpensesCategoryService;
 use App\Entity\User;
+use App\Infrastructure\Persistence\Repository\ExpensesCategoryRepository;
 use App\Models\ExpensesCategoryListItem;
 use App\Models\ExpensesCategoryListResponse;
-use App\Repository\ExpensesCategoryRepository;
-use App\Services\ExpensesCategoryService;
 use Doctrine\Common\Collections\Criteria;
 use PHPUnit\Framework\TestCase;
 

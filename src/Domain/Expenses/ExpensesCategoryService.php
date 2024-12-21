@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Services;
+namespace App\Domain\Expenses;
 
-use App\Entity\Expense;
+use App\Application\Response\DTO\Expenses\ExpenseCategoryDTO;
+use App\Application\Response\DTO\Expenses\ExpenseResponseDTO;
 use App\Entity\User;
-use App\Repository\ExpensesCategoryRepository;
-use App\Response\DTO\Expenses\ExpenseCategoryDTO;
-use App\Response\DTO\Expenses\ExpenseResponseDTO;
+use App\Infrastructure\Persistence\Repository\ExpensesCategoryRepository;
 use Doctrine\Common\Collections\Criteria;
 
 class ExpensesCategoryService

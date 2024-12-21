@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Controller\Investments;
 
 use App\Entity\Account;
-use App\Entity\Expense;
 use App\Entity\Investment;
 use App\Entity\User;
-use App\Request\DTO\Expenses\CreateExpenseRequestDTO;
 use App\Request\DTO\Investments\InvestmentRequestDTO;
 use App\Services\AccountService;
 use App\Services\InvestmentsService;
