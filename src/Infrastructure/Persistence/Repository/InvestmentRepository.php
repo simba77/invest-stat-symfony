@@ -12,11 +12,6 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Investment>
- *
- * @method Investment|null find($id, $lockMode = null, $lockVersion = null)
- * @method Investment|null findOneBy(array $criteria, array $orderBy = null)
- * @method Investment[]    findAll()
- * @method Investment[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class InvestmentRepository extends ServiceEntityRepository
 {

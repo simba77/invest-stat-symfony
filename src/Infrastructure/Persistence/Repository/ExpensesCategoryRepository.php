@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Infrastructure\Persistence\Repository;
 
 use App\Domain\Expenses\ExpensesCategory;
@@ -8,11 +10,6 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<ExpensesCategory>
- *
- * @method ExpensesCategory|null find($id, $lockMode = null, $lockVersion = null)
- * @method ExpensesCategory|null findOneBy(array $criteria, array $orderBy = null)
- * @method ExpensesCategory[]    findAll()
- * @method ExpensesCategory[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class ExpensesCategoryRepository extends ServiceEntityRepository
 {
@@ -38,29 +35,4 @@ class ExpensesCategoryRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
-//    /**
-//     * @return ExpensesCategory[] Returns an array of ExpensesCategory objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?ExpensesCategory
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

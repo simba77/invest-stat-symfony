@@ -6,6 +6,7 @@ namespace App\Infrastructure\Persistence\Doctrine\Listener;
 
 use App\Domain\Shared\CreatedDateProviderInterface;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
+use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Psr\Clock\ClockInterface;
@@ -24,6 +25,9 @@ final class CreatedDateListener
     ) {
     }
 
+    /**
+     * @param PrePersistEventArgs $event
+     */
     public function prePersist(LifecycleEventArgs $event): void
     {
         $target = $event->getObject();

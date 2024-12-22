@@ -10,11 +10,6 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Future>
- *
- * @method Future|null find($id, $lockMode = null, $lockVersion = null)
- * @method Future|null findOneBy(array $criteria, array $orderBy = null)
- * @method Future[]    findAll()
- * @method Future[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class FutureRepository extends ServiceEntityRepository
 {

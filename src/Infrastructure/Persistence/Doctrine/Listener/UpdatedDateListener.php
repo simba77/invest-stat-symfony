@@ -6,6 +6,7 @@ namespace App\Infrastructure\Persistence\Doctrine\Listener;
 
 use App\Domain\Shared\UpdatedDateProviderInterface;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Psr\Clock\ClockInterface;
@@ -23,6 +24,9 @@ final class UpdatedDateListener
     ) {
     }
 
+    /**
+     * @param PreUpdateEventArgs $event
+     */
     public function preUpdate(LifecycleEventArgs $event): void
     {
         $target = $event->getObject();

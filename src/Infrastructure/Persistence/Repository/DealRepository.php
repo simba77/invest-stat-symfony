@@ -19,11 +19,6 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Deal>
- *
- * @method Deal|null find($id, $lockMode = null, $lockVersion = null)
- * @method Deal|null findOneBy(array $criteria, array $orderBy = null)
- * @method Deal[]    findAll()
- * @method Deal[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class DealRepository extends ServiceEntityRepository
 {
@@ -175,7 +170,8 @@ class DealRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getTickersByStockMarket(string $stockMarket)
+    /** @return list<array{ticker: string}> */
+    public function getTickersByStockMarket(string $stockMarket): array
     {
         return $this->createQueryBuilder('d')
             ->select('d.ticker')
@@ -188,7 +184,8 @@ class DealRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getAllTickersByStockMarket(string $stockMarket)
+    /** @return list<array{ticker: string}> */
+    public function getAllTickersByStockMarket(string $stockMarket): array
     {
         return $this->createQueryBuilder('d')
             ->select('d.ticker')
@@ -199,7 +196,8 @@ class DealRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getAllActiveFigi()
+    /** @return list<array{ticker: string, stockMarket: string, figi: string}> */
+    public function getAllActiveFigi(): array
     {
         return $this->createQueryBuilder('d')
             ->select([

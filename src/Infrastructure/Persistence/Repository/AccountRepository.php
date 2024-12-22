@@ -11,11 +11,6 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Account>
- *
- * @method Account|null find($id, $lockMode = null, $lockVersion = null)
- * @method Account|null findOneBy(array $criteria, array $orderBy = null)
- * @method Account[]    findAll()
- * @method Account[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class AccountRepository extends ServiceEntityRepository
 {
@@ -56,9 +51,9 @@ class AccountRepository extends ServiceEntityRepository
     /**
      * @param int $id
      * @param int $userId
-     * @return array{account: Account, deposits_sum: string}
+     * @return array{account: Account, deposits_sum: string} | null
      */
-    public function findByUserAndIdWithDeposits(int $id, int $userId)
+    public function findByUserAndIdWithDeposits(int $id, int $userId): ?array
     {
         return $this->createQueryBuilder('a')
             ->select('a as account')

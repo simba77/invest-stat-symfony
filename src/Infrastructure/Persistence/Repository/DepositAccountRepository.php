@@ -11,11 +11,6 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<DepositAccount>
- *
- * @method DepositAccount|null find($id, $lockMode = null, $lockVersion = null)
- * @method DepositAccount|null findOneBy(array $criteria, array $orderBy = null)
- * @method DepositAccount[]    findAll()
- * @method DepositAccount[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class DepositAccountRepository extends ServiceEntityRepository
 {
@@ -24,6 +19,7 @@ class DepositAccountRepository extends ServiceEntityRepository
         parent::__construct($registry, DepositAccount::class);
     }
 
+    /** @return list<array{id: int, name: string, balance: string, profit: string}> */
     public function getDepositAccountsWithSummary(User $user): array
     {
         $conn = $this->getEntityManager()->getConnection();

@@ -7,6 +7,7 @@ namespace App\Infrastructure\Persistence\Doctrine\Listener;
 use App\Domain\Shared\CreatedUserProviderInterface;
 use App\Domain\Shared\User;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
+use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -19,11 +20,14 @@ final class CreatedByListener
     ) {
     }
 
+    /**
+     * @param PrePersistEventArgs $event
+     */
     public function prePersist(LifecycleEventArgs $event): void
     {
         $target = $event->getObject();
 
-        /** @var User $user */
+        /** @var ?User $user */
         $user = $this->token->getToken()?->getUser();
 
         if ($target instanceof CreatedUserProviderInterface && $user) {

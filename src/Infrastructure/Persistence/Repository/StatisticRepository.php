@@ -6,15 +6,11 @@ namespace App\Infrastructure\Persistence\Repository;
 
 use App\Domain\Investments\Analytics\Statistic;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Statistic>
- *
- * @method Statistic|null find($id, $lockMode = null, $lockVersion = null)
- * @method Statistic|null findOneBy(array $criteria, array $orderBy = null)
- * @method Statistic[]    findAll()
- * @method Statistic[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class StatisticRepository extends ServiceEntityRepository
 {
@@ -23,6 +19,10 @@ class StatisticRepository extends ServiceEntityRepository
         parent::__construct($registry, Statistic::class);
     }
 
+    /**
+     * @return list<array{balance: string, usd_balance: string, investments: string, current_value: string, profit: string, date: string}>
+     * @throws Exception
+     */
     public function getLatestStatistic(): array
     {
         $connection = $this->getEntityManager()->getConnection();
@@ -35,6 +35,10 @@ class StatisticRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
     }
 
+    /**
+     * @return list<array{balance: string, usd_balance: string, investments: string, current_value: string, profit: string, date: string}>
+     * @throws Exception
+     */
     public function getStatisticByYears(): array
     {
         $connection = $this->getEntityManager()->getConnection();

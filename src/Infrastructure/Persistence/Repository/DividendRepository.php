@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Infrastructure\Persistence\Repository;
 
 use App\Domain\Investments\Operations\Dividend;
@@ -8,11 +10,6 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Dividend>
- *
- * @method Dividend|null find($id, $lockMode = null, $lockVersion = null)
- * @method Dividend|null findOneBy(array $criteria, array $orderBy = null)
- * @method Dividend[]    findAll()
- * @method Dividend[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class DividendRepository extends ServiceEntityRepository
 {
