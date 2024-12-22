@@ -12,7 +12,7 @@ use App\Domain\Shared\UpdatedByProvider;
 use App\Domain\Shared\UpdatedDateProvider;
 use App\Domain\Shared\UpdatedDateProviderInterface;
 use App\Domain\Shared\UpdatedUserProviderInterface;
-use App\Entity\User;
+use App\Domain\Shared\User;
 use App\Infrastructure\Persistence\Repository\DepositAccountRepository;
 use Doctrine\ORM\Mapping as ORM;
 

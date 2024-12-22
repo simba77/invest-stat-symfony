@@ -7,7 +7,7 @@ namespace App\Application\Controller\Deposits;
 use App\Application\Request\DTO\Deposits\CreateAccountRequestDTO;
 use App\Domain\Deposits\DepositAccount;
 use App\Domain\Deposits\Deposits;
-use App\Entity\User;
+use App\Domain\Shared\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

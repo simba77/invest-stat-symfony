@@ -9,7 +9,7 @@ use App\Application\Response\DTO\Deposits\DepositAccountListItemDTO;
 use App\Application\Response\DTO\Deposits\DepositAccountSummaryListItemDTO;
 use App\Application\Response\DTO\Deposits\DepositEditFormDTO;
 use App\Application\Response\DTO\Deposits\DepositListItemDTO;
-use App\Entity\User;
+use App\Domain\Shared\User;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 

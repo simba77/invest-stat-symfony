@@ -6,7 +6,7 @@ namespace App\Domain\Expenses;
 
 use App\Application\Response\DTO\Expenses\ExpenseCategoryDTO;
 use App\Application\Response\DTO\Expenses\ExpenseResponseDTO;
-use App\Entity\User;
+use App\Domain\Shared\User;
 use App\Infrastructure\Persistence\Repository\ExpensesCategoryRepository;
 use Doctrine\Common\Collections\Criteria;
 

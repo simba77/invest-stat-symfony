@@ -9,7 +9,7 @@ use App\Application\Request\DTO\Deposits\UpdateDepositRequestDTO;
 use App\Domain\Deposits\Deposit;
 use App\Domain\Deposits\DepositAccount;
 use App\Domain\Deposits\Deposits;
-use App\Entity\User;
+use App\Domain\Shared\User;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

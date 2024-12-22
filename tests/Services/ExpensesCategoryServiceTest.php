@@ -6,7 +6,7 @@ namespace App\Tests\Services;
 
 use App\Domain\Expenses\ExpensesCategory;
 use App\Domain\Expenses\ExpensesCategoryService;
-use App\Entity\User;
+use App\Domain\Shared\User;
 use App\Infrastructure\Persistence\Repository\ExpensesCategoryRepository;
 use App\Models\ExpensesCategoryListItem;
 use App\Models\ExpensesCategoryListResponse;

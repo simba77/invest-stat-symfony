@@ -8,7 +8,7 @@ use App\Application\Request\DTO\Expenses\CreateExpenseRequestDTO;
 use App\Domain\Expenses\Expense;
 use App\Domain\Expenses\ExpensesCategory;
 use App\Domain\Expenses\ExpenseService;
-use App\Entity\User;
+use App\Domain\Shared\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Expenses;
 
 use App\Application\Response\DTO\Expenses\ExpenseResponseDTO;
-use App\Entity\User;
+use App\Domain\Shared\User;
 use App\Infrastructure\Persistence\Repository\ExpenseRepository;
 
 class ExpenseService

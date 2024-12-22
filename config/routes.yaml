@@ -1,19 +1,12 @@
 controllers:
   resource:
-    path: ../src/Controller/
-    namespace: App\Controller
-  type: attribute
-  prefix: '/api'
-
-controllersNew:
-  resource:
     path: ../src/Application/Controller
     namespace: App\Application\Controller
   type: attribute
   prefix: '/api'
 
 spa:
-  controller: App\Controller\SpaController::index
+  controller: App\Application\Controller\Shared\SpaController::index
   path: '/{page}'
   requirements:
     page: '^(?!api).*'
