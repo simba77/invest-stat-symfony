@@ -38,31 +38,31 @@ class Dividend implements
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
+    private User $user;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Account $account = null;
+    private Account $account;
 
     #[ORM\Column(length: 255)]
-    private ?string $ticker = null;
+    private string $ticker;
 
     #[ORM\Column(length: 255)]
-    private ?string $stockMarket = null;
+    private string $stockMarket;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4)]
-    private ?string $amount = null;
+    private string $amount;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $date = null;
+    private \DateTimeInterface $date;
 
     public function __construct(
-        ?User $user,
-        ?Account $account,
-        ?string $ticker,
-        ?string $stockMarket,
-        ?string $amount,
-        ?\DateTimeInterface $date
+        User $user,
+        Account $account,
+        string $ticker,
+        string $stockMarket,
+        string $amount,
+        \DateTimeInterface $date
     ) {
         $this->user = $user;
         $this->account = $account;

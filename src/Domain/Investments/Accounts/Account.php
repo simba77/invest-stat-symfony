@@ -39,14 +39,17 @@ class Account implements
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?int $userId = null;
+    private int $userId;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $name;
 
     #[ORM\Column(nullable: true)]
     private ?int $sort = null;
 
+    /**
+     * @var Collection<int, Investment>
+     */
     #[ORM\OneToMany(mappedBy: 'account', targetEntity: Investment::class)]
     private Collection $investments;
 
@@ -68,6 +71,9 @@ class Account implements
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
     private ?string $futuresCommission = null;
 
+    /**
+     * @var Collection<int, Deal>
+     */
     #[ORM\OneToMany(mappedBy: 'account', targetEntity: Deal::class)]
     private Collection $deals;
 

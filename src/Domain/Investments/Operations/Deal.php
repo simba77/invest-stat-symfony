@@ -41,35 +41,35 @@ class Deal implements
 
     #[ORM\ManyToOne(inversedBy: 'deals')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
+    private User $user;
 
     #[ORM\ManyToOne(inversedBy: 'deals')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Account $account = null;
+    private Account $account;
 
     #[ORM\Column(length: 255)]
-    private ?string $ticker = null;
+    private string $ticker;
 
     #[ORM\Column(length: 255)]
-    private ?string $stockMarket = null;
+    private string $stockMarket;
 
     #[ORM\Column]
-    private ?int $quantity = null;
+    private int $quantity;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4)]
-    private ?string $buyPrice = null;
+    private string $buyPrice;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?string $targetPrice = null;
+    private ?string $targetPrice;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?string $sellPrice = null;
+    private ?string $sellPrice;
 
     #[ORM\Column(type: Types::SMALLINT, enumType: DealStatus::class)]
-    private ?DealStatus $status = null;
+    private DealStatus $status;
 
     #[ORM\Column(type: Types::SMALLINT, enumType: DealType::class)]
-    private ?DealType $type = null;
+    private DealType $type;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $closingDate = null;

@@ -28,10 +28,10 @@ class Bond implements
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $ticker = null;
+    private string $ticker;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $name;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $shortName = null;
@@ -40,16 +40,16 @@ class Bond implements
     private ?string $latName = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $stockMarket = null;
+    private string $stockMarket;
 
     #[ORM\Column(length: 255)]
-    private ?string $currency = null;
+    private string $currency;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $lotSize = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4)]
-    private ?string $price = null;
+    private string $price;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $stepPrice = null;

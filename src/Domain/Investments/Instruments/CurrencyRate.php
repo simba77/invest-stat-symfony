@@ -25,13 +25,13 @@ class CurrencyRate implements CreatedDateProviderInterface, UpdatedDateProviderI
     private ?int $id = null;
 
     #[ORM\Column(length: 10)]
-    private ?string $baseCurrency = null;
+    private string $baseCurrency;
 
     #[ORM\Column(length: 10)]
-    private ?string $targetCurrency = null;
+    private string $targetCurrency;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4)]
-    private ?string $rate = null;
+    private string $rate;
 
     public function __construct(string $baseCurrency, string $targetCurrency, string $rate)
     {

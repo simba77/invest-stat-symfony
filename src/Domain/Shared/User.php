@@ -26,18 +26,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 180, unique: true)]
     #[Groups(['authUserData'])]
-    private ?string $email = null;
+    private string $email = '';
 
+    /** @var list<string> */
     #[ORM\Column]
     private array $roles = [];
 
     #[ORM\Column]
-    private ?string $password = null;
+    private string $password = '';
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['authUserData'])]
     private ?string $name = null;
 
+    /**
+     * @var Collection<int, Deal>
+     */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Deal::class, orphanRemoval: true)]
     private Collection $deals;
 
@@ -96,6 +100,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
+    /**
+     * @param list<string> $roles
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;

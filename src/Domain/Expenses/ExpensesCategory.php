@@ -36,13 +36,16 @@ class ExpensesCategory implements
     private ?int $id = null;
 
     #[ORM\Column(name: 'user_id')]
-    private ?int $userId = null;
+    private int $userId;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Groups(['expensesForm'])]
-    private ?string $name = null;
+    private string $name;
 
+    /**
+     * @var Collection<int, Expense>
+     */
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Expense::class, fetch: 'EAGER')]
     private Collection $expenses;
 

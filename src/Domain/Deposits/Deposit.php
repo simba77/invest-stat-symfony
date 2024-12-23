@@ -36,21 +36,21 @@ class Deposit implements
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2)]
-    private ?string $sum = null;
+    private string $sum;
 
     #[ORM\Column]
-    private ?int $type = null;
+    private int $type;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
+    private User $user;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?DepositAccount $depositAccount = null;
+    private DepositAccount $depositAccount;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $date = null;
+    private \DateTimeInterface $date;
 
     public function __construct(
         string $sum,

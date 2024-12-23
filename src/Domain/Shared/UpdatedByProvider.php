@@ -16,7 +16,7 @@ trait UpdatedByProvider
      * @psalm-suppress PropertyNotSetInConstructor
      */
     #[ORM\Column(name: 'updated_by', type: 'integer', nullable: true)]
-    private int $updatedBy;
+    private ?int $updatedBy;
 
     public function updatedBy(): ?int
     {

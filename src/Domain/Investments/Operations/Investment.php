@@ -36,13 +36,13 @@ class Investment implements
     private ?int $id = null;
 
     #[ORM\Column(name: 'user_id')]
-    private ?int $userId = null;
+    private int $userId;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2)]
-    private ?string $sum = null;
+    private string $sum;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $date = null;
+    private \DateTimeInterface $date;
 
     #[ORM\ManyToOne(targetEntity: Account::class, inversedBy: 'investments')]
     private ?Account $account;

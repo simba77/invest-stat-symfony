@@ -32,7 +32,7 @@ trait CreatedDateProvider
     /**
      * @see CreatedDateProviderInterface::wasCreatedAt()
      */
-    public function wasCreatedAt(\DateTimeInterface | ClockInterface $date): void
+    public function wasCreatedAt(\DateTimeImmutable | \DateTime | ClockInterface $date): void
     {
         if ($date instanceof ClockInterface) {
             $date = $date->now();

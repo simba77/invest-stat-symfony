@@ -14,17 +14,11 @@ interface CreatedDateProviderInterface
 {
     /**
      * Returns the creation date of the object.
-     *
-     * @return \DateTimeImmutable
      */
     public function createdAt(): \DateTimeImmutable;
 
     /**
      * The method forcibly updates the creation date of the object.
-     *
-     * @param \DateTimeImmutable|ClockInterface $date
-     *
-     * @return void
      */
-    public function wasCreatedAt(\DateTimeImmutable | ClockInterface $date): void;
+    public function wasCreatedAt(\DateTimeImmutable | \DateTime | ClockInterface $date): void;
 }

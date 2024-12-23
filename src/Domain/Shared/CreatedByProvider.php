@@ -16,7 +16,7 @@ trait CreatedByProvider
      * @psalm-suppress PropertyNotSetInConstructor
      */
     #[ORM\Column(name: 'created_by', type: 'integer', nullable: true)]
-    private int $createdBy;
+    private ?int $createdBy;
 
     public function createdBy(): ?int
     {

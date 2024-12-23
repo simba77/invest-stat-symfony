@@ -33,13 +33,13 @@ class Expense implements
     private ?int $id = null;
 
     #[ORM\Column(name: 'user_id')]
-    private ?int $userId;
+    private int $userId;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $name;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2)]
-    private ?string $sum = null;
+    private string $sum;
 
     #[ORM\ManyToOne(targetEntity: ExpensesCategory::class, inversedBy: 'expenses')]
     private ExpensesCategory $category;
