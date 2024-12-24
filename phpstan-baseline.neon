@@ -25,12 +25,6 @@ parameters:
 			path: src/Application/Command/TInvestUpdateShares.php
 
 		-
-			message: '#^Variable \$response in PHPDoc tag @var does not match any variable in the foreach loop\: \$item$#'
-			identifier: varTag.differentVariable
-			count: 1
-			path: src/Application/Command/TestApiCommand.php
-
-		-
 			message: '#^Method App\\Application\\Controller\\Shared\\AuthController\:\:logout\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
