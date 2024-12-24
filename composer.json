@@ -87,6 +87,9 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
+        "cs-baseline": [
+          "@php vendor/bin/phpstan analyse --generate-baseline --memory-limit=2G"
+        ],
         "cs-check": [
           "@php vendor/bin/phpstan analyse --memory-limit=2G"
         ]

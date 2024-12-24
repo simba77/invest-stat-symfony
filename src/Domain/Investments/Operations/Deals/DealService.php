@@ -113,7 +113,7 @@ class DealService
         }
 
         // If the number of securities in the database is less than the quantity need to sell.
-        if ($needToSell > 0 && isset($deal)) {
+        if ($needToSell > 0) {
             $additionalDeal = clone $deal;
             $additionalDeal->setQuantity($needToSell);
             $additionalDeal->setStatus(DealStatus::Closed);
@@ -122,10 +122,8 @@ class DealService
             $this->entityManager->persist($additionalDeal);
         }
 
-        if (isset($deal)) {
-            $this->changeAccountBalance($deal, $dto);
-        }
 
+        $this->changeAccountBalance($deal, $dto);
         $this->accountCalculator->recalculateBalanceForAccount($account);
 
         $this->entityManager->flush();
@@ -236,6 +234,8 @@ class DealService
             $buyFullPrice = bcmul($buyLotPrice, (string) $dealRequestDTO->quantity, 4);
             return bcsub($sellFullPrice, $buyFullPrice);
         }
+
+        // @phpstan-ignore-next-line
         return '0';
     }
 

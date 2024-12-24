@@ -8,6 +8,7 @@ use App\Application\Response\DTO\Investments\Operations\SummaryForGroupDTO;
 
 class SummaryForGroup
 {
+    /** @var array<string, array<string, array<string, list<DealData>>>> | array{} */
     public array $deals = [];
 
     public function addDeal(string $status, string $type, string $currency, DealData $deal): void
@@ -15,6 +16,9 @@ class SummaryForGroup
         $this->deals[$status][$type][$currency][] = $deal;
     }
 
+    /**
+     * @return array<string, array<string, array<string, SummaryForGroupDTO>>> | array{}
+     */
     public function getSummary(): array
     {
         $summary = [];

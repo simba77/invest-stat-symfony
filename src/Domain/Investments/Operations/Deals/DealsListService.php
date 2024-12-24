@@ -23,6 +23,7 @@ class DealsListService
     ) {
     }
 
+    /** @return array<string, mixed> */
     public function getListWithGroups(User $user, Account $account): array
     {
         $result = [];
@@ -72,6 +73,10 @@ class DealsListService
         ];
     }
 
+    /**
+     * @param array<string, mixed> $deal
+     * @return array{code: string, name: string}
+     */
     private function getInstrumentType(array $deal): array
     {
         $type = match (true) {
@@ -103,6 +108,10 @@ class DealsListService
         return $types[$type];
     }
 
+    /**
+     * @param array<string, mixed> $deal
+     * @return array{code: string, name: string}
+     */
     private function getCurrency(array $deal): array
     {
         $currency = $deal['shareCurrency'] ?? $deal['bondCurrency'] ?? $deal['futureCurrency'] ?? 'RUB';
@@ -120,6 +129,10 @@ class DealsListService
         return $currencies[$currency];
     }
 
+    /**
+     * @param array<string, mixed> $deal
+     * @return array{code: string, name: string}
+     */
     private function getStatus(array $deal): array
     {
         $status = $deal['deal']->getStatus();
@@ -142,6 +155,10 @@ class DealsListService
         return $statuses[$status->name];
     }
 
+    /**
+     * @param array<string, mixed> $result
+     * @return array<string, mixed>
+     */
     private function resortTickers(array $result): array
     {
         foreach ($result as $statusCode => $groupByStatus) {
@@ -162,6 +179,9 @@ class DealsListService
         return $result;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getFullPortfolio(User $user): array
     {
         $result = [];

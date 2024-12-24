@@ -20,6 +20,9 @@ class Deposits
     ) {
     }
 
+    /**
+     * @return array<DepositListItemDTO>
+     */
     public function getAllDepositsForUser(User $user): array
     {
         $deposits = $this->entityManager->getRepository(Deposit::class)->findBy(['user' => $user], ['date' => Criteria::DESC]);
@@ -36,6 +39,9 @@ class Deposits
         return $result;
     }
 
+    /**
+     * @return array<DepositAccountListItemDTO>
+     */
     public function getDepositAccountsForUser(User $user): array
     {
         $accounts = $this->entityManager->getRepository(DepositAccount::class)->findBy(['user' => $user]);

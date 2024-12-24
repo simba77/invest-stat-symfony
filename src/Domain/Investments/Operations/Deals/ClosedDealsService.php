@@ -22,6 +22,7 @@ class ClosedDealsService
     ) {
     }
 
+    /** @return array<string, mixed> */
     public function getDeals(User $user, ?DealsFilterRequestDTO $filterRequestDTO): array
     {
         $dealsByTickers = [];
@@ -61,6 +62,7 @@ class ClosedDealsService
         return ['deals' => array_values($dealsByTickers), 'summary' => $summary];
     }
 
+    /** @return array<string, mixed> */
     public function getMonthlyDealsStat(User $user, ?DealsFilterRequestDTO $filterRequestDTO): array
     {
         $profitByMonths = [];

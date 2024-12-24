@@ -56,6 +56,9 @@ class ClosedDealsGroupedByTicker
         );
     }
 
+    /**
+     * @return ClosedDealInGroupDTO[]
+     */
     public function getDeals(): array
     {
         return array_map(

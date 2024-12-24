@@ -9,8 +9,10 @@ use App\Domain\Investments\Instruments\Securities\SecurityTypeEnum;
 
 class BondStrategy implements DealStrategyInterface
 {
-    public function __construct(private readonly array $deal, Account $account)
-    {
+    public function __construct(
+        private readonly array $deal,
+        public Account $account
+    ) {
     }
 
     public function getName(): string

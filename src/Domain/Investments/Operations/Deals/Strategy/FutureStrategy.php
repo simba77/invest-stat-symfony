@@ -15,8 +15,10 @@ class FutureStrategy implements DealStrategyInterface
     /**
      * @inheritDoc
      */
-    public function __construct(private readonly array $deal, Account $account)
-    {
+    public function __construct(
+        private readonly array $deal,
+        public Account $account
+    ) {
         $this->futuresMultipliers = new FuturesMultipliers();
     }
 
