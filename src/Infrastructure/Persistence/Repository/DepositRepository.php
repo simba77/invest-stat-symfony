@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\Repository;
 
 use App\Domain\Deposits\Deposit;
+use App\Domain\Deposits\DepositRepositoryInterface;
 use App\Domain\Shared\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Deposit>
  */
-class DepositRepository extends ServiceEntityRepository
+class DepositRepository extends ServiceEntityRepository implements DepositRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -29,5 +31,15 @@ class DepositRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
 
         return (string) $data['sum_of_deposits'];
+    }
+
+    public function getDepositsForUser(User $user): array
+    {
+        return $this->findBy(['user' => $user], ['date' => Criteria::DESC]);
+    }
+
+    public function getDepositByIdAndUser(int $id, User $user): ?Deposit
+    {
+        return $this->findOneBy(['id' => $id, 'user' => $user]);
     }
 }

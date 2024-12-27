@@ -3,6 +3,10 @@
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+
+imports:
+  - { resource: services/*.yaml }
+
 parameters:
   app.expenses.salary: '%env(APP_EXPENSES_SALARY)%'
   app.tinkoff.apiKey: '%env(TINVEST_API_KEY)%'
@@ -27,8 +31,8 @@ services:
 
 
   # Currency rates provider
-  App\Services\MarketData\Currencies\CurrencyProviderInterface:
-    class: App\Services\MarketData\Currencies\MoexCurrencyProvider
+  App\Domain\Investments\Instruments\Currencies\CurrencyProviderInterface:
+    class: App\Domain\Investments\Instruments\Currencies\MoexCurrencyProvider
 
-  App\Services\MarketData\Securities\SharesProviderInterface:
-    class: App\Services\MarketData\Securities\MoexSharesProvider
+  App\Domain\Investments\Instruments\Securities\SharesProviderInterface:
+    class: App\Domain\Investments\Instruments\Securities\MoexSharesProvider

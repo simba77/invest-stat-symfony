@@ -6,8 +6,10 @@ namespace App\Application\Controller\Deposits;
 
 use App\Application\Request\DTO\Deposits\CreateDepositRequestDTO;
 use App\Application\Request\DTO\Deposits\UpdateDepositRequestDTO;
+use App\Application\Response\Compiler\Deposits\DepositsListItemsCompiler;
 use App\Domain\Deposits\Deposit;
 use App\Domain\Deposits\DepositAccount;
+use App\Domain\Deposits\DepositRepositoryInterface;
 use App\Domain\Deposits\Deposits;
 use App\Domain\Shared\User;
 use Carbon\Carbon;
@@ -24,17 +26,18 @@ class DepositsController extends AbstractController
 {
     public function __construct(
         private readonly Deposits $depositsService,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
+        private readonly DepositRepositoryInterface $depositRepository,
+        private readonly DepositsListItemsCompiler $depositsListCompiler,
     ) {
     }
 
     #[Route('/deposits', name: 'app_deposits_index', methods: ['GET'])]
     public function index(#[CurrentUser] ?User $user): JsonResponse
     {
-        $deposits = $this->depositsService->getAllDepositsForUser($user);
-        return $this->json(['items' => $deposits]);
+        $deposits = $this->depositRepository->getDepositsForUser($user);
+        return $this->json(['items' => $this->depositsListCompiler->compile($deposits)]);
     }
-
 
     #[Route('/deposits/create', name: 'app_deposits_create', methods: ['POST'])]
     public function create(#[CurrentUser] ?User $user, #[MapRequestPayload] CreateDepositRequestDTO $dto): JsonResponse

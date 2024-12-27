@@ -8,35 +8,14 @@ use App\Application\Response\DTO\Deposits\DepositAccountEditFormDTO;
 use App\Application\Response\DTO\Deposits\DepositAccountListItemDTO;
 use App\Application\Response\DTO\Deposits\DepositAccountSummaryListItemDTO;
 use App\Application\Response\DTO\Deposits\DepositEditFormDTO;
-use App\Application\Response\DTO\Deposits\DepositListItemDTO;
 use App\Domain\Shared\User;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityManagerInterface;
 
 class Deposits
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager
+        private readonly DepositAccountRepositoryInterface $depositAccountRepository,
+        private readonly DepositRepositoryInterface $depositRepository,
     ) {
-    }
-
-    /**
-     * @return array<DepositListItemDTO>
-     */
-    public function getAllDepositsForUser(User $user): array
-    {
-        $deposits = $this->entityManager->getRepository(Deposit::class)->findBy(['user' => $user], ['date' => Criteria::DESC]);
-        $result = [];
-        foreach ($deposits as $deposit) {
-            $result[] = new DepositListItemDTO(
-                id:          $deposit->getId(),
-                date:        $deposit->getDate()->format('d.m.Y'),
-                sum:         $deposit->getSum(),
-                typeName:    $deposit->getType() === 1 ? 'Deposit' : 'Percent',
-                accountName: $deposit->getDepositAccount()->getName()
-            );
-        }
-        return $result;
     }
 
     /**
@@ -44,7 +23,7 @@ class Deposits
      */
     public function getDepositAccountsForUser(User $user): array
     {
-        $accounts = $this->entityManager->getRepository(DepositAccount::class)->findBy(['user' => $user]);
+        $accounts = $this->depositAccountRepository->getForUser($user);
         $result = [];
         foreach ($accounts as $account) {
             $result[] = new DepositAccountListItemDTO(
@@ -60,7 +39,7 @@ class Deposits
      */
     public function getDepositAccountsWithSummaryForUser(User $user): array
     {
-        $accounts = $this->entityManager->getRepository(DepositAccount::class)->getDepositAccountsWithSummary($user);
+        $accounts = $this->depositAccountRepository->getWithSummary($user);
         $result = [];
         foreach ($accounts as $account) {
             $result[] = new DepositAccountSummaryListItemDTO(
@@ -75,13 +54,13 @@ class Deposits
 
     public function getDepositAccountForUser(int $id, User $user): ?DepositAccountEditFormDTO
     {
-        $account = $this->entityManager->getRepository(DepositAccount::class)->findOneBy(['id' => $id, 'user' => $user]);
+        $account = $this->depositAccountRepository->getByIdAndUser($id, $user);
         return $account ? new DepositAccountEditFormDTO($account->getId(), $account->getName()) : null;
     }
 
     public function getDepositForUser(int $id, User $user): ?DepositEditFormDTO
     {
-        $deposit = $this->entityManager->getRepository(Deposit::class)->findOneBy(['id' => $id, 'user' => $user]);
+        $deposit = $this->depositRepository->getDepositByIdAndUser($id, $user);
         if ($deposit) {
             return new DepositEditFormDTO(
                 $deposit->getId(),

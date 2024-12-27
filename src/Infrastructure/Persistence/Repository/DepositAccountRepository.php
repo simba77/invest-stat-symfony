@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\Repository;
 
 use App\Domain\Deposits\DepositAccount;
+use App\Domain\Deposits\DepositAccountRepositoryInterface;
 use App\Domain\Shared\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -12,15 +13,19 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<DepositAccount>
  */
-class DepositAccountRepository extends ServiceEntityRepository
+class DepositAccountRepository extends ServiceEntityRepository implements DepositAccountRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, DepositAccount::class);
     }
 
-    /** @return list<array{id: int, name: string, balance: string, profit: string}> */
-    public function getDepositAccountsWithSummary(User $user): array
+    public function getForUser(User $user): array
+    {
+        return $this->findBy(['user' => $user]);
+    }
+
+    public function getWithSummary(User $user): array
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = "select *,
@@ -34,5 +39,10 @@ class DepositAccountRepository extends ServiceEntityRepository
            from deposit_accounts where deposit_accounts.user_id = :user";
 
         return $conn->executeQuery($sql, ['user' => $user->getId()])->fetchAllAssociative();
+    }
+
+    public function getByIdAndUser(int $id, User $user): ?DepositAccount
+    {
+        return $this->findOneBy(['id' => $id, 'user' => $user]);
     }
 }

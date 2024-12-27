@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\Domain\:
+    resource: '%kernel.project_dir%/src/Domain'
+
+  App\Domain\Deposits\DepositRepositoryInterface:
+    class: App\Infrastructure\Persistence\Repository\DepositRepository
+
+  App\Domain\Deposits\DepositAccountRepositoryInterface:
+    class: App\Infrastructure\Persistence\Repository\DepositAccountRepository
