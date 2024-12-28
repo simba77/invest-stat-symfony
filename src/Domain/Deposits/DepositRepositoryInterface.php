@@ -14,4 +14,8 @@ interface DepositRepositoryInterface
     public function getDepositsForUser(User $user): array;
 
     public function getDepositByIdAndUser(int $id, User $user): ?Deposit;
+
+    public function save(Deposit $deposit): void;
+
+    public function remove(Deposit $deposit): void;
 }

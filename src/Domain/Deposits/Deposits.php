@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace App\Domain\Deposits;
 
 use App\Application\Response\DTO\Deposits\DepositAccountSummaryListItemDTO;
-use App\Application\Response\DTO\Deposits\DepositEditFormDTO;
 use App\Domain\Shared\User;
 
 class Deposits
 {
     public function __construct(
         private readonly DepositAccountRepositoryInterface $depositAccountRepository,
-        private readonly DepositRepositoryInterface $depositRepository,
     ) {
     }
 
@@ -32,20 +30,5 @@ class Deposits
             );
         }
         return $result;
-    }
-
-    public function getDepositForUser(int $id, User $user): ?DepositEditFormDTO
-    {
-        $deposit = $this->depositRepository->getDepositByIdAndUser($id, $user);
-        if ($deposit) {
-            return new DepositEditFormDTO(
-                $deposit->getId(),
-                $deposit->getSum(),
-                $deposit->getType(),
-                $deposit->getDepositAccount()->getId(),
-                $deposit->getDate()->format('Y-m-d')
-            );
-        }
-        return null;
     }
 }
