@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Application\Controller\Deposits;
 
 use App\Application\Request\DTO\Deposits\CreateAccountRequestDTO;
+use App\Application\Response\Compiler\Deposits\DepositAccountFormDataCompiler;
+use App\Application\Response\Compiler\Deposits\DepositAccountListItemsCompiler;
 use App\Domain\Deposits\DepositAccount;
-use App\Domain\Deposits\Deposits;
+use App\Domain\Deposits\DepositAccountRepositoryInterface;
 use App\Domain\Shared\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,16 +22,18 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class DepositAccountsController extends AbstractController
 {
     public function __construct(
-        private readonly Deposits $depositsService,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
+        private readonly DepositAccountRepositoryInterface $accountRepository,
+        private readonly DepositAccountListItemsCompiler $depositAccountListItemsCompiler,
+        private readonly DepositAccountFormDataCompiler $depositAccountFormDataCompiler,
     ) {
     }
 
     #[Route('/deposits/accounts', name: 'app_deposit_accounts', methods: ['GET'])]
     public function index(#[CurrentUser] ?User $user): JsonResponse
     {
-        $accounts = $this->depositsService->getDepositAccountsForUser($user);
-        return $this->json(['items' => $accounts]);
+        $accounts = $this->accountRepository->getForUser($user);
+        return $this->json(['items' => $this->depositAccountListItemsCompiler->compile($accounts)]);
     }
 
     #[Route('/deposits/accounts/create', name: 'app_deposit_accounts_create', methods: ['POST'])]
@@ -44,17 +48,17 @@ class DepositAccountsController extends AbstractController
     #[Route('/deposits/accounts/get-form/{id}', name: 'app_deposit_accounts_get_form', methods: ['GET'])]
     public function getForm(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
-        $form = $this->depositsService->getDepositAccountForUser($id, $user);
-        if (! $form) {
+        $account = $this->accountRepository->getByIdAndUser($id, $user);
+        if (! $account) {
             throw $this->createNotFoundException('No accounts found for id ' . $id);
         }
-        return $this->json($form);
+        return $this->json($this->depositAccountFormDataCompiler->compile($account));
     }
 
     #[Route('/deposits/accounts/update/{id}', name: 'app_deposit_accounts_update', methods: ['POST'])]
     public function update(int $id, #[MapRequestPayload] CreateAccountRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
     {
-        $account = $this->entityManager->getRepository(DepositAccount::class)->findOneBy(['user' => $user, 'id' => $id]);
+        $account = $this->accountRepository->getByIdAndUser($id, $user);
         if (! $account) {
             throw $this->createNotFoundException('No accounts found for id ' . $id);
         }
@@ -68,7 +72,7 @@ class DepositAccountsController extends AbstractController
     #[Route('/deposits/accounts/delete/{id}', name: 'app_deposit_accounts_delete', methods: ['POST'])]
     public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
-        $account = $this->entityManager->getRepository(DepositAccount::class)->findOneBy(['user' => $user, 'id' => $id]);
+        $account = $this->accountRepository->getByIdAndUser($id, $user);
         if (! $account) {
             throw $this->createNotFoundException('No accounts found for id ' . $id);
         }

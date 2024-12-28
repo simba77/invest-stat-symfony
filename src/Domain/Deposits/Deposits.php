@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Deposits;
 
-use App\Application\Response\DTO\Deposits\DepositAccountEditFormDTO;
-use App\Application\Response\DTO\Deposits\DepositAccountListItemDTO;
 use App\Application\Response\DTO\Deposits\DepositAccountSummaryListItemDTO;
 use App\Application\Response\DTO\Deposits\DepositEditFormDTO;
 use App\Domain\Shared\User;
@@ -16,22 +14,6 @@ class Deposits
         private readonly DepositAccountRepositoryInterface $depositAccountRepository,
         private readonly DepositRepositoryInterface $depositRepository,
     ) {
-    }
-
-    /**
-     * @return array<DepositAccountListItemDTO>
-     */
-    public function getDepositAccountsForUser(User $user): array
-    {
-        $accounts = $this->depositAccountRepository->getForUser($user);
-        $result = [];
-        foreach ($accounts as $account) {
-            $result[] = new DepositAccountListItemDTO(
-                id:   $account->getId(),
-                name: $account->getName()
-            );
-        }
-        return $result;
     }
 
     /**
@@ -50,12 +32,6 @@ class Deposits
             );
         }
         return $result;
-    }
-
-    public function getDepositAccountForUser(int $id, User $user): ?DepositAccountEditFormDTO
-    {
-        $account = $this->depositAccountRepository->getByIdAndUser($id, $user);
-        return $account ? new DepositAccountEditFormDTO($account->getId(), $account->getName()) : null;
     }
 
     public function getDepositForUser(int $id, User $user): ?DepositEditFormDTO
