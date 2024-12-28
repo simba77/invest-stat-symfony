@@ -10,7 +10,6 @@ use App\Application\Response\Compiler\Deposits\DepositAccountListItemsCompiler;
 use App\Domain\Deposits\DepositAccount;
 use App\Domain\Deposits\DepositAccountRepositoryInterface;
 use App\Domain\Shared\User;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -22,7 +21,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class DepositAccountsController extends AbstractController
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
         private readonly DepositAccountRepositoryInterface $accountRepository,
         private readonly DepositAccountListItemsCompiler $depositAccountListItemsCompiler,
         private readonly DepositAccountFormDataCompiler $depositAccountFormDataCompiler,
@@ -40,8 +38,7 @@ class DepositAccountsController extends AbstractController
     public function create(#[CurrentUser] ?User $user, #[MapRequestPayload] CreateAccountRequestDTO $dto): JsonResponse
     {
         $account = new DepositAccount($dto->name, $user);
-        $this->entityManager->persist($account);
-        $this->entityManager->flush();
+        $this->accountRepository->save($account);
         return $this->json(['success' => true]);
     }
 
@@ -64,8 +61,7 @@ class DepositAccountsController extends AbstractController
         }
 
         $account->setName($dto->name);
-        $this->entityManager->persist($account);
-        $this->entityManager->flush();
+        $this->accountRepository->save($account);
         return $this->json(['success' => true]);
     }
 
@@ -77,8 +73,7 @@ class DepositAccountsController extends AbstractController
             throw $this->createNotFoundException('No accounts found for id ' . $id);
         }
 
-        $this->entityManager->remove($account);
-        $this->entityManager->flush();
+        $this->accountRepository->remove($account);
         return $this->json(['success' => true]);
     }
 }

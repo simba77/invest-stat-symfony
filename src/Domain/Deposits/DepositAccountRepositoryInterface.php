@@ -18,4 +18,8 @@ interface DepositAccountRepositoryInterface
     public function getWithSummary(User $user): array;
 
     public function getByIdAndUser(int $id, User $user): ?DepositAccount;
+
+    public function save(DepositAccount $depositAccount): void;
+
+    public function remove(DepositAccount $depositAccount): void;
 }

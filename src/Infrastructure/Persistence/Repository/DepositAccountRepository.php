@@ -45,4 +45,18 @@ class DepositAccountRepository extends ServiceEntityRepository implements Deposi
     {
         return $this->findOneBy(['id' => $id, 'user' => $user]);
     }
+
+    public function save(DepositAccount $depositAccount): void
+    {
+        $em = $this->getEntityManager();
+        $em->persist($depositAccount);
+        $em->flush();
+    }
+
+    public function remove(DepositAccount $depositAccount): void
+    {
+        $em = $this->getEntityManager();
+        $em->remove($depositAccount);
+        $em->flush();
+    }
 }
