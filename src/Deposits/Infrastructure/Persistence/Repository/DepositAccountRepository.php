@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Persistence\Repository;
+namespace App\Deposits\Infrastructure\Persistence\Repository;
 
-use App\Domain\Deposits\DepositAccount;
-use App\Domain\Deposits\DepositAccountRepositoryInterface;
+use App\Deposits\Domain\DepositAccount;
+use App\Deposits\Domain\DepositAccountRepositoryInterface;
 use App\Domain\Shared\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;

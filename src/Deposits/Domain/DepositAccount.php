@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Deposits;
+namespace App\Deposits\Domain;
 
+use App\Deposits\Infrastructure\Persistence\Repository\DepositAccountRepository;
 use App\Domain\Shared\CreatedByProvider;
 use App\Domain\Shared\CreatedDateProvider;
 use App\Domain\Shared\CreatedDateProviderInterface;
@@ -13,7 +14,6 @@ use App\Domain\Shared\UpdatedDateProvider;
 use App\Domain\Shared\UpdatedDateProviderInterface;
 use App\Domain\Shared\UpdatedUserProviderInterface;
 use App\Domain\Shared\User;
-use App\Infrastructure\Persistence\Repository\DepositAccountRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DepositAccountRepository::class)]

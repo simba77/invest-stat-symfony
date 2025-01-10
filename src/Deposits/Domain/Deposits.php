@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Deposits;
+namespace App\Deposits\Domain;
 
-use App\Application\Response\DTO\Deposits\DepositAccountSummaryListItemDTO;
+use App\Deposits\Application\Response\DTO\DepositAccountSummaryListItemDTO;
 use App\Domain\Shared\User;
 
 class Deposits

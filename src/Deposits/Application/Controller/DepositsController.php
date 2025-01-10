@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Controller\Deposits;
+namespace App\Deposits\Application\Controller;
 
 use App\Application\Request\DTO\Deposits\CreateDepositRequestDTO;
 use App\Application\Request\DTO\Deposits\UpdateDepositRequestDTO;
-use App\Application\Response\Compiler\Deposits\DepositFormDataCompiler;
-use App\Application\Response\Compiler\Deposits\DepositsListItemsCompiler;
-use App\Domain\Deposits\Deposit;
-use App\Domain\Deposits\DepositAccountRepositoryInterface;
-use App\Domain\Deposits\DepositRepositoryInterface;
+use App\Deposits\Application\Response\Compiler\DepositFormDataCompiler;
+use App\Deposits\Application\Response\Compiler\DepositsListItemsCompiler;
+use App\Deposits\Domain\Deposit;
+use App\Deposits\Domain\DepositAccountRepositoryInterface;
+use App\Deposits\Domain\DepositRepositoryInterface;
 use App\Domain\Shared\User;
 use Carbon\Carbon;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

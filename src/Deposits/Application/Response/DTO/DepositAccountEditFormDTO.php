@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Response\DTO\Deposits;
+namespace App\Deposits\Application\Response\DTO;
 
 class DepositAccountEditFormDTO
 {

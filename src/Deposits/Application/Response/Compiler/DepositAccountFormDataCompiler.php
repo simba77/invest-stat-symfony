@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Response\Compiler\Deposits;
+namespace App\Deposits\Application\Response\Compiler;
 
-use App\Application\Response\DTO\Deposits\DepositAccountEditFormDTO;
-use App\Domain\Deposits\DepositAccount;
+use App\Deposits\Application\Response\DTO\DepositAccountEditFormDTO;
+use App\Deposits\Domain\DepositAccount;
 use App\Infrastructure\Compiler\CompilerInterface;
 
 /**

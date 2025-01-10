@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Response\Compiler\Deposits;
+namespace App\Deposits\Application\Response\Compiler;
 
-use App\Application\Response\DTO\Deposits\DepositListItemDTO;
-use App\Domain\Deposits\Deposit;
+use App\Deposits\Application\Response\DTO\DepositListItemDTO;
+use App\Deposits\Domain\Deposit;
 use App\Infrastructure\Compiler\CompilerInterface;
 
 /**

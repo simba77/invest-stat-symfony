@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Deposits;
+namespace App\Deposits\Domain;
 
 use App\Domain\Shared\User;
 

@@ -6,6 +6,7 @@
 
 imports:
   - { resource: services/*.yaml }
+  - { resource: services/*.php }
 
 parameters:
   app.expenses.salary: '%env(APP_EXPENSES_SALARY)%'

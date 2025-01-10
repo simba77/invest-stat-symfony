@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Application\Controller\Dashboard;
 
-use App\Domain\Deposits\Deposit;
-use App\Domain\Deposits\Deposits;
+use App\Deposits\Domain\Deposit;
+use App\Deposits\Domain\Deposits;
 use App\Domain\Investments\Accounts\AccountService;
 use App\Domain\Investments\Analytics\StatisticService;
 use App\Domain\Investments\Instruments\Currencies\CurrencyService;

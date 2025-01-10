@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Controller\Deposits;
+namespace App\Deposits\Application\Controller;
 
 use App\Application\Request\DTO\Deposits\CreateAccountRequestDTO;
-use App\Application\Response\Compiler\Deposits\DepositAccountFormDataCompiler;
-use App\Application\Response\Compiler\Deposits\DepositAccountListItemsCompiler;
-use App\Domain\Deposits\DepositAccount;
-use App\Domain\Deposits\DepositAccountRepositoryInterface;
+use App\Deposits\Application\Response\Compiler\DepositAccountFormDataCompiler;
+use App\Deposits\Application\Response\Compiler\DepositAccountListItemsCompiler;
+use App\Deposits\Domain\DepositAccount;
+use App\Deposits\Domain\DepositAccountRepositoryInterface;
 use App\Domain\Shared\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

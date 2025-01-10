@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Application\Command;
 
-use App\Domain\Deposits\Deposit;
-use App\Domain\Deposits\DepositAccount;
+use App\Deposits\Domain\Deposit;
+use App\Deposits\Domain\DepositAccount;
 use App\Domain\Investments\Accounts\Account;
 use App\Domain\Investments\Analytics\Statistic;
 use App\Domain\Investments\Operations\Deal;
