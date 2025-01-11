@@ -32,8 +32,8 @@ services:
 
 
   # Currency rates provider
-  App\Domain\Investments\Instruments\Currencies\CurrencyProviderInterface:
-    class: App\Domain\Investments\Instruments\Currencies\MoexCurrencyProvider
+  App\Investments\Domain\Instruments\Currencies\CurrencyProviderInterface:
+    class: App\Investments\Domain\Instruments\Currencies\MoexCurrencyProvider
 
-  App\Domain\Investments\Instruments\Securities\SharesProviderInterface:
-    class: App\Domain\Investments\Instruments\Securities\MoexSharesProvider
+  App\Investments\Domain\Instruments\Securities\SharesProviderInterface:
+    class: App\Investments\Domain\Instruments\Securities\MoexSharesProvider

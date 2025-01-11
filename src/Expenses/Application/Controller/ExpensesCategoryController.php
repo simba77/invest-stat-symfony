@@ -11,7 +11,6 @@ use App\Expenses\Application\Response\DTO\ExpenseCategoryDTO;
 use App\Expenses\Domain\ExpensesCategory;
 use App\Expenses\Domain\ExpensesCategoryRepositoryInterface;
 use App\Shared\Domain\User;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -26,7 +25,6 @@ class ExpensesCategoryController extends AbstractController
     public function __construct(
         private readonly CategoriesListCompiler $categoriesListCompiler,
         private readonly ExpensesCategoryRepositoryInterface $expensesCategoryRepository,
-        protected EntityManagerInterface $em,
         private readonly MessageBusInterface $messageBus,
     ) {
     }
@@ -42,8 +40,7 @@ class ExpensesCategoryController extends AbstractController
     public function create(#[MapRequestPayload] CreateCategoryRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
     {
         $expensesCategory = new ExpensesCategory($dto->name, $user->getId());
-        $this->em->persist($expensesCategory);
-        $this->em->flush();
+        $this->expensesCategoryRepository->save($expensesCategory);
 
         return $this->json(['success' => true]);
     }
@@ -77,7 +74,7 @@ class ExpensesCategoryController extends AbstractController
         }
 
         $category->setName($dto->name);
-        $this->em->flush();
+        $this->expensesCategoryRepository->save($category);
 
         return $this->json(['success' => true]);
     }
