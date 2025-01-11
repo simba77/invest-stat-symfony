@@ -48,7 +48,7 @@ class ExpensesCategoryController extends AbstractController
     #[Route('/expenses/category/delete/{id}', name: 'app_expenses_category_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
-        $category = $this->em->getRepository(ExpensesCategory::class)->findOneBy(['id' => $id, 'userId' => $user->getId()]);
+        $category = $this->expensesCategoryRepository->getByIdAndUser($id, $user);
         if (! $category) {
             throw $this->createNotFoundException('No category found for id ' . $id);
         }
@@ -68,14 +68,14 @@ class ExpensesCategoryController extends AbstractController
     #[Route('/expenses/category/{id}', name: 'app_expenses_category_get_by_id', requirements: ['id' => '\d+'])]
     public function getById(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
-        $category = $this->em->getRepository(ExpensesCategory::class)->findOneBy(['id' => $id, 'userId' => $user->getId()]);
+        $category = $this->expensesCategoryRepository->getByIdAndUser($id, $user);
         return $this->json(new ExpenseCategoryDTO($category->getId(), $category->getName(), []));
     }
 
     #[Route('/expenses/category/edit/{id}', name: 'app_expenses_category_edit', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function edit(int $id, #[MapRequestPayload] CreateCategoryRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
     {
-        $category = $this->em->getRepository(ExpensesCategory::class)->findOneBy(['id' => $id, 'userId' => $user?->getId()]);
+        $category = $this->expensesCategoryRepository->getByIdAndUser($id, $user);
         if (! $category) {
             throw $this->createNotFoundException('No category found for id ' . $id);
         }
