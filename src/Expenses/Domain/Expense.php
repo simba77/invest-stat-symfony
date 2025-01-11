@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Expenses\Domain;
 
 use App\Expenses\Infrastructure\Persistence\Repository\ExpenseRepository;
@@ -42,7 +44,7 @@ class Expense implements
     private string $sum;
 
     #[ORM\ManyToOne(targetEntity: ExpensesCategory::class, inversedBy: 'expenses')]
-    private ExpensesCategory $category;
+    private ?ExpensesCategory $category;
 
     public function __construct(string $name, string $sum, int $userId)
     {

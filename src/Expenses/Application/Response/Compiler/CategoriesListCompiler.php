@@ -2,30 +2,27 @@
 
 declare(strict_types=1);
 
-namespace App\Expenses\Domain;
+namespace App\Expenses\Application\Response\Compiler;
 
 use App\Expenses\Application\Response\DTO\ExpenseCategoryDTO;
 use App\Expenses\Application\Response\DTO\ExpenseResponseDTO;
-use App\Expenses\Infrastructure\Persistence\Repository\ExpensesCategoryRepository;
-use App\Shared\Domain\User;
-use Doctrine\Common\Collections\Criteria;
+use App\Expenses\Domain\Expense;
+use App\Expenses\Domain\ExpensesCategory;
+use App\Shared\Infrastructure\Compiler\CompilerInterface;
 
-class ExpensesCategoryService
+/**
+ * @template-implements CompilerInterface<iterable<ExpensesCategory>, iterable<ExpenseCategoryDTO>>
+ */
+class CategoriesListCompiler implements CompilerInterface
 {
-    public function __construct(
-        private readonly ExpensesCategoryRepository $categoryRepository
-    ) {
-    }
-
-    public function getCategories(?User $user = null): array
+    /**
+     * @param ExpensesCategory[] $entry
+     * @return ExpenseCategoryDTO[]
+     */
+    public function compile(mixed $entry): array
     {
-        $categories = $this->categoryRepository->findBy(
-            ['userId' => $user?->getId()],
-            ['id' => Criteria::ASC]
-        );
-
         $items = [];
-        foreach ($categories as $category) {
+        foreach ($entry as $category) {
             $expenses = $category->getExpenses()
                 ->map(fn(Expense $item) => new ExpenseResponseDTO(
                     id:   $item->getId(),
@@ -41,8 +38,6 @@ class ExpensesCategoryService
             );
         }
 
-        return [
-            'items' => $items,
-        ];
+        return $items;
     }
 }

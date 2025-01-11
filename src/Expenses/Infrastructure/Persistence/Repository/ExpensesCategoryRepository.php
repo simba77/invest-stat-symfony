@@ -5,34 +5,45 @@ declare(strict_types=1);
 namespace App\Expenses\Infrastructure\Persistence\Repository;
 
 use App\Expenses\Domain\ExpensesCategory;
+use App\Expenses\Domain\ExpensesCategoryRepositoryInterface;
+use App\Shared\Domain\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<ExpensesCategory>
  */
-class ExpensesCategoryRepository extends ServiceEntityRepository
+class ExpensesCategoryRepository extends ServiceEntityRepository implements ExpensesCategoryRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, ExpensesCategory::class);
     }
 
-    public function save(ExpensesCategory $entity, bool $flush = false): void
+    /**
+     * @param User $user
+     * @return ExpensesCategory[]
+     */
+    public function getCategoriesForUser(User $user): array
     {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
+        return $this->findBy(
+            ['userId' => $user->getId()],
+            ['id' => Order::Ascending->value]
+        );
     }
 
-    public function remove(ExpensesCategory $entity, bool $flush = false): void
+    public function save(ExpensesCategory $expensesCategory): void
     {
-        $this->getEntityManager()->remove($entity);
+        $em = $this->getEntityManager();
+        $em->persist($expensesCategory);
+        $em->flush();
+    }
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
+    public function remove(ExpensesCategory $expensesCategory): void
+    {
+        $em = $this->getEntityManager();
+        $em->remove($expensesCategory);
+        $em->flush();
     }
 }

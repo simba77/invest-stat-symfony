@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Expenses\Application\Controller;
 
 use App\Expenses\Application\Request\DTO\CreateCategoryRequestDTO;
+use App\Expenses\Application\Response\Compiler\CategoriesListCompiler;
 use App\Expenses\Application\Response\DTO\ExpenseCategoryDTO;
 use App\Expenses\Domain\ExpensesCategory;
-use App\Expenses\Domain\ExpensesCategoryService;
+use App\Expenses\Domain\ExpensesCategoryRepositoryInterface;
 use App\Shared\Domain\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,7 +22,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ExpensesCategoryController extends AbstractController
 {
     public function __construct(
-        private readonly ExpensesCategoryService $expensesCategoryService,
+        private readonly CategoriesListCompiler $categoriesListCompiler,
+        private readonly ExpensesCategoryRepositoryInterface $expensesCategoryRepository,
         protected EntityManagerInterface $em,
     ) {
     }
@@ -29,7 +31,8 @@ class ExpensesCategoryController extends AbstractController
     #[Route('/expenses', name: 'app_expenses_category')]
     public function index(#[CurrentUser] ?User $user): JsonResponse
     {
-        return $this->json($this->expensesCategoryService->getCategories($user));
+        $categories = $this->expensesCategoryRepository->getCategoriesForUser($user);
+        return $this->json(['items' => $this->categoriesListCompiler->compile($categories)]);
     }
 
     #[Route('/expenses/category/create', name: 'app_expenses_category_create', methods: ['POST'])]

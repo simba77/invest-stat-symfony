@@ -27,4 +27,18 @@ class ExpenseRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()['allExpenses'] ?? '0';
     }
+
+    public function save(Expense $entity): void
+    {
+        $em = $this->getEntityManager();
+        $em->persist($entity);
+        $em->flush();
+    }
+
+    public function remove(Expense $entity): void
+    {
+        $em = $this->getEntityManager();
+        $em->remove($entity);
+        $em->flush();
+    }
 }
