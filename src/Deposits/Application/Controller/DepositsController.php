@@ -6,16 +6,17 @@ namespace App\Deposits\Application\Controller;
 
 use App\Application\Request\DTO\Deposits\CreateDepositRequestDTO;
 use App\Application\Request\DTO\Deposits\UpdateDepositRequestDTO;
+use App\Deposits\Application\CreateDepositCommand;
 use App\Deposits\Application\Response\Compiler\DepositFormDataCompiler;
 use App\Deposits\Application\Response\Compiler\DepositsListItemsCompiler;
-use App\Deposits\Domain\Deposit;
+use App\Deposits\Application\UpdateDepositCommand;
 use App\Deposits\Domain\DepositAccountRepositoryInterface;
 use App\Deposits\Domain\DepositRepositoryInterface;
 use App\Domain\Shared\User;
-use Carbon\Carbon;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -28,6 +29,7 @@ class DepositsController extends AbstractController
         private readonly DepositsListItemsCompiler $depositsListCompiler,
         private readonly DepositAccountRepositoryInterface $depositAccountRepository,
         private readonly DepositFormDataCompiler $depositFormDataCompiler,
+        private readonly MessageBusInterface $messageBus,
     ) {
     }
 
@@ -46,8 +48,16 @@ class DepositsController extends AbstractController
             throw $this->createNotFoundException('No accounts found for id ' . $dto->accountId);
         }
 
-        $deposit = new Deposit($dto->sum, $dto->type, $user, $account, Carbon::parse($dto->date));
-        $this->depositRepository->save($deposit);
+        $this->messageBus->dispatch(
+            new CreateDepositCommand(
+                amount:  $dto->sum,
+                type:    $dto->type,
+                date:    $dto->date,
+                account: $account,
+                user:    $user
+            )
+        );
+
         return $this->json(['success' => true]);
     }
 
@@ -74,12 +84,16 @@ class DepositsController extends AbstractController
             throw $this->createNotFoundException('No accounts found for id ' . $dto->accountId);
         }
 
-        $deposit->setSum($dto->sum);
-        $deposit->setDepositAccount($account);
-        $deposit->setType($dto->type);
-        $deposit->setDate(Carbon::parse($dto->date));
+        $this->messageBus->dispatch(
+            new UpdateDepositCommand(
+                deposit: $deposit,
+                amount:  $dto->sum,
+                type:    $dto->type,
+                date:    $dto->date,
+                account: $account,
+            )
+        );
 
-        $this->depositRepository->save($deposit);
         return $this->json(['success' => true]);
     }
 
