@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Persistence\Repository;
+namespace App\Expenses\Infrastructure\Persistence\Repository;
 
-use App\Domain\Expenses\ExpensesCategory;
+use App\Expenses\Domain\ExpensesCategory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Response\DTO\Expenses;
+namespace App\Expenses\Application\Response\DTO;
 
 class ExpenseResponseDTO
 {

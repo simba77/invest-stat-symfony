@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Expenses;
+namespace App\Expenses\Domain;
 
 use App\Domain\Shared\CreatedByProvider;
 use App\Domain\Shared\CreatedDateProvider;
@@ -10,7 +10,7 @@ use App\Domain\Shared\UpdatedByProvider;
 use App\Domain\Shared\UpdatedDateProvider;
 use App\Domain\Shared\UpdatedDateProviderInterface;
 use App\Domain\Shared\UpdatedUserProviderInterface;
-use App\Infrastructure\Persistence\Repository\ExpensesCategoryRepository;
+use App\Expenses\Infrastructure\Persistence\Repository\ExpensesCategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;

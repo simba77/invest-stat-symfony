@@ -26,14 +26,9 @@ doctrine:
     mappings:
       App:
         is_bundle: false
-        dir: '%kernel.project_dir%/src/Domain'
-        prefix: 'App\Domain'
+        dir: '%kernel.project_dir%/src'
+        prefix: 'App'
         alias: App
-      Deposits:
-        is_bundle: false
-        dir: '%kernel.project_dir%/src/Deposits/Domain'
-        prefix: 'App\Deposits\Domain'
-        alias: Deposits
 
 when@test:
   doctrine:

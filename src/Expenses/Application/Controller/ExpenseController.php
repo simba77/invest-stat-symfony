@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Controller\Expenses;
+namespace App\Expenses\Application\Controller;
 
-use App\Application\Request\DTO\Expenses\CreateExpenseRequestDTO;
-use App\Domain\Expenses\Expense;
-use App\Domain\Expenses\ExpensesCategory;
-use App\Domain\Expenses\ExpenseService;
 use App\Domain\Shared\User;
+use App\Expenses\Application\Request\DTO\CreateExpenseRequestDTO;
+use App\Expenses\Domain\Expense;
+use App\Expenses\Domain\ExpensesCategory;
+use App\Expenses\Domain\ExpenseService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

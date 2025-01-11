@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Expenses;
+namespace App\Expenses\Domain;
 
-use App\Application\Response\DTO\Expenses\ExpenseResponseDTO;
 use App\Domain\Shared\User;
-use App\Infrastructure\Persistence\Repository\ExpenseRepository;
+use App\Expenses\Application\Response\DTO\ExpenseResponseDTO;
+use App\Expenses\Infrastructure\Persistence\Repository\ExpenseRepository;
 
 class ExpenseService
 {
