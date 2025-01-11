@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Expenses\Application\Controller;
 
+use App\Expenses\Application\DeleteCategoryCommand;
 use App\Expenses\Application\Request\DTO\CreateCategoryRequestDTO;
 use App\Expenses\Application\Response\Compiler\CategoriesListCompiler;
 use App\Expenses\Application\Response\DTO\ExpenseCategoryDTO;
@@ -14,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -25,6 +27,7 @@ class ExpensesCategoryController extends AbstractController
         private readonly CategoriesListCompiler $categoriesListCompiler,
         private readonly ExpensesCategoryRepositoryInterface $expensesCategoryRepository,
         protected EntityManagerInterface $em,
+        private readonly MessageBusInterface $messageBus,
     ) {
     }
 
@@ -53,14 +56,7 @@ class ExpensesCategoryController extends AbstractController
             throw $this->createNotFoundException('No category found for id ' . $id);
         }
 
-        // Remove related expenses
-        $expenses = $category->getExpenses();
-        foreach ($expenses as $expense) {
-            $this->em->remove($expense);
-        }
-
-        $this->em->remove($category);
-        $this->em->flush();
+        $this->messageBus->dispatch(new DeleteCategoryCommand($category));
 
         return $this->json(['success' => true]);
     }

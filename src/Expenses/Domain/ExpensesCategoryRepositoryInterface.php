@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Expenses\Domain;
 
 use App\Shared\Domain\User;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 interface ExpensesCategoryRepositoryInterface
 {

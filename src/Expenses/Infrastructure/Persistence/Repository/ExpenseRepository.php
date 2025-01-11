@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Expenses\Infrastructure\Persistence\Repository;
 
 use App\Expenses\Domain\Expense;
+use App\Expenses\Domain\ExpenseRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Expense>
  */
-class ExpenseRepository extends ServiceEntityRepository
+class ExpenseRepository extends ServiceEntityRepository implements ExpenseRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -28,17 +29,17 @@ class ExpenseRepository extends ServiceEntityRepository
             ->getOneOrNullResult()['allExpenses'] ?? '0';
     }
 
-    public function save(Expense $entity): void
+    public function save(Expense $expense): void
     {
         $em = $this->getEntityManager();
-        $em->persist($entity);
+        $em->persist($expense);
         $em->flush();
     }
 
-    public function remove(Expense $entity): void
+    public function remove(Expense $expense): void
     {
         $em = $this->getEntityManager();
-        $em->remove($entity);
+        $em->remove($expense);
         $em->flush();
     }
 }
