@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Deposits\Application;
 
 use App\Deposits\Domain\DepositAccount;
-use App\Domain\Shared\User;
+use App\Shared\Domain\User;
 
 class CreateDepositCommand
 {

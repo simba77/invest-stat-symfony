@@ -6,7 +6,7 @@ namespace App\Deposits\Application\Response\Compiler;
 
 use App\Deposits\Application\Response\DTO\DepositEditFormDTO;
 use App\Deposits\Domain\Deposit;
-use App\Infrastructure\Compiler\CompilerInterface;
+use App\Shared\Infrastructure\Compiler\CompilerInterface;
 
 /**
  * @template-implements CompilerInterface<Deposit, DepositEditFormDTO>

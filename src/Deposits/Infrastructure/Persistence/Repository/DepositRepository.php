@@ -6,7 +6,7 @@ namespace App\Deposits\Infrastructure\Persistence\Repository;
 
 use App\Deposits\Domain\Deposit;
 use App\Deposits\Domain\DepositRepositoryInterface;
-use App\Domain\Shared\User;
+use App\Shared\Domain\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ManagerRegistry;

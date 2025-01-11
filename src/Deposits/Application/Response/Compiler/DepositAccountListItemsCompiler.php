@@ -6,7 +6,7 @@ namespace App\Deposits\Application\Response\Compiler;
 
 use App\Deposits\Application\Response\DTO\DepositAccountListItemDTO;
 use App\Deposits\Domain\DepositAccount;
-use App\Infrastructure\Compiler\CompilerInterface;
+use App\Shared\Infrastructure\Compiler\CompilerInterface;
 
 /**
  * @template-implements CompilerInterface<iterable<DepositAccount>, iterable<DepositAccountListItemDTO>>

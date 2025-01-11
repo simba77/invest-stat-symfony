@@ -1,139 +1,151 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Parameter \#9 \$lotSize of class App\\Domain\\Investments\\Instruments\\Share constructor expects string, int given\.$#'
+			message: '#^Property App\\Expenses\\Domain\\Expense\:\:\$category type mapping mismatch\: database can contain App\\Expenses\\Domain\\ExpensesCategory\|null but property expects App\\Expenses\\Domain\\ExpensesCategory\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Expenses/Domain/Expense.php
+
+		-
+			message: '#^Method App\\Expenses\\Domain\\ExpensesCategoryService\:\:getCategories\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Expenses/Domain/ExpensesCategoryService.php
+
+		-
+			message: '#^Parameter \#9 \$lotSize of class App\\Investments\\Domain\\Instruments\\Share constructor expects string, int given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Application/Command/GetAllSpbSharesCommand.php
+			path: src/Investments/Application/Command/GetAllSpbSharesCommand.php
 
 		-
 			message: '#^Parameter \#1 \$var of method Tinkoff\\Invest\\V1\\GetLastPricesRequest\:\:setInstrumentId\(\) expects Google\\Protobuf\\Internal\\RepeatedField&iterable\<string\>, list\<string\> given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Application/Command/TInvestGetMarketData.php
+			path: src/Investments/Application/Command/TInvestGetMarketData.php
 
 		-
 			message: '#^Variable \$response in PHPDoc tag @var does not match any variable in the foreach loop\: \$item$#'
 			identifier: varTag.differentVariable
 			count: 1
-			path: src/Application/Command/TInvestGetMarketData.php
+			path: src/Investments/Application/Command/TInvestGetMarketData.php
 
 		-
 			message: '#^Variable \$response in PHPDoc tag @var does not match any variable in the foreach loop\: \$item$#'
 			identifier: varTag.differentVariable
 			count: 1
-			path: src/Application/Command/TInvestUpdateShares.php
+			path: src/Investments/Application/Command/TInvestUpdateShares.php
 
 		-
-			message: '#^Method App\\Application\\Controller\\Shared\\AuthController\:\:logout\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Application/Controller/Shared/AuthController.php
-
-		-
-			message: '#^Call to an undefined method App\\Domain\\Expenses\\ExpensesCategory\:\:setCreatedAt\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: src/DataFixtures/ExpensesCategoryFixtures.php
-
-		-
-			message: '#^Class App\\Domain\\Expenses\\ExpensesCategory constructor invoked with 0 parameters, 2 required\.$#'
-			identifier: arguments.count
-			count: 3
-			path: src/DataFixtures/ExpensesCategoryFixtures.php
-
-		-
-			message: '#^Property App\\Domain\\Expenses\\Expense\:\:\$category type mapping mismatch\: database can contain App\\Domain\\Expenses\\ExpensesCategory\|null but property expects App\\Domain\\Expenses\\ExpensesCategory\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/Domain/Expenses/Expense.php
-
-		-
-			message: '#^Method App\\Domain\\Expenses\\ExpensesCategoryService\:\:getCategories\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method App\\Investments\\Domain\\Accounts\\AccountCalculator\:\:calculateSumOfAllDealsForAccount\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Domain/Expenses/ExpensesCategoryService.php
+			path: src/Investments/Domain/Accounts/AccountCalculator.php
 
 		-
-			message: '#^Method App\\Domain\\Investments\\Accounts\\AccountCalculator\:\:calculateSumOfAllDealsForAccount\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Domain/Investments/Accounts/AccountCalculator.php
-
-		-
-			message: '#^Offset ''deposits_sum'' on array\{account\: App\\Domain\\Investments\\Accounts\\Account, deposits_sum\: string\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Offset ''deposits_sum'' on array\{account\: App\\Investments\\Domain\\Accounts\\Account, deposits_sum\: string\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1
-			path: src/Domain/Investments/Accounts/AccountService.php
+			path: src/Investments/Domain/Accounts/AccountService.php
 
 		-
-			message: '#^Property App\\Domain\\Investments\\Analytics\\Statistic\:\:\$account type mapping mismatch\: property can contain App\\Domain\\Investments\\Accounts\\Account\|null but database expects App\\Domain\\Investments\\Accounts\\Account\.$#'
+			message: '#^Property App\\Investments\\Domain\\Analytics\\Statistic\:\:\$account type mapping mismatch\: property can contain App\\Investments\\Domain\\Accounts\\Account\|null but database expects App\\Investments\\Domain\\Accounts\\Account\.$#'
 			identifier: doctrine.associationType
 			count: 1
-			path: src/Domain/Investments/Analytics/Statistic.php
+			path: src/Investments/Domain/Analytics/Statistic.php
 
 		-
-			message: '#^Property App\\Domain\\Investments\\Analytics\\Statistic\:\:\$date type mapping mismatch\: property can contain DateTimeInterface\|null but database expects DateTimeInterface\.$#'
+			message: '#^Property App\\Investments\\Domain\\Analytics\\Statistic\:\:\$date type mapping mismatch\: property can contain DateTimeInterface\|null but database expects DateTimeInterface\.$#'
 			identifier: doctrine.columnType
 			count: 1
-			path: src/Domain/Investments/Analytics/Statistic.php
+			path: src/Investments/Domain/Analytics/Statistic.php
 
 		-
-			message: '#^Method App\\Domain\\Investments\\Analytics\\StatisticService\:\:getStatisticByYears\(\) has no return type specified\.$#'
+			message: '#^Method App\\Investments\\Domain\\Analytics\\StatisticService\:\:getStatisticByYears\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
-			path: src/Domain/Investments/Analytics/StatisticService.php
+			path: src/Investments/Domain/Analytics/StatisticService.php
 
 		-
-			message: '#^Method App\\Domain\\Investments\\Instruments\\InvestCabHttpClient\:\:getDataAboutTicker\(\) has no return type specified\.$#'
+			message: '#^Method App\\Investments\\Domain\\Instruments\\InvestCabHttpClient\:\:getDataAboutTicker\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
-			path: src/Domain/Investments/Instruments/InvestCabHttpClient.php
+			path: src/Investments/Domain/Instruments/InvestCabHttpClient.php
 
 		-
-			message: '#^Method App\\Domain\\Investments\\Instruments\\InvestCabHttpClient\:\:parseContent\(\) has no return type specified\.$#'
+			message: '#^Method App\\Investments\\Domain\\Instruments\\InvestCabHttpClient\:\:parseContent\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
-			path: src/Domain/Investments/Instruments/InvestCabHttpClient.php
+			path: src/Investments/Domain/Instruments/InvestCabHttpClient.php
 
 		-
-			message: '#^Method App\\Domain\\Investments\\Instruments\\MoexHttpClient\:\:getBonds\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method App\\Investments\\Domain\\Instruments\\MoexHttpClient\:\:getBonds\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 2
-			path: src/Domain/Investments/Instruments/MoexHttpClient.php
+			path: src/Investments/Domain/Instruments/MoexHttpClient.php
 
 		-
-			message: '#^Method App\\Domain\\Investments\\Instruments\\MoexHttpClient\:\:getCurrencyRates\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method App\\Investments\\Domain\\Instruments\\MoexHttpClient\:\:getCurrencyRates\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Domain/Investments/Instruments/MoexHttpClient.php
+			path: src/Investments/Domain/Instruments/MoexHttpClient.php
 
 		-
-			message: '#^Method App\\Domain\\Investments\\Instruments\\MoexHttpClient\:\:getData\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method App\\Investments\\Domain\\Instruments\\MoexHttpClient\:\:getData\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Domain/Investments/Instruments/MoexHttpClient.php
+			path: src/Investments/Domain/Instruments/MoexHttpClient.php
 
 		-
-			message: '#^Method App\\Domain\\Investments\\Instruments\\MoexHttpClient\:\:getFutures\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method App\\Investments\\Domain\\Instruments\\MoexHttpClient\:\:getFutures\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 2
-			path: src/Domain/Investments/Instruments/MoexHttpClient.php
+			path: src/Investments/Domain/Instruments/MoexHttpClient.php
 
 		-
-			message: '#^Method App\\Domain\\Investments\\Instruments\\MoexHttpClient\:\:getSharesByBoard\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method App\\Investments\\Domain\\Instruments\\MoexHttpClient\:\:getSharesByBoard\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 2
-			path: src/Domain/Investments/Instruments/MoexHttpClient.php
+			path: src/Investments/Domain/Instruments/MoexHttpClient.php
 
 		-
-			message: '#^Method App\\Domain\\Investments\\Instruments\\Securities\\MoexSharesProvider\:\:parseResult\(\) has parameter \$boardData with no value type specified in iterable type array\.$#'
+			message: '#^Method App\\Investments\\Domain\\Instruments\\Securities\\MoexSharesProvider\:\:parseResult\(\) has parameter \$boardData with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Domain/Investments/Instruments/Securities/MoexSharesProvider.php
+			path: src/Investments/Domain/Instruments/Securities/MoexSharesProvider.php
 
 		-
-			message: '#^Method App\\Domain\\Investments\\Instruments\\Securities\\MoexSharesProvider\:\:parseResult\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method App\\Investments\\Domain\\Instruments\\Securities\\MoexSharesProvider\:\:parseResult\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Domain/Investments/Instruments/Securities/MoexSharesProvider.php
+			path: src/Investments/Domain/Instruments/Securities/MoexSharesProvider.php
+
+		-
+			message: '#^Method App\\Investments\\Domain\\Operations\\Deals\\SummaryForGroup\:\:getSummary\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Investments/Domain/Operations/Deals/SummaryForGroup.php
+
+		-
+			message: '#^PHPDoc tag @return with type App\\Investments\\Application\\Response\\DTO\\Operations\\SummaryForGroupDTO\|array is not subtype of native type array\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/Investments/Domain/Operations/Deals/SummaryForGroup.php
+
+		-
+			message: '#^PHPDoc tag @var for property App\\Investments\\Domain\\Operations\\Deals\\SummaryForGroup\:\:\$deals with type App\\Investments\\Domain\\Operations\\Deals\\DealData\|array is not subtype of native type array\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Investments/Domain/Operations/Deals/SummaryForGroup.php
+
+		-
+			message: '#^Property App\\Investments\\Domain\\Operations\\Deals\\SummaryForGroup\:\:\$deals type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Investments/Domain/Operations/Deals/SummaryForGroup.php
+
+		-
+			message: '#^Method App\\Shared\\Application\\Controller\\AuthController\:\:logout\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Shared/Application/Controller/AuthController.php

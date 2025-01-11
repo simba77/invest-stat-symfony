@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Deposits\Domain;
 
 use App\Deposits\Infrastructure\Persistence\Repository\DepositRepository;
-use App\Domain\Shared\CreatedByProvider;
-use App\Domain\Shared\CreatedDateProvider;
-use App\Domain\Shared\CreatedDateProviderInterface;
-use App\Domain\Shared\CreatedUserProviderInterface;
-use App\Domain\Shared\UpdatedByProvider;
-use App\Domain\Shared\UpdatedDateProvider;
-use App\Domain\Shared\UpdatedDateProviderInterface;
-use App\Domain\Shared\UpdatedUserProviderInterface;
-use App\Domain\Shared\User;
+use App\Shared\Domain\CreatedByProvider;
+use App\Shared\Domain\CreatedDateProvider;
+use App\Shared\Domain\CreatedDateProviderInterface;
+use App\Shared\Domain\CreatedUserProviderInterface;
+use App\Shared\Domain\UpdatedByProvider;
+use App\Shared\Domain\UpdatedDateProvider;
+use App\Shared\Domain\UpdatedDateProviderInterface;
+use App\Shared\Domain\UpdatedUserProviderInterface;
+use App\Shared\Domain\User;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 

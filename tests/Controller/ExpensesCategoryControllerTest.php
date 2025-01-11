@@ -2,7 +2,7 @@
 
 namespace App\Tests\Controller;
 
-use App\Infrastructure\Persistence\Repository\UserRepository;
+use App\Shared\Infrastructure\Persistence\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ExpensesCategoryControllerTest extends WebTestCase

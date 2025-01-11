@@ -6,7 +6,7 @@ controllers:
   prefix: '/api'
 
 spa:
-  controller: App\Application\Controller\Shared\SpaController::index
+  controller: App\Shared\Application\Controller\SpaController::index
   path: '/{page}'
   requirements:
     page: '^(?!api).*'

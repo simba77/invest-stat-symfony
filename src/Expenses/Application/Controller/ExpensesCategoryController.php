@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Expenses\Application\Controller;
 
-use App\Domain\Shared\User;
 use App\Expenses\Application\Request\DTO\CreateCategoryRequestDTO;
 use App\Expenses\Application\Response\DTO\ExpenseCategoryDTO;
 use App\Expenses\Domain\ExpensesCategory;
 use App\Expenses\Domain\ExpensesCategoryService;
+use App\Shared\Domain\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

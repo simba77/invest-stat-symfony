@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Deposits\Application\Controller;
 
-use App\Application\Request\DTO\Deposits\CreateAccountRequestDTO;
+use App\Deposits\Application\Request\DTO\CreateAccountRequestDTO;
 use App\Deposits\Application\Response\Compiler\DepositAccountFormDataCompiler;
 use App\Deposits\Application\Response\Compiler\DepositAccountListItemsCompiler;
 use App\Deposits\Domain\DepositAccount;
 use App\Deposits\Domain\DepositAccountRepositoryInterface;
-use App\Domain\Shared\User;
+use App\Shared\Domain\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
