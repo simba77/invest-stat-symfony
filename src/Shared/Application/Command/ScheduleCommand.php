@@ -21,7 +21,7 @@ class ScheduleCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $rootDir = dirname(__DIR__, 3);
+        $rootDir = dirname(__DIR__, 4);
 
         try {
             $scheduler = new Scheduler();
