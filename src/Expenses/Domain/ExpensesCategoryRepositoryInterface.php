@@ -14,6 +14,8 @@ interface ExpensesCategoryRepositoryInterface
      */
     public function getCategoriesForUser(User $user): array;
 
+    public function getById(int $id): ?ExpensesCategory;
+
     public function getByIdAndUser(int $id, User $user): ?ExpensesCategory;
 
     public function save(ExpensesCategory $expensesCategory): void;

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Expenses\Application\Controller;
 
+use App\Expenses\Application\CreateExpenseCommand;
 use App\Expenses\Application\Request\DTO\CreateExpenseRequestDTO;
 use App\Expenses\Domain\Expense;
-use App\Expenses\Domain\ExpensesCategory;
 use App\Expenses\Domain\ExpenseService;
 use App\Shared\Domain\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -23,19 +24,15 @@ class ExpenseController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly ExpenseService $expenseService
+        private readonly ExpenseService $expenseService,
+        public MessageBusInterface $messageBus,
     ) {
     }
 
     #[Route('/expenses/{categoryId}/create', name: 'app_expenses_expense', requirements: ['categoryId' => '\d+'], methods: ['POST'])]
     public function create(int $categoryId, #[MapRequestPayload] CreateExpenseRequestDTO $dto, #[CurrentUser] ?User $user): Response
     {
-        $category = $this->em->getRepository(ExpensesCategory::class)->find($categoryId);
-        $expense = new Expense($dto->name, $dto->sum, $user->getId());
-        $expense->setCategory($category);
-        $this->em->persist($expense);
-        $this->em->flush();
-
+        $this->messageBus->dispatch(new CreateExpenseCommand($dto->name, $dto->sum, $categoryId, $user));
         return $this->json(['success' => true]);
     }
 

@@ -33,6 +33,11 @@ class ExpensesCategoryRepository extends ServiceEntityRepository implements Expe
         );
     }
 
+    public function getById(int $id): ?ExpensesCategory
+    {
+        return $this->findOneBy(['id' => $id]);
+    }
+
     public function getByIdAndUser(int $id, User $user): ?ExpensesCategory
     {
         return $this->findOneBy(['id' => $id, 'userId' => $user->getId()]);
