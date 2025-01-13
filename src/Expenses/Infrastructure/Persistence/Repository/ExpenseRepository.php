@@ -6,6 +6,7 @@ namespace App\Expenses\Infrastructure\Persistence\Repository;
 
 use App\Expenses\Domain\Expense;
 use App\Expenses\Domain\ExpenseRepositoryInterface;
+use App\Shared\Domain\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -27,6 +28,11 @@ class ExpenseRepository extends ServiceEntityRepository implements ExpenseReposi
             ->select('sum(e.sum) as allExpenses')
             ->getQuery()
             ->getOneOrNullResult()['allExpenses'] ?? '0';
+    }
+
+    public function getByIdAndUser(int $id, User $user): ?Expense
+    {
+        return $this->findOneBy(['id' => $id, 'userId' => $user->getId()]);
     }
 
     public function save(Expense $expense): void
