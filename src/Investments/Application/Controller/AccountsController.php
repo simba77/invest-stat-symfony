@@ -11,12 +11,12 @@ use App\Investments\Application\Request\DTO\CreateAccountRequestDTO;
 use App\Investments\Application\Response\DTO\Compiler\AccountsListCompiler;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Accounts\AccountService;
+use App\Shared\Domain\Bus\SyncCommandBusInterface;
 use App\Shared\Domain\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -28,7 +28,7 @@ class AccountsController extends AbstractController
         private readonly AccountRepositoryInterface $accountRepository,
         private readonly AccountService $accountService,
         private readonly AccountsListCompiler $accountsListCompiler,
-        private readonly MessageBusInterface $messageBus,
+        private readonly SyncCommandBusInterface $commandBus,
     ) {
     }
 
@@ -42,7 +42,7 @@ class AccountsController extends AbstractController
     #[Route('/accounts/create', name: 'app_accounts_accounts_create', methods: ['POST'])]
     public function create(#[MapRequestPayload] CreateAccountRequestDTO $dto, #[CurrentUser] ?User $user): Response
     {
-        $this->messageBus->dispatch(
+        $this->commandBus->dispatch(
             new CreateAccountCommand(
                 user:              $user,
                 name:              $dto->name,
@@ -64,7 +64,7 @@ class AccountsController extends AbstractController
             throw $this->createNotFoundException('No accounts found for id ' . $id);
         }
 
-        $this->messageBus->dispatch(
+        $this->commandBus->dispatch(
             new UpdateAccountCommand(
                 account:           $account,
                 name:              $dto->name,
@@ -92,7 +92,7 @@ class AccountsController extends AbstractController
     #[Route('/accounts/delete/{id}', name: 'app_accounts_accounts_delete', requirements: ['id' => '\d+'])]
     public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
-        $this->messageBus->dispatch(
+        $this->commandBus->dispatch(
             new DeleteAccountCommand(
                 accountId: $id,
                 user:      $user
