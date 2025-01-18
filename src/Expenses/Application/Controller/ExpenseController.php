@@ -8,6 +8,7 @@ use App\Expenses\Application\CreateExpenseCommand;
 use App\Expenses\Application\Request\DTO\CreateExpenseRequestDTO;
 use App\Expenses\Application\Response\Compiler\ExpenseItemCompiler;
 use App\Expenses\Application\Response\Compiler\ExpensesSummaryCompiler;
+use App\Expenses\Application\UpdateExpenseCommand;
 use App\Expenses\Domain\ExpenseRepositoryInterface;
 use App\Shared\Domain\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -52,9 +53,7 @@ class ExpenseController extends AbstractController
             throw $this->createNotFoundException('No expense found for id ' . $id);
         }
 
-        $expense->setName($dto->name);
-        $expense->setSum($dto->sum);
-        $this->expenseRepository->save($expense);
+        $this->messageBus->dispatch(new UpdateExpenseCommand($expense, $dto->name, $dto->sum));
 
         return $this->json(['success' => true]);
     }
