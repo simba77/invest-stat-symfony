@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Investments\Application\Controller;
 
 use App\Investments\Application\Request\DTO\CreateAccountRequestDTO;
+use App\Investments\Application\Response\DTO\Compiler\AccountsListCompiler;
 use App\Investments\Domain\Accounts\Account;
+use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Accounts\AccountService;
 use App\Shared\Domain\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,15 +24,17 @@ class AccountsController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly AccountService $accountService
+        private readonly AccountRepositoryInterface $accountRepository,
+        private readonly AccountService $accountService,
+        private readonly AccountsListCompiler $accountsListCompiler,
     ) {
     }
 
     #[Route('/accounts', name: 'app_accounts_accounts_index')]
     public function index(#[CurrentUser] ?User $user): JsonResponse
     {
-        $list = $this->accountService->getAccountsListForUser($user);
-        return $this->json($list);
+        $accounts = $this->accountRepository->findByUserIdWithDeposits($user);
+        return $this->json($this->accountsListCompiler->compile($accounts));
     }
 
     #[Route('/accounts/create', name: 'app_accounts_accounts_create', methods: ['POST'])]

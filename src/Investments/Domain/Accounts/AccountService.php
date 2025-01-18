@@ -37,7 +37,7 @@ class AccountService
      */
     public function getAccountsListForUser(?User $user): array
     {
-        $items = $this->accountRepository->findByUserIdWithDeposits($user->getId() ?? 0);
+        $items = $this->accountRepository->findByUserIdWithDeposits($user);
         $result = [];
         foreach ($items as $item) {
             $account = $item['account'];

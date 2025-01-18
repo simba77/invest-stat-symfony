@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace App\Investments\Infrastructure\Persistence\Repository;
 
 use App\Investments\Domain\Accounts\Account;
+use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Operations\Investment;
+use App\Shared\Domain\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Account>
  */
-class AccountRepository extends ServiceEntityRepository
+class AccountRepository extends ServiceEntityRepository implements AccountRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -20,15 +22,15 @@ class AccountRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param int $userId
+     * @param User $user
      * @return array<int, array{account: Account, deposits_sum: string | null}>
      */
-    public function findByUserIdWithDeposits(int $userId): array
+    public function findByUserIdWithDeposits(User $user): array
     {
         return $this->createQueryBuilder('a')
             ->select('a as account')
             ->andWhere('a.userId = :val')
-            ->setParameter('val', $userId)
+            ->setParameter('val', $user->getId())
             ->orderBy('a.sort', 'ASC')
             ->addSelect('(select sum(inv.sum) from ' . Investment::class . ' as inv where inv.account = a) as deposits_sum')
             ->getQuery()
