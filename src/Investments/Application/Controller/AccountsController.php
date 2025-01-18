@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Controller;
 
+use App\Investments\Application\Accounts\CreateAccountCommand;
+use App\Investments\Application\Accounts\DeleteAccountCommand;
+use App\Investments\Application\Accounts\UpdateAccountCommand;
 use App\Investments\Application\Request\DTO\CreateAccountRequestDTO;
 use App\Investments\Application\Response\DTO\Compiler\AccountsListCompiler;
-use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Accounts\AccountService;
 use App\Shared\Domain\User;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -23,10 +25,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class AccountsController extends AbstractController
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
         private readonly AccountRepositoryInterface $accountRepository,
         private readonly AccountService $accountService,
         private readonly AccountsListCompiler $accountsListCompiler,
+        private readonly MessageBusInterface $messageBus,
     ) {
     }
 
@@ -40,38 +42,39 @@ class AccountsController extends AbstractController
     #[Route('/accounts/create', name: 'app_accounts_accounts_create', methods: ['POST'])]
     public function create(#[MapRequestPayload] CreateAccountRequestDTO $dto, #[CurrentUser] ?User $user): Response
     {
-        $account = new Account(
-            userId:            $user->getId(),
-            name:              $dto->name,
-            balance:           $dto->balance,
-            usdBalance:        $dto->usdBalance,
-            commission:        $dto->commission,
-            futuresCommission: $dto->futuresCommission,
-            sort:              $dto->sort
+        $this->messageBus->dispatch(
+            new CreateAccountCommand(
+                user:              $user,
+                name:              $dto->name,
+                balance:           $dto->balance,
+                usdBalance:        $dto->usdBalance,
+                commission:        $dto->commission,
+                futuresCommission: $dto->futuresCommission,
+                sort:              $dto->sort
+            )
         );
-
-        $this->em->persist($account);
-        $this->em->flush();
-
         return $this->json(['success' => true]);
     }
 
     #[Route('/accounts/update/{id}', name: 'app_accounts_accounts_update', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function update(int $id, #[MapRequestPayload] CreateAccountRequestDTO $dto, #[CurrentUser] ?User $user): Response
     {
-        $account = $this->em->getRepository(Account::class)->findOneBy(['id' => $id, 'userId' => $user->getId()]);
+        $account = $this->accountRepository->getByIdAndUser($id, $user);
         if (! $account) {
             throw $this->createNotFoundException('No accounts found for id ' . $id);
         }
 
-        $account->setName($dto->name);
-        $account->setBalance($dto->balance);
-        $account->setUsdBalance($dto->usdBalance);
-        $account->setCommission($dto->commission);
-        $account->setFuturesCommission($dto->futuresCommission);
-        $account->setSort($dto->sort);
-        $this->em->persist($account);
-        $this->em->flush();
+        $this->messageBus->dispatch(
+            new UpdateAccountCommand(
+                account:           $account,
+                name:              $dto->name,
+                balance:           $dto->balance,
+                usdBalance:        $dto->usdBalance,
+                commission:        $dto->commission,
+                futuresCommission: $dto->futuresCommission,
+                sort:              $dto->sort
+            )
+        );
 
         return $this->json(['success' => true]);
     }
@@ -89,14 +92,12 @@ class AccountsController extends AbstractController
     #[Route('/accounts/delete/{id}', name: 'app_accounts_accounts_delete', requirements: ['id' => '\d+'])]
     public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
-        $account = $this->em->getRepository(Account::class)->findOneBy(['id' => $id, 'userId' => $user->getId()]);
-        if (! $account) {
-            throw $this->createNotFoundException('No accounts found for id ' . $id);
-        }
-
-        $this->em->remove($account);
-        $this->em->flush();
-
+        $this->messageBus->dispatch(
+            new DeleteAccountCommand(
+                accountId: $id,
+                user:      $user
+            )
+        );
         return $this->json(['success' => true]);
     }
 }

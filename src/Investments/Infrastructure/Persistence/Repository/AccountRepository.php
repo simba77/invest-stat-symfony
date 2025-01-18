@@ -37,6 +37,11 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
             ->getResult();
     }
 
+    public function getByIdAndUser(int $id, User $user): ?Account
+    {
+        return $this->findOneBy(['id' => $id, 'userId' => $user->getId()]);
+    }
+
     /**
      * @return array<int, array{account: Account, deposits_sum: string | null}>
      */
@@ -67,5 +72,19 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
             ->addSelect('(select sum(inv.sum) from ' . Investment::class . ' as inv where inv.account = a) as deposits_sum')
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function save(Account $account): void
+    {
+        $em = $this->getEntityManager();
+        $em->persist($account);
+        $em->flush();
+    }
+
+    public function remove(Account $account): void
+    {
+        $em = $this->getEntityManager();
+        $em->remove($account);
+        $em->flush();
     }
 }
