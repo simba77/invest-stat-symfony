@@ -13,6 +13,7 @@ use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Accounts\AccountService;
 use App\Shared\Domain\Bus\SyncCommandBusInterface;
 use App\Shared\Domain\User;
+use App\Shared\Infrastructure\Symfony\NotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,20 +60,16 @@ class AccountsController extends AbstractController
     #[Route('/accounts/update/{id}', name: 'app_accounts_accounts_update', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function update(int $id, #[MapRequestPayload] CreateAccountRequestDTO $dto, #[CurrentUser] ?User $user): Response
     {
-        $account = $this->accountRepository->getByIdAndUser($id, $user);
-        if (! $account) {
-            throw $this->createNotFoundException('No accounts found for id ' . $id);
-        }
-
         $this->commandBus->dispatch(
             new UpdateAccountCommand(
-                account:           $account,
+                accountId:         $id,
+                user:              $user,
                 name:              $dto->name,
                 balance:           $dto->balance,
                 usdBalance:        $dto->usdBalance,
                 commission:        $dto->commission,
                 futuresCommission: $dto->futuresCommission,
-                sort:              $dto->sort
+                sort:              $dto->sort,
             )
         );
 
@@ -84,7 +81,7 @@ class AccountsController extends AbstractController
     {
         $form = $this->accountService->getEditForm($id, $user->getId() ?? 0);
         if (! $form) {
-            throw $this->createNotFoundException('No accounts found for id ' . $id);
+            throw new NotFoundException(sprintf('Account with id "%s" not found', $id));
         }
         return $this->json($form);
     }

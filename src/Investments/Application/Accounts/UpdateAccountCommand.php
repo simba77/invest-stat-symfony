@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Accounts;
 
-use App\Investments\Domain\Accounts\Account;
+use App\Shared\Domain\User;
 
 class UpdateAccountCommand
 {
     public function __construct(
-        public Account $account,
+        public int $accountId,
+        public User $user,
         public string $name,
         public string $balance,
         public string $usdBalance,
