@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Investments\Domain\Accounts;
 
 use App\Investments\Application\Response\DTO\Accounts\AccountDetailResponseDTO;
-use App\Investments\Application\Response\DTO\Accounts\AccountEditFormResponseDTO;
 use App\Investments\Application\Response\DTO\Accounts\AccountListItemResponseDTO;
 use App\Investments\Application\Response\DTO\Accounts\AccountResponseDTO;
 use App\Investments\Infrastructure\Persistence\Repository\AccountRepository;
@@ -56,23 +55,6 @@ class AccountService
             );
         }
         return $result;
-    }
-
-    public function getEditForm(int $id, int $userId): ?AccountEditFormResponseDTO
-    {
-        $account = $this->accountRepository->findOneBy(['id' => $id, 'userId' => $userId]);
-        if (! $account) {
-            return null;
-        }
-
-        return new AccountEditFormResponseDTO(
-            name:              $account->getName(),
-            balance:           $account->getBalance(),
-            usdBalance:        $account->getUsdBalance(),
-            commission:        $account->getCommission(),
-            futuresCommission: $account->getFuturesCommission(),
-            sort:              $account->getSort(),
-        );
     }
 
     /**

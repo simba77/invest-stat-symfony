@@ -8,9 +8,9 @@ use App\Investments\Application\Accounts\CreateAccountCommand;
 use App\Investments\Application\Accounts\DeleteAccountCommand;
 use App\Investments\Application\Accounts\UpdateAccountCommand;
 use App\Investments\Application\Request\DTO\CreateAccountRequestDTO;
+use App\Investments\Application\Response\DTO\Compiler\AccountEditFormCompiler;
 use App\Investments\Application\Response\DTO\Compiler\AccountsListCompiler;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
-use App\Investments\Domain\Accounts\AccountService;
 use App\Shared\Domain\Bus\SyncCommandBusInterface;
 use App\Shared\Domain\User;
 use App\Shared\Infrastructure\Symfony\NotFoundException;
@@ -27,9 +27,9 @@ class AccountsController extends AbstractController
 {
     public function __construct(
         private readonly AccountRepositoryInterface $accountRepository,
-        private readonly AccountService $accountService,
         private readonly AccountsListCompiler $accountsListCompiler,
         private readonly SyncCommandBusInterface $commandBus,
+        private readonly AccountEditFormCompiler $accountEditFormCompiler,
     ) {
     }
 
@@ -79,11 +79,11 @@ class AccountsController extends AbstractController
     #[Route('/accounts/get-form/{id}', name: 'app_accounts_accounts_getform', requirements: ['id' => '\d+'])]
     public function getForm(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
-        $form = $this->accountService->getEditForm($id, $user->getId() ?? 0);
-        if (! $form) {
+        $account = $this->accountRepository->getByIdAndUser($id, $user);
+        if (! $account) {
             throw new NotFoundException(sprintf('Account with id "%s" not found', $id));
         }
-        return $this->json($form);
+        return $this->json($this->accountEditFormCompiler->compile($account));
     }
 
     #[Route('/accounts/delete/{id}', name: 'app_accounts_accounts_delete', requirements: ['id' => '\d+'])]
