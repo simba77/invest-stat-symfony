@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Command;
 
-use App\Investments\Domain\Accounts\AccountCalculator;
+use App\Investments\Application\Accounts\AccountBalanceCalculator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,7 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class AccountsRecalculateCommand extends Command
 {
     public function __construct(
-        private readonly AccountCalculator $accountCalculator
+        private readonly AccountBalanceCalculator $accountCalculator
     ) {
         parent::__construct();
     }

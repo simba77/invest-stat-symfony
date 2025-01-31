@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Command;
 
-use App\Investments\Domain\Accounts\AccountCalculator;
+use App\Investments\Application\Accounts\AccountBalanceCalculator;
 use App\Investments\Domain\Instruments\Currencies\CurrencyProviderInterface;
 use App\Investments\Domain\Instruments\CurrencyRate;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,7 +23,7 @@ class GetCurrencyRatesCommand extends Command
     public function __construct(
         private readonly CurrencyProviderInterface $currencyProvider,
         private readonly EntityManagerInterface $em,
-        private readonly AccountCalculator $accountCalculator
+        private readonly AccountBalanceCalculator $accountBalanceCalculator
     ) {
         parent::__construct();
     }
@@ -44,7 +44,7 @@ class GetCurrencyRatesCommand extends Command
             $this->em->flush();
         }
 
-        $this->accountCalculator->recalculateBalanceForAllAccounts();
+        $this->accountBalanceCalculator->recalculateBalanceForAllAccounts();
 
         $io->success('Success');
 

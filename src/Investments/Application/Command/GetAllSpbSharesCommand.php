@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Command;
 
-use App\Investments\Domain\Accounts\AccountCalculator;
+use App\Investments\Application\Accounts\AccountBalanceCalculator;
 use App\Investments\Domain\Instruments\InvestCabHttpClient;
 use App\Investments\Domain\Instruments\Securities\ShareTypeEnum;
 use App\Investments\Domain\Instruments\Share;
@@ -27,7 +27,7 @@ class GetAllSpbSharesCommand extends Command
         private readonly EntityManagerInterface $em,
         private readonly InvestCabHttpClient $httpClient,
         private readonly LoggerInterface $logger,
-        private readonly AccountCalculator $accountCalculator
+        private readonly AccountBalanceCalculator $accountBalanceCalculator
     ) {
         parent::__construct();
     }
@@ -73,7 +73,7 @@ class GetAllSpbSharesCommand extends Command
             }
         }
 
-        $this->accountCalculator->recalculateBalanceForAllAccounts();
+        $this->accountBalanceCalculator->recalculateBalanceForAllAccounts();
 
         $io->success('Success');
         return Command::SUCCESS;

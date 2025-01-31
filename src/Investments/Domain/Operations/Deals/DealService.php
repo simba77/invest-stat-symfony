@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Domain\Operations\Deals;
 
+use App\Investments\Application\Accounts\AccountBalanceCalculator;
 use App\Investments\Application\Request\DTO\Operations\CreateDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\EditDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\SellDealRequestDTO;
@@ -25,7 +26,7 @@ class DealService
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly SecuritiesService $securitiesService,
-        private readonly AccountCalculator $accountCalculator,
+        private readonly AccountBalanceCalculator $accountBalanceCalculator,
     ) {
     }
 
@@ -47,7 +48,7 @@ class DealService
 
         $this->changeAccountBalanceWhenAddDeal($account, $dealRequestDTO);
 
-        $this->accountCalculator->recalculateBalanceForAccount($account);
+        $this->accountBalanceCalculator->recalculateBalance($account);
 
         $this->entityManager->flush();
     }
@@ -61,7 +62,7 @@ class DealService
 
         $this->changeAccountBalance($deal, $dto);
 
-        $this->accountCalculator->recalculateBalanceForAccount($deal->getAccount());
+        $this->accountBalanceCalculator->recalculateBalance($deal->getAccount());
 
         $this->entityManager->flush();
     }
@@ -124,7 +125,7 @@ class DealService
 
 
         $this->changeAccountBalance($deal, $dto);
-        $this->accountCalculator->recalculateBalanceForAccount($account);
+        $this->accountBalanceCalculator->recalculateBalance($account);
 
         $this->entityManager->flush();
     }
@@ -249,7 +250,7 @@ class DealService
         $deal->setTargetPrice($dto->targetPrice);
         $this->entityManager->persist($deal);
 
-        $this->accountCalculator->recalculateBalanceForAccount($deal->getAccount());
+        $this->accountBalanceCalculator->recalculateBalance($deal->getAccount());
 
         $this->entityManager->flush();
     }

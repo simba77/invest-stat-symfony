@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Command;
 
-use App\Investments\Domain\Accounts\AccountCalculator;
+use App\Investments\Application\Accounts\AccountBalanceCalculator;
 use App\Investments\Domain\Instruments\Bond;
 use App\Investments\Domain\Instruments\Securities\MoexBondsProvider;
 use Carbon\Carbon;
@@ -24,7 +24,7 @@ class GetBondsCommand extends Command
     public function __construct(
         private readonly MoexBondsProvider $bondsProvider,
         private readonly EntityManagerInterface $em,
-        private readonly AccountCalculator $accountCalculator
+        private readonly AccountBalanceCalculator $accountBalanceCalculator
     ) {
         parent::__construct();
     }
@@ -85,7 +85,7 @@ class GetBondsCommand extends Command
             $this->em->flush();
         }
 
-        $this->accountCalculator->recalculateBalanceForAllAccounts();
+        $this->accountBalanceCalculator->recalculateBalanceForAllAccounts();
 
         $io->success('Success');
 

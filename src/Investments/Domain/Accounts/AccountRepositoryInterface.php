@@ -16,6 +16,11 @@ interface AccountRepositoryInterface
 
     public function getByIdAndUser(int $id, User $user): ?Account;
 
+    /**
+     * @return Account[]
+     */
+    public function findAll(): array;
+
     public function save(Account $account): void;
 
     public function remove(Account $account): void;
