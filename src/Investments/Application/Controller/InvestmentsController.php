@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Investments\Application\Controller;
 
 use App\Investments\Application\Request\DTO\Operations\InvestmentRequestDTO;
+use App\Investments\Application\Response\DTO\Compiler\AccountsSimpleListCompiler;
 use App\Investments\Domain\Accounts\Account;
-use App\Investments\Domain\Accounts\AccountService;
+use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Operations\Investment;
 use App\Investments\Domain\Operations\InvestmentsService;
 use App\Shared\Domain\User;
@@ -25,7 +26,8 @@ class InvestmentsController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly InvestmentsService $investmentsService,
-        private readonly AccountService $accountService
+        protected readonly AccountRepositoryInterface $accountRepository,
+        protected readonly AccountsSimpleListCompiler $accountsSimpleListCompiler,
     ) {
     }
 
@@ -63,8 +65,13 @@ class InvestmentsController extends AbstractController
             ];
         }
 
-        $accounts = $this->accountService->getSimpleListOfAccountsForUser($user);
-        return $this->json(['form' => $form, 'accounts' => $accounts]);
+        $accounts = $this->accountRepository->findByUser($user);
+        return $this->json(
+            [
+                'form'     => $form,
+                'accounts' => $this->accountsSimpleListCompiler->compile($accounts),
+            ]
+        );
     }
 
     #[Route('/investments/edit/{id}', name: 'app_investments_investments_edit', requirements: ['id' => '\d+'], methods: ['POST'])]

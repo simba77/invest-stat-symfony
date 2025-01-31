@@ -6,7 +6,8 @@ namespace App\Shared\Application\Controller;
 
 use App\Deposits\Domain\Deposit;
 use App\Deposits\Domain\Deposits;
-use App\Investments\Domain\Accounts\AccountService;
+use App\Investments\Application\Response\DTO\Compiler\AccountsListCompiler;
+use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Analytics\StatisticService;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
 use App\Investments\Domain\Operations\Deal;
@@ -26,9 +27,10 @@ class HomepageController extends AbstractController
     public function __construct(
         private readonly CurrencyService $currencyService,
         private readonly EntityManagerInterface $entityManager,
-        private readonly AccountService $accountService,
         private readonly Deposits $depositsService,
-        private readonly StatisticService $statisticService
+        private readonly StatisticService $statisticService,
+        protected readonly AccountRepositoryInterface $accountRepository,
+        protected readonly AccountsListCompiler $accountsListCompiler,
     ) {
     }
 
@@ -50,9 +52,9 @@ class HomepageController extends AbstractController
             $dailyChange = bcadd($dailyChange, $dealData->getFullDailyProfitInBaseCurrency(), 2);
         }
 
-
-        $accounts = $this->accountService->getAccountsListForUser($user);
-        foreach ($accounts as $account) {
+        $accounts = $this->accountRepository->findByUserWithDeposits($user);
+        $accountsList = $this->accountsListCompiler->compile($accounts);
+        foreach ($accountsList as $account) {
             $allAssetsSum = bcadd($account->currentValue, $allAssetsSum, 2);
         }
 

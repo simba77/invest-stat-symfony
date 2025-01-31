@@ -25,7 +25,7 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
      * @param User $user
      * @return array<int, array{account: Account, deposits_sum: string | null}>
      */
-    public function findByUserIdWithDeposits(User $user): array
+    public function findByUserWithDeposits(User $user): array
     {
         return $this->createQueryBuilder('a')
             ->select('a as account')
@@ -40,6 +40,11 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
     public function getByIdAndUser(int $id, User $user): ?Account
     {
         return $this->findOneBy(['id' => $id, 'userId' => $user->getId()]);
+    }
+
+    public function findByUser(User $user): array
+    {
+        return $this->findBy(['userId' => $user->getId()]);
     }
 
     /**

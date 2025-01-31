@@ -12,9 +12,14 @@ interface AccountRepositoryInterface
      * @param User $user
      * @return array<int, array{account: Account, deposits_sum: string | null}>
      */
-    public function findByUserIdWithDeposits(User $user): array;
+    public function findByUserWithDeposits(User $user): array;
 
     public function getByIdAndUser(int $id, User $user): ?Account;
+
+    /**
+     * @return Account[]
+     */
+    public function findByUser(User $user): array;
 
     /**
      * @return Account[]

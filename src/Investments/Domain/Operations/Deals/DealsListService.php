@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Investments\Domain\Operations\Deals;
 
 use App\Investments\Application\Accounts\AccountBalanceCalculator;
+use App\Investments\Application\Response\DTO\Compiler\AccountsListCompiler;
 use App\Investments\Domain\Accounts\Account;
-use App\Investments\Domain\Accounts\AccountService;
+use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
 use App\Investments\Infrastructure\Persistence\Repository\DealRepository;
 use App\Shared\Domain\User;
@@ -19,7 +20,8 @@ class DealsListService
         private readonly PropertyAccessorInterface $propertyAccess,
         private readonly AccountBalanceCalculator $accountBalanceCalculator,
         private readonly CurrencyService $currencyService,
-        private readonly AccountService $accountService,
+        protected readonly AccountRepositoryInterface $accountRepository,
+        protected readonly AccountsListCompiler $accountsListCompiler,
     ) {
     }
 
@@ -192,8 +194,9 @@ class DealsListService
         $summary = new SummaryForGroup();
 
         $accountsValue = '0';
-        $accounts = $this->accountService->getAccountsListForUser($user);
-        foreach ($accounts as $account) {
+        $accounts = $this->accountRepository->findByUserWithDeposits($user);
+        $accountsList = $this->accountsListCompiler->compile($accounts);
+        foreach ($accountsList as $account) {
             $accountsValue = bcadd($accountsValue, $account->currentValue, 2);
         }
 
