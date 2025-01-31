@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Investments\Domain\Operations\Deals;
 
+use App\Investments\Application\Accounts\AccountBalanceCalculator;
 use App\Investments\Domain\Accounts\Account;
-use App\Investments\Domain\Accounts\AccountCalculator;
 use App\Investments\Domain\Accounts\AccountService;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
 use App\Investments\Infrastructure\Persistence\Repository\DealRepository;
@@ -17,7 +17,7 @@ class DealsListService
     public function __construct(
         private readonly DealRepository $dealRepository,
         private readonly PropertyAccessorInterface $propertyAccess,
-        private readonly AccountCalculator $accountCalculator,
+        private readonly AccountBalanceCalculator $accountBalanceCalculator,
         private readonly CurrencyService $currencyService,
         private readonly AccountService $accountService,
     ) {
@@ -32,7 +32,7 @@ class DealsListService
         $currencies = [];
         $deals = $this->dealRepository->findForUserAndAccount($user, $account);
         $summary = new SummaryForGroup();
-        $accountValue = $this->accountCalculator->getAccountValue($account);
+        $accountValue = $this->accountBalanceCalculator->getTotalBalance($account);
 
         foreach ($deals as $deal) {
             // Statuses

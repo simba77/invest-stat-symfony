@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Domain\Accounts;
 
+use App\Investments\Application\Accounts\AccountBalanceCalculator;
 use App\Investments\Application\Response\DTO\Accounts\AccountDetailResponseDTO;
 use App\Investments\Application\Response\DTO\Accounts\AccountListItemResponseDTO;
 use App\Investments\Application\Response\DTO\Accounts\AccountResponseDTO;
@@ -14,7 +15,7 @@ class AccountService
 {
     public function __construct(
         private readonly AccountRepository $accountRepository,
-        private readonly AccountCalculator $accountCalculator,
+        private readonly AccountBalanceCalculator $accountBalanceCalculator,
     ) {
     }
 
@@ -41,7 +42,7 @@ class AccountService
         foreach ($items as $item) {
             $account = $item['account'];
 
-            $currentValue = $this->accountCalculator->getAccountValue($account);
+            $totalBalance = $this->accountBalanceCalculator->getTotalBalance($account);
             $sumDeposits = $item['deposits_sum'] ?? '0';
 
             $result[] = new AccountListItemResponseDTO(
@@ -50,8 +51,8 @@ class AccountService
                 balance:      $account->getBalance(),
                 usdBalance:   $account->getUsdBalance(),
                 deposits:     $sumDeposits,
-                currentValue: $currentValue,
-                fullProfit:   bcsub($currentValue, $sumDeposits, 2),
+                currentValue: $totalBalance,
+                fullProfit:   bcsub($totalBalance, $sumDeposits, 2),
             );
         }
         return $result;
@@ -71,7 +72,7 @@ class AccountService
 
         $account = $accountData['account'];
 
-        $currentValue = $this->accountCalculator->getAccountValue($account);
+        $totalBalance = $this->accountBalanceCalculator->getTotalBalance($account);
         $sumDeposits = $accountData['deposits_sum'] ?? '0';
 
         return new AccountDetailResponseDTO(
@@ -80,8 +81,8 @@ class AccountService
             balance:      $account->getBalance(),
             usdBalance:   $account->getUsdBalance(),
             deposits:     $sumDeposits,
-            currentValue: $currentValue,
-            fullProfit:   bcsub($currentValue, $sumDeposits, 2),
+            currentValue: $totalBalance,
+            fullProfit:   bcsub($totalBalance, $sumDeposits, 2),
         );
     }
 }

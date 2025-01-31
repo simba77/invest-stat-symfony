@@ -59,4 +59,12 @@ class AccountBalanceCalculator
             'fullCurrentPrice' => $fullCurrentPrice,
         ];
     }
+
+    public function getTotalBalance(Account $account): string
+    {
+        $usdRate = $this->currencyService->getUSDRUBRate();
+        $currentValue = bcadd($account->getCurrentSumOfAssets(), $account->getBalance(), 2);
+        $usdBalance = bcmul($account->getUsdBalance(), $usdRate, 2);
+        return bcadd($currentValue, $usdBalance, 2);
+    }
 }

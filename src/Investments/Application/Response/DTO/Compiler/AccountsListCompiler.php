@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Response\DTO\Compiler;
 
+use App\Investments\Application\Accounts\AccountBalanceCalculator;
 use App\Investments\Application\Response\DTO\Accounts\AccountListItemResponseDTO;
 use App\Investments\Domain\Accounts\Account;
-use App\Investments\Domain\Accounts\AccountCalculator;
 use App\Shared\Infrastructure\Compiler\CompilerInterface;
 
 /**
@@ -15,7 +15,7 @@ use App\Shared\Infrastructure\Compiler\CompilerInterface;
 class AccountsListCompiler implements CompilerInterface
 {
     public function __construct(
-        private readonly AccountCalculator $accountCalculator,
+        private readonly AccountBalanceCalculator $accountBalanceCalculator,
     ) {
     }
 
@@ -29,7 +29,7 @@ class AccountsListCompiler implements CompilerInterface
         foreach ($entry as $item) {
             $account = $item['account'];
 
-            $currentValue = $this->accountCalculator->getAccountValue($account);
+            $totalBalance = $this->accountBalanceCalculator->getTotalBalance($account);
             $sumDeposits = $item['deposits_sum'] ?? '0';
 
             $result[] = new AccountListItemResponseDTO(
@@ -38,8 +38,8 @@ class AccountsListCompiler implements CompilerInterface
                 balance:      $account->getBalance(),
                 usdBalance:   $account->getUsdBalance(),
                 deposits:     $sumDeposits,
-                currentValue: $currentValue,
-                fullProfit:   bcsub($currentValue, $sumDeposits, 2),
+                currentValue: $totalBalance,
+                fullProfit:   bcsub($totalBalance, $sumDeposits, 2),
             );
         }
 

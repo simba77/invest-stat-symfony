@@ -74,6 +74,14 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
             ->getOneOrNullResult();
     }
 
+    /**
+     * @return list<Account>
+     */
+    public function findAll(): array
+    {
+        return parent::findAll();
+    }
+
     public function save(Account $account): void
     {
         $em = $this->getEntityManager();
