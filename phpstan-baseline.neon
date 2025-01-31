@@ -25,12 +25,6 @@ parameters:
 			path: src/Investments/Application/Command/TInvestUpdateShares.php
 
 		-
-			message: '#^Method App\\Investments\\Domain\\Accounts\\AccountCalculator\:\:calculateSumOfAllDealsForAccount\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Investments/Domain/Accounts/AccountCalculator.php
-
-		-
 			message: '#^Offset ''deposits_sum'' on array\{account\: App\\Investments\\Domain\\Accounts\\Account, deposits_sum\: string\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1
