@@ -7,9 +7,10 @@ namespace App\Investments\Application\Controller;
 use App\Investments\Application\Request\DTO\Operations\CreateDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\EditDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\SellDealRequestDTO;
+use App\Investments\Application\Response\DTO\Compiler\AccountItemCompiler;
 use App\Investments\Application\Response\DTO\Operations\EditDealDTO;
 use App\Investments\Domain\Accounts\Account;
-use App\Investments\Domain\Accounts\AccountService;
+use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\Deals\DealService;
 use App\Investments\Domain\Operations\Deals\DealsListService;
@@ -29,9 +30,10 @@ class DealsController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly AccountService $accountService,
         private readonly DealsListService $dealsListService,
-        private readonly DealService $dealService
+        private readonly DealService $dealService,
+        protected readonly AccountRepositoryInterface $accountRepository,
+        protected readonly AccountItemCompiler $accountItemCompiler,
     ) {
     }
 
@@ -45,11 +47,17 @@ class DealsController extends AbstractController
     #[Route('/deals/{accountId}', name: 'app_deals_deals_index', requirements: ['accountId' => '\d+'])]
     public function dealListByAccount(int $accountId, #[CurrentUser] ?User $user): Response
     {
-        $acc = $this->em->getRepository(Account::class)->findOneBy(['id' => $accountId, 'userId' => $user->getId()]);
-        $deals = $this->dealsListService->getListWithGroups($user, $acc);
-
-        $account = $this->accountService->getAccountWithDetailInformation($accountId, $user->getId());
-        return $this->json(['account' => $account, 'deals' => $deals]);
+        $account = $this->accountRepository->findByIdAndUserWithDeposits($accountId, $user);
+        if (! $account) {
+            throw $this->createNotFoundException('No account found for id ' . $accountId);
+        }
+        $deals = $this->dealsListService->getListWithGroups($user, $account['account']);
+        return $this->json(
+            [
+                'account' => $this->accountItemCompiler->compile($account),
+                'deals'   => $deals,
+            ]
+        );
     }
 
     #[Route('/deals/create/{accountId}', name: 'app_deals_deals_create', requirements: ['accountId' => '\d+'], methods: ['POST'])]

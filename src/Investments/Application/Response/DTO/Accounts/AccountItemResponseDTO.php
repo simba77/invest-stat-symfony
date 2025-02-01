@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Response\DTO\Accounts;
 
-class AccountDetailResponseDTO
+class AccountItemResponseDTO
 {
     public function __construct(
         public int $id,

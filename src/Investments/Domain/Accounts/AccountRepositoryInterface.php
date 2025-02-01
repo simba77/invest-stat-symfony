@@ -9,10 +9,14 @@ use App\Shared\Domain\User;
 interface AccountRepositoryInterface
 {
     /**
-     * @param User $user
      * @return array<int, array{account: Account, deposits_sum: string | null}>
      */
     public function findByUserWithDeposits(User $user): array;
+
+    /**
+     * @return array{account: Account, deposits_sum: string | null} | null
+     */
+    public function findByIdAndUserWithDeposits(int $id, User $user): ?array;
 
     public function getByIdAndUser(int $id, User $user): ?Account;
 
