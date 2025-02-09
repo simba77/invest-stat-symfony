@@ -10,6 +10,7 @@ use App\Investments\Domain\Instruments\Bond;
 use App\Investments\Domain\Instruments\Future;
 use App\Investments\Domain\Instruments\Share;
 use App\Investments\Domain\Operations\Deal;
+use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\Deals\DealStatus;
 use App\Shared\Domain\User;
 use Carbon\Carbon;
@@ -20,7 +21,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Deal>
  */
-class DealRepository extends ServiceEntityRepository
+class DealRepository extends ServiceEntityRepository implements DealRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

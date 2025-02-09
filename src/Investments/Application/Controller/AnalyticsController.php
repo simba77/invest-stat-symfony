@@ -8,9 +8,9 @@ use App\Investments\Application\Request\DTO\Operations\DealsFilterRequestDTO;
 use App\Investments\Application\Response\DTO\Compiler\ClosedDealsListCompiler;
 use App\Investments\Application\Response\DTO\Compiler\MonthlyDealsListCompiler;
 use App\Investments\Domain\Analytics\StatisticService;
-use App\Investments\Infrastructure\Persistence\Repository\CouponRepository;
-use App\Investments\Infrastructure\Persistence\Repository\DealRepository;
-use App\Investments\Infrastructure\Persistence\Repository\DividendRepository;
+use App\Investments\Domain\Operations\CouponRepositoryInterface;
+use App\Investments\Domain\Operations\DealRepositoryInterface;
+use App\Investments\Domain\Operations\DividendRepositoryInterface;
 use App\Shared\Domain\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,11 +23,11 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class AnalyticsController extends AbstractController
 {
     public function __construct(
-        public readonly DealRepository $dealRepository,
+        public readonly DealRepositoryInterface $dealRepository,
         public readonly ClosedDealsListCompiler $closedDealsListCompiler,
         public readonly MonthlyDealsListCompiler $monthlyDealsListCompiler,
-        public readonly DividendRepository $dividendRepository,
-        public readonly CouponRepository $couponRepository,
+        public readonly DividendRepositoryInterface $dividendRepository,
+        public readonly CouponRepositoryInterface $couponRepository,
     ) {
     }
 
