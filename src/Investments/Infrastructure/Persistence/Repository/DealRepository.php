@@ -28,9 +28,6 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
         parent::__construct($registry, Deal::class);
     }
 
-    /**
-     * @return array<int, array{deal: Deal}>
-     */
     public function findForUser(?User $user): array
     {
         return $this->createQueryBuilder('d')
@@ -215,9 +212,6 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
             ->getResult();
     }
 
-    /**
-     * @return array<int, array{deal: Deal}>
-     */
     public function getClosedDealsForUserByFilter(User $user, ?DealsFilterRequestDTO $filter = null): array
     {
         $builder = $this->createQueryBuilder('d')
