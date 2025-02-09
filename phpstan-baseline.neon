@@ -25,24 +25,6 @@ parameters:
 			path: src/Investments/Application/Command/TInvestUpdateShares.php
 
 		-
-			message: '#^Property App\\Investments\\Domain\\Analytics\\Statistic\:\:\$account type mapping mismatch\: property can contain App\\Investments\\Domain\\Accounts\\Account\|null but database expects App\\Investments\\Domain\\Accounts\\Account\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/Investments/Domain/Analytics/Statistic.php
-
-		-
-			message: '#^Property App\\Investments\\Domain\\Analytics\\Statistic\:\:\$date type mapping mismatch\: property can contain DateTimeInterface\|null but database expects DateTimeInterface\.$#'
-			identifier: doctrine.columnType
-			count: 1
-			path: src/Investments/Domain/Analytics/Statistic.php
-
-		-
-			message: '#^Method App\\Investments\\Domain\\Analytics\\StatisticService\:\:getStatisticByYears\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Investments/Domain/Analytics/StatisticService.php
-
-		-
 			message: '#^Method App\\Investments\\Domain\\Instruments\\InvestCabHttpClient\:\:getDataAboutTicker\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1

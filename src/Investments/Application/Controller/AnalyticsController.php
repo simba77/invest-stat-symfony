@@ -7,7 +7,6 @@ namespace App\Investments\Application\Controller;
 use App\Investments\Application\Request\DTO\Operations\DealsFilterRequestDTO;
 use App\Investments\Application\Response\DTO\Compiler\ClosedDealsListCompiler;
 use App\Investments\Application\Response\DTO\Compiler\MonthlyDealsListCompiler;
-use App\Investments\Domain\Analytics\StatisticService;
 use App\Investments\Domain\Operations\CouponRepositoryInterface;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\DividendRepositoryInterface;
@@ -52,13 +51,5 @@ class AnalyticsController extends AbstractController
                 ),
             ]
         );
-    }
-
-    #[Route('/analytics/annual-stat', name: 'app_analytics_annual_statistic', methods: 'GET')]
-    public function annualStatistic(
-        StatisticService $statisticService
-    ): JsonResponse {
-        $deals = $statisticService->getStatisticByYears();
-        return $this->json($deals);
     }
 }

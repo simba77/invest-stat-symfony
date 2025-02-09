@@ -7,8 +7,9 @@ namespace App\Shared\Application\Controller;
 use App\Deposits\Domain\Deposit;
 use App\Deposits\Domain\Deposits;
 use App\Investments\Application\Response\DTO\Compiler\AccountsListCompiler;
+use App\Investments\Application\Response\DTO\Compiler\AnnualStatisticCompiler;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
-use App\Investments\Domain\Analytics\StatisticService;
+use App\Investments\Domain\Analytics\StatisticRepositoryInterface;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\Deals\DealData;
@@ -28,9 +29,10 @@ class HomepageController extends AbstractController
         private readonly CurrencyService $currencyService,
         private readonly EntityManagerInterface $entityManager,
         private readonly Deposits $depositsService,
-        private readonly StatisticService $statisticService,
         protected readonly AccountRepositoryInterface $accountRepository,
         protected readonly AccountsListCompiler $accountsListCompiler,
+        public readonly AnnualStatisticCompiler $annualStatisticCompiler,
+        public readonly StatisticRepositoryInterface $statisticRepository,
     ) {
     }
 
@@ -109,7 +111,12 @@ class HomepageController extends AbstractController
                         'currency' => '₽',
                     ],
                 ],
-                'statisticByYears' => $this->statisticService->getStatisticByYears(),
+                'statisticByYears' => $this->annualStatisticCompiler->compile(
+                    [
+                        'yearsData'  => $this->statisticRepository->getStatisticByYears(),
+                        'latestData' => $this->statisticRepository->getLatestStatistic(),
+                    ]
+                ),
             ]
         );
     }

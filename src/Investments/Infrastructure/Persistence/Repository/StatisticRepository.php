@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Infrastructure\Persistence\Repository;
 
 use App\Investments\Domain\Analytics\Statistic;
+use App\Investments\Domain\Analytics\StatisticRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
@@ -12,7 +13,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Statistic>
  */
-class StatisticRepository extends ServiceEntityRepository
+class StatisticRepository extends ServiceEntityRepository implements StatisticRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

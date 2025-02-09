@@ -2,26 +2,27 @@
 
 declare(strict_types=1);
 
-namespace App\Investments\Domain\Analytics;
+namespace App\Investments\Application\Response\DTO\Compiler;
 
+use App\Shared\Infrastructure\Compiler\CompilerInterface;
 use Carbon\Carbon;
-use Doctrine\ORM\EntityManagerInterface;
 
-class StatisticService
+/**
+ * @template-implements CompilerInterface<array{yearsData: array, latestData: array}, array>
+ */
+class AnnualStatisticCompiler implements CompilerInterface
 {
-    public function __construct(
-        private readonly EntityManagerInterface $entityManager
-    ) {
-    }
-
-    public function getStatisticByYears()
+    /**
+     * @param array{
+     *     yearsData: list<array{balance: string, usd_balance: string, investments: string, current_value: string, profit: string, date: string}>,
+     *     latestData: list<array{balance: string, usd_balance: string, investments: string, current_value: string, profit: string, date: string}>
+     *         } $entry
+     * @return array<int, mixed>
+     */
+    public function compile(mixed $entry): array
     {
-        $statisticRepository = $this->entityManager->getRepository(Statistic::class);
-        $yearsData = $statisticRepository->getStatisticByYears();
-        $latestData = $statisticRepository->getLatestStatistic();
-
         $statByYears = [];
-        foreach ($yearsData as $data) {
+        foreach ($entry['yearsData'] as $data) {
             $date = Carbon::createFromFormat('Y-m-d H:i:s', $data['date']);
             if (isset($statByYears[$date->year])) {
                 $existenceDate = $statByYears[$date->year];
@@ -49,7 +50,7 @@ class StatisticService
             ];
         }
 
-        foreach ($latestData as $data) {
+        foreach ($entry['latestData'] as $data) {
             if (isset($statByYears['current'])) {
                 $existenceDate = $statByYears['current'];
             } else {
@@ -75,7 +76,6 @@ class StatisticService
                 'profitPercent' => 0,
             ];
         }
-
 
         $prevKey = null;
         // Calculate profit
