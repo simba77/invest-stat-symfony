@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Controller;
 
+use App\Investments\Application\Operations\Coupons\CreateCouponCommand;
 use App\Investments\Application\Request\DTO\Operations\CreateCouponRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\UpdateCouponRequestDTO;
 use App\Investments\Application\Response\DTO\Compiler\CouponListCompiler;
@@ -16,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -27,6 +29,7 @@ class CouponsController extends AbstractController
         private readonly EntityManagerInterface $em,
         private readonly CouponRepositoryInterface $couponRepository,
         private readonly CouponListCompiler $couponListCompiler,
+        private readonly MessageBusInterface $messageBus,
     ) {
     }
 
@@ -40,19 +43,18 @@ class CouponsController extends AbstractController
     #[Route('/coupons/create', name: 'app_coupons_create', requirements: ['categoryId' => '\d+'], methods: ['POST'])]
     public function create(#[MapRequestPayload] CreateCouponRequestDTO $dto, #[CurrentUser] ?User $user): Response
     {
-        $account = $this->em->getRepository(Account::class)->find($dto->accountId);
-        $coupon = new Coupon(
-            user:        $user,
-            account:     $account,
-            ticker:      $dto->ticker,
-            stockMarket: $dto->stockMarket,
-            amount:      $dto->amount,
-            date:        new \DateTimeImmutable($dto->date),
+        $this->messageBus->dispatch(
+            new CreateCouponCommand(
+                userId:      $user->getId(),
+                accountId:   $dto->accountId,
+                ticker:      $dto->ticker,
+                stockMarket: $dto->stockMarket,
+                amount:      $dto->amount,
+                date:        $dto->date
+            )
         );
 
-        $this->em->persist($coupon);
-        $this->em->flush();
-        return $this->json(['success' => true]);
+        return $this->json(['success' => true], Response::HTTP_CREATED);
     }
 
     #[Route('/coupons/get-form/{id}', name: 'app_coupons_get_form', requirements: ['id' => '\d+'])]

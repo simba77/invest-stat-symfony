@@ -85,6 +85,11 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
         return parent::findAll();
     }
 
+    public function findById(int $id): ?Account
+    {
+        return $this->find($id);
+    }
+
     public function save(Account $account): void
     {
         $em = $this->getEntityManager();

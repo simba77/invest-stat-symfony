@@ -33,4 +33,6 @@ interface AccountRepositoryInterface
     public function save(Account $account): void;
 
     public function remove(Account $account): void;
+
+    public function findById(int $id): ?Account;
 }

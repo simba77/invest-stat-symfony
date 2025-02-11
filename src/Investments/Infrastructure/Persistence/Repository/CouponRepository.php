@@ -30,4 +30,18 @@ class CouponRepository extends ServiceEntityRepository implements CouponReposito
     {
         return $this->findBy(['user' => $user], ['date' => Order::Descending->value, 'id' => Order::Descending->value]);
     }
+
+    public function save(Coupon $coupon): void
+    {
+        $em = $this->getEntityManager();
+        $em->persist($coupon);
+        $em->flush();
+    }
+
+    public function remove(Coupon $coupon): void
+    {
+        $em = $this->getEntityManager();
+        $em->remove($coupon);
+        $em->flush();
+    }
 }

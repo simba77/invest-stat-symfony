@@ -17,4 +17,8 @@ interface CouponRepositoryInterface
      * @return array<Coupon>
      */
     public function findByUser(?User $user): array;
+
+    public function save(Coupon $coupon): void;
+
+    public function remove(Coupon $coupon): void;
 }
