@@ -6,7 +6,7 @@ namespace App\Investments\Application\Request\DTO\Operations;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class DealsFilterRequestDTO
+final class DealsFilterRequestDTO
 {
     public function __construct(
         #[Assert\Length(min: 0)]

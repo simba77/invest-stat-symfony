@@ -6,7 +6,7 @@ namespace App\Investments\Application\Request\DTO\Operations;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class UpdateCouponRequestDTO
+final class UpdateCouponRequestDTO
 {
     public function __construct(
         #[Assert\NotBlank]

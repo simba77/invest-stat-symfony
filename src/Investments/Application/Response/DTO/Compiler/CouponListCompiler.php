@@ -2,29 +2,25 @@
 
 declare(strict_types=1);
 
-namespace App\Investments\Domain\Operations;
+namespace App\Investments\Application\Response\DTO\Compiler;
 
 use App\Investments\Application\Response\DTO\Operations\CouponListItemDTO;
-use App\Investments\Infrastructure\Persistence\Repository\CouponRepository;
-use App\Shared\Domain\User;
-use Doctrine\Common\Collections\Criteria;
+use App\Investments\Domain\Operations\Coupon;
+use App\Shared\Infrastructure\Compiler\CompilerInterface;
 
-class CouponsService
+/**
+ * @template-implements CompilerInterface<iterable<Coupon>, CouponListItemDTO[]>
+ */
+class CouponListCompiler implements CompilerInterface
 {
-    public function __construct(
-        private readonly CouponRepository $couponRepository
-    ) {
-    }
-
     /**
-     * @param User|null $user
+     * @param iterable<Coupon> $entry
      * @return CouponListItemDTO[]
      */
-    public function getCouponsForUser(?User $user): array
+    public function compile(mixed $entry): array
     {
-        $coupons = $this->couponRepository->findBy(['user' => $user], ['date' => Criteria::DESC, 'id' => Criteria::DESC]);
         $result = [];
-        foreach ($coupons as $coupon) {
+        foreach ($entry as $coupon) {
             $result[] = new CouponListItemDTO(
                 id:          $coupon->getId(),
                 date:        $coupon->getDate()->format('d.m.Y'),

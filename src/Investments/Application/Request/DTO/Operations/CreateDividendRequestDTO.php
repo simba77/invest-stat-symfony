@@ -6,7 +6,7 @@ namespace App\Investments\Application\Request\DTO\Operations;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CreateDividendRequestDTO
+final class CreateDividendRequestDTO
 {
     public function __construct(
         #[Assert\NotBlank]

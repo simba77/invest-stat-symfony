@@ -6,7 +6,7 @@ namespace App\Investments\Application\Request\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CreateAccountRequestDTO
+final class CreateAccountRequestDTO
 {
     public function __construct(
         #[Assert\NotBlank]

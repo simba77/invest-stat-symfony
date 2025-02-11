@@ -6,7 +6,9 @@ namespace App\Investments\Infrastructure\Persistence\Repository;
 
 use App\Investments\Domain\Operations\Coupon;
 use App\Investments\Domain\Operations\CouponRepositoryInterface;
+use App\Shared\Domain\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -22,5 +24,10 @@ class CouponRepository extends ServiceEntityRepository implements CouponReposito
     public function findAll(): array
     {
         return parent::findAll();
+    }
+
+    public function findByUser(?User $user): array
+    {
+        return $this->findBy(['user' => $user], ['date' => Order::Descending->value, 'id' => Order::Descending->value]);
     }
 }

@@ -6,9 +6,10 @@ namespace App\Investments\Application\Controller;
 
 use App\Investments\Application\Request\DTO\Operations\CreateCouponRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\UpdateCouponRequestDTO;
+use App\Investments\Application\Response\DTO\Compiler\CouponListCompiler;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Operations\Coupon;
-use App\Investments\Domain\Operations\CouponsService;
+use App\Investments\Domain\Operations\CouponRepositoryInterface;
 use App\Shared\Domain\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,15 +25,16 @@ class CouponsController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly CouponsService $couponsService
+        private readonly CouponRepositoryInterface $couponRepository,
+        private readonly CouponListCompiler $couponListCompiler,
     ) {
     }
 
     #[Route('/coupons', name: 'app_coupons_index')]
     public function index(#[CurrentUser] ?User $user): JsonResponse
     {
-        $items = $this->couponsService->getCouponsForUser($user);
-        return $this->json(['items' => $items]);
+        $coupons = $this->couponRepository->findByUser($user);
+        return $this->json(['items' => $this->couponListCompiler->compile($coupons)]);
     }
 
     #[Route('/coupons/create', name: 'app_coupons_create', requirements: ['categoryId' => '\d+'], methods: ['POST'])]
