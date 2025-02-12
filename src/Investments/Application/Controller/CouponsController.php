@@ -7,6 +7,7 @@ namespace App\Investments\Application\Controller;
 use App\Investments\Application\Operations\Coupons\CreateCouponCommand;
 use App\Investments\Application\Request\DTO\Operations\CreateCouponRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\UpdateCouponRequestDTO;
+use App\Investments\Application\Response\DTO\Compiler\CouponFormCompiler;
 use App\Investments\Application\Response\DTO\Compiler\CouponListCompiler;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Operations\Coupon;
@@ -30,6 +31,7 @@ class CouponsController extends AbstractController
         private readonly CouponRepositoryInterface $couponRepository,
         private readonly CouponListCompiler $couponListCompiler,
         private readonly MessageBusInterface $messageBus,
+        private readonly CouponFormCompiler $couponFormCompiler,
     ) {
     }
 
@@ -60,23 +62,11 @@ class CouponsController extends AbstractController
     #[Route('/coupons/get-form/{id}', name: 'app_coupons_get_form', requirements: ['id' => '\d+'])]
     public function getForm(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
-        $form = [];
-        if ($id > 0) {
-            $coupon = $this->em->getRepository(Coupon::class)->findOneBy(['id' => $id, 'user' => $user]);
-            if (! $coupon) {
-                throw $this->createNotFoundException('No coupons found for id ' . $id);
-            }
-            $form = [
-                'id'          => $coupon->getId(),
-                'amount'      => $coupon->getAmount(),
-                'date'        => $coupon->getDate()->format('Y-m-d'),
-                'accountId'   => $coupon->getAccount()->getId(),
-                'ticker'      => $coupon->getTicker(),
-                'stockMarket' => $coupon->getStockMarket(),
-            ];
+        $coupon = $this->couponRepository->findByIdAndUser($id, $user);
+        if (! $coupon) {
+            throw $this->createNotFoundException('No coupons found for id ' . $id);
         }
-
-        return $this->json($form);
+        return $this->json($this->couponFormCompiler->compile($coupon));
     }
 
     #[Route('/coupons/update/{id}', name: 'app_coupons_edit', requirements: ['id' => '\d+'], methods: ['POST'])]
