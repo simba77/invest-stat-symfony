@@ -7,6 +7,7 @@ namespace App\Investments\Application\Operations\Coupons;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Operations\CouponRepositoryInterface;
 use App\Shared\Infrastructure\Symfony\NotFoundException;
+use DateTimeImmutable;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -18,6 +19,9 @@ class UpdateCouponCommandHandler
     ) {
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function __invoke(UpdateCouponCommand $command): void
     {
         $account = $this->accountRepository->findById($command->accountId);
@@ -27,10 +31,10 @@ class UpdateCouponCommandHandler
             throw new NotFoundException(sprintf('Account with id "%s" not found', $command->accountId));
         }
         if (! $coupon) {
-            throw new NotFoundException(sprintf('Coupon with id "%s" not found', $command->accountId));
+            throw new NotFoundException(sprintf('Coupon with id "%s" not found', $command->id));
         }
 
-        $coupon->setDate(new \DateTimeImmutable($command->date));
+        $coupon->setDate(new DateTimeImmutable($command->date));
         $coupon->setAmount($command->amount);
         $coupon->setTicker($command->ticker);
         $coupon->setStockMarket($command->stockMarket);

@@ -36,6 +36,11 @@ class CouponRepository extends ServiceEntityRepository implements CouponReposito
         return $this->findOneBy(['id' => $id, 'user' => $user]);
     }
 
+    public function findById(int $id): ?Coupon
+    {
+        return $this->findOneBy(['id' => $id]);
+    }
+
     public function save(Coupon $coupon): void
     {
         $em = $this->getEntityManager();
