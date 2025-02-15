@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Controller;
 
 use App\Investments\Application\Operations\Coupons\CreateCouponCommand;
+use App\Investments\Application\Operations\Coupons\UpdateCouponCommand;
 use App\Investments\Application\Request\DTO\Operations\CreateCouponRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\UpdateCouponRequestDTO;
 use App\Investments\Application\Response\DTO\Compiler\CouponFormCompiler;
@@ -72,17 +73,17 @@ class CouponsController extends AbstractController
     #[Route('/coupons/update/{id}', name: 'app_coupons_edit', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function edit(int $id, #[MapRequestPayload] UpdateCouponRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
     {
-        $coupon = $this->em->getRepository(Coupon::class)->findOneBy(['id' => $id, 'user' => $user]);
-        if (! $coupon) {
-            throw $this->createNotFoundException('No coupons found for id ' . $id);
-        }
-        $account = $this->em->getRepository(Account::class)->find($dto->accountId);
-        $coupon->setDate(new \DateTimeImmutable($dto->date));
-        $coupon->setAmount($dto->amount);
-        $coupon->setTicker($dto->ticker);
-        $coupon->setStockMarket($dto->stockMarket);
-        $coupon->setAccount($account);
-        $this->em->flush();
+        $this->messageBus->dispatch(
+            new UpdateCouponCommand(
+                id:          $id,
+                accountId:   $dto->accountId,
+                date:        $dto->date,
+                amount:      $dto->amount,
+                ticker:      $dto->ticker,
+                stockMarket: $dto->stockMarket,
+                user:        $user
+            )
+        );
 
         return $this->json(['success' => true]);
     }
