@@ -1,13 +1,13 @@
 import axios from "axios";
 import { ref } from "vue";
-import { AccountData } from "@/types/account";
+import {FullPortfolio} from "@/types/account";
 
-const portfolio = ref<AccountData>()
+const portfolio = ref<FullPortfolio>()
 
 export const usePortfolio = () => {
 
   async function getPortfolio() {
-    portfolio.value = await axios.get('/api/deals').then((response) => response.data);
+    portfolio.value = await axios.get('/api/portfolio').then((response) => response.data);
   }
 
   return {

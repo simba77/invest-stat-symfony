@@ -200,7 +200,7 @@ class Deal implements
         return $this;
     }
 
-    public function getStatus(): ?DealStatus
+    public function getStatus(): DealStatus
     {
         return $this->status;
     }

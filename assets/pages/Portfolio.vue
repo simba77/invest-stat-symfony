@@ -19,15 +19,15 @@ setPageTitle("Portfolio")
 <template>
   <page-component title="Portfolio">
     <preloader-component v-if="loading" />
-    <div v-else-if="portfolio?.deals">
+    <div v-else-if="portfolio">
       <template
-        v-for="(groupedByStatus, groupedByStatusIndex) in portfolio?.deals.dealsList"
+        v-for="(groupedByStatus, groupedByStatusIndex) in portfolio?.dealsList"
         :key="groupedByStatusIndex"
       >
         <!-- Если групп блокировки больше одной, выводим название -->
-        <template v-if="Object.keys(portfolio.deals.dealsList).length > 1">
+        <template v-if="Object.keys(portfolio.dealsList).length > 1">
           <div class="font-extrabold uppercase text-base mb-4">
-            {{ portfolio?.deals.statuses[groupedByStatusIndex]['name'] }}
+            {{ portfolio?.statuses[groupedByStatusIndex]['name'] }}
           </div>
         </template>
 
@@ -37,7 +37,7 @@ setPageTitle("Portfolio")
           :key="groupedByInstrumentTypeIndex"
         >
           <div class="font-bold text-neutral-600 mb-4">
-            {{ portfolio?.deals.instrumentTypes[groupedByInstrumentTypeIndex]['name'] }}
+            {{ portfolio?.instrumentTypes[groupedByInstrumentTypeIndex]['name'] }}
           </div>
 
 
@@ -48,7 +48,7 @@ setPageTitle("Portfolio")
           >
             <div class="flex items-center">
               <div class="font-bold text-sm mb-4">
-                {{ portfolio?.deals.currencies[groupedByCurrencyIndex]['name'] }}
+                {{ portfolio?.currencies[groupedByCurrencyIndex]['name'] }}
               </div>
               <div class="flex-grow mb-4 ml-3 border-b dark:border-zinc-800" />
             </div>
@@ -64,7 +64,7 @@ setPageTitle("Portfolio")
                 <assets-table-component
                   :hide-actions="true"
                   :assets="groupedByCurrency"
-                  :summary="portfolio?.deals.summary[groupedByStatusIndex][groupedByInstrumentTypeIndex][groupedByCurrencyIndex]"
+                  :summary="portfolio?.summary[groupedByStatusIndex][groupedByInstrumentTypeIndex][groupedByCurrencyIndex]"
                 />
               </template>
             </div>

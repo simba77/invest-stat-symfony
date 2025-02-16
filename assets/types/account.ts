@@ -103,6 +103,14 @@ export interface AccountData {
   }
 }
 
+export interface FullPortfolio {
+  dealsList: object
+  statuses: { [keys: string]: { code: string, name: string } }
+  instrumentTypes: { [keys: string]: { code: string, name: string } }
+  currencies: { [keys: string]: { code: string, name: string } }
+  summary: object
+}
+
 export interface SellSecurity {
   id?: number
   accountId: number

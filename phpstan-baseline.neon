@@ -79,30 +79,6 @@ parameters:
 			path: src/Investments/Domain/Instruments/Securities/MoexSharesProvider.php
 
 		-
-			message: '#^Method App\\Investments\\Domain\\Operations\\Deals\\SummaryForGroup\:\:getSummary\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Investments/Domain/Operations/Deals/SummaryForGroup.php
-
-		-
-			message: '#^PHPDoc tag @return with type App\\Investments\\Application\\Response\\DTO\\Operations\\SummaryForGroupDTO\|array is not subtype of native type array\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: src/Investments/Domain/Operations/Deals/SummaryForGroup.php
-
-		-
-			message: '#^PHPDoc tag @var for property App\\Investments\\Domain\\Operations\\Deals\\SummaryForGroup\:\:\$deals with type App\\Investments\\Domain\\Operations\\Deals\\DealData\|array is not subtype of native type array\.$#'
-			identifier: property.phpDocType
-			count: 1
-			path: src/Investments/Domain/Operations/Deals/SummaryForGroup.php
-
-		-
-			message: '#^Property App\\Investments\\Domain\\Operations\\Deals\\SummaryForGroup\:\:\$deals type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Investments/Domain/Operations/Deals/SummaryForGroup.php
-
-		-
 			message: '#^Method App\\Shared\\Application\\Controller\\AuthController\:\:logout\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
