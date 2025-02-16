@@ -52,9 +52,12 @@ class TInvestGetMarketData extends Command
 
         [$response] = $client->marketDataServiceClient->GetLastPrices($instrumentsRequest)->wait();
 
-
         /** @var \Tinkoff\Invest\V1\GetLastPricesResponse $response */
         foreach ($response->getLastPrices() as $item) {
+            if(empty($item->getFigi())) {
+                continue;
+            }
+
             /** @var LastPrice $item */
             $share = $shareRepository->findOneBy(['figi' => $item->getFigi()]);
             $price = $item->getPrice()->getUnits() . '.' . $item->getPrice()->getNano();
