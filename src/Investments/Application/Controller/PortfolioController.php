@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
+#[Route('/portfolio', name: 'app_full_portfolio')]
 class PortfolioController extends AbstractController
 {
     public function __construct(
@@ -23,7 +24,6 @@ class PortfolioController extends AbstractController
     ) {
     }
 
-    #[Route('/portfolio', name: 'app_full_portfolio')]
     public function __invoke(#[CurrentUser] ?User $user): Response
     {
         $compilerData = new PortfolioCompilerData(
