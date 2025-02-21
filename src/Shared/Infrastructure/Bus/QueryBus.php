@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace App\Shared\Infrastructure\Bus;
 
-use App\Shared\Domain\Bus\SyncCommandBusInterface;
+use App\Shared\Domain\Bus\QueryBusInterface;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Throwable;
 
-class SyncCommandBus implements SyncCommandBusInterface
+class QueryBus implements QueryBusInterface
 {
+    use HandleTrait;
+
     public function __construct(
-        private readonly MessageBusInterface $bus
+        /** @phpstan-ignore property.onlyWritten */
+        private MessageBusInterface $messageBus
     ) {
     }
 
-    /**
-     * @throws Throwable
-     */
-    public function dispatch(object $command): void
+    public function ask(mixed $query): mixed
     {
         try {
-            $this->bus->dispatch($command);
+            return $this->handle($query);
         } catch (HandlerFailedException $e) {
             throw $e->getPrevious();
         }
