@@ -6,12 +6,13 @@ namespace App\Investments\Application\Response\Compiler;
 
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
 use App\Investments\Domain\Operations\Coupon;
+use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\Deals\DealData;
 use App\Investments\Domain\Operations\Dividend;
 use App\Shared\Infrastructure\Compiler\CompilerInterface;
 
 /**
- * @template-implements CompilerInterface<array{deals: mixed, dividends: Dividend[], coupons: Coupon[]}, array<string, string>>
+ * @template-implements CompilerInterface<array{deals: Deal[], dividends: Dividend[], coupons: Coupon[]}, array<string, string>>
  */
 class MonthlyDealsListCompiler implements CompilerInterface
 {
@@ -21,15 +22,17 @@ class MonthlyDealsListCompiler implements CompilerInterface
     }
 
     /**
-     * @param array{deals: mixed, dividends: Dividend[], coupons: Coupon[]} $entry
+     * @param array{deals: Deal[], dividends: Dividend[], coupons: Coupon[]} $entry
      * @return array<string, string>
      */
     public function compile(mixed $entry): array
     {
+        /** @var array<string, string> $result */
         $result = [];
+
         foreach ($entry['deals'] as $deal) {
-            $dealData = new DealData($deal, $deal['deal']->getAccount(), $this->currencyService);
-            $date = $deal['deal']->getClosingDate()?->format('Y.m') ?? '0';
+            $dealData = new DealData($deal, $this->currencyService);
+            $date = $deal->getClosingDate()?->format('Y.m') ?? '0';
 
             if (isset($result[$date])) {
                 $result[$date] = bcadd($result[$date], $dealData->getProfitInBaseCurrency(), 2);
@@ -43,7 +46,7 @@ class MonthlyDealsListCompiler implements CompilerInterface
             if (isset($result[$date])) {
                 $result[$date] = bcadd($result[$date], $dividend->getAmount(), 2);
             } else {
-                $result[$date] = $dividend->getAmount();
+                $result[$date] = $dividend->getAmount() ?? '0';
             }
         }
 
@@ -52,7 +55,7 @@ class MonthlyDealsListCompiler implements CompilerInterface
             if (isset($result[$date])) {
                 $result[$date] = bcadd($result[$date], $coupon->getAmount(), 2);
             } else {
-                $result[$date] = $coupon->getAmount();
+                $result[$date] = $coupon->getAmount() ?? '0';
             }
         }
 
