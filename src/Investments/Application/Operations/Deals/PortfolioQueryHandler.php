@@ -2,62 +2,68 @@
 
 declare(strict_types=1);
 
-namespace App\Investments\Application\Response\Compiler;
+namespace App\Investments\Application\Operations\Deals;
 
-use App\Investments\Application\Operations\Deals\PortfolioCompilerData;
+use App\Investments\Application\Accounts\AccountBalanceCalculator;
+use App\Investments\Application\Response\Compiler\DealListCurrencies;
+use App\Investments\Application\Response\Compiler\DealListInstrumentTypes;
+use App\Investments\Application\Response\Compiler\DealListStatuses;
 use App\Investments\Application\Response\DTO\Operations\FullPortfolioDTO;
-use App\Investments\Domain\Accounts\Account;
+use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
+use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\Deals\DealData;
 use App\Investments\Domain\Operations\Deals\GroupByTicker;
 use App\Investments\Domain\Operations\Deals\SummaryForGroup;
-use App\Shared\Infrastructure\Compiler\CompilerInterface;
+use App\Shared\Domain\User;
+use App\Shared\Domain\UserRepositoryInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
-/**
- * @template-implements CompilerInterface<PortfolioCompilerData, FullPortfolioDTO>
- */
-class PortfolioCompiler implements CompilerInterface
+#[AsMessageHandler]
+class PortfolioQueryHandler
 {
     public function __construct(
-        private readonly AccountsListCompiler $accountsListCompiler,
+        private readonly AccountRepositoryInterface $accountRepository,
+        private readonly DealRepositoryInterface $dealRepository,
+        private readonly UserRepositoryInterface $userRepository,
         private readonly CurrencyService $currencyService,
-        private readonly PropertyAccessorInterface $propertyAccess
+        private readonly PropertyAccessorInterface $propertyAccess,
+        private readonly AccountBalanceCalculator $accountBalanceCalculator,
     ) {
     }
 
-    /**
-     * @param PortfolioCompilerData $entry
-     * @return FullPortfolioDTO
-     */
-    public function compile(mixed $entry): FullPortfolioDTO
+    public function __invoke(PortfolioQuery $query): FullPortfolioDTO
     {
-        $accountsValue = $this->getAccountsValue($entry->accounts);
+        $user = $this->userRepository->findById($query->userId);
+        $deals = $this->dealRepository->findByUserId($user->getId());
+        $accountBalance = $this->getAccountsBalance($user);
+
         $summary = new SummaryForGroup();
         $statuses = new DealListStatuses();
         $instrumentTypes = new DealListInstrumentTypes();
         $currencies = new DealListCurrencies();
         $result = [];
 
-        foreach ($entry->deals as $deal) {
-            $status = $statuses->addAndGet($deal['deal']->getStatus());
+        foreach ($deals as $deal) {
+            $status = $statuses->addAndGet($deal->getStatus());
             $instrumentType = $instrumentTypes->addAndGet($deal);
             $currency = $currencies->add($deal);
-            $ticker = $deal['deal']->getTicker();
+            $ticker = $deal->getTicker();
 
-            $dealData = new DealData($deal, $deal['deal']->getAccount(), $this->currencyService);
+            $dealData = new DealData($deal, $this->currencyService);
 
             /** @var ?GroupByTicker $group */
-            $group = $this->propertyAccess->getValue($result, '[' . $status['code'] . '][' . $instrumentType['code'] . '][' . $currency['code'] . '][' . $ticker . ']');
+            $group = $this->propertyAccess->getValue($result, '[' . $status->code . '][' . $instrumentType->code . '][' . $currency->code . '][' . $ticker . ']');
             if ($group) {
                 $group->addDeal($dealData);
             } else {
-                $group = new GroupByTicker($accountsValue);
+                $group = new GroupByTicker($accountBalance);
                 $group->addDeal($dealData);
-                $result[$status['code']][$instrumentType['code']][$currency['code']][$ticker] = $group;
+                $result[$status->code][$instrumentType->code][$currency->code][$ticker] = $group;
             }
 
-            $summary->addDeal($status['code'], $instrumentType['code'], $currency['code'], $dealData);
+            $summary->addDeal($status->code, $instrumentType->code, $currency->code, $dealData);
         }
 
         return new FullPortfolioDTO(
@@ -69,17 +75,14 @@ class PortfolioCompiler implements CompilerInterface
         );
     }
 
-    /**
-     * @param array<int, array{account: Account, deposits_sum: string | null}> $accounts
-     */
-    private function getAccountsValue(array $accounts): string
+    private function getAccountsBalance(User $user): string
     {
-        $accountsValue = '0';
-        $accountsList = $this->accountsListCompiler->compile($accounts);
-        foreach ($accountsList as $account) {
-            $accountsValue = bcadd($accountsValue, $account->currentValue, 2);
+        $balance = '0';
+        $accounts = $this->accountRepository->findByUserWithDeposits($user);
+        foreach ($accounts as $account) {
+            $balance = bcadd($balance, $this->accountBalanceCalculator->getTotalBalance($account['account']));
         }
-        return $accountsValue;
+        return $balance;
     }
 
     /**
