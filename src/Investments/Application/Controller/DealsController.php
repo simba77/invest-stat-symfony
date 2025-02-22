@@ -8,7 +8,7 @@ use App\Investments\Application\Operations\Deals\AccountDealsQuery;
 use App\Investments\Application\Request\DTO\Operations\CreateDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\EditDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\SellDealRequestDTO;
-use App\Investments\Application\Response\DTO\Compiler\AccountItemCompiler;
+use App\Investments\Application\Response\Compiler\AccountItemCompiler;
 use App\Investments\Application\Response\DTO\Operations\EditDealDTO;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;

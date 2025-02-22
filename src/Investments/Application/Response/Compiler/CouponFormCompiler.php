@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Investments\Application\Response\DTO\Compiler;
+namespace App\Investments\Application\Response\Compiler;
 
 use App\Investments\Application\Response\DTO\Operations\CouponFormDTO;
 use App\Investments\Domain\Operations\Coupon;

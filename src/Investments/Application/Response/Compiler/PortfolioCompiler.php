@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Investments\Application\Response\Compiler;
 
 use App\Investments\Application\Operations\Deals\PortfolioCompilerData;
-use App\Investments\Application\Response\DTO\Compiler\AccountsListCompiler;
 use App\Investments\Application\Response\DTO\Operations\FullPortfolioDTO;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;

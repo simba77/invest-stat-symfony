@@ -6,8 +6,8 @@ namespace App\Shared\Application\Controller;
 
 use App\Deposits\Domain\Deposit;
 use App\Deposits\Domain\Deposits;
-use App\Investments\Application\Response\DTO\Compiler\AccountsListCompiler;
-use App\Investments\Application\Response\DTO\Compiler\AnnualStatisticCompiler;
+use App\Investments\Application\Response\Compiler\AccountsListCompiler;
+use App\Investments\Application\Response\Compiler\AnnualStatisticCompiler;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Analytics\StatisticRepositoryInterface;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;

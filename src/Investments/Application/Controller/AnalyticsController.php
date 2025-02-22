@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Investments\Application\Controller;
 
 use App\Investments\Application\Request\DTO\Operations\DealsFilterRequestDTO;
-use App\Investments\Application\Response\DTO\Compiler\ClosedDealsListCompiler;
-use App\Investments\Application\Response\DTO\Compiler\MonthlyDealsListCompiler;
+use App\Investments\Application\Response\Compiler\ClosedDealsListCompiler;
+use App\Investments\Application\Response\Compiler\MonthlyDealsListCompiler;
 use App\Investments\Domain\Operations\CouponRepositoryInterface;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\DividendRepositoryInterface;

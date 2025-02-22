@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Controller;
 
 use App\Investments\Application\Request\DTO\Operations\InvestmentRequestDTO;
-use App\Investments\Application\Response\DTO\Compiler\AccountsSimpleListCompiler;
+use App\Investments\Application\Response\Compiler\AccountsSimpleListCompiler;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Operations\Investment;

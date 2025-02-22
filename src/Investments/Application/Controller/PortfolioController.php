@@ -27,7 +27,7 @@ class PortfolioController extends AbstractController
     public function __invoke(#[CurrentUser] ?User $user): Response
     {
         $compilerData = new PortfolioCompilerData(
-            deals:    $this->dealRepository->findForUser($user),
+            deals:    $this->dealRepository->findByUserId($user),
             accounts: $this->accountRepository->findByUserWithDeposits($user)
         );
 
