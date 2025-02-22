@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Investments\Infrastructure\Persistence\Repository;
 
 use App\Investments\Application\Request\DTO\Operations\DealsFilterRequestDTO;
-use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Instruments\Bond;
 use App\Investments\Domain\Instruments\Future;
 use App\Investments\Domain\Instruments\Share;
@@ -28,43 +27,20 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
         parent::__construct($registry, Deal::class);
     }
 
-    public function findForUser(?User $user): array
+    /**
+     * @return array<int, Deal>
+     */
+    public function findByUserId(int $userId): array
     {
         return $this->createQueryBuilder('d')
-            ->select(
-                [
-                    'd as deal',
-
-                    // Share
-                    's.shortName shareName',
-                    's.price sharePrice',
-                    's.prevPrice sharePrevPrice',
-                    's.currency shareCurrency',
-                    's.type shareType',
-
-                    // Bond
-                    'b.shortName bondName',
-                    'b.price bondPrice',
-                    'b.prevPrice bondPrevPrice',
-                    'b.currency bondCurrency',
-                    'b.lotSize bondLotSize',
-
-                    // Future
-                    'f.shortName futureName',
-                    'f.price futurePrice',
-                    'f.prevPrice futurePrevPrice',
-                    'f.currency futureCurrency',
-                    'f.stepPrice futureStepPrice',
-                    'f.lotSize futureLotSize',
-                ]
-            )
-            ->andWhere('d.user = :user')
+            ->select(['d', 's', 'b', 'f'])
+            ->leftJoin('d.share', 's')
+            ->leftJoin('d.bond', 'b')
+            ->leftJoin('d.future', 'f')
+            ->andWhere('d.user = :userId')
             ->andWhere('d.status != :status')
-            ->setParameter('user', $user)
+            ->setParameter('userId', $userId)
             ->setParameter('status', DealStatus::Closed)
-            ->leftJoin(Share::class, 's', Join::WITH, 's.ticker = d.ticker AND s.stockMarket = d.stockMarket')
-            ->leftJoin(Bond::class, 'b', Join::WITH, 'b.ticker = d.ticker AND b.stockMarket = d.stockMarket')
-            ->leftJoin(Future::class, 'f', Join::WITH, 'f.ticker = d.ticker AND f.stockMarket = d.stockMarket')
             ->orderBy('d.status', 'ASC')
             ->addOrderBy('s.type', 'DESC')
             ->addOrderBy('s.currency', 'ASC')
@@ -103,20 +79,20 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
     public function findForAccount(int $accountId): array
     {
         return $this->createQueryBuilder('d')
-        ->select(['d', 's', 'b', 'f'])
-        ->leftJoin('d.share', 's')
-        ->leftJoin('d.bond', 'b')
-        ->leftJoin('d.future', 'f')
-        ->andWhere('d.account = :accountId')
-        ->andWhere('d.status != :status')
-        ->setParameter('accountId', $accountId)
-        ->setParameter('status', DealStatus::Closed)
-        ->orderBy('d.status', 'ASC')
-        ->addOrderBy('s.type', 'DESC')
-        ->addOrderBy('s.currency', 'ASC')
-        ->addOrderBy('d.id', 'ASC')
-        ->getQuery()
-        ->getResult();
+            ->select(['d', 's', 'b', 'f'])
+            ->leftJoin('d.share', 's')
+            ->leftJoin('d.bond', 'b')
+            ->leftJoin('d.future', 'f')
+            ->andWhere('d.account = :accountId')
+            ->andWhere('d.status != :status')
+            ->setParameter('accountId', $accountId)
+            ->setParameter('status', DealStatus::Closed)
+            ->orderBy('d.status', 'ASC')
+            ->addOrderBy('s.type', 'DESC')
+            ->addOrderBy('s.currency', 'ASC')
+            ->addOrderBy('d.id', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     /** @return list<array{ticker: string}> */

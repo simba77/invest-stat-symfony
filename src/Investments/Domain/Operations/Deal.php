@@ -88,7 +88,7 @@ class Deal implements
     private ?Bond $bond = null;
 
     #[ORM\ManyToOne(targetEntity: Future::class)]
-    #[ORM\JoinColumn(name: 'ticker', referencedColumnName: 'ticker', nullable: false)]
+    #[ORM\JoinColumn(name: 'ticker', referencedColumnName: 'ticker')]
     #[ORM\JoinColumn(name: 'stock_market', referencedColumnName: 'stock_market')]
     private ?Future $future = null;
 
