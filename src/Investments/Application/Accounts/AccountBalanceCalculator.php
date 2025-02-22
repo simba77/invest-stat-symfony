@@ -46,7 +46,7 @@ class AccountBalanceCalculator
         $fullBuyPrice = '0';
         $fullCurrentPrice = '0';
         foreach ($deals as $deal) {
-            $dealData = new DealData($deal, $account, $this->currencyService);
+            $dealData = new DealData($deal, $this->currencyService);
             if ($dealData->getSecurityType() === SecurityTypeEnum::Future) {
                 $fullCurrentPrice = bcadd($fullCurrentPrice, $dealData->getProfitInBaseCurrency(), 4);
             } else {
