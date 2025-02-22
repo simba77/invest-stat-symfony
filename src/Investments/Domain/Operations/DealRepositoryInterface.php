@@ -57,7 +57,12 @@ interface DealRepositoryInterface
     public function getClosedDealsForUserByFilter(User $user, ?DealsFilterRequestDTO $filter = null): array;
 
     /**
-     * @return list<Deal>
+     * @return array<int, Deal>
      */
     public function findForUserAndAccount(int $userId, int $accountId): array;
+
+    /**
+     * @return array<int, Deal>
+     */
+    public function findForAccount(int $accountId): array;
 }

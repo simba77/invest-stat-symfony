@@ -100,7 +100,7 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
     /**
      * @return array<int, Deal>
      */
-    public function findForAccount(Account $account): array
+    public function findForAccount(int $accountId): array
     {
         return $this->createQueryBuilder('d')
         ->select(['d', 's', 'b', 'f'])
@@ -109,7 +109,7 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
         ->leftJoin('d.future', 'f')
         ->andWhere('d.account = :accountId')
         ->andWhere('d.status != :status')
-        ->setParameter('accountId', $account)
+        ->setParameter('accountId', $accountId)
         ->setParameter('status', DealStatus::Closed)
         ->orderBy('d.status', 'ASC')
         ->addOrderBy('s.type', 'DESC')

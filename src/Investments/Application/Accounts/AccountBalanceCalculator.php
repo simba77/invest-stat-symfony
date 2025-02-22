@@ -42,7 +42,7 @@ class AccountBalanceCalculator
      */
     public function calculateSumOfAllDealsForAccount(Account $account): array
     {
-        $deals = $this->dealRepository->findForAccount($account);
+        $deals = $this->dealRepository->findForAccount($account->getId());
         $fullBuyPrice = '0';
         $fullCurrentPrice = '0';
         foreach ($deals as $deal) {
