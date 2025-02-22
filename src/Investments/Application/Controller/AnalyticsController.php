@@ -33,7 +33,7 @@ class AnalyticsController extends AbstractController
     #[Route('/analytics/closed-deals', name: 'app_analytics_closed_deals', methods: 'GET')]
     public function closedDeals(#[MapQueryString] ?DealsFilterRequestDTO $filter, #[CurrentUser] ?User $user): JsonResponse
     {
-        $deals = $this->dealRepository->getClosedDealsForUserByFilter($user, $filter);
+        $deals = $this->dealRepository->getClosedDealsForUserByFilter($user->getId(), $filter);
         return $this->json($this->closedDealsListCompiler->compile($deals));
     }
 
@@ -44,7 +44,7 @@ class AnalyticsController extends AbstractController
             [
                 'profitByMonths' => $this->monthlyDealsListCompiler->compile(
                     [
-                        'deals'     => $this->dealRepository->getClosedDealsForUserByFilter($user, $filter),
+                        'deals'     => $this->dealRepository->getClosedDealsForUserByFilter($user->getId(), $filter),
                         'dividends' => $this->dividendRepository->findAll(),
                         'coupons'   => $this->couponRepository->findAll(),
                     ],

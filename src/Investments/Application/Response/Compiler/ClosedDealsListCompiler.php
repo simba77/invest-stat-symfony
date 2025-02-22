@@ -32,7 +32,7 @@ class ClosedDealsListCompiler implements CompilerInterface
         $summaryProfit = '0';
 
         foreach ($entry as $deal) {
-            $dealData = new DealData($deal, $deal['deal']->getAccount(), $this->currencyService);
+            $dealData = new DealData($deal, $this->currencyService);
 
             if (array_key_exists($dealData->getTicker(), $dealsByTickers)) {
                 $group = $dealsByTickers[$dealData->getTicker()];

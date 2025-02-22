@@ -16,7 +16,7 @@ class BondStrategy implements DealStrategyInterface
 
     public function getName(): string
     {
-        return $this->deal->getBond()->getName();
+        return $this->deal->getBond()->getShortName();
     }
 
     public function getSecurityType(): SecurityTypeEnum

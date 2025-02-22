@@ -20,7 +20,7 @@ class FutureStrategy implements DealStrategyInterface
 
     public function getName(): string
     {
-        return $this->deal->getFuture()->getName();
+        return $this->deal->getFuture()->getShortName();
     }
 
     public function getSecurityType(): SecurityTypeEnum

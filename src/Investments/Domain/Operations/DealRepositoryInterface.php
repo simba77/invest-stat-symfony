@@ -15,27 +15,9 @@ interface DealRepositoryInterface
     public function findByUserId(int $userId): array;
 
     /**
-     * @return array<int, array{
-     *     deal: Deal,
-     *     shareName: string,
-     *     sharePrice: string,
-     *     sharePrevPrice: string,
-     *     shareCurrency: string,
-     *     shareType: string,
-     *     bondName: string,
-     *     bondPrice: string,
-     *     bondPrevPrice: string,
-     *     bondCurrency: string,
-     *     bondLotSize: string,
-     *     futureName: string,
-     *     futurePrice: string,
-     *     futurePrevPrice: string,
-     *     futureCurrency: string,
-     *     futureStepPrice: string,
-     *     futureLotSize: string,
-     * }>
+     * @return array<int, Deal>
      */
-    public function getClosedDealsForUserByFilter(User $user, ?DealsFilterRequestDTO $filter = null): array;
+    public function getClosedDealsForUserByFilter(int $userId, ?DealsFilterRequestDTO $filter = null): array;
 
     /**
      * @return array<int, Deal>

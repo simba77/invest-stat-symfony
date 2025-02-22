@@ -16,7 +16,7 @@ class ShareStrategy implements DealStrategyInterface
 
     public function getName(): string
     {
-        return $this->deal->getShare()->getName();
+        return $this->deal->getShare()?->getShortName() ?? '';
     }
 
     public function getSecurityType(): SecurityTypeEnum
@@ -36,7 +36,7 @@ class ShareStrategy implements DealStrategyInterface
 
     public function getCurrentPrice(): string
     {
-        return $this->deal->getShare()->getPrice() ?? '0';
+        return $this->deal->getShare()?->getPrice() ?? '0';
     }
 
     public function getPrevPrice(): string
@@ -51,6 +51,6 @@ class ShareStrategy implements DealStrategyInterface
 
     public function getCurrency(): string
     {
-        return $this->deal->getShare()->getCurrency() ?? 'RUB';
+        return $this->deal->getShare()?->getCurrency() ?? 'RUB';
     }
 }
