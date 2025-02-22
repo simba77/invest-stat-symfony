@@ -10,7 +10,6 @@ use App\Investments\Application\Request\DTO\Operations\EditDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\SellDealRequestDTO;
 use App\Investments\Application\Response\DTO\Instruments\SecurityDTO;
 use App\Investments\Domain\Accounts\Account;
-use App\Investments\Domain\Accounts\AccountCalculator;
 use App\Investments\Domain\Instruments\Securities\SecuritiesService;
 use App\Investments\Domain\Instruments\Securities\SecurityTypeEnum;
 use App\Investments\Domain\Operations\Deal;
@@ -28,29 +27,6 @@ class DealService
         private readonly SecuritiesService $securitiesService,
         private readonly AccountBalanceCalculator $accountBalanceCalculator,
     ) {
-    }
-
-    public function addDeal(Account $account, User $user, CreateDealRequestDTO $dealRequestDTO): void
-    {
-        $deal = new Deal(
-            $user,
-            $account,
-            $dealRequestDTO->ticker,
-            $dealRequestDTO->stockMarket,
-            DealStatus::Active,
-            $dealRequestDTO->isShort ? DealType::Short : DealType::Long,
-            $dealRequestDTO->quantity,
-            $dealRequestDTO->buyPrice,
-            $dealRequestDTO->targetPrice
-        );
-
-        $this->entityManager->persist($deal);
-
-        $this->changeAccountBalanceWhenAddDeal($account, $dealRequestDTO);
-
-        $this->accountBalanceCalculator->recalculateBalance($account);
-
-        $this->entityManager->flush();
     }
 
     public function sellOne(Deal $deal, SellDealRequestDTO $dto): void
@@ -127,57 +103,6 @@ class DealService
         $this->changeAccountBalance($deal, $dto);
         $this->accountBalanceCalculator->recalculateBalance($account);
 
-        $this->entityManager->flush();
-    }
-
-    private function changeAccountBalanceWhenAddDeal(Account $account, CreateDealRequestDTO $dealRequestDTO): void
-    {
-        $security = $this->securitiesService->getSecurityByTickerAndStockMarket($dealRequestDTO->ticker, $dealRequestDTO->stockMarket);
-        $dealSum = '0';
-        $currency = 'RUB';
-
-        if ($security) {
-            if ($security->securityType === SecurityTypeEnum::Share) {
-                $dealSum = bcmul($dealRequestDTO->buyPrice, (string) $dealRequestDTO->quantity, 4);
-            } elseif ($security->securityType === SecurityTypeEnum::Bond) {
-                $dealSum = bcmul($security->lotSize, $dealRequestDTO->buyPrice, 4);
-                $dealSum = bcdiv($dealSum, '100', 4);
-                $dealSum = bcmul($dealSum, (string) $dealRequestDTO->quantity, 4);
-                $dealSum = bcadd($dealSum, bcmul($security->bondAccumulatedCoupon, (string) $dealRequestDTO->quantity, 4), 4);
-            }
-
-            if ($security->currency !== 'RUB') {
-                $currency = $security->currency;
-            }
-        } else {
-            // If no data on the security is found, then we set the expected data for calculating the price
-            $dealSum = bcmul($dealRequestDTO->buyPrice, (string) $dealRequestDTO->quantity, 4);
-            if ($dealRequestDTO->stockMarket !== 'MOEX') {
-                $currency = 'USD';
-            }
-        }
-
-        if ($currency === 'RUB') {
-            $balanceToChange = $account->getBalance();
-
-            // Depends on the type of deal we decide to increase or decrease the balance.
-            if (! $dealRequestDTO->isShort) {
-                $account->setBalance(bcsub($balanceToChange, $dealSum, 4));
-            } else {
-                $account->setBalance(bcadd($balanceToChange, $dealSum, 4));
-            }
-        } else {
-            $balanceToChange = $account->getUsdBalance();
-
-            // Depends on the type of deal we decide to increase or decrease the balance.
-            if (! $dealRequestDTO->isShort) {
-                $account->setUsdBalance(bcsub($balanceToChange, $dealSum, 4));
-            } else {
-                $account->setUsdBalance(bcadd($balanceToChange, $dealSum, 4));
-            }
-        }
-
-        $this->entityManager->persist($account);
         $this->entityManager->flush();
     }
 

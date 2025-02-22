@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Controller;
 
 use App\Investments\Application\Operations\Deals\AccountDealsQuery;
+use App\Investments\Application\Operations\Deals\CreateDealCommand;
 use App\Investments\Application\Request\DTO\Operations\CreateDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\EditDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\SellDealRequestDTO;
@@ -16,6 +17,7 @@ use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\Deals\DealService;
 use App\Investments\Domain\Operations\Deals\DealType;
 use App\Shared\Domain\Bus\QueryBusInterface;
+use App\Shared\Domain\Bus\SyncCommandBusInterface;
 use App\Shared\Domain\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,7 +36,8 @@ class DealsController extends AbstractController
         private readonly DealService $dealService,
         protected readonly AccountRepositoryInterface $accountRepository,
         protected readonly AccountItemCompiler $accountItemCompiler,
-        private readonly QueryBusInterface $queryBus
+        private readonly QueryBusInterface $queryBus,
+        private readonly SyncCommandBusInterface $commandBus,
     ) {
     }
 
@@ -62,12 +65,19 @@ class DealsController extends AbstractController
     #[Route('/deals/create/{accountId}', name: 'app_deals_deals_create', requirements: ['accountId' => '\d+'], methods: ['POST'])]
     public function create(int $accountId, #[MapRequestPayload] CreateDealRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
     {
-        $account = $this->em->getRepository(Account::class)->findOneBy(['id' => $accountId, 'userId' => $user->getId()]);
-        if (! $account) {
-            throw $this->createNotFoundException('No account found for id ' . $accountId);
-        }
+        $this->commandBus->dispatch(
+            new CreateDealCommand(
+                accountId:   $accountId,
+                userId:      $user->getId(),
+                ticker:      $dto->ticker,
+                stockMarket: $dto->stockMarket,
+                isShort:     $dto->isShort,
+                quantity:    $dto->quantity,
+                buyPrice:    $dto->buyPrice,
+                targetPrice: $dto->targetPrice,
+            )
+        );
 
-        $this->dealService->addDeal($account, $user, $dto);
         return $this->json(['success' => true]);
     }
 
