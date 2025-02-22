@@ -78,33 +78,29 @@ class Deal implements
     private ?\DateTimeInterface $closingDate = null;
 
     #[ORM\ManyToOne(targetEntity: Share::class)]
-    #[ORM\JoinColumn(name: 'ticker', referencedColumnName: 'ticker')]
-    #[ORM\JoinColumn(name: 'stock_market', referencedColumnName: 'stock_market')]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Share $share = null;
 
     #[ORM\ManyToOne(targetEntity: Bond::class)]
-    #[ORM\JoinColumn(name: 'ticker', referencedColumnName: 'ticker')]
-    #[ORM\JoinColumn(name: 'stock_market', referencedColumnName: 'stock_market')]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Bond $bond = null;
 
     #[ORM\ManyToOne(targetEntity: Future::class)]
-    #[ORM\JoinColumn(name: 'ticker', referencedColumnName: 'ticker')]
-    #[ORM\JoinColumn(name: 'stock_market', referencedColumnName: 'stock_market')]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Future $future = null;
 
     public function __construct(
-        User       $user,
-        Account    $account,
-        string     $ticker,
-        string     $stockMarket,
+        User $user,
+        Account $account,
+        string $ticker,
+        string $stockMarket,
         DealStatus $status,
-        DealType   $type,
-        int        $quantity,
-        string      $buyPrice,
-        string      $targetPrice = '0',
-        string      $sellPrice = '0',
-    )
-    {
+        DealType $type,
+        int $quantity,
+        string $buyPrice,
+        string $targetPrice = '0',
+        string $sellPrice = '0',
+    ) {
         $this->user = $user;
         $this->account = $account;
         $this->ticker = $ticker;
@@ -267,5 +263,23 @@ class Deal implements
     public function getFuture(): ?Future
     {
         return $this->future;
+    }
+
+    public function setShare(?Share $share): static
+    {
+        $this->share = $share;
+        return $this;
+    }
+
+    public function setBond(?Bond $bond): static
+    {
+        $this->bond = $bond;
+        return $this;
+    }
+
+    public function setFuture(?Future $future): static
+    {
+        $this->future = $future;
+        return $this;
     }
 }
