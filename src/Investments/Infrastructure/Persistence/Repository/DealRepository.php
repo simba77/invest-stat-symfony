@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace App\Investments\Infrastructure\Persistence\Repository;
 
 use App\Investments\Application\Request\DTO\Operations\DealsFilterRequestDTO;
-use App\Investments\Domain\Instruments\Bond;
-use App\Investments\Domain\Instruments\Future;
 use App\Investments\Domain\Instruments\Share;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\Deals\DealStatus;
-use App\Shared\Domain\User;
 use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
@@ -171,5 +168,19 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
             ->addOrderBy('d.id', 'ASC');
 
         return $builder->getQuery()->getResult();
+    }
+
+    public function save(Deal $deal): void
+    {
+        $em = $this->getEntityManager();
+        $em->persist($deal);
+        $em->flush();
+    }
+
+    public function remove(Deal $deal): void
+    {
+        $em = $this->getEntityManager();
+        $em->remove($deal);
+        $em->flush();
     }
 }

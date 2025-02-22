@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Investments\Domain\Operations;
 
 use App\Investments\Application\Request\DTO\Operations\DealsFilterRequestDTO;
-use App\Shared\Domain\User;
 
 interface DealRepositoryInterface
 {
@@ -28,4 +27,8 @@ interface DealRepositoryInterface
      * @return array<int, Deal>
      */
     public function findForAccount(int $accountId): array;
+
+    public function save(Deal $deal): void;
+
+    public function remove(Deal $deal): void;
 }
