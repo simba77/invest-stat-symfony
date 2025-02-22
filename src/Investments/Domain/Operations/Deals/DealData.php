@@ -4,65 +4,31 @@ declare(strict_types=1);
 
 namespace App\Investments\Domain\Operations\Deals;
 
-use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
 use App\Investments\Domain\Instruments\Securities\SecurityTypeEnum;
 use App\Investments\Domain\Operations\Deal;
-use App\Investments\Domain\Operations\Deals\Strategy\BondStrategy;
+use App\Investments\Domain\Operations\Deals\Strategy\DealStrategyFactory;
 use App\Investments\Domain\Operations\Deals\Strategy\DealStrategyInterface;
-use App\Investments\Domain\Operations\Deals\Strategy\FutureStrategy;
-use App\Investments\Domain\Operations\Deals\Strategy\ShareStrategy;
 
 class DealData
 {
     private DealStrategyInterface $strategy;
 
-    /** @param array{
-     *     deal: Deal,
-     *     shareName?: string,
-     *     bondName?: string,
-     *     futureName?: string,
-     *     sharePrice?: string,
-     *     sharePrevPrice?: string,
-     *     bondPrice?: string,
-     *     bondPrevPrice?: string,
-     *     bondLotSize?: string,
-     *     futurePrice?: string,
-     *     futurePrevPrice?: string,
-     *     futureStepPrice?: string,
-     *     futureLotSize?: string,
-     *     shareCurrency?: string,
-     *     futureCurrency?: string,
-     *     bondCurrency?: string,
-     * } $deal
-     */
     public function __construct(
-        private readonly array $deal,
-        private readonly Account $account,
+        private readonly Deal $deal,
         private readonly CurrencyService $currencyService,
     ) {
-        if ($this->deal['futureName']) {
-            $this->setStrategy(new FutureStrategy($this->deal, $this->account));
-        } elseif ($this->deal['bondName']) {
-            $this->setStrategy(new BondStrategy($this->deal, $this->account));
-        } else {
-            $this->setStrategy(new ShareStrategy($this->deal, $this->account));
-        }
-    }
-
-    public function setStrategy(DealStrategyInterface $strategy): void
-    {
-        $this->strategy = $strategy;
+        $this->strategy = DealStrategyFactory::create($this->deal);
     }
 
     public function getId(): int
     {
-        return $this->deal['deal']->getId();
+        return $this->deal->getId();
     }
 
     public function getAccountId(): int
     {
-        return $this->account->getId();
+        return $this->deal->getAccount()->getId();
     }
 
     public function getName(): string
@@ -72,7 +38,7 @@ class DealData
 
     public function getTicker(): string
     {
-        return $this->deal['deal']->getTicker();
+        return $this->deal->getTicker();
     }
 
     public function getSecurityType(): SecurityTypeEnum
@@ -87,7 +53,7 @@ class DealData
 
     public function getQuantity(): int
     {
-        return (int) $this->deal['deal']->getQuantity();
+        return (int) $this->deal->getQuantity();
     }
 
     public function getFullBuyPrice(): string
@@ -145,7 +111,7 @@ class DealData
 
     public function getTargetPrice(): string
     {
-        return $this->deal['deal']->getTargetPrice();
+        return $this->deal->getTargetPrice();
     }
 
     public function getFullTargetPrice(): string
@@ -160,14 +126,14 @@ class DealData
 
     public function getProfit(): string
     {
-        if ($this->deal['deal']->getStatus() === DealStatus::Closed) {
-            if ($this->deal['deal']->getType() === DealType::Short) {
+        if ($this->deal->getStatus() === DealStatus::Closed) {
+            if ($this->deal->getType() === DealType::Short) {
                 return bcsub(bcsub($this->getFullBuyPrice(), $this->getFullSellPrice(), 4), $this->getCommission(), 4);
             }
             return bcsub(bcsub($this->getFullSellPrice(), $this->getFullBuyPrice(), 4), $this->getCommission(), 4);
         }
 
-        if ($this->deal['deal']->getType() === DealType::Short) {
+        if ($this->deal->getType() === DealType::Short) {
             return bcsub(bcsub($this->getFullBuyPrice(), $this->getFullCurrentPrice(), 4), $this->getCommission(), 4);
         }
         return bcsub(bcsub($this->getFullCurrentPrice(), $this->getFullBuyPrice(), 4), $this->getCommission(), 4);
@@ -184,7 +150,7 @@ class DealData
             return '0';
         }
 
-        if ($this->deal['deal']->getType() === DealType::Short) {
+        if ($this->deal->getType() === DealType::Short) {
             return bcsub($this->getBuyPrice(), $this->getTargetPrice(), 4);
         }
         return bcsub($this->getTargetPrice(), $this->getBuyPrice(), 4);
@@ -196,7 +162,7 @@ class DealData
             return '0';
         }
 
-        if ($this->deal['deal']->getType() === DealType::Short) {
+        if ($this->deal->getType() === DealType::Short) {
             return bcsub($this->getFullBuyPrice(), $this->getFullTargetPrice(), 4);
         }
         return bcsub($this->getFullTargetPrice(), $this->getFullBuyPrice(), 4);
@@ -225,27 +191,27 @@ class DealData
 
     public function getType(): ?DealType
     {
-        return $this->deal['deal']->getType();
+        return $this->deal->getType();
     }
 
     public function getStatus(): DealStatus
     {
-        return $this->deal['deal']->getStatus();
+        return $this->deal->getStatus();
     }
 
     public function getCreatedAt(): string
     {
-        return $this->deal['deal']->createdAt()->format('d.m.Y H:i');
+        return $this->deal->createdAt()->format('d.m.Y H:i');
     }
 
     public function getUpdatedAt(): ?string
     {
-        return $this->deal['deal']->updatedAt()?->format('d.m.Y H:i');
+        return $this->deal->updatedAt()?->format('d.m.Y H:i');
     }
 
     public function getClosingDate(): ?string
     {
-        return $this->deal['deal']->getClosingDate()?->format('d.m.Y H:i');
+        return $this->deal->getClosingDate()?->format('d.m.Y H:i');
     }
 
     public function getBuyPriceInBaseCurrency(): string

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Domain\Operations;
 
 use App\Investments\Application\Request\DTO\Operations\DealsFilterRequestDTO;
+use App\Investments\Domain\Accounts\Account;
 use App\Shared\Domain\User;
 
 interface DealRepositoryInterface
@@ -54,4 +55,9 @@ interface DealRepositoryInterface
      * }>
      */
     public function getClosedDealsForUserByFilter(User $user, ?DealsFilterRequestDTO $filter = null): array;
+
+    /**
+     * @return list<Deal>
+     */
+    public function findForUserAndAccount(int $userId, int $accountId): array;
 }

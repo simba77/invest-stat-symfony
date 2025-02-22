@@ -4,23 +4,22 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Response\Compiler;
 
+use App\Investments\Application\Response\DTO\Operations\Deals\DealStatusDTO;
 use App\Investments\Domain\Operations\Deals\DealStatus;
 
 class DealListStatuses
 {
-    /** @var array<string, array{code: string, name: string}> */
+    /** @var array<string, DealStatusDTO> */
     private array $statuses = [];
 
-    /**
-     * @return array{code: string, name: string}
-     */
-    public function addAndGet(DealStatus $status): array
+    public function addAndGet(DealStatus $status): DealStatusDTO
     {
-        $this->statuses[$status->codeAndName()['code']] = $status->codeAndName();
-        return $status->codeAndName();
+        $statusData = $status->codeAndName();
+        $this->statuses[$statusData['code']] = new DealStatusDTO($statusData['code'], $statusData['name']);
+        return $this->statuses[$statusData['code']];
     }
 
-    /** @return  array<string, array{code: string, name: string}> */
+    /** @return  array<string, DealStatusDTO> */
     public function getStatuses(): array
     {
         return $this->statuses;

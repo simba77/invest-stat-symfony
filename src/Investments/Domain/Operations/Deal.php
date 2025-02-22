@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Investments\Domain\Operations;
 
 use App\Investments\Domain\Accounts\Account;
+use App\Investments\Domain\Instruments\Bond;
+use App\Investments\Domain\Instruments\Future;
+use App\Investments\Domain\Instruments\Share;
 use App\Investments\Domain\Operations\Deals\DealStatus;
 use App\Investments\Domain\Operations\Deals\DealType;
 use App\Investments\Infrastructure\Persistence\Repository\DealRepository;
@@ -73,6 +76,21 @@ class Deal implements
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $closingDate = null;
+
+    #[ORM\ManyToOne(targetEntity: Share::class)]
+    #[ORM\JoinColumn(name: 'ticker', referencedColumnName: 'ticker')]
+    #[ORM\JoinColumn(name: 'stock_market', referencedColumnName: 'stock_market')]
+    private ?Share $share = null;
+
+    #[ORM\ManyToOne(targetEntity: Bond::class)]
+    #[ORM\JoinColumn(name: 'ticker', referencedColumnName: 'ticker')]
+    #[ORM\JoinColumn(name: 'stock_market', referencedColumnName: 'stock_market')]
+    private ?Bond $bond = null;
+
+    #[ORM\ManyToOne(targetEntity: Future::class)]
+    #[ORM\JoinColumn(name: 'ticker', referencedColumnName: 'ticker', nullable: false)]
+    #[ORM\JoinColumn(name: 'stock_market', referencedColumnName: 'stock_market')]
+    private ?Future $future = null;
 
     public function __construct(
         User       $user,
@@ -234,5 +252,20 @@ class Deal implements
         $this->closingDate = $closingDate;
 
         return $this;
+    }
+
+    public function getShare(): ?Share
+    {
+        return $this->share;
+    }
+
+    public function getBond(): ?Bond
+    {
+        return $this->bond;
+    }
+
+    public function getFuture(): ?Future
+    {
+        return $this->future;
     }
 }

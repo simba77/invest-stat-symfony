@@ -4,41 +4,20 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Response\Compiler;
 
+use App\Investments\Application\Response\DTO\Operations\Deals\DealInstrumentTypeDTO;
 use App\Investments\Domain\Operations\Deal;
 
 class DealListInstrumentTypes
 {
-    /** @var array<string, array{code: string, name: string}> */
+    /** @var array<string, DealInstrumentTypeDTO> */
     private array $instrumentTypes = [];
 
-    /**
-     * @param array{
-     *      deal: Deal,
-     *      shareName: ?string,
-     *      sharePrice: string,
-     *      sharePrevPrice: string,
-     *      shareCurrency: string,
-     *      shareType: string,
-     *      bondName: ?string,
-     *      bondPrice: string,
-     *      bondPrevPrice: string,
-     *      bondCurrency: string,
-     *      bondLotSize: string,
-     *      futureName: ?string,
-     *      futurePrice: string,
-     *      futurePrevPrice: string,
-     *      futureCurrency: string,
-     *      futureStepPrice: string,
-     *      futureLotSize: string,
-     *  } $deal
-     * @return array{code: string, name: string}
-     */
-    public function addAndGet(array $deal): array
+    public function addAndGet(Deal $deal): DealInstrumentTypeDTO
     {
         $type = match (true) {
-            $deal['shareName'] !== null => 'shares',
-            $deal['bondName'] !== null => 'bonds',
-            $deal['futureName'] !== null => 'futures',
+            $deal->getShare() !== null => 'shares',
+            $deal->getBond() !== null => 'bonds',
+            $deal->getFuture() !== null => 'futures',
             default => 'other',
         };
 
@@ -61,12 +40,12 @@ class DealListInstrumentTypes
             ],
         ];
 
-        $instrumentType = $types[$type];
-        $this->instrumentTypes[$instrumentType['code']] = $instrumentType;
+        $instrumentType = new DealInstrumentTypeDTO($types[$type]['code'], $types[$type]['name']);
+        $this->instrumentTypes[$instrumentType->code] = $instrumentType;
         return $instrumentType;
     }
 
-    /** @return  array<string, array{code: string, name: string}> */
+    /** @return  array<string, DealInstrumentTypeDTO> */
     public function getInstrumentTypes(): array
     {
         return $this->instrumentTypes;

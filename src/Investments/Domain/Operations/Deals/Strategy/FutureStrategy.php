@@ -4,27 +4,23 @@ declare(strict_types=1);
 
 namespace App\Investments\Domain\Operations\Deals\Strategy;
 
-use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Instruments\FuturesMultipliers;
 use App\Investments\Domain\Instruments\Securities\SecurityTypeEnum;
+use App\Investments\Domain\Operations\Deal;
 
 class FutureStrategy implements DealStrategyInterface
 {
     public readonly FuturesMultipliers $futuresMultipliers;
 
-    /**
-     * @inheritDoc
-     */
     public function __construct(
-        private readonly array $deal,
-        public Account $account
+        private readonly Deal $deal
     ) {
         $this->futuresMultipliers = new FuturesMultipliers();
     }
 
     public function getName(): string
     {
-        return $this->deal['futureName'];
+        return $this->deal->getFuture()->getName();
     }
 
     public function getSecurityType(): SecurityTypeEnum
@@ -34,22 +30,22 @@ class FutureStrategy implements DealStrategyInterface
 
     public function getBuyPrice(): string
     {
-        return bcmul(bcmul($this->deal['deal']->getBuyPrice(), $this->getMultiplier(), 4), $this->deal['futureLotSize'], 4);
+        return bcmul(bcmul($this->deal->getBuyPrice(), $this->getMultiplier(), 4), $this->deal->getFuture()->getLotSize(), 4);
     }
 
     public function getSellPrice(): string
     {
-        return bcmul(bcmul($this->deal['deal']->getSellPrice(), $this->getMultiplier(), 4), $this->deal['futureLotSize'], 4);
+        return bcmul(bcmul($this->deal->getSellPrice(), $this->getMultiplier(), 4), $this->deal->getFuture()->getLotSize(), 4);
     }
 
     public function getCurrentPrice(): string
     {
-        return bcmul(bcmul($this->deal['futurePrice'], $this->getMultiplier(), 4), $this->deal['futureLotSize'], 4);
+        return bcmul(bcmul($this->deal->getFuture()->getPrice(), $this->getMultiplier(), 4), $this->deal->getFuture()->getLotSize(), 4);
     }
 
     public function getPrevPrice(): string
     {
-        return bcmul(bcmul($this->deal['futurePrevPrice'], $this->getMultiplier(), 4), $this->deal['futureLotSize'], 4);
+        return bcmul(bcmul($this->deal->getFuture()->getPrevPrice(), $this->getMultiplier(), 4), $this->deal->getFuture()->getLotSize(), 4);
     }
 
     public function getCommission(string $price, string $quantity): string
@@ -59,15 +55,15 @@ class FutureStrategy implements DealStrategyInterface
 
     public function getCurrency(): string
     {
-        return $this->deal['futureCurrency'] ?? 'RUB';
+        return $this->deal->getFuture()->getCurrency() ?? 'RUB';
     }
 
     private function getMultiplier(): string
     {
-        $multiplier = $this->futuresMultipliers->getMultiplierForTicker($this->deal['deal']->getTicker());
+        $multiplier = $this->futuresMultipliers->getMultiplierForTicker($this->deal->getTicker());
         if (! is_null($multiplier)) {
             return $multiplier;
         }
-        return $this->deal['futureStepPrice'] ?? '1';
+        return $this->deal->getFuture()->getStepPrice() ?? '1';
     }
 }

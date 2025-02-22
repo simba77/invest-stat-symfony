@@ -4,38 +4,23 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Response\Compiler;
 
+use App\Investments\Application\Response\DTO\Operations\Deals\DealCurrencyDTO;
 use App\Investments\Domain\Operations\Deal;
 
 class DealListCurrencies
 {
-    /** @var array<string, array{code: string, name: string}> */
+    /** @var array<string, DealCurrencyDTO> */
     private array $currencies = [];
 
-    /**
-     * @param array{
-     *      deal: Deal,
-     *      shareName: string,
-     *      sharePrice: string,
-     *      sharePrevPrice: string,
-     *      shareCurrency: ?string,
-     *      shareType: string,
-     *      bondName: string,
-     *      bondPrice: string,
-     *      bondPrevPrice: string,
-     *      bondCurrency: ?string,
-     *      bondLotSize: string,
-     *      futureName: string,
-     *      futurePrice: string,
-     *      futurePrevPrice: string,
-     *      futureCurrency: ?string,
-     *      futureStepPrice: string,
-     *      futureLotSize: string,
-     *  } $deal
-     * @return array{code: string, name: string}
-     */
-    public function add(array $deal): array
+    public function add(Deal $deal): DealCurrencyDTO
     {
-        $currencyCode = $deal['shareCurrency'] ?? $deal['bondCurrency'] ?? $deal['futureCurrency'] ?? 'RUB';
+        $currencyCode = match (true) {
+            $deal->getShare() !== null => $deal->getShare()->getCurrency(),
+            $deal->getBond() !== null => $deal->getBond()->getCurrency(),
+            $deal->getFuture() !== null => $deal->getFuture()->getCurrency(),
+            default => 'RUB',
+        };
+
         $currencies = [
             'USD' => [
                 'code' => 'USD',
@@ -47,12 +32,12 @@ class DealListCurrencies
             ],
         ];
 
-        $currency = $currencies[$currencyCode];
-        $this->currencies[$currency['code']] = $currency;
+        $currency = new DealCurrencyDTO($currencies[$currencyCode]['code'], $currencies[$currencyCode]['name']);
+        $this->currencies[$currency->code] = $currency;
         return $currency;
     }
 
-    /** @return  array<string, array{code: string, name: string}> */
+    /** @return  array<string, DealCurrencyDTO> */
     public function getCurrencies(): array
     {
         return $this->currencies;

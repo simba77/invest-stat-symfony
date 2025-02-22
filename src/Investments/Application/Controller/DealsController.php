@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Controller;
 
+use App\Investments\Application\Operations\Deals\AccountDealsQuery;
 use App\Investments\Application\Request\DTO\Operations\CreateDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\EditDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\SellDealRequestDTO;
@@ -13,8 +14,8 @@ use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\Deals\DealService;
-use App\Investments\Domain\Operations\Deals\DealsListService;
 use App\Investments\Domain\Operations\Deals\DealType;
+use App\Shared\Domain\Bus\QueryBusInterface;
 use App\Shared\Domain\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,13 +31,16 @@ class DealsController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly DealsListService $dealsListService,
         private readonly DealService $dealService,
         protected readonly AccountRepositoryInterface $accountRepository,
         protected readonly AccountItemCompiler $accountItemCompiler,
+        private readonly QueryBusInterface $queryBus
     ) {
     }
 
+    /**
+     * @throws \Throwable
+     */
     #[Route('/deals/{accountId}', name: 'app_deals_deals_index', requirements: ['accountId' => '\d+'])]
     public function dealListByAccount(int $accountId, #[CurrentUser] ?User $user): Response
     {
@@ -44,7 +48,9 @@ class DealsController extends AbstractController
         if (! $account) {
             throw $this->createNotFoundException('No account found for id ' . $accountId);
         }
-        $deals = $this->dealsListService->getListWithGroups($user, $account['account']);
+
+        $deals = $this->queryBus->ask(new AccountDealsQuery($accountId, $user->getId()));
+
         return $this->json(
             [
                 'account' => $this->accountItemCompiler->compile($account),
