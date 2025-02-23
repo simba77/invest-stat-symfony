@@ -13,6 +13,8 @@ interface DealRepositoryInterface
      */
     public function findByUserId(int $userId): array;
 
+    public function findById(int $id): ?Deal;
+
     /**
      * @return array<int, Deal>
      */

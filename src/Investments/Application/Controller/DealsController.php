@@ -6,6 +6,7 @@ namespace App\Investments\Application\Controller;
 
 use App\Investments\Application\Operations\Deals\AccountDealsQuery;
 use App\Investments\Application\Operations\Deals\CreateDealCommand;
+use App\Investments\Application\Operations\Deals\DeleteDealCommand;
 use App\Investments\Application\Request\DTO\Operations\CreateDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\EditDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\SellDealRequestDTO;
@@ -14,6 +15,7 @@ use App\Investments\Application\Response\DTO\Operations\EditDealDTO;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Operations\Deal;
+use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\Deals\DealService;
 use App\Investments\Domain\Operations\Deals\DealType;
 use App\Shared\Domain\Bus\QueryBusInterface;
@@ -38,6 +40,7 @@ class DealsController extends AbstractController
         protected readonly AccountItemCompiler $accountItemCompiler,
         private readonly QueryBusInterface $queryBus,
         private readonly SyncCommandBusInterface $commandBus,
+        private readonly DealRepositoryInterface $dealRepository,
     ) {
     }
 
@@ -84,12 +87,12 @@ class DealsController extends AbstractController
     #[Route('/deals/delete/{id}', name: 'app_deals_deals_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
-        $deal = $this->em->getRepository(Deal::class)->findOneBy(['id' => $id, 'user' => $user]);
-        if (! $deal) {
+        $deal = $this->dealRepository->findById($id);
+        if (! $deal || $deal->getUser()->getId() !== $user->getId()) {
             throw $this->createNotFoundException('No expense found for id ' . $id);
         }
-        $this->em->remove($deal);
-        $this->em->flush();
+
+        $this->commandBus->dispatch(new DeleteDealCommand($deal->getId()));
 
         return $this->json(['success' => true]);
     }

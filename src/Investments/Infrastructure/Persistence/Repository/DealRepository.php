@@ -46,6 +46,11 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
             ->getResult();
     }
 
+    public function findById(int $id): Deal
+    {
+        return $this->find($id);
+    }
+
     /**
      * @return array<int, Deal>
      */
