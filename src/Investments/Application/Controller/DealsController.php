@@ -6,6 +6,7 @@ namespace App\Investments\Application\Controller;
 
 use App\Investments\Application\Operations\Deals\AccountDealsQuery;
 use App\Investments\Application\Operations\Deals\CreateDealCommand;
+use App\Investments\Application\Operations\Deals\DealService;
 use App\Investments\Application\Operations\Deals\DeleteDealCommand;
 use App\Investments\Application\Request\DTO\Operations\CreateDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\EditDealRequestDTO;
@@ -14,9 +15,7 @@ use App\Investments\Application\Response\Compiler\AccountItemCompiler;
 use App\Investments\Application\Response\DTO\Operations\EditDealDTO;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
-use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
-use App\Investments\Domain\Operations\Deals\DealService;
 use App\Investments\Domain\Operations\Deals\DealType;
 use App\Shared\Domain\Bus\QueryBusInterface;
 use App\Shared\Domain\Bus\SyncCommandBusInterface;
@@ -100,8 +99,8 @@ class DealsController extends AbstractController
     #[Route('/deals/get-by-id/{id}', name: 'app_deals_deals_getbyid', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function getById(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
-        $deal = $this->em->getRepository(Deal::class)->findOneBy(['id' => $id, 'user' => $user]);
-        if (! $deal) {
+        $deal = $this->dealRepository->findById($id);
+        if (! $deal || $deal->getUser()->getId() !== $user->getId()) {
             throw $this->createNotFoundException('No deal found for id ' . $id);
         }
         return $this->json(
@@ -122,8 +121,8 @@ class DealsController extends AbstractController
     #[Route('/deals/edit/{id}', name: 'app_deals_deals_edit', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function edit(int $id, #[MapRequestPayload] EditDealRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
     {
-        $deal = $this->em->getRepository(Deal::class)->findOneBy(['id' => $id, 'user' => $user]);
-        if (! $deal) {
+        $deal = $this->dealRepository->findById($id);
+        if (! $deal || $deal->getUser()->getId() !== $user->getId()) {
             throw $this->createNotFoundException('No deal found for id ' . $id);
         }
 
@@ -137,10 +136,11 @@ class DealsController extends AbstractController
     {
         if ($dto->id) {
             // Sell one deal
-            $deal = $this->em->getRepository(Deal::class)->findOneBy(['id' => $dto->id, 'user' => $user]);
-            if (! $deal) {
+            $deal = $this->dealRepository->findById($dto->id);
+            if (! $deal || $deal->getUser()->getId() !== $user->getId()) {
                 throw $this->createNotFoundException('No deal found for id ' . $dto->id);
             }
+
             $this->dealService->sellOne($deal, $dto);
         } else {
             // Sell the required number of securities

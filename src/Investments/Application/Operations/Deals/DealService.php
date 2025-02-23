@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Investments\Domain\Operations\Deals;
+namespace App\Investments\Application\Operations\Deals;
 
 use App\Investments\Application\Accounts\AccountBalanceCalculator;
-use App\Investments\Application\Request\DTO\Operations\CreateDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\EditDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\SellDealRequestDTO;
 use App\Investments\Application\Response\DTO\Instruments\SecurityDTO;
@@ -13,6 +12,8 @@ use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Instruments\Securities\SecuritiesService;
 use App\Investments\Domain\Instruments\Securities\SecurityTypeEnum;
 use App\Investments\Domain\Operations\Deal;
+use App\Investments\Domain\Operations\Deals\DealStatus;
+use App\Investments\Domain\Operations\Deals\DealType;
 use App\Investments\Domain\Operations\Deals\Exceptions\NoDealsException;
 use App\Shared\Domain\User;
 use Carbon\Carbon;

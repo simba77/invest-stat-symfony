@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Controller;
 
+use App\Investments\Application\Operations\DividendsService;
 use App\Investments\Application\Request\DTO\Operations\CreateDividendRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\UpdateDividendRequestDTO;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Operations\Dividend;
-use App\Investments\Domain\Operations\DividendsService;
 use App\Shared\Domain\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

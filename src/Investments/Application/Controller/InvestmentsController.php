@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Controller;
 
+use App\Investments\Application\Operations\InvestmentsService;
 use App\Investments\Application\Request\DTO\Operations\InvestmentRequestDTO;
 use App\Investments\Application\Response\Compiler\AccountsSimpleListCompiler;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Operations\Investment;
-use App\Investments\Domain\Operations\InvestmentsService;
 use App\Shared\Domain\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

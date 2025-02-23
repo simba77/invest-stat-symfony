@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Investments\Domain\Operations;
+namespace App\Investments\Application\Operations;
 
 use App\Investments\Application\Response\DTO\Operations\DividendListItemDTO;
 use App\Investments\Infrastructure\Persistence\Repository\DividendRepository;
