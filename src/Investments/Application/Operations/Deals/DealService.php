@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Investments\Application\Operations\Deals;
 
 use App\Investments\Application\Accounts\AccountBalanceCalculator;
-use App\Investments\Application\Request\DTO\Operations\EditDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\SellDealRequestDTO;
 use App\Investments\Application\Response\DTO\Instruments\SecurityDTO;
 use App\Investments\Domain\Accounts\Account;
@@ -164,20 +163,5 @@ class DealService
 
         // @phpstan-ignore-next-line
         return '0';
-    }
-
-    public function changeDeal(Deal $deal, EditDealRequestDTO $dto): void
-    {
-        $deal->setTicker($dto->ticker);
-        $deal->setStockMarket($dto->stockMarket);
-        $deal->setType($dto->isShort ? DealType::Short : DealType::Long);
-        $deal->setQuantity($dto->quantity);
-        $deal->setBuyPrice($dto->buyPrice);
-        $deal->setTargetPrice($dto->targetPrice);
-        $this->entityManager->persist($deal);
-
-        $this->accountBalanceCalculator->recalculateBalance($deal->getAccount());
-
-        $this->entityManager->flush();
     }
 }

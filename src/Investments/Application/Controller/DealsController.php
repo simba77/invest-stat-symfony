@@ -8,6 +8,7 @@ use App\Investments\Application\Operations\Deals\AccountDealsQuery;
 use App\Investments\Application\Operations\Deals\CreateDealCommand;
 use App\Investments\Application\Operations\Deals\DealService;
 use App\Investments\Application\Operations\Deals\DeleteDealCommand;
+use App\Investments\Application\Operations\Deals\UpdateDealCommand;
 use App\Investments\Application\Request\DTO\Operations\CreateDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\EditDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\SellDealRequestDTO;
@@ -126,7 +127,17 @@ class DealsController extends AbstractController
             throw $this->createNotFoundException('No deal found for id ' . $id);
         }
 
-        $this->dealService->changeDeal($deal, $dto);
+        $this->commandBus->dispatch(
+            new UpdateDealCommand(
+                id:          $deal->getId(),
+                ticker:      $dto->ticker,
+                stockMarket: $dto->stockMarket,
+                isShort:     $dto->isShort,
+                quantity:    $dto->quantity,
+                buyPrice:    $dto->buyPrice,
+                targetPrice: $dto->targetPrice,
+            )
+        );
 
         return $this->json(['success' => true]);
     }
