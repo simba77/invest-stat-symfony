@@ -14,14 +14,12 @@ use App\Investments\Application\Request\DTO\Operations\EditDealRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\SellDealRequestDTO;
 use App\Investments\Application\Response\Compiler\AccountItemCompiler;
 use App\Investments\Application\Response\DTO\Operations\EditDealDTO;
-use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\Deals\DealType;
 use App\Shared\Domain\Bus\QueryBusInterface;
 use App\Shared\Domain\Bus\SyncCommandBusInterface;
 use App\Shared\Domain\User;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +32,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class DealsController extends AbstractController
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
         private readonly DealService $dealService,
         protected readonly AccountRepositoryInterface $accountRepository,
         protected readonly AccountItemCompiler $accountItemCompiler,
@@ -155,7 +152,7 @@ class DealsController extends AbstractController
             $this->dealService->sellOne($deal, $dto);
         } else {
             // Sell the required number of securities
-            $account = $this->em->getRepository(Account::class)->findOneBy(['id' => $dto->accountId, 'userId' => $user->getId()]);
+            $account = $this->accountRepository->findById($dto->accountId);
             $this->dealService->sellAsNeeded($user, $account, $dto);
         }
 

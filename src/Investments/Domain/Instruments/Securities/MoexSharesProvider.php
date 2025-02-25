@@ -33,6 +33,10 @@ class MoexSharesProvider implements SharesProviderInterface
         return [...$tqbrShares, ...$tqtfShares, ...$tqifShares];
     }
 
+    /**
+     * @param array{shares: array<int, mixed>, marketData: array<int, mixed>} $boardData
+     * @return array<ShareDTO>
+     */
     private function parseResult(array $boardData): array
     {
         $result = [];

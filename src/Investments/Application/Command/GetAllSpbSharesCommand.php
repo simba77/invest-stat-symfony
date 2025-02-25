@@ -62,7 +62,7 @@ class GetAllSpbSharesCommand extends Command
                         ShareTypeEnum::Stock->value,
                         $tickerData['description'] ?? $ticker['ticker'],
                         $tickerData['description'] ?? $ticker['ticker'],
-                        1,
+                        '1',
                         ''
                     );
                 }

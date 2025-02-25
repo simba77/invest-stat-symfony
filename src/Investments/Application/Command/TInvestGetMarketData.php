@@ -48,11 +48,16 @@ class TInvestGetMarketData extends Command
         $shareRepository = $this->em->getRepository(Share::class);
 
         $instrumentsRequest = new GetLastPricesRequest();
-        $instrumentsRequest->setInstrumentId(array_column($activeTickers, 'figi'));
+        /** @var iterable<string> $figi */
+        $figi = array_column($activeTickers, 'figi');
+        $instrumentsRequest->setInstrumentId($figi);
 
         [$response] = $client->marketDataServiceClient->GetLastPrices($instrumentsRequest)->wait();
 
-        /** @var \Tinkoff\Invest\V1\GetLastPricesResponse $response */
+        /**
+         * @var \Tinkoff\Invest\V1\GetLastPricesResponse $response
+         */
+        // @phpstan-ignore-next-line
         foreach ($response->getLastPrices() as $item) {
             if(empty($item->getFigi())) {
                 continue;

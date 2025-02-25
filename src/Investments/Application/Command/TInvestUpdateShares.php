@@ -43,6 +43,7 @@ class TInvestUpdateShares extends Command
         $instrumentsRequest = new InstrumentsRequest();
         [$response] = $client->instrumentsServiceClient->Shares($instrumentsRequest)->wait();
         /** @var \Tinkoff\Invest\V1\SharesResponse $response */
+        // @phpstan-ignore-next-line
         foreach ($response->getInstruments() as $item) {
             /** @var \Tinkoff\Invest\V1\Share $item */
             if ($item->getExchange() === 'spb_close' || $item->getExchange() === 'otc_ncc') {

@@ -20,12 +20,12 @@ class InvestCabHttpClient
         );
     }
 
-    private function parseContent(string $content)
+    private function parseContent(string $content): mixed
     {
         return json_decode(json_decode($content, true, 512, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR);
     }
 
-    public function getDataAboutTicker(string $ticker)
+    public function getDataAboutTicker(string $ticker): mixed
     {
         $data = $this->client->request('GET', 'symbol?symbol=' . $ticker)->getContent();
         return $this->parseContent($data);

@@ -25,11 +25,12 @@ class MoexHttpClient
     }
 
     /**
-     * @throws TransportExceptionInterface
+     * @return array<string, mixed>
      * @throws ServerExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws ClientExceptionInterface
      * @throws \JsonException
+     * @throws TransportExceptionInterface
      */
     public function getData(string $url): array
     {
@@ -38,6 +39,9 @@ class MoexHttpClient
         return json_decode(json_encode($xmlObject, JSON_THROW_ON_ERROR), true) ?? [];
     }
 
+    /**
+     * @return list<mixed>
+     */
     public function getCurrencyRates(): array
     {
         $data = $this->getData('/iss/statistics/engines/futures/markets/indicativerates/securities.xml');
@@ -47,7 +51,7 @@ class MoexHttpClient
     }
 
     /**
-     * @return array{shares: array, marketData: array}
+     * @return array{shares: list<mixed>, marketData: list<mixed>}
      */
     public function getSharesByBoard(string $board): array
     {
@@ -63,7 +67,7 @@ class MoexHttpClient
     }
 
     /**
-     * @return array{bonds: array, marketData: array}
+     * @return array{bonds: list<mixed>, marketData: list<mixed>}
      */
     public function getBonds(): array
     {
@@ -79,7 +83,7 @@ class MoexHttpClient
     }
 
     /**
-     * @return array{futures: array, marketData: array}
+     * @return array{futures: list<mixed>, marketData: list<mixed>}
      */
     public function getFutures(): array
     {
