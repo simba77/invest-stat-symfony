@@ -17,6 +17,7 @@ class DepositAccountFormDataCompiler implements CompilerInterface
      * @param DepositAccount $entry
      * @return DepositAccountEditFormDTO
      */
+    #[\Override]
     public function compile(mixed $entry): DepositAccountEditFormDTO
     {
         return new DepositAccountEditFormDTO(

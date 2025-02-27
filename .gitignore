@@ -1,4 +1,3 @@
-
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -29,7 +28,3 @@ docker-compose.override.yml
 /node_modules/
 /public/build/
 ###< pentatrion/vite-bundle ###
-
-###> phpstan/phpstan ###
-phpstan.neon
-###< phpstan/phpstan ###

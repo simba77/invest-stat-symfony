@@ -1,0 +1,964 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="6.8.8@1361cd33008feb3ae2b4a93f1860e14e538ec8c2">
+  <file src="src/Deposits/Application/Response/Compiler/DepositAccountListItemsCompiler.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function compile(mixed $entry): array]]></code>
+    </MissingOverrideAttribute>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[$entry]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Deposits/Application/Response/Compiler/DepositFormDataCompiler.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function compile(mixed $entry): DepositEditFormDTO]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Deposits/Application/Response/Compiler/DepositsListItemsCompiler.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function compile(mixed $entry): array]]></code>
+    </MissingOverrideAttribute>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[$entry]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Deposits/Application/Response/DTO/DepositAccountEditFormDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$name]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Deposits/Application/Response/DTO/DepositAccountListItemDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$name]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Deposits/Application/Response/DTO/DepositAccountSummaryListItemDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$profit]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Deposits/Application/Response/DTO/DepositEditFormDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$accountId]]></code>
+      <code><![CDATA[$date]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$sum]]></code>
+      <code><![CDATA[$type]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Deposits/Application/Response/DTO/DepositListItemDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$accountName]]></code>
+      <code><![CDATA[$date]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$sum]]></code>
+      <code><![CDATA[$typeName]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Deposits/Domain/Deposit.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getUser]]></code>
+      <code><![CDATA[setUser]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Deposits/Domain/DepositAccount.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getUser]]></code>
+      <code><![CDATA[setUser]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Deposits/Infrastructure/Persistence/Repository/DepositAccountRepository.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$registry]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Deposits/Infrastructure/Persistence/Repository/DepositRepository.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$registry]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Expenses/Application/Response/Compiler/CategoriesListCompiler.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function compile(mixed $entry): array]]></code>
+    </MissingOverrideAttribute>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[$entry]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Expenses/Application/Response/Compiler/ExpenseItemCompiler.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function compile(mixed $entry): ExpenseResponseDTO]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Expenses/Application/Response/Compiler/ExpensesSummaryCompiler.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function compile(mixed $entry): array]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Expenses/Application/Response/DTO/ExpenseCategoryDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$expenses]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$name]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Expenses/Application/Response/DTO/ExpenseResponseDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$sum]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Expenses/Domain/Expense.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getCategory]]></code>
+      <code><![CDATA[getUserId]]></code>
+      <code><![CDATA[setUserId]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Expenses/Domain/ExpensesCategory.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getUserId]]></code>
+      <code><![CDATA[setId]]></code>
+      <code><![CDATA[setUserId]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Expenses/Domain/ExpensesCategoryRepositoryInterface.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getById]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Expenses/Infrastructure/Persistence/Repository/ExpenseRepository.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$registry]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Expenses/Infrastructure/Persistence/Repository/ExpensesCategoryRepository.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$registry]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Investments/Application/Command/AccountsRecalculateCommand.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Command/CollectAccountsStatisticCommand.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Command/ConvertDealsCommand.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Command/GetAllSpbSharesCommand.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Command/GetBondsCommand.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Command/GetCurrencyRatesCommand.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Command/GetFuturesCommand.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Command/GetMoexSharesCommand.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Command/GetSpbSharesCommand.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Command/TInvestGetMarketData.php">
+    <InvalidArgument>
+      <code><![CDATA[$figi]]></code>
+      <code><![CDATA[$token]]></code>
+    </InvalidArgument>
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Command/TInvestUpdateShares.php">
+    <InvalidArgument>
+      <code><![CDATA[$token]]></code>
+    </InvalidArgument>
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Command/UpdateClosingDateDealsCommand.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Command/UpdatePrevPricesCommand.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Operations/Deals/AccountDealsQueryHandler.php">
+    <UnusedForeachValue>
+      <code><![CDATA[$groupByCurrency]]></code>
+    </UnusedForeachValue>
+  </file>
+  <file src="src/Investments/Application/Operations/Deals/DealService.php">
+    <RedundantCondition>
+      <code><![CDATA[$securityDTO->securityType === SecurityTypeEnum::Future]]></code>
+    </RedundantCondition>
+  </file>
+  <file src="src/Investments/Application/Operations/Deals/PortfolioQueryHandler.php">
+    <UnusedForeachValue>
+      <code><![CDATA[$groupByCurrency]]></code>
+    </UnusedForeachValue>
+  </file>
+  <file src="src/Investments/Application/Request/DTO/Operations/DealsFilterRequestDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$accountId]]></code>
+      <code><![CDATA[$endDate]]></code>
+      <code><![CDATA[$startDate]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/Compiler/AccountEditFormCompiler.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function compile(mixed $entry): AccountEditFormResponseDTO]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Response/Compiler/AccountItemCompiler.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function compile(mixed $entry): AccountItemResponseDTO]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Response/Compiler/AccountsListCompiler.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function compile(mixed $entry): array]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Response/Compiler/AccountsSimpleListCompiler.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function compile(mixed $entry): array]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Response/Compiler/AnnualStatisticCompiler.php">
+    <InvalidOperand>
+      <code><![CDATA[$data['balance']]]></code>
+      <code><![CDATA[$data['balance']]]></code>
+      <code><![CDATA[$data['current_value']]]></code>
+      <code><![CDATA[$data['current_value']]]></code>
+      <code><![CDATA[$data['investments']]]></code>
+      <code><![CDATA[$data['investments']]]></code>
+      <code><![CDATA[$data['profit']]]></code>
+      <code><![CDATA[$data['profit']]]></code>
+      <code><![CDATA[$data['usd_balance']]]></code>
+      <code><![CDATA[$data['usd_balance']]]></code>
+      <code><![CDATA[$statByYear['profit'] * 100]]></code>
+      <code><![CDATA[($statByYear['profit'] * 100 / $statByYears[$prevKey]['profit']) - 100]]></code>
+    </InvalidOperand>
+    <InvalidPropertyFetch>
+      <code><![CDATA[$date->year]]></code>
+    </InvalidPropertyFetch>
+    <InvalidReturnStatement>
+      <code><![CDATA[$statByYears]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[array<int, mixed>]]></code>
+    </InvalidReturnType>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function compile(mixed $entry): array]]></code>
+    </MissingOverrideAttribute>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[$entry]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Investments/Application/Response/Compiler/ClosedDealsListCompiler.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function compile(mixed $entry): array]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Response/Compiler/CouponFormCompiler.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function compile(mixed $entry): CouponFormDTO]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Response/Compiler/CouponListCompiler.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function compile(mixed $entry): array]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Response/Compiler/MonthlyDealsListCompiler.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function compile(mixed $entry): array]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Accounts/AccountDealsResponseDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$currencies]]></code>
+      <code><![CDATA[$dealsList]]></code>
+      <code><![CDATA[$instrumentTypes]]></code>
+      <code><![CDATA[$statuses]]></code>
+      <code><![CDATA[$summary]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Accounts/AccountEditFormResponseDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$balance]]></code>
+      <code><![CDATA[$commission]]></code>
+      <code><![CDATA[$futuresCommission]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$sort]]></code>
+      <code><![CDATA[$usdBalance]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Accounts/AccountItemResponseDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$balance]]></code>
+      <code><![CDATA[$deposits]]></code>
+      <code><![CDATA[$fullProfit]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$usdBalance]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Accounts/SimpleAccountItemResponseDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$sort]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Analytics/ClosedDealInGroupDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$accountId]]></code>
+      <code><![CDATA[$buyPrice]]></code>
+      <code><![CDATA[$closingDate]]></code>
+      <code><![CDATA[$commission]]></code>
+      <code><![CDATA[$createdAt]]></code>
+      <code><![CDATA[$currency]]></code>
+      <code><![CDATA[$fullBuyPrice]]></code>
+      <code><![CDATA[$fullSellPrice]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$isBlocked]]></code>
+      <code><![CDATA[$isShort]]></code>
+      <code><![CDATA[$profit]]></code>
+      <code><![CDATA[$profitPercent]]></code>
+      <code><![CDATA[$quantity]]></code>
+      <code><![CDATA[$sellPrice]]></code>
+      <code><![CDATA[$shortName]]></code>
+      <code><![CDATA[$ticker]]></code>
+      <code><![CDATA[$updatedAt]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Analytics/ClosedDealListGroupByTickerDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$buyPrice]]></code>
+      <code><![CDATA[$commission]]></code>
+      <code><![CDATA[$currency]]></code>
+      <code><![CDATA[$fullBuyPrice]]></code>
+      <code><![CDATA[$fullSellPrice]]></code>
+      <code><![CDATA[$isBlocked]]></code>
+      <code><![CDATA[$isShort]]></code>
+      <code><![CDATA[$profit]]></code>
+      <code><![CDATA[$profitPercent]]></code>
+      <code><![CDATA[$quantity]]></code>
+      <code><![CDATA[$sellPrice]]></code>
+      <code><![CDATA[$shortName]]></code>
+      <code><![CDATA[$ticker]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Analytics/SummaryForClosedDealsDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$buyPrice]]></code>
+      <code><![CDATA[$profit]]></code>
+      <code><![CDATA[$profitPercent]]></code>
+      <code><![CDATA[$sellPrice]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Instruments/SecurityDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$price]]></code>
+      <code><![CDATA[$shortName]]></code>
+      <code><![CDATA[$stockMarket]]></code>
+      <code><![CDATA[$ticker]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Operations/CouponFormDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$accountId]]></code>
+      <code><![CDATA[$amount]]></code>
+      <code><![CDATA[$date]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$stockMarket]]></code>
+      <code><![CDATA[$ticker]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Operations/CouponListItemDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$accountName]]></code>
+      <code><![CDATA[$amount]]></code>
+      <code><![CDATA[$date]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$stockMarket]]></code>
+      <code><![CDATA[$ticker]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Operations/DealInGroupDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$accountId]]></code>
+      <code><![CDATA[$buyPrice]]></code>
+      <code><![CDATA[$commission]]></code>
+      <code><![CDATA[$createdAt]]></code>
+      <code><![CDATA[$currency]]></code>
+      <code><![CDATA[$currentPrice]]></code>
+      <code><![CDATA[$dailyProfit]]></code>
+      <code><![CDATA[$fullBuyPrice]]></code>
+      <code><![CDATA[$fullCurrentPrice]]></code>
+      <code><![CDATA[$fullDailyProfit]]></code>
+      <code><![CDATA[$fullPrevPrice]]></code>
+      <code><![CDATA[$fullTargetPrice]]></code>
+      <code><![CDATA[$fullTargetProfit]]></code>
+      <code><![CDATA[$fullTargetProfitPercent]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$isBlocked]]></code>
+      <code><![CDATA[$isShort]]></code>
+      <code><![CDATA[$percent]]></code>
+      <code><![CDATA[$prevPrice]]></code>
+      <code><![CDATA[$profit]]></code>
+      <code><![CDATA[$profitPercent]]></code>
+      <code><![CDATA[$quantity]]></code>
+      <code><![CDATA[$shortName]]></code>
+      <code><![CDATA[$targetPrice]]></code>
+      <code><![CDATA[$targetProfit]]></code>
+      <code><![CDATA[$ticker]]></code>
+      <code><![CDATA[$updatedAt]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Operations/DealListGroupByTickerDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$buyPrice]]></code>
+      <code><![CDATA[$commission]]></code>
+      <code><![CDATA[$currency]]></code>
+      <code><![CDATA[$currentPrice]]></code>
+      <code><![CDATA[$dailyProfit]]></code>
+      <code><![CDATA[$fullBuyPrice]]></code>
+      <code><![CDATA[$fullCurrentPrice]]></code>
+      <code><![CDATA[$fullDailyProfit]]></code>
+      <code><![CDATA[$fullPrevPrice]]></code>
+      <code><![CDATA[$fullTargetPrice]]></code>
+      <code><![CDATA[$fullTargetProfit]]></code>
+      <code><![CDATA[$isBlocked]]></code>
+      <code><![CDATA[$isShort]]></code>
+      <code><![CDATA[$prevPrice]]></code>
+      <code><![CDATA[$profit]]></code>
+      <code><![CDATA[$profitPercent]]></code>
+      <code><![CDATA[$quantity]]></code>
+      <code><![CDATA[$shortName]]></code>
+      <code><![CDATA[$targetPrice]]></code>
+      <code><![CDATA[$targetProfit]]></code>
+      <code><![CDATA[$targetProfitPercent]]></code>
+      <code><![CDATA[$ticker]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Operations/Deals/DealCurrencyDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$name]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Operations/Deals/DealInstrumentTypeDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$name]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Operations/Deals/DealStatusDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$name]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Operations/DividendListItemDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$accountName]]></code>
+      <code><![CDATA[$amount]]></code>
+      <code><![CDATA[$date]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$stockMarket]]></code>
+      <code><![CDATA[$ticker]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Operations/EditDealDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$buyPrice]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$isShort]]></code>
+      <code><![CDATA[$quantity]]></code>
+      <code><![CDATA[$stockMarket]]></code>
+      <code><![CDATA[$targetPrice]]></code>
+      <code><![CDATA[$ticker]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Operations/FullPortfolioDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$currencies]]></code>
+      <code><![CDATA[$dealsList]]></code>
+      <code><![CDATA[$instrumentTypes]]></code>
+      <code><![CDATA[$statuses]]></code>
+      <code><![CDATA[$summary]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Operations/InvestmentResponseDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$account]]></code>
+      <code><![CDATA[$currency]]></code>
+      <code><![CDATA[$date]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$sum]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Operations/SummaryForGroupDTO.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$buyPrice]]></code>
+      <code><![CDATA[$buyPriceInBaseCurrency]]></code>
+      <code><![CDATA[$currentPrice]]></code>
+      <code><![CDATA[$currentPriceInBaseCurrency]]></code>
+      <code><![CDATA[$isBaseCurrency]]></code>
+      <code><![CDATA[$profit]]></code>
+      <code><![CDATA[$profitInBaseCurrency]]></code>
+      <code><![CDATA[$profitPercent]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Domain/Accounts/Account.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[addDeal]]></code>
+      <code><![CDATA[getDeals]]></code>
+      <code><![CDATA[getInvestments]]></code>
+      <code><![CDATA[getStartSumOfAssets]]></code>
+      <code><![CDATA[removeDeal]]></code>
+      <code><![CDATA[setId]]></code>
+      <code><![CDATA[setUserId]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Investments/Domain/Analytics/Statistic.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getAccount]]></code>
+      <code><![CDATA[getBalance]]></code>
+      <code><![CDATA[getCurrentValue]]></code>
+      <code><![CDATA[getDate]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getInvestments]]></code>
+      <code><![CDATA[getProfit]]></code>
+      <code><![CDATA[getUsdBalance]]></code>
+      <code><![CDATA[setAccount]]></code>
+      <code><![CDATA[setBalance]]></code>
+      <code><![CDATA[setCurrentValue]]></code>
+      <code><![CDATA[setDate]]></code>
+      <code><![CDATA[setInvestments]]></code>
+      <code><![CDATA[setProfit]]></code>
+      <code><![CDATA[setUsdBalance]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Investments/Domain/Instruments/Bond.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getCouponPercent]]></code>
+      <code><![CDATA[getCouponValue]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getLatName]]></code>
+      <code><![CDATA[getMaturityDate]]></code>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[getNextCouponDate]]></code>
+      <code><![CDATA[getStepPrice]]></code>
+      <code><![CDATA[setCurrency]]></code>
+      <code><![CDATA[setStepPrice]]></code>
+      <code><![CDATA[setStockMarket]]></code>
+      <code><![CDATA[setTicker]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Investments/Domain/Instruments/Currencies/CurrencyRateDTO.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function getBaseCurrency(): string]]></code>
+      <code><![CDATA[public function getRate(): string]]></code>
+      <code><![CDATA[public function getTargetCurrency(): string]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Domain/Instruments/Currencies/MoexCurrencyProvider.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function getCurrencyRates(): array]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Domain/Instruments/CurrencyRate.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getBaseCurrency]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getTargetCurrency]]></code>
+      <code><![CDATA[setBaseCurrency]]></code>
+      <code><![CDATA[setTargetCurrency]]></code>
+    </PossiblyUnusedMethod>
+    <RedundantPropertyInitializationCheck>
+      <code><![CDATA[$this->rate]]></code>
+      <code><![CDATA['0']]></code>
+    </RedundantPropertyInitializationCheck>
+  </file>
+  <file src="src/Investments/Domain/Instruments/Future.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getExpiration]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getLatName]]></code>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[setCurrency]]></code>
+      <code><![CDATA[setExpiration]]></code>
+      <code><![CDATA[setStepPrice]]></code>
+      <code><![CDATA[setStockMarket]]></code>
+      <code><![CDATA[setTicker]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Investments/Domain/Instruments/Securities/BondDTO.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function getCouponAccumulated(): ?string]]></code>
+      <code><![CDATA[public function getCouponPercent(): ?string]]></code>
+      <code><![CDATA[public function getCouponValue(): ?string]]></code>
+      <code><![CDATA[public function getCurrency(): string]]></code>
+      <code><![CDATA[public function getLatName(): ?string]]></code>
+      <code><![CDATA[public function getLotSize(): ?string]]></code>
+      <code><![CDATA[public function getMaturityDate(): ?\DateTimeInterface]]></code>
+      <code><![CDATA[public function getName(): string]]></code>
+      <code><![CDATA[public function getNextCouponDate(): ?\DateTimeInterface]]></code>
+      <code><![CDATA[public function getPrevPrice(): ?string]]></code>
+      <code><![CDATA[public function getPrice(): string]]></code>
+      <code><![CDATA[public function getShortName(): ?string]]></code>
+      <code><![CDATA[public function getStepPrice(): ?string]]></code>
+      <code><![CDATA[public function getStockMarket(): string]]></code>
+      <code><![CDATA[public function getTicker(): string]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Domain/Instruments/Securities/FutureDTO.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function getCurrency(): string]]></code>
+      <code><![CDATA[public function getExpiration(): ?\DateTimeInterface]]></code>
+      <code><![CDATA[public function getLatName(): ?string]]></code>
+      <code><![CDATA[public function getLotSize(): ?string]]></code>
+      <code><![CDATA[public function getName(): string]]></code>
+      <code><![CDATA[public function getPrevPrice(): ?string]]></code>
+      <code><![CDATA[public function getPrice(): string]]></code>
+      <code><![CDATA[public function getShortName(): ?string]]></code>
+      <code><![CDATA[public function getStepPrice(): ?string]]></code>
+      <code><![CDATA[public function getStockMarket(): string]]></code>
+      <code><![CDATA[public function getTicker(): string]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Domain/Instruments/Securities/MoexBondsProvider.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function getBonds(): array]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Domain/Instruments/Securities/MoexFuturesProvider.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function getFutures(): array]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Domain/Instruments/Securities/MoexSharesProvider.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function getShares(): array]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Investments/Domain/Instruments/Securities/ShareDTO.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function getClassCode(): string]]></code>
+      <code><![CDATA[public function getCurrency(): string]]></code>
+      <code><![CDATA[public function getIsin(): ?string]]></code>
+      <code><![CDATA[public function getLatName(): ?string]]></code>
+      <code><![CDATA[public function getLotSize(): ?string]]></code>
+      <code><![CDATA[public function getName(): string]]></code>
+      <code><![CDATA[public function getPrevPrice(): string]]></code>
+      <code><![CDATA[public function getPrice(): string]]></code>
+      <code><![CDATA[public function getShortName(): ?string]]></code>
+      <code><![CDATA[public function getStockMarket(): string]]></code>
+      <code><![CDATA[public function getTicker(): string]]></code>
+      <code><![CDATA[public function getType(): int]]></code>
+    </MissingOverrideAttribute>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->classCode]]></code>
+      <code><![CDATA[$this->prevPrice]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Investments/Domain/Instruments/Share.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getClassCode]]></code>
+      <code><![CDATA[getFigi]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getIsin]]></code>
+      <code><![CDATA[getLatName]]></code>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[getSector]]></code>
+      <code><![CDATA[getType]]></code>
+      <code><![CDATA[setCurrency]]></code>
+      <code><![CDATA[setStockMarket]]></code>
+      <code><![CDATA[setTicker]]></code>
+      <code><![CDATA[setType]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Investments/Domain/Operations/Coupon.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getUser]]></code>
+      <code><![CDATA[setUser]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Investments/Domain/Operations/Deals/ClosedDealsGroupedByTicker.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getDeals]]></code>
+      <code><![CDATA[getGroupData]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Investments/Domain/Operations/Deals/DealData.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[int]]></code>
+      <code><![CDATA[int]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->deal->getAccount()->getId()]]></code>
+      <code><![CDATA[$this->deal->getId()]]></code>
+      <code><![CDATA[$this->deal->getTargetPrice()]]></code>
+      <code><![CDATA[$this->deal->getTicker()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Investments/Domain/Operations/Deals/GroupByTicker.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getDeals]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Investments/Domain/Operations/Deals/Strategy/BondStrategy.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function getBuyPrice(): string]]></code>
+      <code><![CDATA[public function getCommission(string $price, string $quantity): string]]></code>
+      <code><![CDATA[public function getCurrency(): string]]></code>
+      <code><![CDATA[public function getCurrentPrice(): string]]></code>
+      <code><![CDATA[public function getName(): string]]></code>
+      <code><![CDATA[public function getPrevPrice(): string]]></code>
+      <code><![CDATA[public function getSecurityType(): SecurityTypeEnum]]></code>
+      <code><![CDATA[public function getSellPrice(): string]]></code>
+    </MissingOverrideAttribute>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->deal->getBond()->getShortName()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Investments/Domain/Operations/Deals/Strategy/FutureStrategy.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function getBuyPrice(): string]]></code>
+      <code><![CDATA[public function getCommission(string $price, string $quantity): string]]></code>
+      <code><![CDATA[public function getCurrency(): string]]></code>
+      <code><![CDATA[public function getCurrentPrice(): string]]></code>
+      <code><![CDATA[public function getName(): string]]></code>
+      <code><![CDATA[public function getPrevPrice(): string]]></code>
+      <code><![CDATA[public function getSecurityType(): SecurityTypeEnum]]></code>
+      <code><![CDATA[public function getSellPrice(): string]]></code>
+    </MissingOverrideAttribute>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->deal->getFuture()->getShortName()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Investments/Domain/Operations/Deals/Strategy/ShareStrategy.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function getBuyPrice(): string]]></code>
+      <code><![CDATA[public function getCommission(string $price, string $quantity): string]]></code>
+      <code><![CDATA[public function getCurrency(): string]]></code>
+      <code><![CDATA[public function getCurrentPrice(): string]]></code>
+      <code><![CDATA[public function getName(): string]]></code>
+      <code><![CDATA[public function getPrevPrice(): string]]></code>
+      <code><![CDATA[public function getSecurityType(): SecurityTypeEnum]]></code>
+      <code><![CDATA[public function getSellPrice(): string]]></code>
+    </MissingOverrideAttribute>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->deal->getBuyPrice()]]></code>
+      <code><![CDATA[$this->deal->getSellPrice()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Investments/Domain/Operations/Dividend.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getUser]]></code>
+      <code><![CDATA[setUser]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Investments/Domain/Operations/Investment.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getUserId]]></code>
+      <code><![CDATA[setUserId]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Investments/Infrastructure/Persistence/Repository/AccountRepository.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$registry]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Investments/Infrastructure/Persistence/Repository/BondRepository.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$registry]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Investments/Infrastructure/Persistence/Repository/CouponRepository.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$registry]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Investments/Infrastructure/Persistence/Repository/CurrencyRateRepository.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$registry]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Investments/Infrastructure/Persistence/Repository/DealRepository.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$registry]]></code>
+      <code><![CDATA[$stockMarket]]></code>
+      <code><![CDATA[$stockMarket]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Investments/Infrastructure/Persistence/Repository/DividendRepository.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$registry]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Investments/Infrastructure/Persistence/Repository/FutureRepository.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$registry]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Investments/Infrastructure/Persistence/Repository/InvestmentRepository.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$registry]]></code>
+      <code><![CDATA[$userId]]></code>
+      <code><![CDATA[$userId]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Investments/Infrastructure/Persistence/Repository/ShareRepository.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$registry]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Investments/Infrastructure/Persistence/Repository/StatisticRepository.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$registry]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Shared/Application/Command/CreateAdminCommand.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Shared/Application/Command/ScheduleCommand.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Shared/Application/Command/TestApiCommand.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+    <UnusedVariable>
+      <code><![CDATA[$response]]></code>
+      <code><![CDATA[$status]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="src/Shared/Domain/CreatedUserProviderInterface.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[createdBy]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Shared/Domain/UpdatedByProvider.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[updatedBy]]></code>
+      <code><![CDATA[updatedBy]]></code>
+      <code><![CDATA[updatedBy]]></code>
+      <code><![CDATA[updatedBy]]></code>
+      <code><![CDATA[updatedBy]]></code>
+      <code><![CDATA[updatedBy]]></code>
+      <code><![CDATA[updatedBy]]></code>
+      <code><![CDATA[updatedBy]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Shared/Domain/UpdatedUserProviderInterface.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[createdBy]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Shared/Domain/User.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function eraseCredentials()]]></code>
+      <code><![CDATA[public function getPassword(): string]]></code>
+      <code><![CDATA[public function getRoles(): array]]></code>
+      <code><![CDATA[public function getUserIdentifier(): string]]></code>
+    </MissingOverrideAttribute>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[addDeal]]></code>
+      <code><![CDATA[getDeals]]></code>
+      <code><![CDATA[getEmail]]></code>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[removeDeal]]></code>
+      <code><![CDATA[setId]]></code>
+      <code><![CDATA[setRoles]]></code>
+    </PossiblyUnusedMethod>
+    <RedundantCast>
+      <code><![CDATA[(string) $this->email]]></code>
+    </RedundantCast>
+  </file>
+  <file src="src/Shared/Infrastructure/Auth/LoginSuccessSubscriber.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public static function getSubscribedEvents(): array]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Shared/Infrastructure/Bus/QueryBus.php">
+    <InvalidThrow>
+      <code><![CDATA[throw $e->getPrevious()]]></code>
+    </InvalidThrow>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function ask(mixed $query): mixed]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Shared/Infrastructure/Bus/SyncCommandBus.php">
+    <InvalidThrow>
+      <code><![CDATA[throw $e->getPrevious()]]></code>
+    </InvalidThrow>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function dispatch(object $command): void]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Shared/Infrastructure/Persistence/Repository/UserRepository.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[remove]]></code>
+      <code><![CDATA[save]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$entity]]></code>
+      <code><![CDATA[$entity]]></code>
+      <code><![CDATA[$flush]]></code>
+      <code><![CDATA[$flush]]></code>
+      <code><![CDATA[$registry]]></code>
+    </PossiblyUnusedParam>
+  </file>
+</files>
