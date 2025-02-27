@@ -876,15 +876,6 @@
       <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
     </MissingOverrideAttribute>
   </file>
-  <file src="src/Shared/Application/Command/TestApiCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
-    </MissingOverrideAttribute>
-    <UnusedVariable>
-      <code><![CDATA[$response]]></code>
-      <code><![CDATA[$status]]></code>
-    </UnusedVariable>
-  </file>
   <file src="src/Shared/Domain/CreatedUserProviderInterface.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[createdBy]]></code>
