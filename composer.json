@@ -87,7 +87,7 @@
             "@auto-scripts"
         ],
         "cs-baseline": [
-          "@php vendor/bin/psalm --update-baseline=psalm-baseline.xml"
+          "@php vendor/bin/psalm --set-baseline=psalm-baseline.xml --no-cache"
         ],
         "cs-nobaseline": [
           "@php vendor/bin/psalm --ignore-baseline --no-cache"

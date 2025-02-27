@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="6.8.8@1361cd33008feb3ae2b4a93f1860e14e538ec8c2">
   <file src="src/Deposits/Application/Response/Compiler/DepositAccountListItemsCompiler.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function compile(mixed $entry): array]]></code>
-    </MissingOverrideAttribute>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$entry]]></code>
     </MoreSpecificImplementedParamType>
   </file>
-  <file src="src/Deposits/Application/Response/Compiler/DepositFormDataCompiler.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function compile(mixed $entry): DepositEditFormDTO]]></code>
-    </MissingOverrideAttribute>
-  </file>
   <file src="src/Deposits/Application/Response/Compiler/DepositsListItemsCompiler.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function compile(mixed $entry): array]]></code>
-    </MissingOverrideAttribute>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$entry]]></code>
     </MoreSpecificImplementedParamType>
@@ -81,22 +70,9 @@
     </PossiblyUnusedParam>
   </file>
   <file src="src/Expenses/Application/Response/Compiler/CategoriesListCompiler.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function compile(mixed $entry): array]]></code>
-    </MissingOverrideAttribute>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$entry]]></code>
     </MoreSpecificImplementedParamType>
-  </file>
-  <file src="src/Expenses/Application/Response/Compiler/ExpenseItemCompiler.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function compile(mixed $entry): ExpenseResponseDTO]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Expenses/Application/Response/Compiler/ExpensesSummaryCompiler.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function compile(mixed $entry): array]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="src/Expenses/Application/Response/DTO/ExpenseCategoryDTO.php">
     <PossiblyUnusedProperty>
@@ -141,77 +117,16 @@
       <code><![CDATA[$registry]]></code>
     </PossiblyUnusedParam>
   </file>
-  <file src="src/Investments/Application/Command/AccountsRecalculateCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Application/Command/CollectAccountsStatisticCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Application/Command/ConvertDealsCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Application/Command/GetAllSpbSharesCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Application/Command/GetBondsCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Application/Command/GetCurrencyRatesCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Application/Command/GetFuturesCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Application/Command/GetMoexSharesCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Application/Command/GetSpbSharesCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
-    </MissingOverrideAttribute>
-  </file>
   <file src="src/Investments/Application/Command/TInvestGetMarketData.php">
     <InvalidArgument>
       <code><![CDATA[$figi]]></code>
       <code><![CDATA[$token]]></code>
     </InvalidArgument>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="src/Investments/Application/Command/TInvestUpdateShares.php">
     <InvalidArgument>
       <code><![CDATA[$token]]></code>
     </InvalidArgument>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Application/Command/UpdateClosingDateDealsCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Application/Command/UpdatePrevPricesCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="src/Investments/Application/Operations/Deals/AccountDealsQueryHandler.php">
     <UnusedForeachValue>
@@ -234,26 +149,6 @@
       <code><![CDATA[$endDate]]></code>
       <code><![CDATA[$startDate]]></code>
     </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/Compiler/AccountEditFormCompiler.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function compile(mixed $entry): AccountEditFormResponseDTO]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Application/Response/Compiler/AccountItemCompiler.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function compile(mixed $entry): AccountItemResponseDTO]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Application/Response/Compiler/AccountsListCompiler.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function compile(mixed $entry): array]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Application/Response/Compiler/AccountsSimpleListCompiler.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function compile(mixed $entry): array]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="src/Investments/Application/Response/Compiler/AnnualStatisticCompiler.php">
     <InvalidOperand>
@@ -279,32 +174,9 @@
     <InvalidReturnType>
       <code><![CDATA[array<int, mixed>]]></code>
     </InvalidReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function compile(mixed $entry): array]]></code>
-    </MissingOverrideAttribute>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$entry]]></code>
     </MoreSpecificImplementedParamType>
-  </file>
-  <file src="src/Investments/Application/Response/Compiler/ClosedDealsListCompiler.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function compile(mixed $entry): array]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Application/Response/Compiler/CouponFormCompiler.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function compile(mixed $entry): CouponFormDTO]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Application/Response/Compiler/CouponListCompiler.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function compile(mixed $entry): array]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Application/Response/Compiler/MonthlyDealsListCompiler.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function compile(mixed $entry): array]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="src/Investments/Application/Response/DTO/Accounts/AccountDealsResponseDTO.php">
     <PossiblyUnusedProperty>
@@ -586,18 +458,6 @@
       <code><![CDATA[setTicker]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="src/Investments/Domain/Instruments/Currencies/CurrencyRateDTO.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getBaseCurrency(): string]]></code>
-      <code><![CDATA[public function getRate(): string]]></code>
-      <code><![CDATA[public function getTargetCurrency(): string]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Domain/Instruments/Currencies/MoexCurrencyProvider.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getCurrencyRates(): array]]></code>
-    </MissingOverrideAttribute>
-  </file>
   <file src="src/Investments/Domain/Instruments/CurrencyRate.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getBaseCurrency]]></code>
@@ -624,74 +484,11 @@
       <code><![CDATA[setTicker]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="src/Investments/Domain/Instruments/Securities/BondDTO.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getCouponAccumulated(): ?string]]></code>
-      <code><![CDATA[public function getCouponPercent(): ?string]]></code>
-      <code><![CDATA[public function getCouponValue(): ?string]]></code>
-      <code><![CDATA[public function getCurrency(): string]]></code>
-      <code><![CDATA[public function getLatName(): ?string]]></code>
-      <code><![CDATA[public function getLotSize(): ?string]]></code>
-      <code><![CDATA[public function getMaturityDate(): ?\DateTimeInterface]]></code>
-      <code><![CDATA[public function getName(): string]]></code>
-      <code><![CDATA[public function getNextCouponDate(): ?\DateTimeInterface]]></code>
-      <code><![CDATA[public function getPrevPrice(): ?string]]></code>
-      <code><![CDATA[public function getPrice(): string]]></code>
-      <code><![CDATA[public function getShortName(): ?string]]></code>
-      <code><![CDATA[public function getStepPrice(): ?string]]></code>
-      <code><![CDATA[public function getStockMarket(): string]]></code>
-      <code><![CDATA[public function getTicker(): string]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Domain/Instruments/Securities/FutureDTO.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getCurrency(): string]]></code>
-      <code><![CDATA[public function getExpiration(): ?\DateTimeInterface]]></code>
-      <code><![CDATA[public function getLatName(): ?string]]></code>
-      <code><![CDATA[public function getLotSize(): ?string]]></code>
-      <code><![CDATA[public function getName(): string]]></code>
-      <code><![CDATA[public function getPrevPrice(): ?string]]></code>
-      <code><![CDATA[public function getPrice(): string]]></code>
-      <code><![CDATA[public function getShortName(): ?string]]></code>
-      <code><![CDATA[public function getStepPrice(): ?string]]></code>
-      <code><![CDATA[public function getStockMarket(): string]]></code>
-      <code><![CDATA[public function getTicker(): string]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Domain/Instruments/Securities/MoexBondsProvider.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getBonds(): array]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Domain/Instruments/Securities/MoexFuturesProvider.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getFutures(): array]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Investments/Domain/Instruments/Securities/MoexSharesProvider.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getShares(): array]]></code>
-    </MissingOverrideAttribute>
-  </file>
   <file src="src/Investments/Domain/Instruments/Securities/ShareDTO.php">
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
       <code><![CDATA[string]]></code>
     </InvalidNullableReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getClassCode(): string]]></code>
-      <code><![CDATA[public function getCurrency(): string]]></code>
-      <code><![CDATA[public function getIsin(): ?string]]></code>
-      <code><![CDATA[public function getLatName(): ?string]]></code>
-      <code><![CDATA[public function getLotSize(): ?string]]></code>
-      <code><![CDATA[public function getName(): string]]></code>
-      <code><![CDATA[public function getPrevPrice(): string]]></code>
-      <code><![CDATA[public function getPrice(): string]]></code>
-      <code><![CDATA[public function getShortName(): ?string]]></code>
-      <code><![CDATA[public function getStockMarket(): string]]></code>
-      <code><![CDATA[public function getTicker(): string]]></code>
-      <code><![CDATA[public function getType(): int]]></code>
-    </MissingOverrideAttribute>
     <NullableReturnStatement>
       <code><![CDATA[$this->classCode]]></code>
       <code><![CDATA[$this->prevPrice]]></code>
@@ -716,6 +513,11 @@
   <file src="src/Investments/Domain/Operations/Coupon.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getUser]]></code>
+      <code><![CDATA[setUser]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Investments/Domain/Operations/Deal.php">
+    <PossiblyUnusedMethod>
       <code><![CDATA[setUser]]></code>
     </PossiblyUnusedMethod>
   </file>
@@ -748,16 +550,6 @@
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
     </InvalidNullableReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getBuyPrice(): string]]></code>
-      <code><![CDATA[public function getCommission(string $price, string $quantity): string]]></code>
-      <code><![CDATA[public function getCurrency(): string]]></code>
-      <code><![CDATA[public function getCurrentPrice(): string]]></code>
-      <code><![CDATA[public function getName(): string]]></code>
-      <code><![CDATA[public function getPrevPrice(): string]]></code>
-      <code><![CDATA[public function getSecurityType(): SecurityTypeEnum]]></code>
-      <code><![CDATA[public function getSellPrice(): string]]></code>
-    </MissingOverrideAttribute>
     <NullableReturnStatement>
       <code><![CDATA[$this->deal->getBond()->getShortName()]]></code>
     </NullableReturnStatement>
@@ -766,16 +558,6 @@
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
     </InvalidNullableReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getBuyPrice(): string]]></code>
-      <code><![CDATA[public function getCommission(string $price, string $quantity): string]]></code>
-      <code><![CDATA[public function getCurrency(): string]]></code>
-      <code><![CDATA[public function getCurrentPrice(): string]]></code>
-      <code><![CDATA[public function getName(): string]]></code>
-      <code><![CDATA[public function getPrevPrice(): string]]></code>
-      <code><![CDATA[public function getSecurityType(): SecurityTypeEnum]]></code>
-      <code><![CDATA[public function getSellPrice(): string]]></code>
-    </MissingOverrideAttribute>
     <NullableReturnStatement>
       <code><![CDATA[$this->deal->getFuture()->getShortName()]]></code>
     </NullableReturnStatement>
@@ -785,16 +567,6 @@
       <code><![CDATA[string]]></code>
       <code><![CDATA[string]]></code>
     </InvalidNullableReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getBuyPrice(): string]]></code>
-      <code><![CDATA[public function getCommission(string $price, string $quantity): string]]></code>
-      <code><![CDATA[public function getCurrency(): string]]></code>
-      <code><![CDATA[public function getCurrentPrice(): string]]></code>
-      <code><![CDATA[public function getName(): string]]></code>
-      <code><![CDATA[public function getPrevPrice(): string]]></code>
-      <code><![CDATA[public function getSecurityType(): SecurityTypeEnum]]></code>
-      <code><![CDATA[public function getSellPrice(): string]]></code>
-    </MissingOverrideAttribute>
     <NullableReturnStatement>
       <code><![CDATA[$this->deal->getBuyPrice()]]></code>
       <code><![CDATA[$this->deal->getSellPrice()]]></code>
@@ -863,92 +635,6 @@
   </file>
   <file src="src/Investments/Infrastructure/Persistence/Repository/StatisticRepository.php">
     <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Shared/Application/Command/CreateAdminCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Shared/Application/Command/ScheduleCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Shared/Domain/CreatedUserProviderInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[createdBy]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Shared/Domain/UpdatedByProvider.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[updatedBy]]></code>
-      <code><![CDATA[updatedBy]]></code>
-      <code><![CDATA[updatedBy]]></code>
-      <code><![CDATA[updatedBy]]></code>
-      <code><![CDATA[updatedBy]]></code>
-      <code><![CDATA[updatedBy]]></code>
-      <code><![CDATA[updatedBy]]></code>
-      <code><![CDATA[updatedBy]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Shared/Domain/UpdatedUserProviderInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[createdBy]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Shared/Domain/User.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function eraseCredentials()]]></code>
-      <code><![CDATA[public function getPassword(): string]]></code>
-      <code><![CDATA[public function getRoles(): array]]></code>
-      <code><![CDATA[public function getUserIdentifier(): string]]></code>
-    </MissingOverrideAttribute>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[addDeal]]></code>
-      <code><![CDATA[getDeals]]></code>
-      <code><![CDATA[getEmail]]></code>
-      <code><![CDATA[getName]]></code>
-      <code><![CDATA[removeDeal]]></code>
-      <code><![CDATA[setId]]></code>
-      <code><![CDATA[setRoles]]></code>
-    </PossiblyUnusedMethod>
-    <RedundantCast>
-      <code><![CDATA[(string) $this->email]]></code>
-    </RedundantCast>
-  </file>
-  <file src="src/Shared/Infrastructure/Auth/LoginSuccessSubscriber.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public static function getSubscribedEvents(): array]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Shared/Infrastructure/Bus/QueryBus.php">
-    <InvalidThrow>
-      <code><![CDATA[throw $e->getPrevious()]]></code>
-    </InvalidThrow>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function ask(mixed $query): mixed]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Shared/Infrastructure/Bus/SyncCommandBus.php">
-    <InvalidThrow>
-      <code><![CDATA[throw $e->getPrevious()]]></code>
-    </InvalidThrow>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function dispatch(object $command): void]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Shared/Infrastructure/Persistence/Repository/UserRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[remove]]></code>
-      <code><![CDATA[save]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$entity]]></code>
-      <code><![CDATA[$entity]]></code>
-      <code><![CDATA[$flush]]></code>
-      <code><![CDATA[$flush]]></code>
       <code><![CDATA[$registry]]></code>
     </PossiblyUnusedParam>
   </file>
