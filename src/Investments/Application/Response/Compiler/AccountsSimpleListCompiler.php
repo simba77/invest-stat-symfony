@@ -17,6 +17,7 @@ class AccountsSimpleListCompiler implements CompilerInterface
      * @param array<int, Account> $entry
      * @return array<SimpleAccountItemResponseDTO>
      */
+    #[\Override]
     public function compile(mixed $entry): array
     {
         $result = [];

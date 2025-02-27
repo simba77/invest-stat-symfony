@@ -22,6 +22,7 @@ class ExpensesSummaryCompiler implements CompilerInterface
      * @param User $entry
      * @return array<array{name: string, total: numeric-string, helpText: string}>
      */
+    #[\Override]
     public function compile(mixed $entry): array
     {
         $expenses = $this->expenseRepository->getSumForUser($entry->getId());

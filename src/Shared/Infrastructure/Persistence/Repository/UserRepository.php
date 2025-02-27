@@ -6,6 +6,7 @@ namespace App\Shared\Infrastructure\Persistence\Repository;
 
 use App\Shared\Domain\User;
 use App\Shared\Domain\UserRepositoryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\LazyServiceEntityRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -13,32 +14,15 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 /**
- * @extends ServiceEntityRepository<User>
+ * @extends LazyServiceEntityRepository<User>
  * @implements PasswordUpgraderInterface<PasswordAuthenticatedUserInterface>
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserRepositoryInterface
 {
+    /** @psalm-suppress PossiblyUnusedParam */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
-    }
-
-    public function save(User $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function remove(User $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
     }
 
     /**
@@ -52,7 +36,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         $user->setPassword($newHashedPassword);
 
-        $this->save($user, true);
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
     }
 
     public function findById(int $id): ?User

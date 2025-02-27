@@ -19,6 +19,7 @@ class LoginSuccessSubscriber implements EventSubscriberInterface
         $request->attributes->set('_remember_me', $data->remember_me ?? '');
     }
 
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [

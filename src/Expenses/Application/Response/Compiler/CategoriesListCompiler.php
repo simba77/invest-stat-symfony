@@ -19,6 +19,7 @@ class CategoriesListCompiler implements CompilerInterface
      * @param ExpensesCategory[] $entry
      * @return ExpenseCategoryDTO[]
      */
+    #[\Override]
     public function compile(mixed $entry): array
     {
         $items = [];

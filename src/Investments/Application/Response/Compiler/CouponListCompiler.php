@@ -17,6 +17,7 @@ class CouponListCompiler implements CompilerInterface
      * @param iterable<Coupon> $entry
      * @return CouponListItemDTO[]
      */
+    #[\Override]
     public function compile(mixed $entry): array
     {
         $result = [];

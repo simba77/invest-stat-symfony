@@ -19,6 +19,7 @@ class AnnualStatisticCompiler implements CompilerInterface
      *         } $entry
      * @return array<int, mixed>
      */
+    #[\Override]
     public function compile(mixed $entry): array
     {
         $statByYears = [];

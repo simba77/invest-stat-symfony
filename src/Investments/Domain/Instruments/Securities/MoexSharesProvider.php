@@ -16,6 +16,7 @@ class MoexSharesProvider implements SharesProviderInterface
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function getShares(): array
     {
         // TQBR Board

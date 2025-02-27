@@ -25,21 +25,25 @@ class BondDTO implements BondInterface
     ) {
     }
 
+    #[\Override]
     public function getTicker(): string
     {
         return $this->ticker;
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->name;
     }
 
+    #[\Override]
     public function getShortName(): ?string
     {
         return $this->shortName;
     }
 
+    #[\Override]
     public function getLatName(): ?string
     {
         return $this->latName;
@@ -48,6 +52,7 @@ class BondDTO implements BondInterface
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function getStockMarket(): string
     {
         return $this->stockMarket;
@@ -56,51 +61,61 @@ class BondDTO implements BondInterface
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function getCurrency(): string
     {
         return $this->currency;
     }
 
+    #[\Override]
     public function getPrice(): string
     {
         return $this->price;
     }
 
+    #[\Override]
     public function getPrevPrice(): ?string
     {
         return $this->prevPrice;
     }
 
+    #[\Override]
     public function getLotSize(): ?string
     {
         return $this->lotSize;
     }
 
+    #[\Override]
     public function getStepPrice(): ?string
     {
         return $this->stepPrice;
     }
 
+    #[\Override]
     public function getCouponPercent(): ?string
     {
         return $this->couponPercent;
     }
 
+    #[\Override]
     public function getCouponValue(): ?string
     {
         return $this->couponValue;
     }
 
+    #[\Override]
     public function getCouponAccumulated(): ?string
     {
         return $this->couponAccumulated;
     }
 
+    #[\Override]
     public function getNextCouponDate(): ?\DateTimeInterface
     {
         return $this->nextCouponDate;
     }
 
+    #[\Override]
     public function getMaturityDate(): ?\DateTimeInterface
     {
         return $this->maturityDate;

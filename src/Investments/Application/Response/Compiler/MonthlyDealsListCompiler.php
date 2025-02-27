@@ -25,6 +25,7 @@ class MonthlyDealsListCompiler implements CompilerInterface
      * @param array{deals: Deal[], dividends: Dividend[], coupons: Coupon[]} $entry
      * @return array<string, string>
      */
+    #[\Override]
     public function compile(mixed $entry): array
     {
         /** @var array<string, string> $result */

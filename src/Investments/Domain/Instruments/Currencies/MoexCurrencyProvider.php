@@ -16,6 +16,7 @@ class MoexCurrencyProvider implements CurrencyProviderInterface
     /**
      * @return CurrencyRateInterface[]
      */
+    #[\Override]
     public function getCurrencyRates(): array
     {
         $allRates = $this->httpClient->getCurrencyRates();

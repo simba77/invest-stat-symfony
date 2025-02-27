@@ -17,6 +17,7 @@ class MoexBondsProvider implements BondsProviderInterface
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function getBonds(): array
     {
         $bonds = $this->httpClient->getBonds();

@@ -24,6 +24,7 @@ class ClosedDealsListCompiler implements CompilerInterface
      * @param mixed $entry
      * @return array{summary: SummaryForClosedDealsDTO, deals: ClosedDealsGroupedByTicker[]}
      */
+    #[\Override]
     public function compile(mixed $entry): array
     {
         $dealsByTickers = [];

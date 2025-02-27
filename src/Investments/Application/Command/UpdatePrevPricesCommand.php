@@ -26,6 +26,7 @@ class UpdatePrevPricesCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         ini_set('memory_limit', '1G');

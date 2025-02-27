@@ -17,6 +17,7 @@ class MoexFuturesProvider implements FuturesProviderInterface
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function getFutures(): array
     {
         $futures = $this->httpClient->getFutures();

@@ -14,41 +14,49 @@ class ShareStrategy implements DealStrategyInterface
     ) {
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->deal->getShare()?->getShortName() ?? '';
     }
 
+    #[\Override]
     public function getSecurityType(): SecurityTypeEnum
     {
         return SecurityTypeEnum::Share;
     }
 
+    #[\Override]
     public function getBuyPrice(): string
     {
         return $this->deal->getBuyPrice();
     }
 
+    #[\Override]
     public function getSellPrice(): string
     {
         return $this->deal->getSellPrice();
     }
 
+    #[\Override]
     public function getCurrentPrice(): string
     {
         return $this->deal->getShare()?->getPrice() ?? '0';
     }
 
+    #[\Override]
     public function getPrevPrice(): string
     {
         return $this->deal->getShare()->getPrevPrice() ?? '0';
     }
 
+    #[\Override]
     public function getCommission(string $price, string $quantity): string
     {
         return bcmul($price, bcdiv($this->deal->getAccount()->getCommission(), '100', 4), 4);
     }
 
+    #[\Override]
     public function getCurrency(): string
     {
         return $this->deal->getShare()?->getCurrency() ?? 'RUB';

@@ -16,6 +16,7 @@ class CurrencyRateDTO implements CurrencyRateInterface
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function getBaseCurrency(): string
     {
         return $this->baseCurrency;
@@ -24,6 +25,7 @@ class CurrencyRateDTO implements CurrencyRateInterface
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function getTargetCurrency(): string
     {
         return $this->targetCurrency;
@@ -32,6 +34,7 @@ class CurrencyRateDTO implements CurrencyRateInterface
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function getRate(): string
     {
         return $this->rate;

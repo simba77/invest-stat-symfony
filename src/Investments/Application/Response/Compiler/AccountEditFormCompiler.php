@@ -17,6 +17,7 @@ class AccountEditFormCompiler implements CompilerInterface
      * @param Account $entry
      * @return AccountEditFormResponseDTO
      */
+    #[\Override]
     public function compile(mixed $entry): AccountEditFormResponseDTO
     {
         return new AccountEditFormResponseDTO(

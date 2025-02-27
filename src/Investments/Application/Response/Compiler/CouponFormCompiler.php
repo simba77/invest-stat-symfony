@@ -13,6 +13,7 @@ use App\Shared\Infrastructure\Compiler\CompilerInterface;
  */
 class CouponFormCompiler implements CompilerInterface
 {
+    #[\Override]
     public function compile(mixed $entry): CouponFormDTO
     {
         return new CouponFormDTO(

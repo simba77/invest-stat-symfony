@@ -14,6 +14,9 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+/**
+ * @api
+ */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'users')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -39,20 +42,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['authUserData'])]
     private ?string $name = null;
 
-    /**
-     * @var Collection<int, Deal>
-     */
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Deal::class, orphanRemoval: true)]
-    private Collection $deals;
-
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
     #[Groups(['authUserData'])]
     private ?string $salary = null;
-
-    public function __construct()
-    {
-        $this->deals = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -83,14 +75,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @see UserInterface
      */
+    #[\Override]
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return $this->email;
     }
 
     /**
      * @see UserInterface
      */
+    #[\Override]
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -113,6 +107,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
+    #[\Override]
     public function getPassword(): string
     {
         return $this->password;
@@ -128,6 +123,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
+    #[\Override]
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
@@ -142,36 +138,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setName(?string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Deal>
-     */
-    public function getDeals(): Collection
-    {
-        return $this->deals;
-    }
-
-    public function addDeal(Deal $deal): static
-    {
-        if (!$this->deals->contains($deal)) {
-            $this->deals->add($deal);
-            $deal->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDeal(Deal $deal): static
-    {
-        if ($this->deals->removeElement($deal)) {
-            // set the owning side to null (unless already changed)
-            if ($deal->getUser() === $this) {
-                $deal->setUser(null);
-            }
-        }
 
         return $this;
     }

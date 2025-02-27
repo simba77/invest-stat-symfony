@@ -22,6 +22,7 @@ class AccountsListCompiler implements CompilerInterface
      * @param array<int, array{account: Account, deposits_sum: string | null}> $entry
      * @return array<AccountItemResponseDTO>
      */
+    #[\Override]
     public function compile(mixed $entry): array
     {
         $result = [];

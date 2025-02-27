@@ -9,6 +9,9 @@ namespace App\Shared\Domain;
  */
 interface CreatedUserProviderInterface
 {
+    /**
+     * @psalm-suppress PossiblyUnusedMethod
+     */
     public function createdBy(): ?int;
 
     public function wasCreatedBy(User $user): void;

@@ -90,10 +90,10 @@
           "@php vendor/bin/psalm --update-baseline=psalm-baseline.xml"
         ],
         "cs-nobaseline": [
-          "@php vendor/bin/psalm --ignore-baseline"
+          "@php vendor/bin/psalm --ignore-baseline --no-cache"
         ],
         "cs-check": [
-          "@php vendor/bin/psalm"
+          "@php vendor/bin/psalm --no-cache"
         ]
     },
     "conflict": {

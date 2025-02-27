@@ -17,6 +17,7 @@ class DepositAccountListItemsCompiler implements CompilerInterface
      * @param DepositAccount[] $entry
      * @return DepositAccountListItemDTO[]
      */
+    #[\Override]
     public function compile(mixed $entry): array
     {
         $result = [];

@@ -17,6 +17,7 @@ class ExpenseItemCompiler implements CompilerInterface
      * @param Expense $entry
      * @return ExpenseResponseDTO
      */
+    #[\Override]
     public function compile(mixed $entry): ExpenseResponseDTO
     {
         return new ExpenseResponseDTO(

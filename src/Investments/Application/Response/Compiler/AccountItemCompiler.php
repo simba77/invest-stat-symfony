@@ -23,6 +23,7 @@ class AccountItemCompiler implements CompilerInterface
      * @param array{account: Account, deposits_sum: string | null} $entry
      * @return AccountItemResponseDTO
      */
+    #[\Override]
     public function compile(mixed $entry): AccountItemResponseDTO
     {
         $account = $entry['account'];

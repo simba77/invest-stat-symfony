@@ -9,7 +9,10 @@ namespace App\Shared\Domain;
  */
 interface UpdatedUserProviderInterface
 {
-    public function createdBy(): ?int;
+    /**
+     * @psalm-suppress PossiblyUnusedMethod
+     */
+    public function updatedBy(): ?int;
 
     public function wasUpdatedBy(User $user): void;
 }
