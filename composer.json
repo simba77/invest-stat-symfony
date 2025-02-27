@@ -89,6 +89,9 @@
         "cs-baseline": [
           "@php vendor/bin/psalm --update-baseline=psalm-baseline.xml"
         ],
+        "cs-nobaseline": [
+          "@php vendor/bin/psalm --ignore-baseline"
+        ],
         "cs-check": [
           "@php vendor/bin/psalm"
         ]
