@@ -42,9 +42,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['authUserData'])]
     private ?string $name = null;
 
+    /**
+     * @var Collection<int, Deal>
+     */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Deal::class, orphanRemoval: true)]
+    private Collection $deals;
+
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
     #[Groups(['authUserData'])]
     private ?string $salary = null;
+
+    public function __construct()
+    {
+        $this->deals = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -138,6 +149,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setName(?string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Deal>
+     */
+    public function getDeals(): Collection
+    {
+        return $this->deals;
+    }
+
+    public function addDeal(Deal $deal): static
+    {
+        if (!$this->deals->contains($deal)) {
+            $this->deals->add($deal);
+            $deal->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDeal(Deal $deal): static
+    {
+        if ($this->deals->removeElement($deal)) {
+            // set the owning side to null (unless already changed)
+            if ($deal->getUser() === $this) {
+                $deal->setUser(null);
+            }
+        }
 
         return $this;
     }
