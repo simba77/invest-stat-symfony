@@ -184,7 +184,6 @@
   <file src="src/Investments/Domain/Instruments/Share.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getClassCode]]></code>
-      <code><![CDATA[getFigi]]></code>
       <code><![CDATA[getId]]></code>
       <code><![CDATA[getIsin]]></code>
       <code><![CDATA[getLatName]]></code>

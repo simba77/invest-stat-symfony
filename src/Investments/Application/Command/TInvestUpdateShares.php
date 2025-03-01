@@ -6,6 +6,7 @@ namespace App\Investments\Application\Command;
 
 use App\Investments\Domain\Instruments\Securities\ShareTypeEnum;
 use App\Investments\Domain\Instruments\Share;
+use App\Investments\Domain\Instruments\ShareRepositoryInterface;
 use App\Investments\Infrastructure\Http\TInvestHttpClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -25,6 +26,7 @@ class TInvestUpdateShares extends Command
         private readonly EntityManagerInterface $em,
         private readonly LoggerInterface $logger,
         private readonly TInvestHttpClient $httpClient,
+        private readonly ShareRepositoryInterface $shareRepository,
     ) {
         parent::__construct();
     }
@@ -34,9 +36,7 @@ class TInvestUpdateShares extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $shareRepository = $this->em->getRepository(Share::class);
         $shares = $this->httpClient->getAllShares();
-
         foreach ($shares as $item) {
             if ($item->getExchange() === 'spb_close' || $item->getExchange() === 'otc_ncc') {
                 continue;
@@ -47,7 +47,7 @@ class TInvestUpdateShares extends Command
                 $stockMarket = strtoupper($matches[0]);
             }
 
-            $share = $shareRepository->findOneBy(['ticker' => $item->getTicker(), 'stockMarket' => $stockMarket]);
+            $share = $this->shareRepository->findByTickerAndStockMarket($item->getTicker(), $stockMarket);
             if ($share) {
                 $share->setName($item->getName());
                 $share->setIsin($item->getIsin());
@@ -71,7 +71,6 @@ class TInvestUpdateShares extends Command
             }
 
             $share->setSector($item->getSector());
-            $share->setFigi($item->getFigi());
             $share->setTUID($item->getUid());
             $share->setClassCode($item->getClassCode());
             $this->em->persist($share);

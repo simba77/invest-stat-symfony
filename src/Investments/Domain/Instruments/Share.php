@@ -65,9 +65,6 @@ class Share implements
     private ?string $classCode = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $figi = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
     private ?string $sector = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -244,18 +241,6 @@ class Share implements
     public function setClassCode(?string $classCode): static
     {
         $this->classCode = $classCode;
-
-        return $this;
-    }
-
-    public function getFigi(): ?string
-    {
-        return $this->figi;
-    }
-
-    public function setFigi(?string $figi): static
-    {
-        $this->figi = $figi;
 
         return $this;
     }
