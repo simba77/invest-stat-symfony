@@ -19,6 +19,7 @@ class Coupon
     #[ORM\Column]
     private ?int $id = null;
 
+    /** @psalm-suppress UnusedProperty */
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private User $user;
@@ -61,24 +62,12 @@ class Coupon
         return $this->id;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
     public function getAccount(): ?Account
     {
         return $this->account;
     }
 
-    public function setAccount(?Account $account): static
+    public function setAccount(Account $account): static
     {
         $this->account = $account;
 

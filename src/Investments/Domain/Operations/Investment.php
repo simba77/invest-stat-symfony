@@ -35,6 +35,7 @@ class Investment implements
     #[ORM\Column]
     private ?int $id = null;
 
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Column(name: 'user_id')]
     private int $userId;
 
@@ -58,18 +59,6 @@ class Investment implements
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->userId;
-    }
-
-    public function setUserId(int $userId): static
-    {
-        $this->userId = $userId;
-
-        return $this;
     }
 
     public function getSum(): ?string

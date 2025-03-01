@@ -196,12 +196,6 @@
       <code><![CDATA[setType]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="src/Investments/Domain/Operations/Coupon.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getUser]]></code>
-      <code><![CDATA[setUser]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="src/Investments/Domain/Operations/Deals/ClosedDealsGroupedByTicker.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getDeals]]></code>
@@ -252,17 +246,5 @@
       <code><![CDATA[$this->deal->getBuyPrice()]]></code>
       <code><![CDATA[$this->deal->getSellPrice()]]></code>
     </NullableReturnStatement>
-  </file>
-  <file src="src/Investments/Domain/Operations/Dividend.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getUser]]></code>
-      <code><![CDATA[setUser]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Investments/Domain/Operations/Investment.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getUserId]]></code>
-      <code><![CDATA[setUserId]]></code>
-    </PossiblyUnusedMethod>
   </file>
 </files>
