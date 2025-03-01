@@ -51,11 +51,6 @@
       <code><![CDATA[getById]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="src/Investments/Application/Command/TInvestUpdateShares.php">
-    <InvalidArgument>
-      <code><![CDATA[$token]]></code>
-    </InvalidArgument>
-  </file>
   <file src="src/Investments/Application/Operations/Deals/AccountDealsQueryHandler.php">
     <UnusedForeachValue>
       <code><![CDATA[$groupByCurrency]]></code>
