@@ -24,4 +24,10 @@ class ShareRepository extends ServiceEntityRepository implements ShareRepository
     {
         return $this->findOneBy(['ticker' => $ticker, 'stockMarket' => $stockMarket]);
     }
+
+    #[\Override]
+    public function findByTUid(string $tUid): ?Share
+    {
+        return $this->findOneBy(['tUid' => $tUid]);
+    }
 }

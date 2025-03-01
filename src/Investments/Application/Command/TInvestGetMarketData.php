@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Command;
 
 use App\Investments\Domain\Instruments\Share;
+use App\Investments\Domain\Instruments\ShareRepositoryInterface;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Infrastructure\Http\TInvestHttpClient;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,6 +25,7 @@ class TInvestGetMarketData extends Command
         private readonly EntityManagerInterface $em,
         private readonly DealRepositoryInterface $dealRepository,
         private readonly TInvestHttpClient $httpClient,
+        private readonly ShareRepositoryInterface $shareRepository,
     ) {
         parent::__construct();
     }
@@ -47,15 +49,13 @@ class TInvestGetMarketData extends Command
             return Command::SUCCESS;
         }
 
-        $shareRepository = $this->em->getRepository(Share::class);
         $prices = $this->httpClient->getLastPricesByUids($uids);
-
         foreach ($prices as $item) {
             if (empty($item->getInstrumentUid())) {
                 continue;
             }
 
-            $share = $shareRepository->findOneBy(['tUid' => $item->getInstrumentUid()]);
+            $share = $this->shareRepository->findByTUid($item->getInstrumentUid());
             if ($share === null) {
                 continue;
             }

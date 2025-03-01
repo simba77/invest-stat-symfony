@@ -7,4 +7,6 @@ namespace App\Investments\Domain\Instruments;
 interface ShareRepositoryInterface
 {
     public function findByTickerAndStockMarket(string $ticker, string $stockMarket): ?Share;
+
+    public function findByTUid(string $tUid): ?Share;
 }
