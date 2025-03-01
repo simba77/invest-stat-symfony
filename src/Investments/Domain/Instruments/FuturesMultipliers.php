@@ -14,7 +14,8 @@ class FuturesMultipliers
             'CRH5' => '1',
             'MXZ4' => '1',
             'MXH5' => '1',
-            'EUM5' => '0.001'
+            'EUM5' => '0.001',
+            'MXM5' => '1'
         ];
 
         if(array_key_exists($ticker, $multipliers)) {
