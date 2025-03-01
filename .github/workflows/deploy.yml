@@ -21,5 +21,6 @@ jobs:
             git pull origin master
             php8.1 /usr/local/bin/composer install
             php8.1 bin/console doctrine:migrations:migrate --no-interaction
+            php8.1 bin/console cache:clear
             npm ci
             npm run build
