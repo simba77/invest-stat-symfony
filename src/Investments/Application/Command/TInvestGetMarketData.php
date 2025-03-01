@@ -6,16 +6,13 @@ namespace App\Investments\Application\Command;
 
 use App\Investments\Domain\Instruments\Share;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
+use App\Investments\Infrastructure\Http\TInvestHttpClient;
 use Doctrine\ORM\EntityManagerInterface;
-use Metaseller\TinkoffInvestApi2\TinkoffClientsFactory;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Tinkoff\Invest\V1\GetLastPricesRequest;
-use Tinkoff\Invest\V1\LastPrice;
 
 #[AsCommand(
     name: 'securities:get-market-data',
@@ -25,8 +22,8 @@ class TInvestGetMarketData extends Command
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly ParameterBagInterface $parameters,
         private readonly DealRepositoryInterface $dealRepository,
+        private readonly TInvestHttpClient $httpClient,
     ) {
         parent::__construct();
     }
@@ -50,22 +47,10 @@ class TInvestGetMarketData extends Command
             return Command::SUCCESS;
         }
 
-        /** @var string $token */
-        $token = $this->parameters->get('app.tinkoff.apiKey');
-        $client = TinkoffClientsFactory::create($token);
-
         $shareRepository = $this->em->getRepository(Share::class);
+        $prices = $this->httpClient->getLastPricesByUids($uids);
 
-        $instrumentsRequest = new GetLastPricesRequest();
-        $instrumentsRequest->setInstrumentId($uids);
-
-        [$response] = $client->marketDataServiceClient->GetLastPrices($instrumentsRequest)->wait();
-
-        /**
-         * @var \Tinkoff\Invest\V1\GetLastPricesResponse $response
-         */
-        foreach ($response->getLastPrices() as $item) {
-            /** @var LastPrice $item */
+        foreach ($prices as $item) {
             if (empty($item->getInstrumentUid())) {
                 continue;
             }
