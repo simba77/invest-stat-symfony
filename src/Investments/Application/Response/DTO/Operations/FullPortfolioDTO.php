@@ -9,6 +9,9 @@ use App\Investments\Application\Response\DTO\Operations\Deals\DealInstrumentType
 use App\Investments\Application\Response\DTO\Operations\Deals\DealStatusDTO;
 use App\Investments\Domain\Operations\Deals\GroupByTicker;
 
+/**
+ * @psalm-api
+ */
 class FullPortfolioDTO
 {
     public function __construct(

@@ -7,7 +7,7 @@ namespace App\Expenses\Infrastructure\Persistence\Repository;
 use App\Expenses\Domain\ExpensesCategory;
 use App\Expenses\Domain\ExpensesCategoryRepositoryInterface;
 use App\Shared\Domain\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Shared\Infrastructure\Persistence\Doctrine\ServiceEntityRepository;
 use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -25,6 +25,7 @@ class ExpensesCategoryRepository extends ServiceEntityRepository implements Expe
      * @param User $user
      * @return ExpensesCategory[]
      */
+    #[\Override]
     public function getCategoriesForUser(User $user): array
     {
         return $this->findBy(
@@ -33,16 +34,19 @@ class ExpensesCategoryRepository extends ServiceEntityRepository implements Expe
         );
     }
 
+    #[\Override]
     public function getById(int $id): ?ExpensesCategory
     {
         return $this->findOneBy(['id' => $id]);
     }
 
+    #[\Override]
     public function getByIdAndUser(int $id, User $user): ?ExpensesCategory
     {
         return $this->findOneBy(['id' => $id, 'userId' => $user->getId()]);
     }
 
+    #[\Override]
     public function save(ExpensesCategory $expensesCategory): void
     {
         $em = $this->getEntityManager();
@@ -50,6 +54,7 @@ class ExpensesCategoryRepository extends ServiceEntityRepository implements Expe
         $em->flush();
     }
 
+    #[\Override]
     public function remove(ExpensesCategory $expensesCategory): void
     {
         $em = $this->getEntityManager();

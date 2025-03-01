@@ -6,6 +6,9 @@ namespace App\Investments\Application\Response\DTO\Instruments;
 
 use App\Investments\Domain\Instruments\Securities\SecurityTypeEnum;
 
+/**
+ * @psalm-api
+ */
 class SecurityDTO
 {
     public function __construct(

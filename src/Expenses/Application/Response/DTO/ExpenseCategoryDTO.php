@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Expenses\Application\Response\DTO;
 
+/**
+ * @psalm-api
+ */
 final class ExpenseCategoryDTO
 {
     public function __construct(

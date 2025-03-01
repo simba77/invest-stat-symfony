@@ -7,7 +7,7 @@ namespace App\Deposits\Infrastructure\Persistence\Repository;
 use App\Deposits\Domain\Deposit;
 use App\Deposits\Domain\DepositRepositoryInterface;
 use App\Shared\Domain\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Shared\Infrastructure\Persistence\Doctrine\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,6 +21,7 @@ class DepositRepository extends ServiceEntityRepository implements DepositReposi
         parent::__construct($registry, Deposit::class);
     }
 
+    #[\Override]
     public function getSumOfDepositsForUser(User $user): string
     {
         $data = $this->createQueryBuilder('d')
@@ -33,16 +34,19 @@ class DepositRepository extends ServiceEntityRepository implements DepositReposi
         return (string) $data['sum_of_deposits'];
     }
 
+    #[\Override]
     public function getDepositsForUser(User $user): array
     {
         return $this->findBy(['user' => $user], ['date' => Criteria::DESC]);
     }
 
+    #[\Override]
     public function getDepositByIdAndUser(int $id, User $user): ?Deposit
     {
         return $this->findOneBy(['id' => $id, 'user' => $user]);
     }
 
+    #[\Override]
     public function save(Deposit $deposit): void
     {
         $em = $this->getEntityManager();
@@ -50,6 +54,7 @@ class DepositRepository extends ServiceEntityRepository implements DepositReposi
         $em->flush();
     }
 
+    #[\Override]
     public function remove(Deposit $deposit): void
     {
         $em = $this->getEntityManager();

@@ -9,8 +9,8 @@ use App\Investments\Domain\Instruments\Share;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\Deals\DealStatus;
+use App\Shared\Infrastructure\Persistence\Doctrine\ServiceEntityRepository;
 use Carbon\Carbon;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -27,6 +27,7 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
     /**
      * @return array<int, Deal>
      */
+    #[\Override]
     public function findByUserId(int $userId): array
     {
         return $this->createQueryBuilder('d')
@@ -46,7 +47,8 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
             ->getResult();
     }
 
-    public function findById(int $id): Deal
+    #[\Override]
+    public function findById(int $id): ?Deal
     {
         return $this->find($id);
     }
@@ -54,6 +56,7 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
     /**
      * @return array<int, Deal>
      */
+    #[\Override]
     public function findForUserAndAccount(int $userId, int $accountId): array
     {
         return $this->createQueryBuilder('d')
@@ -78,6 +81,7 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
     /**
      * @return array<int, Deal>
      */
+    #[\Override]
     public function findForAccount(int $accountId): array
     {
         return $this->createQueryBuilder('d')
@@ -144,6 +148,7 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
     /**
      * @return array<int, Deal>
      */
+    #[\Override]
     public function getClosedDealsForUserByFilter(int $userId, ?DealsFilterRequestDTO $filter = null): array
     {
         $builder = $this->createQueryBuilder('d')
@@ -175,6 +180,7 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
         return $builder->getQuery()->getResult();
     }
 
+    #[\Override]
     public function save(Deal $deal): void
     {
         $em = $this->getEntityManager();
@@ -182,6 +188,7 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
         $em->flush();
     }
 
+    #[\Override]
     public function remove(Deal $deal): void
     {
         $em = $this->getEntityManager();

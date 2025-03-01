@@ -10,6 +10,9 @@ use App\Investments\Application\Response\DTO\Operations\Deals\DealStatusDTO;
 use App\Investments\Application\Response\DTO\Operations\SummaryForGroupDTO;
 use App\Investments\Domain\Operations\Deals\GroupByTicker;
 
+/**
+ * @psalm-api
+ */
 class AccountDealsResponseDTO
 {
     public function __construct(

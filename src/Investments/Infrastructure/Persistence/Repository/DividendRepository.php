@@ -6,7 +6,7 @@ namespace App\Investments\Infrastructure\Persistence\Repository;
 
 use App\Investments\Domain\Operations\Dividend;
 use App\Investments\Domain\Operations\DividendRepositoryInterface;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Shared\Infrastructure\Persistence\Doctrine\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,6 +19,7 @@ class DividendRepository extends ServiceEntityRepository implements DividendRepo
         parent::__construct($registry, Dividend::class);
     }
 
+    #[\Override]
     public function findAll(): array
     {
         return parent::findAll();

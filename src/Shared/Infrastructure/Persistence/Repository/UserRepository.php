@@ -6,20 +6,18 @@ namespace App\Shared\Infrastructure\Persistence\Repository;
 
 use App\Shared\Domain\User;
 use App\Shared\Domain\UserRepositoryInterface;
-use Doctrine\Bundle\DoctrineBundle\Repository\LazyServiceEntityRepository;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Shared\Infrastructure\Persistence\Doctrine\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 /**
- * @extends LazyServiceEntityRepository<User>
+ * @extends ServiceEntityRepository<User>
  * @implements PasswordUpgraderInterface<PasswordAuthenticatedUserInterface>
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserRepositoryInterface
 {
-    /** @psalm-suppress PossiblyUnusedParam */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
@@ -28,6 +26,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      */
+    #[\Override]
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (! $user instanceof User) {
@@ -40,6 +39,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
+    #[\Override]
     public function findById(int $id): ?User
     {
         return $this->find($id);

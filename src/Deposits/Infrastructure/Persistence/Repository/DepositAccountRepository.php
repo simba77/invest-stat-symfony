@@ -7,7 +7,7 @@ namespace App\Deposits\Infrastructure\Persistence\Repository;
 use App\Deposits\Domain\DepositAccount;
 use App\Deposits\Domain\DepositAccountRepositoryInterface;
 use App\Shared\Domain\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Shared\Infrastructure\Persistence\Doctrine\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -20,11 +20,13 @@ class DepositAccountRepository extends ServiceEntityRepository implements Deposi
         parent::__construct($registry, DepositAccount::class);
     }
 
+    #[\Override]
     public function getForUser(User $user): array
     {
         return $this->findBy(['user' => $user]);
     }
 
+    #[\Override]
     public function getWithSummary(User $user): array
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -41,11 +43,13 @@ class DepositAccountRepository extends ServiceEntityRepository implements Deposi
         return $conn->executeQuery($sql, ['user' => $user->getId()])->fetchAllAssociative();
     }
 
+    #[\Override]
     public function getByIdAndUser(int $id, User $user): ?DepositAccount
     {
         return $this->findOneBy(['id' => $id, 'user' => $user]);
     }
 
+    #[\Override]
     public function save(DepositAccount $depositAccount): void
     {
         $em = $this->getEntityManager();
@@ -53,6 +57,7 @@ class DepositAccountRepository extends ServiceEntityRepository implements Deposi
         $em->flush();
     }
 
+    #[\Override]
     public function remove(DepositAccount $depositAccount): void
     {
         $em = $this->getEntityManager();

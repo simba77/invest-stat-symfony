@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Infrastructure\Persistence\Repository;
 
 use App\Investments\Domain\Instruments\CurrencyRate;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Shared\Infrastructure\Persistence\Doctrine\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

@@ -6,7 +6,7 @@ namespace App\Investments\Infrastructure\Persistence\Repository;
 
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Operations\Investment;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Shared\Infrastructure\Persistence\Doctrine\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 

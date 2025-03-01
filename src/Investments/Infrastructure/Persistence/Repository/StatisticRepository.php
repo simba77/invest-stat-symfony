@@ -6,7 +6,7 @@ namespace App\Investments\Infrastructure\Persistence\Repository;
 
 use App\Investments\Domain\Analytics\Statistic;
 use App\Investments\Domain\Analytics\StatisticRepositoryInterface;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Shared\Infrastructure\Persistence\Doctrine\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -24,6 +24,7 @@ class StatisticRepository extends ServiceEntityRepository implements StatisticRe
      * @return list<array{balance: string, usd_balance: string, investments: string, current_value: string, profit: string, date: string}>
      * @throws Exception
      */
+    #[\Override]
     public function getLatestStatistic(): array
     {
         $connection = $this->getEntityManager()->getConnection();
@@ -40,6 +41,7 @@ class StatisticRepository extends ServiceEntityRepository implements StatisticRe
      * @return list<array{balance: string, usd_balance: string, investments: string, current_value: string, profit: string, date: string}>
      * @throws Exception
      */
+    #[\Override]
     public function getStatisticByYears(): array
     {
         $connection = $this->getEntityManager()->getConnection();

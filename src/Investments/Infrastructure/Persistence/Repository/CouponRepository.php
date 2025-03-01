@@ -7,7 +7,7 @@ namespace App\Investments\Infrastructure\Persistence\Repository;
 use App\Investments\Domain\Operations\Coupon;
 use App\Investments\Domain\Operations\CouponRepositoryInterface;
 use App\Shared\Domain\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Shared\Infrastructure\Persistence\Doctrine\ServiceEntityRepository;
 use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,26 +21,31 @@ class CouponRepository extends ServiceEntityRepository implements CouponReposito
         parent::__construct($registry, Coupon::class);
     }
 
+    #[\Override]
     public function findAll(): array
     {
         return parent::findAll();
     }
 
+    #[\Override]
     public function findByUser(?User $user): array
     {
         return $this->findBy(['user' => $user], ['date' => Order::Descending->value, 'id' => Order::Descending->value]);
     }
 
+    #[\Override]
     public function findByIdAndUser(int $id, User $user): ?Coupon
     {
         return $this->findOneBy(['id' => $id, 'user' => $user]);
     }
 
+    #[\Override]
     public function findById(int $id): ?Coupon
     {
         return $this->findOneBy(['id' => $id]);
     }
 
+    #[\Override]
     public function save(Coupon $coupon): void
     {
         $em = $this->getEntityManager();
@@ -48,6 +53,7 @@ class CouponRepository extends ServiceEntityRepository implements CouponReposito
         $em->flush();
     }
 
+    #[\Override]
     public function remove(Coupon $coupon): void
     {
         $em = $this->getEntityManager();

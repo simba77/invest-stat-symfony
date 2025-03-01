@@ -10,43 +10,6 @@
       <code><![CDATA[$entry]]></code>
     </MoreSpecificImplementedParamType>
   </file>
-  <file src="src/Deposits/Application/Response/DTO/DepositAccountEditFormDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$name]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Deposits/Application/Response/DTO/DepositAccountListItemDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$name]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Deposits/Application/Response/DTO/DepositAccountSummaryListItemDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$profit]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Deposits/Application/Response/DTO/DepositEditFormDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$accountId]]></code>
-      <code><![CDATA[$date]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$sum]]></code>
-      <code><![CDATA[$type]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Deposits/Application/Response/DTO/DepositListItemDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$accountName]]></code>
-      <code><![CDATA[$date]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$sum]]></code>
-      <code><![CDATA[$typeName]]></code>
-    </PossiblyUnusedProperty>
-  </file>
   <file src="src/Deposits/Domain/Deposit.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getUser]]></code>
@@ -59,34 +22,15 @@
       <code><![CDATA[setUser]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="src/Deposits/Infrastructure/Persistence/Repository/DepositAccountRepository.php">
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
   <file src="src/Deposits/Infrastructure/Persistence/Repository/DepositRepository.php">
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
+    <QueryBuilderSetParameter>
+      <code><![CDATA[$user]]></code>
+    </QueryBuilderSetParameter>
   </file>
   <file src="src/Expenses/Application/Response/Compiler/CategoriesListCompiler.php">
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$entry]]></code>
     </MoreSpecificImplementedParamType>
-  </file>
-  <file src="src/Expenses/Application/Response/DTO/ExpenseCategoryDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$expenses]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$name]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Expenses/Application/Response/DTO/ExpenseResponseDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$sum]]></code>
-    </PossiblyUnusedProperty>
   </file>
   <file src="src/Expenses/Domain/Expense.php">
     <PossiblyUnusedMethod>
@@ -106,16 +50,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[getById]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Expenses/Infrastructure/Persistence/Repository/ExpenseRepository.php">
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Expenses/Infrastructure/Persistence/Repository/ExpensesCategoryRepository.php">
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
   </file>
   <file src="src/Investments/Application/Command/TInvestGetMarketData.php">
     <InvalidArgument>
@@ -146,8 +80,6 @@
   <file src="src/Investments/Application/Request/DTO/Operations/DealsFilterRequestDTO.php">
     <PossiblyUnusedProperty>
       <code><![CDATA[$accountId]]></code>
-      <code><![CDATA[$endDate]]></code>
-      <code><![CDATA[$startDate]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="src/Investments/Application/Response/Compiler/AnnualStatisticCompiler.php">
@@ -177,240 +109,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$entry]]></code>
     </MoreSpecificImplementedParamType>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Accounts/AccountDealsResponseDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$currencies]]></code>
-      <code><![CDATA[$dealsList]]></code>
-      <code><![CDATA[$instrumentTypes]]></code>
-      <code><![CDATA[$statuses]]></code>
-      <code><![CDATA[$summary]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Accounts/AccountEditFormResponseDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$balance]]></code>
-      <code><![CDATA[$commission]]></code>
-      <code><![CDATA[$futuresCommission]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$sort]]></code>
-      <code><![CDATA[$usdBalance]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Accounts/AccountItemResponseDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$balance]]></code>
-      <code><![CDATA[$deposits]]></code>
-      <code><![CDATA[$fullProfit]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$usdBalance]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Accounts/SimpleAccountItemResponseDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$sort]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Analytics/ClosedDealInGroupDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$accountId]]></code>
-      <code><![CDATA[$buyPrice]]></code>
-      <code><![CDATA[$closingDate]]></code>
-      <code><![CDATA[$commission]]></code>
-      <code><![CDATA[$createdAt]]></code>
-      <code><![CDATA[$currency]]></code>
-      <code><![CDATA[$fullBuyPrice]]></code>
-      <code><![CDATA[$fullSellPrice]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$isBlocked]]></code>
-      <code><![CDATA[$isShort]]></code>
-      <code><![CDATA[$profit]]></code>
-      <code><![CDATA[$profitPercent]]></code>
-      <code><![CDATA[$quantity]]></code>
-      <code><![CDATA[$sellPrice]]></code>
-      <code><![CDATA[$shortName]]></code>
-      <code><![CDATA[$ticker]]></code>
-      <code><![CDATA[$updatedAt]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Analytics/ClosedDealListGroupByTickerDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$buyPrice]]></code>
-      <code><![CDATA[$commission]]></code>
-      <code><![CDATA[$currency]]></code>
-      <code><![CDATA[$fullBuyPrice]]></code>
-      <code><![CDATA[$fullSellPrice]]></code>
-      <code><![CDATA[$isBlocked]]></code>
-      <code><![CDATA[$isShort]]></code>
-      <code><![CDATA[$profit]]></code>
-      <code><![CDATA[$profitPercent]]></code>
-      <code><![CDATA[$quantity]]></code>
-      <code><![CDATA[$sellPrice]]></code>
-      <code><![CDATA[$shortName]]></code>
-      <code><![CDATA[$ticker]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Analytics/SummaryForClosedDealsDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$buyPrice]]></code>
-      <code><![CDATA[$profit]]></code>
-      <code><![CDATA[$profitPercent]]></code>
-      <code><![CDATA[$sellPrice]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Instruments/SecurityDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$price]]></code>
-      <code><![CDATA[$shortName]]></code>
-      <code><![CDATA[$stockMarket]]></code>
-      <code><![CDATA[$ticker]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Operations/CouponFormDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$accountId]]></code>
-      <code><![CDATA[$amount]]></code>
-      <code><![CDATA[$date]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$stockMarket]]></code>
-      <code><![CDATA[$ticker]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Operations/CouponListItemDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$accountName]]></code>
-      <code><![CDATA[$amount]]></code>
-      <code><![CDATA[$date]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$stockMarket]]></code>
-      <code><![CDATA[$ticker]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Operations/DealInGroupDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$accountId]]></code>
-      <code><![CDATA[$buyPrice]]></code>
-      <code><![CDATA[$commission]]></code>
-      <code><![CDATA[$createdAt]]></code>
-      <code><![CDATA[$currency]]></code>
-      <code><![CDATA[$currentPrice]]></code>
-      <code><![CDATA[$dailyProfit]]></code>
-      <code><![CDATA[$fullBuyPrice]]></code>
-      <code><![CDATA[$fullCurrentPrice]]></code>
-      <code><![CDATA[$fullDailyProfit]]></code>
-      <code><![CDATA[$fullPrevPrice]]></code>
-      <code><![CDATA[$fullTargetPrice]]></code>
-      <code><![CDATA[$fullTargetProfit]]></code>
-      <code><![CDATA[$fullTargetProfitPercent]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$isBlocked]]></code>
-      <code><![CDATA[$isShort]]></code>
-      <code><![CDATA[$percent]]></code>
-      <code><![CDATA[$prevPrice]]></code>
-      <code><![CDATA[$profit]]></code>
-      <code><![CDATA[$profitPercent]]></code>
-      <code><![CDATA[$quantity]]></code>
-      <code><![CDATA[$shortName]]></code>
-      <code><![CDATA[$targetPrice]]></code>
-      <code><![CDATA[$targetProfit]]></code>
-      <code><![CDATA[$ticker]]></code>
-      <code><![CDATA[$updatedAt]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Operations/DealListGroupByTickerDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$buyPrice]]></code>
-      <code><![CDATA[$commission]]></code>
-      <code><![CDATA[$currency]]></code>
-      <code><![CDATA[$currentPrice]]></code>
-      <code><![CDATA[$dailyProfit]]></code>
-      <code><![CDATA[$fullBuyPrice]]></code>
-      <code><![CDATA[$fullCurrentPrice]]></code>
-      <code><![CDATA[$fullDailyProfit]]></code>
-      <code><![CDATA[$fullPrevPrice]]></code>
-      <code><![CDATA[$fullTargetPrice]]></code>
-      <code><![CDATA[$fullTargetProfit]]></code>
-      <code><![CDATA[$isBlocked]]></code>
-      <code><![CDATA[$isShort]]></code>
-      <code><![CDATA[$prevPrice]]></code>
-      <code><![CDATA[$profit]]></code>
-      <code><![CDATA[$profitPercent]]></code>
-      <code><![CDATA[$quantity]]></code>
-      <code><![CDATA[$shortName]]></code>
-      <code><![CDATA[$targetPrice]]></code>
-      <code><![CDATA[$targetProfit]]></code>
-      <code><![CDATA[$targetProfitPercent]]></code>
-      <code><![CDATA[$ticker]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Operations/Deals/DealCurrencyDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$name]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Operations/Deals/DealInstrumentTypeDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$name]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Operations/Deals/DealStatusDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$name]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Operations/DividendListItemDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$accountName]]></code>
-      <code><![CDATA[$amount]]></code>
-      <code><![CDATA[$date]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$stockMarket]]></code>
-      <code><![CDATA[$ticker]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Operations/EditDealDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$buyPrice]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$isShort]]></code>
-      <code><![CDATA[$quantity]]></code>
-      <code><![CDATA[$stockMarket]]></code>
-      <code><![CDATA[$targetPrice]]></code>
-      <code><![CDATA[$ticker]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Operations/FullPortfolioDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$currencies]]></code>
-      <code><![CDATA[$dealsList]]></code>
-      <code><![CDATA[$instrumentTypes]]></code>
-      <code><![CDATA[$statuses]]></code>
-      <code><![CDATA[$summary]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Operations/InvestmentResponseDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$account]]></code>
-      <code><![CDATA[$currency]]></code>
-      <code><![CDATA[$date]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$sum]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Operations/SummaryForGroupDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$buyPrice]]></code>
-      <code><![CDATA[$buyPriceInBaseCurrency]]></code>
-      <code><![CDATA[$currentPrice]]></code>
-      <code><![CDATA[$currentPriceInBaseCurrency]]></code>
-      <code><![CDATA[$isBaseCurrency]]></code>
-      <code><![CDATA[$profit]]></code>
-      <code><![CDATA[$profitInBaseCurrency]]></code>
-      <code><![CDATA[$profitPercent]]></code>
-    </PossiblyUnusedProperty>
   </file>
   <file src="src/Investments/Domain/Accounts/Account.php">
     <PossiblyUnusedMethod>
@@ -516,11 +214,6 @@
       <code><![CDATA[setUser]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="src/Investments/Domain/Operations/Deal.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[setUser]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="src/Investments/Domain/Operations/Deals/ClosedDealsGroupedByTicker.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getDeals]]></code>
@@ -583,59 +276,5 @@
       <code><![CDATA[getUserId]]></code>
       <code><![CDATA[setUserId]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Investments/Infrastructure/Persistence/Repository/AccountRepository.php">
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Investments/Infrastructure/Persistence/Repository/BondRepository.php">
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Investments/Infrastructure/Persistence/Repository/CouponRepository.php">
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Investments/Infrastructure/Persistence/Repository/CurrencyRateRepository.php">
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Investments/Infrastructure/Persistence/Repository/DealRepository.php">
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-      <code><![CDATA[$stockMarket]]></code>
-      <code><![CDATA[$stockMarket]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Investments/Infrastructure/Persistence/Repository/DividendRepository.php">
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Investments/Infrastructure/Persistence/Repository/FutureRepository.php">
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Investments/Infrastructure/Persistence/Repository/InvestmentRepository.php">
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-      <code><![CDATA[$userId]]></code>
-      <code><![CDATA[$userId]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Investments/Infrastructure/Persistence/Repository/ShareRepository.php">
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Investments/Infrastructure/Persistence/Repository/StatisticRepository.php">
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
   </file>
 </files>

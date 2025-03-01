@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Response\DTO\Operations;
 
+/**
+ * @psalm-api
+ */
 class EditDealDTO
 {
     public function __construct(
