@@ -81,6 +81,7 @@ class TInvestUpdateShares extends Command
 
             $share->setSector($item->getSector());
             $share->setFigi($item->getFigi());
+            $share->setTUID($item->getUid());
             $share->setClassCode($item->getClassCode());
             $this->em->persist($share);
         }

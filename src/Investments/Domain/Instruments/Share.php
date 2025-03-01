@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ShareRepository::class)]
 #[ORM\Table(name: 'shares')]
 #[ORM\Index(columns: ['ticker', 'stock_market'], name: 'ticker_market')]
+#[ORM\Index(columns: ['t_uid'], name: 't_uid')]
 class Share implements
     CreatedDateProviderInterface,
     UpdatedDateProviderInterface
@@ -68,6 +69,9 @@ class Share implements
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $sector = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $tUid = null;
 
     public function __construct(
         string $ticker,
@@ -264,6 +268,18 @@ class Share implements
     public function setSector(?string $sector): static
     {
         $this->sector = $sector;
+
+        return $this;
+    }
+
+    public function getTUid(): ?string
+    {
+        return $this->tUid;
+    }
+
+    public function setTUid(?string $tUid): static
+    {
+        $this->tUid = $tUid;
 
         return $this;
     }
