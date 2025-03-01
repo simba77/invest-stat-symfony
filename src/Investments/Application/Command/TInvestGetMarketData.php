@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Command;
 
-use App\Investments\Domain\Instruments\Share;
 use App\Investments\Domain\Instruments\ShareRepositoryInterface;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Infrastructure\Http\TInvestHttpClient;
@@ -60,7 +59,7 @@ class TInvestGetMarketData extends Command
                 continue;
             }
 
-            $price = sprintf('%s.%s', ((string) $item->getPrice()?->getUnits()), ((string) $item->getPrice()?->getNano()));
+            $price = sprintf('%s.%s', $item->getPrice()?->getUnits() ?? '0', $item->getPrice()?->getNano() ?? '0');
             if ($price > 0) {
                 $share->setPrice($price);
                 $this->em->persist($share);
