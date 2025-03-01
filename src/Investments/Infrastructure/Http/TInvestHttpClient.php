@@ -8,7 +8,11 @@ use Metaseller\TinkoffInvestApi2\TinkoffClientsFactory;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Tinkoff\Invest\V1\GetLastPricesRequest;
+use Tinkoff\Invest\V1\GetLastPricesResponse;
+use Tinkoff\Invest\V1\InstrumentsRequest;
 use Tinkoff\Invest\V1\LastPrice;
+use Tinkoff\Invest\V1\Share;
+use Tinkoff\Invest\V1\SharesResponse;
 
 class TInvestHttpClient
 {
@@ -33,10 +37,19 @@ class TInvestHttpClient
         $instrumentsRequest = new GetLastPricesRequest();
         $instrumentsRequest->setInstrumentId($uids);
 
-        /**
-         * @var \Tinkoff\Invest\V1\GetLastPricesResponse $response
-         */
+        /** @var GetLastPricesResponse $response */
         [$response] = $this->client->marketDataServiceClient->GetLastPrices($instrumentsRequest)->wait();
         return $response->getLastPrices();
+    }
+
+    /**
+     * @return iterable<Share>
+     */
+    public function getAllShares(): iterable
+    {
+        $instrumentsRequest = new InstrumentsRequest();
+        /** @var SharesResponse $response */
+        [$response] = $this->client->instrumentsServiceClient->Shares($instrumentsRequest)->wait();
+        return $response->getInstruments();
     }
 }

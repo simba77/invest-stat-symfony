@@ -6,16 +6,14 @@ namespace App\Investments\Application\Command;
 
 use App\Investments\Domain\Instruments\Securities\ShareTypeEnum;
 use App\Investments\Domain\Instruments\Share;
+use App\Investments\Infrastructure\Http\TInvestHttpClient;
 use Doctrine\ORM\EntityManagerInterface;
-use Metaseller\TinkoffInvestApi2\TinkoffClientsFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Tinkoff\Invest\V1\InstrumentsRequest;
 
 #[AsCommand(
     name: 'securities:get-tinvest-shares',
@@ -26,7 +24,7 @@ class TInvestUpdateShares extends Command
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly LoggerInterface $logger,
-        private readonly ParameterBagInterface $parameters
+        private readonly TInvestHttpClient $httpClient,
     ) {
         parent::__construct();
     }
@@ -36,17 +34,10 @@ class TInvestUpdateShares extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $token = $this->parameters->get('app.tinkoff.apiKey');
-        $client = TinkoffClientsFactory::create($token);
-
         $shareRepository = $this->em->getRepository(Share::class);
+        $shares = $this->httpClient->getAllShares();
 
-        $instrumentsRequest = new InstrumentsRequest();
-        [$response] = $client->instrumentsServiceClient->Shares($instrumentsRequest)->wait();
-        /** @var \Tinkoff\Invest\V1\SharesResponse $response */
-        // @phpstan-ignore-next-line
-        foreach ($response->getInstruments() as $item) {
-            /** @var \Tinkoff\Invest\V1\Share $item */
+        foreach ($shares as $item) {
             if ($item->getExchange() === 'spb_close' || $item->getExchange() === 'otc_ncc') {
                 continue;
             }
