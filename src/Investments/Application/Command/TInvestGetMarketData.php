@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Command;
 
 use App\Investments\Domain\Instruments\Share;
-use App\Investments\Domain\Operations\Deal;
+use App\Investments\Domain\Operations\DealRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Metaseller\TinkoffInvestApi2\TinkoffClientsFactory;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -25,7 +25,8 @@ class TInvestGetMarketData extends Command
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly ParameterBagInterface $parameters
+        private readonly ParameterBagInterface $parameters,
+        private readonly DealRepositoryInterface $dealRepository,
     ) {
         parent::__construct();
     }
@@ -35,43 +36,51 @@ class TInvestGetMarketData extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $dealsRepository = $this->em->getRepository(Deal::class);
-        $activeTickers = $dealsRepository->getAllActiveFigi();
+        $uids = [];
+        $deals = $this->dealRepository->getAllActiveDealsWithTUid();
+        foreach ($deals as $deal) {
+            $uid = $deal->getShare()?->getTUid() ?? null;
+            if ($uid !== null) {
+                $uids[] = $uid;
+            }
+        }
 
-        if (empty($activeTickers)) {
+        if (empty($uids)) {
             $io->success('No active deals were found!');
             return Command::SUCCESS;
         }
 
+        /** @var string $token */
         $token = $this->parameters->get('app.tinkoff.apiKey');
         $client = TinkoffClientsFactory::create($token);
 
         $shareRepository = $this->em->getRepository(Share::class);
 
         $instrumentsRequest = new GetLastPricesRequest();
-        /** @var iterable<string> $figi */
-        $figi = array_column($activeTickers, 'figi');
-        $instrumentsRequest->setInstrumentId($figi);
+        $instrumentsRequest->setInstrumentId($uids);
 
         [$response] = $client->marketDataServiceClient->GetLastPrices($instrumentsRequest)->wait();
 
         /**
          * @var \Tinkoff\Invest\V1\GetLastPricesResponse $response
          */
-        // @phpstan-ignore-next-line
         foreach ($response->getLastPrices() as $item) {
-            if(empty($item->getFigi())) {
+            /** @var LastPrice $item */
+            if (empty($item->getInstrumentUid())) {
                 continue;
             }
 
-            /** @var LastPrice $item */
-            $share = $shareRepository->findOneBy(['figi' => $item->getFigi()]);
-            $price = $item->getPrice()->getUnits() . '.' . $item->getPrice()->getNano();
+            $share = $shareRepository->findOneBy(['tUid' => $item->getInstrumentUid()]);
+            if ($share === null) {
+                continue;
+            }
+
+            $price = sprintf('%s.%s', ((string) $item->getPrice()?->getUnits()), ((string) $item->getPrice()?->getNano()));
             if ($price > 0) {
                 $share->setPrice($price);
                 $this->em->persist($share);
             }
-            $io->success($share->getStockMarket() . ':' . $share->getTicker() . ' - ' . $share->getPrice());
+            $io->success(sprintf('%s: %s - %s', $share->getStockMarket() ?? '', $share->getTicker() ?? '', $share->getPrice() ?? ''));
         }
 
         $this->em->flush();

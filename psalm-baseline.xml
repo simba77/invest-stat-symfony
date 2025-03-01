@@ -51,12 +51,6 @@
       <code><![CDATA[getById]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="src/Investments/Application/Command/TInvestGetMarketData.php">
-    <InvalidArgument>
-      <code><![CDATA[$figi]]></code>
-      <code><![CDATA[$token]]></code>
-    </InvalidArgument>
-  </file>
   <file src="src/Investments/Application/Command/TInvestUpdateShares.php">
     <InvalidArgument>
       <code><![CDATA[$token]]></code>

@@ -127,18 +127,15 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
             ->getResult();
     }
 
-    /** @return list<array{ticker: string, stockMarket: string, figi: string}> */
-    public function getAllActiveFigi(): array
+    /** @return array<int, Deal> */
+    #[\Override]
+    public function getAllActiveDealsWithTUid(): array
     {
         return $this->createQueryBuilder('d')
-            ->select([
-                         'd.ticker as ticker',
-                         'd.stockMarket as stockMarket',
-                         's.figi as figi',
-                     ])
-            ->leftJoin(Share::class, 's', Join::WITH, 's.ticker = d.ticker AND s.stockMarket = d.stockMarket')
+            ->select(['d', 's'])
+            ->leftJoin('d.share', 's')
             ->andWhere("d.status != :status")
-            ->andWhere("s.figi is not null")
+            ->andWhere("s.tUid is not null")
             ->groupBy('d.ticker')
             ->setParameter('status', DealStatus::Closed)
             ->getQuery()

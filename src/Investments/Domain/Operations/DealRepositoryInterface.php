@@ -33,4 +33,9 @@ interface DealRepositoryInterface
     public function save(Deal $deal): void;
 
     public function remove(Deal $deal): void;
+
+    /**
+     * @return array<int, Deal>
+     */
+    public function getAllActiveDealsWithTUid(): array;
 }
