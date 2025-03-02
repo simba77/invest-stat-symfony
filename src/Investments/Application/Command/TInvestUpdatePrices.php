@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Command;
 
+use App\Investments\Domain\Instruments\BondRepositoryInterface;
 use App\Investments\Domain\Instruments\ShareRepositoryInterface;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Infrastructure\Http\TInvestHttpClient;
@@ -25,6 +26,7 @@ class TInvestUpdatePrices extends Command
         private readonly DealRepositoryInterface $dealRepository,
         private readonly TInvestHttpClient $httpClient,
         private readonly ShareRepositoryInterface $shareRepository,
+        private readonly BondRepositoryInterface $bondRepository,
     ) {
         parent::__construct();
     }
@@ -34,8 +36,16 @@ class TInvestUpdatePrices extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
+        $this->updateSharePrices($io);
+        $this->updateBondPrices($io);
+
+        return Command::SUCCESS;
+    }
+
+    private function updateSharePrices(SymfonyStyle $io): void
+    {
         $uids = [];
-        $deals = $this->dealRepository->getAllActiveDealsWithTUid();
+        $deals = $this->dealRepository->getAllActiveDealsWithSharesAndTUid();
         foreach ($deals as $deal) {
             $uid = $deal->getShare()?->getTUid() ?? null;
             if ($uid !== null) {
@@ -44,8 +54,8 @@ class TInvestUpdatePrices extends Command
         }
 
         if (empty($uids)) {
-            $io->success('No active deals were found!');
-            return Command::SUCCESS;
+            $io->success('No active deals with shares were found!');
+            return;
         }
 
         $prices = $this->httpClient->getLastPricesByUids($uids);
@@ -69,8 +79,44 @@ class TInvestUpdatePrices extends Command
 
         $this->em->flush();
 
-        $io->success('Success!');
+        $io->success('Share prices updated!');
+    }
 
-        return Command::SUCCESS;
+    private function updateBondPrices(SymfonyStyle $io): void
+    {
+        $uids = [];
+        $deals = $this->dealRepository->getAllActiveDealsWithBondsAndTUid();
+        foreach ($deals as $deal) {
+            $uid = $deal->getBond()?->getTUid() ?? null;
+            if ($uid !== null) {
+                $uids[] = $uid;
+            }
+        }
+        if (empty($uids)) {
+            $io->success('No active deals with bonds were found!');
+            return;
+        }
+
+        $prices = $this->httpClient->getLastPricesByUids($uids);
+        foreach ($prices as $item) {
+            if (empty($item->getInstrumentUid())) {
+                continue;
+            }
+
+            $bond = $this->bondRepository->findByTUid($item->getInstrumentUid());
+            if ($bond === null) {
+                continue;
+            }
+
+            $price = sprintf('%s.%s', $item->getPrice()?->getUnits() ?? '0', $item->getPrice()?->getNano() ?? '0');
+            if ($price > 0) {
+                $bond->setPrice($price);
+                $this->em->persist($bond);
+            }
+            $io->success(sprintf('%s: %s (%s) - %s', $bond->getStockMarket(), $bond->getName(), $bond->getTicker(), $bond->getPrice()));
+        }
+
+        $this->em->flush();
+        $io->success('Bond prices updated!');
     }
 }

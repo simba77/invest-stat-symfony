@@ -129,13 +129,28 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
 
     /** @return array<int, Deal> */
     #[\Override]
-    public function getAllActiveDealsWithTUid(): array
+    public function getAllActiveDealsWithSharesAndTUid(): array
     {
         return $this->createQueryBuilder('d')
             ->select(['d', 's'])
             ->leftJoin('d.share', 's')
             ->andWhere("d.status != :status")
             ->andWhere("s.tUid is not null")
+            ->groupBy('d.ticker')
+            ->setParameter('status', DealStatus::Closed)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /** @return array<int, Deal> */
+    #[\Override]
+    public function getAllActiveDealsWithBondsAndTUid(): array
+    {
+        return $this->createQueryBuilder('d')
+            ->select(['d', 'b'])
+            ->leftJoin('d.bond', 'b')
+            ->andWhere("d.status != :status")
+            ->andWhere("b.tUid is not null")
             ->groupBy('d.ticker')
             ->setParameter('status', DealStatus::Closed)
             ->getQuery()
