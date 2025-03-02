@@ -162,7 +162,6 @@
       <code><![CDATA[getExpiration]]></code>
       <code><![CDATA[getId]]></code>
       <code><![CDATA[getLatName]]></code>
-      <code><![CDATA[getName]]></code>
       <code><![CDATA[setCurrency]]></code>
       <code><![CDATA[setExpiration]]></code>
       <code><![CDATA[setStepPrice]]></code>
