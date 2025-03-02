@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: BondRepository::class)]
 #[ORM\Table(name: 'bonds')]
 #[ORM\Index(columns: ['ticker', 'stock_market'], name: 'ticker_market')]
+#[ORM\Index(columns: ['t_uid'], name: 't_uid')]
 class Bond implements
     CreatedDateProviderInterface,
     UpdatedDateProviderInterface
@@ -72,16 +73,19 @@ class Bond implements
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $prevPrice = null;
 
+    #[ORM\Column(type: Types::GUID, length: 255, nullable: true)]
+    private ?string $tUid = null;
+
     public function __construct(
         string $ticker,
         string $name,
         string $stockMarket,
         string $currency,
         string $price,
-        string $prevPrice = '',
-        string $shortName = '',
-        string $latName = '',
-        string $lotSize = '1',
+        ?string $prevPrice = null,
+        ?string $shortName = null,
+        ?string $latName = null,
+        ?string $lotSize = '1',
         ?string $stepPrice = null,
         ?string $couponPercent = null,
         ?string $couponValue = null,
@@ -287,6 +291,18 @@ class Bond implements
     public function setPrevPrice(?string $prevPrice): static
     {
         $this->prevPrice = $prevPrice;
+
+        return $this;
+    }
+
+    public function getTUid(): ?string
+    {
+        return $this->tUid;
+    }
+
+    public function setTUid(?string $tUid): static
+    {
+        $this->tUid = $tUid;
 
         return $this;
     }
