@@ -101,7 +101,7 @@ class Share implements
         return $this->id;
     }
 
-    public function getTicker(): ?string
+    public function getTicker(): string
     {
         return $this->ticker;
     }
@@ -113,7 +113,7 @@ class Share implements
         return $this;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -149,7 +149,7 @@ class Share implements
         return $this;
     }
 
-    public function getStockMarket(): ?string
+    public function getStockMarket(): string
     {
         return $this->stockMarket;
     }
@@ -173,7 +173,7 @@ class Share implements
         return $this;
     }
 
-    public function getPrice(): ?string
+    public function getPrice(): string
     {
         return $this->price;
     }

@@ -74,7 +74,7 @@ class TInvestUpdatePrices extends Command
                 $share->setPrice($price);
                 $this->em->persist($share);
             }
-            $io->success(sprintf('%s: %s - %s', $share->getStockMarket() ?? '', $share->getTicker() ?? '', $share->getPrice() ?? ''));
+            $io->success(sprintf('%s: %s - %s', $share->getStockMarket(), $share->getTicker(), $share->getPrice()));
         }
 
         $this->em->flush();

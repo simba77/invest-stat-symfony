@@ -136,7 +136,6 @@
       <code><![CDATA[getId]]></code>
       <code><![CDATA[getLatName]]></code>
       <code><![CDATA[getMaturityDate]]></code>
-      <code><![CDATA[getName]]></code>
       <code><![CDATA[getNextCouponDate]]></code>
       <code><![CDATA[getStepPrice]]></code>
       <code><![CDATA[setCurrency]]></code>

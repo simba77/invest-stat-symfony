@@ -63,7 +63,7 @@ class FutureStrategy implements DealStrategyInterface
     #[\Override]
     public function getCurrency(): string
     {
-        return $this->deal->getFuture()->getCurrency() ?? 'RUB';
+        return $this->deal->getFuture()->getCurrency();
     }
 
     private function getMultiplier(): string

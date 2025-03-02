@@ -91,7 +91,7 @@ class Future implements
         return $this->id;
     }
 
-    public function getTicker(): ?string
+    public function getTicker(): string
     {
         return $this->ticker;
     }
@@ -103,7 +103,7 @@ class Future implements
         return $this;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -139,7 +139,7 @@ class Future implements
         return $this;
     }
 
-    public function getStockMarket(): ?string
+    public function getStockMarket(): string
     {
         return $this->stockMarket;
     }
@@ -151,7 +151,7 @@ class Future implements
         return $this;
     }
 
-    public function getCurrency(): ?string
+    public function getCurrency(): string
     {
         return $this->currency;
     }
@@ -163,7 +163,7 @@ class Future implements
         return $this;
     }
 
-    public function getPrice(): ?string
+    public function getPrice(): string
     {
         return $this->price;
     }
