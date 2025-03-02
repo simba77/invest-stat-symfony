@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: FutureRepository::class)]
 #[ORM\Table(name: 'futures')]
 #[ORM\Index(columns: ['ticker', 'stock_market'], name: 'ticker_market')]
+#[ORM\Index(columns: ['t_uid'], name: 't_uid')]
 class Future implements
     CreatedDateProviderInterface,
     UpdatedDateProviderInterface
@@ -59,6 +60,9 @@ class Future implements
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $prevPrice = null;
+
+    #[ORM\Column(type: Types::GUID, length: 255, nullable: true)]
+    private ?string $tUid = null;
 
     public function __construct(
         string $ticker,
@@ -218,6 +222,18 @@ class Future implements
     public function setPrevPrice(?string $prevPrice): static
     {
         $this->prevPrice = $prevPrice;
+
+        return $this;
+    }
+
+    public function getTUid(): ?string
+    {
+        return $this->tUid;
+    }
+
+    public function setTUid(?string $tUid): static
+    {
+        $this->tUid = $tUid;
 
         return $this;
     }

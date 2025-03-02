@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Command;
 
 use App\Investments\Domain\Instruments\BondRepositoryInterface;
+use App\Investments\Domain\Instruments\FutureRepositoryInterface;
 use App\Investments\Domain\Instruments\ShareRepositoryInterface;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Infrastructure\Http\TInvestHttpClient;
@@ -27,6 +28,7 @@ class TInvestUpdatePrices extends Command
         private readonly TInvestHttpClient $httpClient,
         private readonly ShareRepositoryInterface $shareRepository,
         private readonly BondRepositoryInterface $bondRepository,
+        private readonly FutureRepositoryInterface $futureRepository,
     ) {
         parent::__construct();
     }
@@ -38,6 +40,7 @@ class TInvestUpdatePrices extends Command
 
         $this->updateSharePrices($io);
         $this->updateBondPrices($io);
+        $this->updateFuturePrices($io);
 
         return Command::SUCCESS;
     }
@@ -114,6 +117,44 @@ class TInvestUpdatePrices extends Command
                 $this->em->persist($bond);
             }
             $io->success(sprintf('%s: %s (%s) - %s', $bond->getStockMarket(), $bond->getName(), $bond->getTicker(), $bond->getPrice()));
+        }
+
+        $this->em->flush();
+        $io->success('Bond prices updated!');
+    }
+
+    private function updateFuturePrices(SymfonyStyle $io): void
+    {
+        $uids = [];
+        $deals = $this->dealRepository->getAllActiveDealsWithFuturesAndTUid();
+        foreach ($deals as $deal) {
+            $uid = $deal->getFuture()?->getTUid() ?? null;
+            if ($uid !== null) {
+                $uids[] = $uid;
+            }
+        }
+        if (empty($uids)) {
+            $io->success('No active deals with futures were found!');
+            return;
+        }
+
+        $prices = $this->httpClient->getLastPricesByUids($uids);
+        foreach ($prices as $item) {
+            if (empty($item->getInstrumentUid())) {
+                continue;
+            }
+
+            $future = $this->futureRepository->findByTUid($item->getInstrumentUid());
+            if ($future === null) {
+                continue;
+            }
+
+            $price = sprintf('%s.%s', $item->getPrice()?->getUnits() ?? '0', $item->getPrice()?->getNano() ?? '0');
+            if ($price > 0) {
+                $future->setPrice($price);
+                $this->em->persist($future);
+            }
+            $io->success(sprintf('%s: %s (%s) - %s', $future->getStockMarket(), $future->getName(), $future->getTicker(), $future->getPrice()));
         }
 
         $this->em->flush();

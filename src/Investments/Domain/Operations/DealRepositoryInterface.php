@@ -43,4 +43,9 @@ interface DealRepositoryInterface
      * @return array<int, Deal>
      */
     public function getAllActiveDealsWithBondsAndTUid(): array;
+
+    /**
+     * @return array<int, Deal>
+     */
+    public function getAllActiveDealsWithFuturesAndTUid(): array;
 }
