@@ -8,6 +8,7 @@ use Metaseller\TinkoffInvestApi2\TinkoffClientsFactory;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Tinkoff\Invest\V1\Bond;
+use Tinkoff\Invest\V1\Future;
 use Tinkoff\Invest\V1\GetLastPricesRequest;
 use Tinkoff\Invest\V1\GetLastPricesResponse;
 use Tinkoff\Invest\V1\InstrumentsRequest;
@@ -62,6 +63,17 @@ class TInvestHttpClient
         $instrumentsRequest = new InstrumentsRequest();
         /** @var SharesResponse $response */
         [$response] = $this->client->instrumentsServiceClient->Bonds($instrumentsRequest)->wait();
+        return $response->getInstruments();
+    }
+
+    /**
+     * @return iterable<Future>
+     */
+    public function getAllFutures(): iterable
+    {
+        $instrumentsRequest = new InstrumentsRequest();
+        /** @var SharesResponse $response */
+        [$response] = $this->client->instrumentsServiceClient->Futures($instrumentsRequest)->wait();
         return $response->getInstruments();
     }
 }
