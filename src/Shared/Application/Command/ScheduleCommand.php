@@ -35,7 +35,7 @@ class ScheduleCommand extends Command
             $scheduler->php($rootDir . '/bin/console securities:get-moex-shares')->everyMinute(15);
             // $scheduler->php($rootDir . '/bin/console securities:get-spb-shares')->everyMinute(5);
             $scheduler->php($rootDir . '/bin/console securities:update-instruments')->daily(19);
-            $scheduler->php($rootDir . '/bin/console securities:get-market-data')->everyMinute(2);
+            $scheduler->php($rootDir . '/bin/console securities:update-prices')->everyMinute(2);
 
             // Set daily profit to 0. (Set current prices as prev)
             $scheduler->php($rootDir . '/bin/console securities:update-prev-prices')->daily(3);

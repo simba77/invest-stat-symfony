@@ -15,10 +15,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'securities:get-market-data',
-    description: 'Get market data from tinkoff invest api',
+    name: 'securities:update-prices',
+    description: 'Get prices from tinkoff invest api',
 )]
-class TInvestGetMarketData extends Command
+class TInvestUpdatePrices extends Command
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
