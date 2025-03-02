@@ -73,6 +73,7 @@ class Bond implements
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $prevPrice = null;
 
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Column(type: Types::GUID, length: 255, nullable: true)]
     private ?string $tUid = null;
 
@@ -293,11 +294,6 @@ class Bond implements
         $this->prevPrice = $prevPrice;
 
         return $this;
-    }
-
-    public function getTUid(): ?string
-    {
-        return $this->tUid;
     }
 
     public function setTUid(?string $tUid): static
