@@ -23,12 +23,12 @@ class DealData
 
     public function getId(): int
     {
-        return $this->deal->getId();
+        return $this->deal->getId() ?? throw new \RuntimeException('Deal id is not set');
     }
 
     public function getAccountId(): int
     {
-        return $this->deal->getAccount()->getId();
+        return $this->deal->getAccount()->getId() ?? throw new \RuntimeException('Account is not set');
     }
 
     public function getName(): string
@@ -111,7 +111,7 @@ class DealData
 
     public function getTargetPrice(): string
     {
-        return $this->deal->getTargetPrice();
+        return $this->deal->getTargetPrice() ?? '0';
     }
 
     public function getFullTargetPrice(): string

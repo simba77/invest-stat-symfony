@@ -7,6 +7,9 @@ namespace App\Investments\Domain\Operations\Deals;
 use App\Investments\Application\Response\DTO\Operations\DealInGroupDTO;
 use App\Investments\Application\Response\DTO\Operations\DealListGroupByTickerDTO;
 
+/**
+ * @psalm-api
+ */
 class GroupByTicker
 {
     /**

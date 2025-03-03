@@ -7,6 +7,9 @@ namespace App\Investments\Domain\Operations\Deals;
 use App\Investments\Application\Response\DTO\Analytics\ClosedDealInGroupDTO;
 use App\Investments\Application\Response\DTO\Analytics\ClosedDealListGroupByTickerDTO;
 
+/**
+ * @psalm-api
+ */
 class ClosedDealsGroupedByTicker
 {
     /**

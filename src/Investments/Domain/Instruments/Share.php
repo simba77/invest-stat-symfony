@@ -23,6 +23,7 @@ class Share implements
     use CreatedDateProvider;
     use UpdatedDateProvider;
 
+    /** @psalm-suppress UnusedProperty  */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -37,6 +38,7 @@ class Share implements
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $shortName = null;
 
+    /** @psalm-suppress UnusedProperty  */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $latName = null;
 
@@ -52,18 +54,22 @@ class Share implements
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $lotSize = null;
 
+    /** @psalm-suppress UnusedProperty  */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $isin = null;
 
+    /** @psalm-suppress UnusedProperty  */
     #[ORM\Column(type: Types::SMALLINT)]
     private int $type;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $prevPrice = null;
 
+    /** @psalm-suppress UnusedProperty  */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $classCode = null;
 
+    /** @psalm-suppress UnusedProperty  */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $sector = null;
 
@@ -96,21 +102,9 @@ class Share implements
         $this->prevPrice = $prevPrice;
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function getTicker(): string
     {
         return $this->ticker;
-    }
-
-    public function setTicker(string $ticker): static
-    {
-        $this->ticker = $ticker;
-
-        return $this;
     }
 
     public function getName(): string
@@ -137,11 +131,6 @@ class Share implements
         return $this;
     }
 
-    public function getLatName(): ?string
-    {
-        return $this->latName;
-    }
-
     public function setLatName(?string $latName): static
     {
         $this->latName = $latName;
@@ -154,23 +143,9 @@ class Share implements
         return $this->stockMarket;
     }
 
-    public function setStockMarket(string $stockMarket): static
-    {
-        $this->stockMarket = $stockMarket;
-
-        return $this;
-    }
-
     public function getCurrency(): ?string
     {
         return $this->currency;
-    }
-
-    public function setCurrency(string $currency): static
-    {
-        $this->currency = $currency;
-
-        return $this;
     }
 
     public function getPrice(): string
@@ -197,26 +172,9 @@ class Share implements
         return $this;
     }
 
-    public function getIsin(): ?string
-    {
-        return $this->isin;
-    }
-
     public function setIsin(?string $isin): static
     {
         $this->isin = $isin;
-
-        return $this;
-    }
-
-    public function getType(): int
-    {
-        return $this->type;
-    }
-
-    public function setType(int $type): static
-    {
-        $this->type = $type;
 
         return $this;
     }
@@ -233,21 +191,11 @@ class Share implements
         return $this;
     }
 
-    public function getClassCode(): ?string
-    {
-        return $this->classCode;
-    }
-
     public function setClassCode(?string $classCode): static
     {
         $this->classCode = $classCode;
 
         return $this;
-    }
-
-    public function getSector(): ?string
-    {
-        return $this->sector;
     }
 
     public function setSector(?string $sector): static

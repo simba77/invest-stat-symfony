@@ -40,5 +40,5 @@ interface ShareInterface
     /**
      * Type constant. TQBR, TQTF etc.
      */
-    public function getClassCode(): string;
+    public function getClassCode(): ?string;
 }

@@ -71,7 +71,7 @@ class ShareDTO implements ShareInterface
     }
 
     #[\Override]
-    public function getPrevPrice(): string
+    public function getPrevPrice(): ?string
     {
         return $this->prevPrice;
     }
@@ -98,7 +98,7 @@ class ShareDTO implements ShareInterface
     }
 
     #[\Override]
-    public function getClassCode(): string
+    public function getClassCode(): ?string
     {
         return $this->classCode;
     }

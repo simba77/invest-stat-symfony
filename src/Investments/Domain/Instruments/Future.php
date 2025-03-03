@@ -23,6 +23,7 @@ class Future implements
     use CreatedDateProvider;
     use UpdatedDateProvider;
 
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -37,6 +38,7 @@ class Future implements
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $shortName = null;
 
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $latName = null;
 
@@ -54,6 +56,7 @@ class Future implements
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $lotSize = null;
 
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $expiration = null;
 
@@ -107,21 +110,9 @@ class Future implements
         $this->stepPrice = $stepPrice;
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function getTicker(): string
     {
         return $this->ticker;
-    }
-
-    public function setTicker(string $ticker): static
-    {
-        $this->ticker = $ticker;
-
-        return $this;
     }
 
     public function getName(): string
@@ -148,11 +139,6 @@ class Future implements
         return $this;
     }
 
-    public function getLatName(): ?string
-    {
-        return $this->latName;
-    }
-
     public function setLatName(?string $latName): static
     {
         $this->latName = $latName;
@@ -165,23 +151,9 @@ class Future implements
         return $this->stockMarket;
     }
 
-    public function setStockMarket(string $stockMarket): static
-    {
-        $this->stockMarket = $stockMarket;
-
-        return $this;
-    }
-
     public function getCurrency(): string
     {
         return $this->currency;
-    }
-
-    public function setCurrency(string $currency): static
-    {
-        $this->currency = $currency;
-
-        return $this;
     }
 
     /**
@@ -220,34 +192,12 @@ class Future implements
         return $this;
     }
 
-
-    public function getExpiration(): ?\DateTimeInterface
-    {
-        return $this->expiration;
-    }
-
-    public function setExpiration(?\DateTimeInterface $expiration): static
-    {
-        $this->expiration = $expiration;
-        return $this;
-    }
-
     /**
      * @return numeric-string|null
      */
     public function getStepPrice(): ?string
     {
         return $this->stepPrice;
-    }
-
-    /**
-     * @param numeric-string|null $stepPrice
-     * @return $this
-     */
-    public function setStepPrice(?string $stepPrice): static
-    {
-        $this->stepPrice = $stepPrice;
-        return $this;
     }
 
     /**
