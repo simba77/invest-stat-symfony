@@ -59,12 +59,15 @@ class Deal implements
     #[ORM\Column]
     private int $quantity;
 
+    /** @var numeric-string */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4)]
     private string $buyPrice;
 
+    /** @var numeric-string|null */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $targetPrice;
 
+    /** @var numeric-string|null */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $sellPrice;
 
@@ -89,6 +92,18 @@ class Deal implements
     #[ORM\JoinColumn(nullable: true)]
     private ?Future $future = null;
 
+    /**
+     * @param User $user
+     * @param Account $account
+     * @param string $ticker
+     * @param string $stockMarket
+     * @param DealStatus $status
+     * @param DealType $type
+     * @param int $quantity
+     * @param numeric-string $buyPrice
+     * @param numeric-string $targetPrice
+     * @param numeric-string $sellPrice
+     */
     public function __construct(
         User $user,
         Account $account,
@@ -118,31 +133,31 @@ class Deal implements
         return $this->id;
     }
 
-    public function getUser(): ?User
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+    public function setUser(User $user): static
     {
         $this->user = $user;
 
         return $this;
     }
 
-    public function getAccount(): ?Account
+    public function getAccount(): Account
     {
         return $this->account;
     }
 
-    public function setAccount(?Account $account): static
+    public function setAccount(Account $account): static
     {
         $this->account = $account;
 
         return $this;
     }
 
-    public function getTicker(): ?string
+    public function getTicker(): string
     {
         return $this->ticker;
     }
@@ -166,7 +181,7 @@ class Deal implements
         return $this;
     }
 
-    public function getQuantity(): ?int
+    public function getQuantity(): int
     {
         return $this->quantity;
     }
@@ -178,11 +193,18 @@ class Deal implements
         return $this;
     }
 
-    public function getBuyPrice(): ?string
+    /**
+     * @return numeric-string
+     */
+    public function getBuyPrice(): string
     {
         return $this->buyPrice;
     }
 
+    /**
+     * @param numeric-string $buyPrice
+     * @return $this
+     */
     public function setBuyPrice(string $buyPrice): static
     {
         $this->buyPrice = $buyPrice;
@@ -190,11 +212,18 @@ class Deal implements
         return $this;
     }
 
+    /**
+     * @return numeric-string|null
+     */
     public function getTargetPrice(): ?string
     {
         return $this->targetPrice;
     }
 
+    /**
+     * @param numeric-string|null $targetPrice
+     * @return $this
+     */
     public function setTargetPrice(?string $targetPrice): static
     {
         $this->targetPrice = $targetPrice;
@@ -202,11 +231,18 @@ class Deal implements
         return $this;
     }
 
+    /**
+     * @return numeric-string|null
+     */
     public function getSellPrice(): ?string
     {
         return $this->sellPrice;
     }
 
+    /**
+     * @param numeric-string|null $sellPrice
+     * @return $this
+     */
     public function setSellPrice(?string $sellPrice): static
     {
         $this->sellPrice = $sellPrice;
@@ -226,7 +262,7 @@ class Deal implements
         return $this;
     }
 
-    public function getType(): ?DealType
+    public function getType(): DealType
     {
         return $this->type;
     }

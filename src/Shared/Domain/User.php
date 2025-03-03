@@ -171,18 +171,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeDeal(Deal $deal): static
-    {
-        if ($this->deals->removeElement($deal)) {
-            // set the owning side to null (unless already changed)
-            if ($deal->getUser() === $this) {
-                $deal->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getSalary(): ?string
     {
         return $this->salary;

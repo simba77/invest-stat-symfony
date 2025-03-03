@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Investments\Domain\Operations\Deals\Strategy;
 
+use App\Investments\Domain\Instruments\Bond;
 use App\Investments\Domain\Instruments\Securities\SecurityTypeEnum;
 use App\Investments\Domain\Operations\Deal;
+use RuntimeException;
 
 class BondStrategy implements DealStrategyInterface
 {
@@ -14,10 +16,15 @@ class BondStrategy implements DealStrategyInterface
     ) {
     }
 
+    private function getBond(): Bond
+    {
+        return $this->deal->getBond() ?? throw new RuntimeException('Bond is null');
+    }
+
     #[\Override]
     public function getName(): string
     {
-        return $this->deal->getBond()->getShortName();
+        return $this->getBond()->getShortName() ?? $this->getBond()->getName();
     }
 
     #[\Override]
@@ -29,25 +36,25 @@ class BondStrategy implements DealStrategyInterface
     #[\Override]
     public function getBuyPrice(): string
     {
-        return bcdiv(bcmul($this->deal->getBuyPrice(), $this->deal->getBond()->getLotSize(), 4), '100', 4);
+        return bcdiv(bcmul($this->deal->getBuyPrice(), $this->getBond()->getLotSize(), 4), '100', 4);
     }
 
     #[\Override]
     public function getSellPrice(): string
     {
-        return bcdiv(bcmul($this->deal->getSellPrice(), $this->deal->getBond()->getLotSize(), 4), '100', 4);
+        return bcdiv(bcmul($this->deal->getSellPrice(), $this->getBond()->getLotSize(), 4), '100', 4);
     }
 
     #[\Override]
     public function getCurrentPrice(): string
     {
-        return bcdiv(bcmul($this->deal->getBond()->getPrice(), $this->deal->getBond()->getLotSize(), 4), '100', 4);
+        return bcdiv(bcmul($this->getBond()->getPrice(), $this->getBond()->getLotSize(), 4), '100', 4);
     }
 
     #[\Override]
     public function getPrevPrice(): string
     {
-        return bcdiv(bcmul($this->deal->getBond()->getPrevPrice(), $this->deal->getBond()->getLotSize(), 4), '100', 4);
+        return bcdiv(bcmul($this->getBond()->getPrevPrice(), $this->getBond()->getLotSize(), 4), '100', 4);
     }
 
     #[\Override]
@@ -59,6 +66,6 @@ class BondStrategy implements DealStrategyInterface
     #[\Override]
     public function getCurrency(): string
     {
-        return $this->deal->getBond()->getCurrency() ?? 'RUB';
+        return $this->getBond()->getCurrency() ?? 'RUB';
     }
 }

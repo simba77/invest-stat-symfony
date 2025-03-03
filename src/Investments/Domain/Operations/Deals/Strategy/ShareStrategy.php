@@ -17,7 +17,7 @@ class ShareStrategy implements DealStrategyInterface
     #[\Override]
     public function getName(): string
     {
-        return $this->deal->getShare()?->getShortName() ?? '';
+        return $this->deal->getShare()?->getShortName() ?? $this->deal->getShare()?->getName() ?? '';
     }
 
     #[\Override]
@@ -35,7 +35,7 @@ class ShareStrategy implements DealStrategyInterface
     #[\Override]
     public function getSellPrice(): string
     {
-        return $this->deal->getSellPrice();
+        return $this->deal->getSellPrice() ?? '0';
     }
 
     #[\Override]
@@ -47,10 +47,15 @@ class ShareStrategy implements DealStrategyInterface
     #[\Override]
     public function getPrevPrice(): string
     {
-        return $this->deal->getShare()->getPrevPrice() ?? '0';
+        return $this->deal->getShare()?->getPrevPrice() ?? '0';
     }
 
     #[\Override]
+    /**
+     * @param numeric-string $price
+     * @param numeric-string $quantity
+     * @return numeric-string
+     */
     public function getCommission(string $price, string $quantity): string
     {
         return bcmul($price, bcdiv($this->deal->getAccount()->getCommission(), '100', 4), 4);

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Investments\Domain\Operations\Deals\Strategy;
 
+use App\Investments\Domain\Instruments\Future;
 use App\Investments\Domain\Instruments\FuturesMultipliers;
 use App\Investments\Domain\Instruments\Securities\SecurityTypeEnum;
 use App\Investments\Domain\Operations\Deal;
+use RuntimeException;
 
 class FutureStrategy implements DealStrategyInterface
 {
@@ -18,10 +20,15 @@ class FutureStrategy implements DealStrategyInterface
         $this->futuresMultipliers = new FuturesMultipliers();
     }
 
+    private function getFuture(): Future
+    {
+        return $this->deal->getFuture() ?? throw new RuntimeException('Future is null');
+    }
+
     #[\Override]
     public function getName(): string
     {
-        return $this->deal->getFuture()->getShortName();
+        return $this->getFuture()->getShortName() ?? $this->getFuture()->getName();
     }
 
     #[\Override]
@@ -33,13 +40,13 @@ class FutureStrategy implements DealStrategyInterface
     #[\Override]
     public function getBuyPrice(): string
     {
-        return bcmul(bcmul($this->deal->getBuyPrice(), $this->getMultiplier(), 4), $this->deal->getFuture()->getLotSize(), 4);
+        return bcmul(bcmul($this->deal->getBuyPrice(), $this->getMultiplier(), 4), $this->getFuture()->getLotSize(), 4);
     }
 
     #[\Override]
     public function getSellPrice(): string
     {
-        return bcmul(bcmul($this->deal->getSellPrice(), $this->getMultiplier(), 4), $this->deal->getFuture()->getLotSize(), 4);
+        return bcmul(bcmul($this->deal->getSellPrice() ?? '0', $this->getMultiplier(), 4), $this->getFuture()->getLotSize() ?? '1', 4);
     }
 
     #[\Override]
@@ -66,12 +73,15 @@ class FutureStrategy implements DealStrategyInterface
         return $this->deal->getFuture()->getCurrency();
     }
 
+    /**
+     * @return numeric-string
+     */
     private function getMultiplier(): string
     {
         $multiplier = $this->futuresMultipliers->getMultiplierForTicker($this->deal->getTicker());
         if (! is_null($multiplier)) {
             return $multiplier;
         }
-        return $this->deal->getFuture()->getStepPrice() ?? '1';
+        return $this->deal->getFuture()?->getStepPrice() ?? '1';
     }
 }

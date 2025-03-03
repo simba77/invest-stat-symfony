@@ -105,7 +105,6 @@
       <code><![CDATA[getDeals]]></code>
       <code><![CDATA[getInvestments]]></code>
       <code><![CDATA[getStartSumOfAssets]]></code>
-      <code><![CDATA[removeDeal]]></code>
       <code><![CDATA[setId]]></code>
       <code><![CDATA[setUserId]]></code>
     </PossiblyUnusedMethod>
@@ -185,7 +184,6 @@
       <code><![CDATA[getId]]></code>
       <code><![CDATA[getIsin]]></code>
       <code><![CDATA[getLatName]]></code>
-      <code><![CDATA[getName]]></code>
       <code><![CDATA[getSector]]></code>
       <code><![CDATA[getType]]></code>
       <code><![CDATA[setCurrency]]></code>
@@ -205,44 +203,16 @@
       <code><![CDATA[int]]></code>
       <code><![CDATA[int]]></code>
       <code><![CDATA[string]]></code>
-      <code><![CDATA[string]]></code>
     </InvalidNullableReturnType>
     <NullableReturnStatement>
       <code><![CDATA[$this->deal->getAccount()->getId()]]></code>
       <code><![CDATA[$this->deal->getId()]]></code>
       <code><![CDATA[$this->deal->getTargetPrice()]]></code>
-      <code><![CDATA[$this->deal->getTicker()]]></code>
     </NullableReturnStatement>
   </file>
   <file src="src/Investments/Domain/Operations/Deals/GroupByTicker.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getDeals]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Investments/Domain/Operations/Deals/Strategy/BondStrategy.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->deal->getBond()->getShortName()]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Investments/Domain/Operations/Deals/Strategy/FutureStrategy.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->deal->getFuture()->getShortName()]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Investments/Domain/Operations/Deals/Strategy/ShareStrategy.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->deal->getBuyPrice()]]></code>
-      <code><![CDATA[$this->deal->getSellPrice()]]></code>
-    </NullableReturnStatement>
   </file>
 </files>

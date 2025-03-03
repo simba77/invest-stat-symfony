@@ -53,7 +53,7 @@ class DealData
 
     public function getQuantity(): int
     {
-        return (int) $this->deal->getQuantity();
+        return $this->deal->getQuantity();
     }
 
     public function getFullBuyPrice(): string

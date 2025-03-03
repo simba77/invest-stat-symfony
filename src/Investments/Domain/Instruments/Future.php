@@ -46,24 +46,41 @@ class Future implements
     #[ORM\Column(length: 255)]
     private string $currency;
 
+    /** @var numeric-string */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4)]
     private string $price;
 
+    /** @var numeric-string|null */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $lotSize = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $expiration = null;
 
+    /** @var numeric-string|null */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $stepPrice = null;
 
+    /** @var numeric-string|null */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $prevPrice = null;
 
     #[ORM\Column(type: Types::GUID, length: 255, nullable: true)]
     private ?string $tUid = null;
 
+    /**
+     * @param string $ticker
+     * @param string $name
+     * @param string $stockMarket
+     * @param string $currency
+     * @param numeric-string $price
+     * @param numeric-string $prevPrice
+     * @param string $shortName
+     * @param string $latName
+     * @param numeric-string $lotSize
+     * @param \DateTimeInterface|null $expiration
+     * @param numeric-string|null $stepPrice
+     */
     public function __construct(
         string $ticker,
         string $name,
@@ -167,11 +184,17 @@ class Future implements
         return $this;
     }
 
+    /**
+     * @return numeric-string
+     */
     public function getPrice(): string
     {
         return $this->price;
     }
 
+    /**
+     * @param numeric-string $price
+     */
     public function setPrice(string $price): static
     {
         $this->price = $price;
@@ -179,11 +202,17 @@ class Future implements
         return $this;
     }
 
+    /**
+     * @return numeric-string|null
+     */
     public function getLotSize(): ?string
     {
         return $this->lotSize;
     }
 
+    /**
+     * @param numeric-string|null $lotSize
+     */
     public function setLotSize(?string $lotSize): static
     {
         $this->lotSize = $lotSize;
@@ -203,22 +232,36 @@ class Future implements
         return $this;
     }
 
+    /**
+     * @return numeric-string|null
+     */
     public function getStepPrice(): ?string
     {
         return $this->stepPrice;
     }
 
+    /**
+     * @param numeric-string|null $stepPrice
+     * @return $this
+     */
     public function setStepPrice(?string $stepPrice): static
     {
         $this->stepPrice = $stepPrice;
         return $this;
     }
 
+    /**
+     * @return numeric-string|null
+     */
     public function getPrevPrice(): ?string
     {
         return $this->prevPrice;
     }
 
+    /**
+     * @param numeric-string|null $prevPrice
+     * @return $this
+     */
     public function setPrevPrice(?string $prevPrice): static
     {
         $this->prevPrice = $prevPrice;

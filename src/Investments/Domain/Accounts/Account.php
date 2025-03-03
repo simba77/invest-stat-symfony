@@ -65,6 +65,7 @@ class Account implements
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $currentSumOfAssets = null;
 
+    /** @var numeric-string|null */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
     private ?string $commission = null;
 
@@ -200,6 +201,9 @@ class Account implements
         return $this;
     }
 
+    /**
+     * @return numeric-string
+     */
     public function getCommission(): string
     {
         return $this->commission ?? '0';
@@ -237,18 +241,6 @@ class Account implements
         if (! $this->deals->contains($deal)) {
             $this->deals->add($deal);
             $deal->setAccount($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDeal(Deal $deal): static
-    {
-        if ($this->deals->removeElement($deal)) {
-            // set the owning side to null (unless already changed)
-            if ($deal->getAccount() === $this) {
-                $deal->setAccount(null);
-            }
         }
 
         return $this;
