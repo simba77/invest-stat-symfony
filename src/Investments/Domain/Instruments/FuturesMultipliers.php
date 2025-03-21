@@ -15,6 +15,8 @@ class FuturesMultipliers
             'MXZ4' => '1',
             'MXH5' => '1',
             'EUM5' => '0.001',
+            'SIM5' => '0.001',
+            'SIU5' => '0.001',
             'MXM5' => '1'
         ];
 
