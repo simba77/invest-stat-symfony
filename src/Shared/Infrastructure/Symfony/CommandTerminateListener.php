@@ -7,11 +7,11 @@ namespace App\Shared\Infrastructure\Symfony;
 use App\Shared\Infrastructure\Metrics\AppMetrics;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\ConsoleEvents;
-use Symfony\Component\Console\Event\ConsoleEvent;
+use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
-#[AsEventListener(event: ConsoleEvents::COMMAND)]
-class CommandListener
+#[AsEventListener(event: ConsoleEvents::TERMINATE)]
+class CommandTerminateListener
 {
     public function __construct(
         private readonly LoggerInterface $logger,
@@ -19,10 +19,11 @@ class CommandListener
     ) {
     }
 
-    public function __invoke(ConsoleEvent $event): void
+    public function __invoke(ConsoleTerminateEvent $event): void
     {
-        $this->logger->info('Start command: {command}', [
+        $this->logger->info('The {command} command was completed in {time} sec.', [
             'command' => $event->getCommand()?->getName() ?? 'unknown',
+            'time'    => $this->metrics->getExecutionTime(),
         ]);
     }
 }
