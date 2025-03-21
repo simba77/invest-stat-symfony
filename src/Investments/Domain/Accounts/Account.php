@@ -48,20 +48,28 @@ class Account implements
     private ?int $sort = null;
 
     /**
+     * @psalm-suppress UnusedProperty
      * @var Collection<int, Investment>
      */
     #[ORM\OneToMany(mappedBy: 'account', targetEntity: Investment::class)]
     private Collection $investments;
 
+    /** @var numeric-string|null */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $balance = null;
 
+    /** @var numeric-string|null */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $usdBalance = null;
 
+    /**
+     * @psalm-suppress UnusedProperty
+     * @var numeric-string|null
+     */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $startSumOfAssets = null;
 
+    /** @var numeric-string|null */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $currentSumOfAssets = null;
 
@@ -69,15 +77,26 @@ class Account implements
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
     private ?string $commission = null;
 
+    /** @var numeric-string|null */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
     private ?string $futuresCommission = null;
 
     /**
+     * @psalm-suppress UnusedProperty
      * @var Collection<int, Deal>
      */
     #[ORM\OneToMany(mappedBy: 'account', targetEntity: Deal::class)]
     private Collection $deals;
 
+    /**
+     * @param int $userId
+     * @param string $name
+     * @param numeric-string $balance
+     * @param numeric-string $usdBalance
+     * @param numeric-string $commission
+     * @param numeric-string $futuresCommission
+     * @param int $sort
+     */
     public function __construct(
         int $userId,
         string $name,
@@ -103,22 +122,9 @@ class Account implements
         return $this->id;
     }
 
-    public function setId(int $id): static
-    {
-        $this->id = $id;
-        return $this;
-    }
-
     public function getUserId(): ?int
     {
         return $this->userId;
-    }
-
-    public function setUserId(int $userId): static
-    {
-        $this->userId = $userId;
-
-        return $this;
     }
 
     public function getName(): ?string
@@ -145,14 +151,6 @@ class Account implements
         return $this;
     }
 
-    /**
-     * @return Collection<int, Investment>
-     */
-    public function getInvestments(): Collection
-    {
-        return $this->investments;
-    }
-
     public function getBalance(): string
     {
         return $this->balance ?? '0';
@@ -175,11 +173,6 @@ class Account implements
         $this->usdBalance = $usdBalance;
 
         return $this;
-    }
-
-    public function getStartSumOfAssets(): string
-    {
-        return $this->startSumOfAssets ?? '0';
     }
 
     public function setStartSumOfAssets(?string $startSumOfAssets): static
@@ -224,24 +217,6 @@ class Account implements
     public function setFuturesCommission(?string $futuresCommission): static
     {
         $this->futuresCommission = $futuresCommission;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Deal>
-     */
-    public function getDeals(): Collection
-    {
-        return $this->deals;
-    }
-
-    public function addDeal(Deal $deal): static
-    {
-        if (! $this->deals->contains($deal)) {
-            $this->deals->add($deal);
-            $deal->setAccount($this);
-        }
 
         return $this;
     }

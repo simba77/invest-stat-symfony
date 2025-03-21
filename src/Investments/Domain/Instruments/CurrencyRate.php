@@ -19,14 +19,17 @@ class CurrencyRate implements CreatedDateProviderInterface, UpdatedDateProviderI
     use CreatedDateProvider;
     use UpdatedDateProvider;
 
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Column(length: 10)]
     private string $baseCurrency;
 
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Column(length: 10)]
     private string $targetCurrency;
 
@@ -40,38 +43,9 @@ class CurrencyRate implements CreatedDateProviderInterface, UpdatedDateProviderI
         $this->rate = $rate;
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getBaseCurrency(): ?string
-    {
-        return $this->baseCurrency;
-    }
-
-    public function setBaseCurrency(string $baseCurrency): static
-    {
-        $this->baseCurrency = $baseCurrency;
-
-        return $this;
-    }
-
-    public function getTargetCurrency(): ?string
-    {
-        return $this->targetCurrency;
-    }
-
-    public function setTargetCurrency(string $targetCurrency): static
-    {
-        $this->targetCurrency = $targetCurrency;
-
-        return $this;
-    }
-
     public function getRate(): string
     {
-        return $this->rate ?? '0';
+        return $this->rate;
     }
 
     public function setRate(string $rate): static

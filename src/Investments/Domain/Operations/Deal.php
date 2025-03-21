@@ -150,13 +150,6 @@ class Deal implements
         return $this->account;
     }
 
-    public function setAccount(Account $account): static
-    {
-        $this->account = $account;
-
-        return $this;
-    }
-
     public function getTicker(): string
     {
         return $this->ticker;

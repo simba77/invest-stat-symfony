@@ -22,7 +22,7 @@
         </pluginClass>
         <pluginClass class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
     </plugins>
-    <extraFiles>
+    <extraFiles allowMissingFiles="true">
         <directory name="./var/cache/dev/Symfony/Config"/>
     </extraFiles>
 </psalm>

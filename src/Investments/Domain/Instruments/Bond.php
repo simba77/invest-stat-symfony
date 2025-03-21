@@ -23,6 +23,7 @@ class Bond implements
     use CreatedDateProvider;
     use UpdatedDateProvider;
 
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -37,6 +38,7 @@ class Bond implements
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $shortName = null;
 
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $latName = null;
 
@@ -52,21 +54,26 @@ class Bond implements
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4)]
     private string $price;
 
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $stepPrice = null;
 
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $couponPercent = null;
 
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $couponValue = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $couponAccumulated = null;
 
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $nextCouponDate = null;
 
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $maturityDate = null;
 
@@ -110,21 +117,9 @@ class Bond implements
         $this->maturityDate = $maturityDate;
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function getTicker(): string
     {
         return $this->ticker;
-    }
-
-    public function setTicker(string $ticker): static
-    {
-        $this->ticker = $ticker;
-
-        return $this;
     }
 
     public function getName(): string
@@ -151,11 +146,6 @@ class Bond implements
         return $this;
     }
 
-    public function getLatName(): ?string
-    {
-        return $this->latName;
-    }
-
     public function setLatName(?string $latName): static
     {
         $this->latName = $latName;
@@ -168,23 +158,9 @@ class Bond implements
         return $this->stockMarket;
     }
 
-    public function setStockMarket(string $stockMarket): static
-    {
-        $this->stockMarket = $stockMarket;
-
-        return $this;
-    }
-
     public function getCurrency(): ?string
     {
         return $this->currency;
-    }
-
-    public function setCurrency(string $currency): static
-    {
-        $this->currency = $currency;
-
-        return $this;
     }
 
     public function getLotSize(): ?string
@@ -211,33 +187,11 @@ class Bond implements
         return $this;
     }
 
-    public function getStepPrice(): ?string
-    {
-        return $this->stepPrice;
-    }
-
-    public function setStepPrice(?string $stepPrice): static
-    {
-        $this->stepPrice = $stepPrice;
-
-        return $this;
-    }
-
-    public function getCouponPercent(): ?string
-    {
-        return $this->couponPercent;
-    }
-
     public function setCouponPercent(?string $couponPercent): static
     {
         $this->couponPercent = $couponPercent;
 
         return $this;
-    }
-
-    public function getCouponValue(): ?string
-    {
-        return $this->couponValue;
     }
 
     public function setCouponValue(?string $couponValue): static
@@ -259,21 +213,11 @@ class Bond implements
         return $this;
     }
 
-    public function getNextCouponDate(): ?\DateTimeInterface
-    {
-        return $this->nextCouponDate;
-    }
-
     public function setNextCouponDate(?\DateTimeInterface $nextCouponDate): static
     {
         $this->nextCouponDate = $nextCouponDate;
 
         return $this;
-    }
-
-    public function getMaturityDate(): ?\DateTimeInterface
-    {
-        return $this->maturityDate;
     }
 
     public function setMaturityDate(?\DateTimeInterface $maturityDate): static
