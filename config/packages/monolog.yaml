@@ -41,6 +41,11 @@ when@test:
 when@prod:
   monolog:
     handlers:
+      deprecation:
+        type: stream
+        channels: [ deprecation ]
+        path: php://stderr
+        bubble: false
       main:
         type: fingers_crossed
         action_level: warning
@@ -59,7 +64,3 @@ when@prod:
         process_psr_3_messages: false
         handler: nested
         channels: [ "!event", "!doctrine" ]
-      deprecation:
-        type: stream
-        channels: [ deprecation ]
-        path: php://stderr
