@@ -19,7 +19,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'securities:get-moex-bonds',
     description: 'Get Moex Bonds',
 )]
-class GetBondsCommand extends Command
+class GetMoexBondsCommand extends Command
 {
     public function __construct(
         private readonly MoexBondsProvider $bondsProvider,
@@ -39,7 +39,7 @@ class GetBondsCommand extends Command
 
         $bonds = $this->bondsProvider->getBonds();
         foreach ($bonds as $item) {
-            $bond = $bondRepository->findOneBy(['ticker' => $item->getTicker()]);
+            $bond = $bondRepository->findOneBy(['ticker' => $item->getTicker(), 'stockMarket' => $item->getStockMarket()]);
             if ($bond) {
                 $updatePeriodStart = Carbon::now()->subMinutes(5);
                 $updated = $bond->updatedAt();

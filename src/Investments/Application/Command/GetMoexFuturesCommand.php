@@ -19,7 +19,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'securities:get-moex-futures',
     description: 'Get Moex Futures',
 )]
-class GetFuturesCommand extends Command
+class GetMoexFuturesCommand extends Command
 {
     public function __construct(
         private readonly MoexFuturesProvider $futuresProvider,
