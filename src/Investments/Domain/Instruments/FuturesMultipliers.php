@@ -17,7 +17,8 @@ class FuturesMultipliers
             'EUM5' => '0.001',
             'SIM5' => '0.001',
             'SIU5' => '0.001',
-            'MXM5' => '1'
+            'MXM5' => '1',
+            'AKM5' => '0.001',
         ];
 
         if(array_key_exists($ticker, $multipliers)) {
