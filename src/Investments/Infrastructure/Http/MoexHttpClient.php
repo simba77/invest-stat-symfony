@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Investments\Domain\Instruments;
+namespace App\Investments\Infrastructure\Http;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;

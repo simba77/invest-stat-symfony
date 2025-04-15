@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Domain\Instruments\Currencies;
 
-use App\Investments\Domain\Instruments\MoexHttpClient;
+use App\Investments\Infrastructure\Http\MoexHttpClient;
 
 class MoexCurrencyProvider implements CurrencyProviderInterface
 {

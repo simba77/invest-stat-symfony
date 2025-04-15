@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Investments\Application\Command;
 
 use App\Investments\Application\Accounts\AccountBalanceCalculator;
-use App\Investments\Domain\Instruments\InvestCabHttpClient;
 use App\Investments\Domain\Instruments\Securities\ShareTypeEnum;
 use App\Investments\Domain\Instruments\Share;
 use App\Investments\Domain\Operations\Deal;
+use App\Investments\Infrastructure\Http\InvestCabHttpClient;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;

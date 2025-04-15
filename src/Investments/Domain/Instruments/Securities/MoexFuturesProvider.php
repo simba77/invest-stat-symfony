@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Domain\Instruments\Securities;
 
-use App\Investments\Domain\Instruments\MoexHttpClient;
+use App\Investments\Infrastructure\Http\MoexHttpClient;
 use Carbon\Carbon;
 
 class MoexFuturesProvider implements FuturesProviderInterface

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Investments\Domain\Instruments;
+namespace App\Investments\Infrastructure\Http;
 
 use RuntimeException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
