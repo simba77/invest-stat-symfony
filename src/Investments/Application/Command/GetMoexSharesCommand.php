@@ -44,7 +44,7 @@ class GetMoexSharesCommand extends Command
                 $updated = $share->updatedAt();
 
                 // If the share has been updated by another service, skip this update
-                if($updatePeriodStart->diffInMinutes($updated) < 5) {
+                if($updatePeriodStart->diffInMinutes($updated) > 0 && $updatePeriodStart->diffInMinutes($updated) < 5) {
                     continue;
                 }
 
