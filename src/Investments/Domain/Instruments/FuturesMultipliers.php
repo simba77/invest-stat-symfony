@@ -18,6 +18,7 @@ class FuturesMultipliers
             'SIM5' => '0.001',
             'SIU5' => '0.001',
             'MXM5' => '1',
+            'MXU5' => '1',
             'AKM5' => '0.001',
         ];
 
