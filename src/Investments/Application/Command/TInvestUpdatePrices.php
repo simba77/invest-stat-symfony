@@ -10,6 +10,8 @@ use App\Investments\Domain\Instruments\ShareRepositoryInterface;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Infrastructure\Http\TInvestHttpClient;
 use Doctrine\ORM\EntityManagerInterface;
+use Metaseller\TinkoffInvestApi2\exceptions\ValidateException;
+use Metaseller\TinkoffInvestApi2\helpers\QuotationHelper;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -72,9 +74,9 @@ class TInvestUpdatePrices extends Command
                 continue;
             }
 
-            $price = sprintf('%s.%s', $item->getPrice()?->getUnits() ?? '0', $item->getPrice()?->getNano() ?? '0');
+            $price = QuotationHelper::toDecimal($item->getPrice());
             if ($price > 0) {
-                $share->setPrice($price);
+                $share->setPrice((string) $price);
                 $this->em->persist($share);
             }
             $io->success(sprintf('%s: %s - %s', $share->getStockMarket(), $share->getTicker(), $share->getPrice()));
@@ -111,9 +113,9 @@ class TInvestUpdatePrices extends Command
                 continue;
             }
 
-            $price = sprintf('%s.%s', $item->getPrice()?->getUnits() ?? '0', $item->getPrice()?->getNano() ?? '0');
+            $price = QuotationHelper::toDecimal($item->getPrice());
             if ($price > 0) {
-                $bond->setPrice($price);
+                $bond->setPrice((string) $price);
                 $this->em->persist($bond);
             }
             $io->success(sprintf('%s: %s (%s) - %s', $bond->getStockMarket(), $bond->getName(), $bond->getTicker(), $bond->getPrice()));
@@ -123,6 +125,9 @@ class TInvestUpdatePrices extends Command
         $io->success('Bond prices updated!');
     }
 
+    /**
+     * @throws ValidateException
+     */
     private function updateFuturePrices(SymfonyStyle $io): void
     {
         $uids = [];
@@ -149,9 +154,9 @@ class TInvestUpdatePrices extends Command
                 continue;
             }
 
-            $price = sprintf('%s.%s', $item->getPrice()?->getUnits() ?? '0', $item->getPrice()?->getNano() ?? '0');
+            $price = QuotationHelper::toDecimal($item->getPrice());
             if ($price > 0) {
-                $future->setPrice($price);
+                $future->setPrice((string) $price);
                 $this->em->persist($future);
             }
             $io->success(sprintf('%s: %s (%s) - %s', $future->getStockMarket(), $future->getName(), $future->getTicker(), $future->getPrice()));
