@@ -30,6 +30,10 @@ class DealListCurrencies
                 'code' => 'RUB',
                 'name' => 'Russian Rouble',
             ],
+            'CNY' => [
+                'code' => 'CNY',
+                'name' => 'Chinese Yuan',
+            ],
         ];
 
         $currency = new DealCurrencyDTO($currencies[$currencyCode]['code'], $currencies[$currencyCode]['name']);

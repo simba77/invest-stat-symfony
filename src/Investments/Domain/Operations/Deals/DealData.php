@@ -106,7 +106,7 @@ class DealData
         if ($this->getCurrency() === 'RUB') {
             return $this->getFullDailyProfit();
         }
-        return bcmul($this->getFullDailyProfit(), $this->currencyService->getUSDRUBRate(), 4);
+        return bcmul($this->getFullDailyProfit(), $this->currencyService->getCurrencyRate($this->getCurrency()), 4);
     }
 
     public function getTargetPrice(): string
@@ -186,6 +186,9 @@ class DealData
         if ($this->getCurrency() === 'RUB') {
             return '₽';
         }
+        if ($this->getCurrency() === 'CNY') {
+            return '¥';
+        }
         return '$';
     }
 
@@ -219,7 +222,7 @@ class DealData
         if ($this->getCurrency() === 'RUB') {
             return $this->getBuyPrice();
         }
-        return bcmul($this->getBuyPrice(), $this->currencyService->getUSDRUBRate(), 4);
+        return bcmul($this->getBuyPrice(), $this->currencyService->getCurrencyRate($this->getCurrency()), 4);
     }
 
     public function getSellPriceInBaseCurrency(): string
@@ -227,7 +230,7 @@ class DealData
         if ($this->getCurrency() === 'RUB') {
             return $this->getSellPrice();
         }
-        return bcmul($this->getSellPrice(), $this->currencyService->getUSDRUBRate(), 4);
+        return bcmul($this->getSellPrice(), $this->currencyService->getCurrencyRate($this->getCurrency()), 4);
     }
 
     public function getFullBuyPriceInBaseCurrency(): string
@@ -245,7 +248,7 @@ class DealData
         if ($this->getCurrency() === 'RUB') {
             return $this->getCurrentPrice();
         }
-        return bcmul($this->getCurrentPrice(), $this->currencyService->getUSDRUBRate(), 4);
+        return bcmul($this->getCurrentPrice(), $this->currencyService->getCurrencyRate($this->getCurrency()), 4);
     }
 
     public function getFullCurrentPriceInBaseCurrency(): string
@@ -258,6 +261,6 @@ class DealData
         if ($this->getCurrency() === 'RUB') {
             return $this->getProfit();
         }
-        return bcmul($this->getProfit(), $this->currencyService->getUSDRUBRate(), 4);
+        return bcmul($this->getProfit(), $this->currencyService->getCurrencyRate($this->getCurrency()), 4);
     }
 }

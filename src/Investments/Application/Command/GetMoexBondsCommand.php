@@ -53,6 +53,7 @@ class GetMoexBondsCommand extends Command
                     continue;
                 }
                 $bond->setPrice($item->getPrice());
+                $bond->setCurrency($item->getCurrency());
                 $bond->setPrevPrice($item->getPrevPrice());
                 $bond->setName($item->getName());
                 $bond->setLatName($item->getLatName());

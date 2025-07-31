@@ -10,7 +10,7 @@ class CurrencyService
 {
     public function __construct(
         private readonly CurrencyRateRepository $currencyRateRepository,
-        private ?string $usdRubRate = null
+        private array $rates = []
     ) {
     }
 
@@ -19,11 +19,16 @@ class CurrencyService
      */
     public function getUSDRUBRate(): string
     {
-        if ($this->usdRubRate !== null) {
-            return $this->usdRubRate;
+        return $this->getCurrencyRate('USD');
+    }
+
+    public function getCurrencyRate(string $targetCurrency = 'USD'): string
+    {
+        if (isset($this->rates[$targetCurrency])) {
+            return $this->rates[$targetCurrency];
         }
-        $currencyRate = $this->currencyRateRepository->findOneBy(['baseCurrency' => 'RUB', 'targetCurrency' => 'USD']);
-        $this->usdRubRate = $currencyRate?->getRate() ?? '0';
-        return $this->usdRubRate;
+        $currencyRate = $this->currencyRateRepository->findOneBy(['baseCurrency' => 'RUB', 'targetCurrency' => $targetCurrency]);
+        $this->rates[$targetCurrency] = $currencyRate?->getRate() ?? '0';
+        return $this->rates[$targetCurrency];
     }
 }

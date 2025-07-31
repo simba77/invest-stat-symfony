@@ -163,6 +163,13 @@ class Bond implements
         return $this->currency;
     }
 
+    public function setCurrency(string $currency): static
+    {
+        $this->currency = $currency;
+
+        return $this;
+    }
+
     public function getLotSize(): ?string
     {
         return $this->lotSize;

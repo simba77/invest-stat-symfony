@@ -30,11 +30,16 @@ class MoexBondsProvider implements BondsProviderInterface
             $maturityDate = Carbon::parse($bond['MATDATE']);
             $nextCouponDate = Carbon::parse($bond['NEXTCOUPON']);
 
+            $currency = 'RUB';
+            if (! empty($bond['FACEUNIT']) && $bond['FACEUNIT'] !== 'SUR') {
+                $currency = $bond['FACEUNIT'];
+            }
+
             $result[] = new BondDTO(
                 ticker:            $bond['SECID'],
                 name:              $bond['SECNAME'],
                 stockMarket:       'MOEX',
-                currency:          'RUB',
+                currency:          $currency,
                 price:             ! empty($price) ? $price : '0',
                 prevPrice:         ! empty($bond['PREVPRICE']) ? $bond['PREVPRICE'] : '0',
                 shortName:         $bond['SHORTNAME'],
