@@ -9,7 +9,7 @@ import ColumnGroup from 'primevue/columngroup';
 import SellModal from "@/components/Modals/SellModal.vue";
 import {useModal} from "@/composable/useModal";
 import {useRoute} from "vue-router";
-import {BanknotesIcon, LockClosedIcon} from "@heroicons/vue/24/outline";
+import {BanknotesIcon, LockClosedIcon, ArrowRightIcon} from "@heroicons/vue/24/outline";
 import AssetsSubTable from "@/components/Account/AssetsSubTable.vue";
 const modal = useModal()
 const route = useRoute()
@@ -60,26 +60,34 @@ function showSellModal(item: AssetsGroup) {
       </template>
     </Column>
     <Column field="groupData.quantity" header="Quantity" />
-    <Column header="Buy Price">
+    <Column header="Price">
       <template #body="{data}">
-        <div>{{ formatPrice(data.groupData.buyPrice, data.groupData.currency) }}</div>
-        <div class="text-xs text-gray-500">
-          {{ formatPrice(data.groupData.fullBuyPrice, data.groupData.currency) }}
+        <div class="flex">
+          <div class="text-nowrap">
+            {{ formatPrice(data.groupData.buyPrice, data.groupData.currency) }}
+          </div>
+          <div class="px-2">
+            <arrow-right-icon class="w-3 h-3 inline-block" />
+          </div>
+          <div class="text-nowrap">
+            {{ formatPrice(data.groupData.currentPrice, data.groupData.currency) }}
+            <span v-tooltip="'Prev price: ' + formatPrice(data.groupData.prevPrice, data.groupData.currency)" :class="data.groupData.dailyProfit > 0 ? 'text-green-600' : 'text-red-700'">
+              ({{ data.groupData.dailyProfit > 0 ? '+' : '-' }}{{ getPercent(data.groupData.dailyProfit, data.groupData.prevPrice) }}, {{ formatPrice(Math.abs(data.groupData.dailyProfit), data.groupData.currency) }})
+            </span>
+          </div>
         </div>
-      </template>
-    </Column>
-    <Column header="Current Price">
-      <template #body="{data}">
-        <div>
-          {{ formatPrice(data.groupData.currentPrice, data.groupData.currency) }}
-          <span v-tooltip="'Prev price: ' + formatPrice(data.groupData.prevPrice, data.groupData.currency)" :class="data.groupData.dailyProfit > 0 ? 'text-green-600' : 'text-red-700'">
-            ({{ data.groupData.dailyProfit > 0 ? '+' : '-' }}{{ getPercent(data.groupData.dailyProfit, data.groupData.prevPrice) }}, {{ formatPrice(Math.abs(data.groupData.dailyProfit), data.groupData.currency) }})
-          </span>
-        </div>
-        <div class="text-xs text-gray-500">
-          {{ formatPrice(data.groupData.fullCurrentPrice, data.groupData.currency) }}
-          <span v-tooltip="'Prev full price: ' + formatPrice(data.groupData.fullPrevPrice, data.groupData.currency)" :class="data.groupData.fullDailyProfit > 0 ? 'text-green-600' : 'text-red-700'">
-            ({{ formatPriceWithSign(data.groupData.fullDailyProfit, data.groupData.currency) }})</span>
+        <div class="flex items-center">
+          <div class="text-xs text-gray-500">
+            {{ formatPrice(data.groupData.fullBuyPrice, data.groupData.currency) }}
+          </div>
+          <div class="px-2">
+            <arrow-right-icon class="w-3 -mt-1 inline-block" />
+          </div>
+          <div class="text-xs text-gray-500">
+            {{ formatPrice(data.groupData.fullCurrentPrice, data.groupData.currency) }}
+            <span v-tooltip="'Prev full price: ' + formatPrice(data.groupData.fullPrevPrice, data.groupData.currency)" :class="data.groupData.fullDailyProfit > 0 ? 'text-green-600' : 'text-red-700'">
+              ({{ formatPriceWithSign(data.groupData.fullDailyProfit, data.groupData.currency) }})</span>
+          </div>
         </div>
       </template>
     </Column>
