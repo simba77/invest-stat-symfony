@@ -20,6 +20,7 @@ class FuturesMultipliers
             'MXM5' => '1',
             'MXU5' => '1',
             'AKM5' => '0.001',
+            'SIZ5' => '0.001',
         ];
 
         if(array_key_exists($ticker, $multipliers)) {
