@@ -43,18 +43,19 @@ class GetMoexBondsCommand extends Command
             if ($bond) {
                 $updatePeriodStart = Carbon::now()->subMinutes(5);
                 $updated = $bond->updatedAt();
-
-                // If the share has been updated by another service, skip this update
-                if($updatePeriodStart->diffInMinutes($updated) > 0 && $updatePeriodStart->diffInMinutes($updated) < 5) {
-                    continue;
-                }
+                $updateDiff = $updatePeriodStart->diffInMinutes($updated);
 
                 if (empty($item->getPrice())) {
                     continue;
                 }
-                $bond->setPrice($item->getPrice());
+
+                // If the share has been updated by another service, skip updating prices
+                if ($updateDiff > 5) {
+                    $bond->setPrice($item->getPrice());
+                    $bond->setPrevPrice($item->getPrevPrice());
+                }
+
                 $bond->setCurrency($item->getCurrency());
-                $bond->setPrevPrice($item->getPrevPrice());
                 $bond->setName($item->getName());
                 $bond->setLatName($item->getLatName());
                 $bond->setShortName($item->getShortName());
