@@ -6,9 +6,9 @@ namespace App\Shared\Infrastructure\Metrics;
 
 class AppMetrics
 {
-    public const START_TIME = 'start_time';
-    public const END_TIME = 'end_time';
-    public const EXECUTION_TIME = 'execution_time';
+    public const string START_TIME = 'start_time';
+    public const string END_TIME = 'end_time';
+    public const string EXECUTION_TIME = 'execution_time';
 
     private array $metrics = [];
 
