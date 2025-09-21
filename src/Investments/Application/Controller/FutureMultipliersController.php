@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Controller;
 
+use App\Investments\Application\Request\DTO\Instruments\CreateFutureMultiplierRequestDTO;
+use App\Investments\Application\UseCases\Instruments\CreateFutureMultiplierUseCase;
 use App\Investments\Application\UseCases\Instruments\ListFutureMultipliersUseCase;
+use App\Investments\Domain\Instruments\Exceptions\FutureMultiplierAlreadyExistsException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -14,7 +18,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class FutureMultipliersController extends AbstractController
 {
     public function __construct(
-        private readonly ListFutureMultipliersUseCase $listFutureMultipliersUseCase
+        private readonly ListFutureMultipliersUseCase $listFutureMultipliersUseCase,
+        private readonly CreateFutureMultiplierUseCase $createFutureMultiplierUseCase,
     ) {
     }
 
@@ -26,9 +31,16 @@ class FutureMultipliersController extends AbstractController
     }
 
     #[Route('/futures/multipliers/create', name: 'app_future_multipliers_create', methods: ['POST'])]
-    public function create(): JsonResponse
-    {
-        return new JsonResponse([]);
+    public function create(
+        #[MapRequestPayload]
+        CreateFutureMultiplierRequestDTO $requestDTO
+    ): JsonResponse {
+        try {
+            $this->createFutureMultiplierUseCase->execute($requestDTO->ticker, $requestDTO->value);
+        } catch (FutureMultiplierAlreadyExistsException $e) {
+            return new JsonResponse(['success' => false, 'message' => $e->getMessage()], 422);
+        }
+        return new JsonResponse(['success' => true]);
     }
 
     #[Route('/futures/multipliers/update', name: 'app_future_multipliers_update', methods: ['PATCH'])]

@@ -17,4 +17,11 @@ class FutureMultiplierRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, FutureMultiplier::class);
     }
+
+    public function save(FutureMultiplier $futureMultiplier): void
+    {
+        $em = $this->getEntityManager();
+        $em->persist($futureMultiplier);
+        $em->flush();
+    }
 }
