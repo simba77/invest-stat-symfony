@@ -262,6 +262,30 @@ const routes: Array<RouteRecordRaw> = [
     },
     component: () => import('@/pages/Coupons/CouponForm.vue')
   },
+  {
+    name: 'FuturesMultipliers',
+    path: '/futures/multipliers',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('./pages/FuturesMultipliers/Index.vue')
+  },
+  {
+    name: 'FuturesMultipliersCreate',
+    path: '/futures/multipliers/create',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('@/pages/FuturesMultipliers/MultiplierForm.vue')
+  },
+  {
+    name: 'FuturesMultipliersEdit',
+    path: '/futures/multipliers/edit/:id',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('@/pages/FuturesMultipliers/MultiplierForm.vue')
+  },
 ];
 
 const router = createRouter({

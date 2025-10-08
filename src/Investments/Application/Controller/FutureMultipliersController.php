@@ -49,6 +49,18 @@ class FutureMultipliersController extends AbstractController
         return new JsonResponse([]);
     }
 
+    #[Route('/futures/multipliers/get-form/{id}', name: 'app_future_multipliers_get_form', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function getForm(int $id): JsonResponse
+    {
+        return new JsonResponse(
+            [
+                'id'     => $id,
+                'ticker' => '',
+                'value'  => '',
+            ]
+        );
+    }
+
     #[Route('/futures/multipliers/delete', name: 'app_future_multipliers_delete', methods: ['DELETE'])]
     public function delete(): JsonResponse
     {

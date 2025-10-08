@@ -58,6 +58,11 @@ const navigation = [
     name: 'Coupons',
     routeName: 'Coupons',
     current: route.name === 'Coupons'
+  },
+  {
+    name: 'Future Multipliers',
+    routeName: 'FuturesMultipliers',
+    current: route.name === 'FuturesMultipliers'
   }
 ]
 const userNavigation = [
