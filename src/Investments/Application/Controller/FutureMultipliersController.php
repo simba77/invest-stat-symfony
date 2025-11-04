@@ -6,8 +6,10 @@ namespace App\Investments\Application\Controller;
 
 use App\Investments\Application\Request\DTO\Instruments\CreateFutureMultiplierRequestDTO;
 use App\Investments\Application\UseCases\Instruments\CreateFutureMultiplierUseCase;
+use App\Investments\Application\UseCases\Instruments\DeleteFutureMultiplierUseCase;
 use App\Investments\Application\UseCases\Instruments\ListFutureMultipliersUseCase;
 use App\Investments\Domain\Instruments\Exceptions\FutureMultiplierAlreadyExistsException;
+use App\Investments\Domain\Instruments\Exceptions\FutureMultiplierNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -20,6 +22,7 @@ class FutureMultipliersController extends AbstractController
     public function __construct(
         private readonly ListFutureMultipliersUseCase $listFutureMultipliersUseCase,
         private readonly CreateFutureMultiplierUseCase $createFutureMultiplierUseCase,
+        private readonly DeleteFutureMultiplierUseCase $deleteFutureMultiplierUseCase,
     ) {
     }
 
@@ -61,9 +64,14 @@ class FutureMultipliersController extends AbstractController
         );
     }
 
-    #[Route('/futures/multipliers/delete', name: 'app_future_multipliers_delete', methods: ['DELETE'])]
-    public function delete(): JsonResponse
+    #[Route('/futures/multipliers/delete/{id}', name: 'app_future_multipliers_delete', requirements: ['id' => '\d+'], methods: ['DELETE'])]
+    public function delete(int $id): JsonResponse
     {
-        return new JsonResponse([]);
+        try {
+            $this->deleteFutureMultiplierUseCase->execute($id);
+        } catch (FutureMultiplierNotFoundException $e) {
+            return new JsonResponse(['success' => false, 'message' => $e->getMessage()], 422);
+        }
+        return new JsonResponse(['success' => true]);
     }
 }
