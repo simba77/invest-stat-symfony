@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.10.0@9c0add4eb88d4b169ac04acb7c679918cbb9c252">
-  <file src="src/Deposits/Application/Response/Compiler/DepositAccountListItemsCompiler.php">
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$entry]]></code>
-    </MoreSpecificImplementedParamType>
-  </file>
-  <file src="src/Deposits/Application/Response/Compiler/DepositsListItemsCompiler.php">
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$entry]]></code>
-    </MoreSpecificImplementedParamType>
-  </file>
+<files psalm-version="6.13.0@70cdf647255a1362b426bb0f522a85817b8c791c">
   <file src="src/Deposits/Domain/Deposit.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getUser]]></code>
@@ -26,11 +16,6 @@
     <QueryBuilderSetParameter>
       <code><![CDATA[$user]]></code>
     </QueryBuilderSetParameter>
-  </file>
-  <file src="src/Expenses/Application/Response/Compiler/CategoriesListCompiler.php">
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$entry]]></code>
-    </MoreSpecificImplementedParamType>
   </file>
   <file src="src/Expenses/Domain/Expense.php">
     <PossiblyUnusedMethod>
@@ -95,5 +80,18 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$entry]]></code>
     </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Investments/Application/Response/DTO/Instruments/FutureMultiplierDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$ticker]]></code>
+      <code><![CDATA[$value]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Investments/Domain/Instruments/FutureMultiplier.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[setTicker]]></code>
+      <code><![CDATA[setValue]]></code>
+    </PossiblyUnusedMethod>
   </file>
 </files>
