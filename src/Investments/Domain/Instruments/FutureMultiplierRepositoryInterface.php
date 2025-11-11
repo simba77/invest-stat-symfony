@@ -10,5 +10,7 @@ interface FutureMultiplierRepositoryInterface
 
     public function findById(int $id): ?FutureMultiplier;
 
+    public function findByTicker(string $ticker): ?FutureMultiplier;
+
     public function remove(FutureMultiplier $futureMultiplier): void;
 }

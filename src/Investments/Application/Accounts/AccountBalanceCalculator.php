@@ -7,6 +7,7 @@ namespace App\Investments\Application\Accounts;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
+use App\Investments\Domain\Instruments\FutureMultiplierRepositoryInterface;
 use App\Investments\Domain\Instruments\Securities\SecurityTypeEnum;
 use App\Investments\Domain\Operations\Deals\DealData;
 use App\Investments\Infrastructure\Persistence\Repository\DealRepository;
@@ -16,7 +17,8 @@ class AccountBalanceCalculator
     public function __construct(
         protected readonly AccountRepositoryInterface $accountRepository,
         protected readonly DealRepository $dealRepository,
-        protected readonly CurrencyService $currencyService
+        protected readonly CurrencyService $currencyService,
+        protected readonly FutureMultiplierRepositoryInterface $futureMultiplierRepository
     ) {
     }
 
@@ -46,7 +48,7 @@ class AccountBalanceCalculator
         $fullBuyPrice = '0';
         $fullCurrentPrice = '0';
         foreach ($deals as $deal) {
-            $dealData = new DealData($deal, $this->currencyService);
+            $dealData = new DealData($deal, $this->currencyService, $this->futureMultiplierRepository);
             if ($dealData->getSecurityType() === SecurityTypeEnum::Future) {
                 $fullCurrentPrice = bcadd($fullCurrentPrice, $dealData->getProfitInBaseCurrency(), 4);
             } else {

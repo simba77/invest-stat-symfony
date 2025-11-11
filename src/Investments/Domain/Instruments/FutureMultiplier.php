@@ -45,6 +45,9 @@ class FutureMultiplier
         $this->ticker = $ticker;
     }
 
+    /**
+     * @return numeric-string
+     */
     public function getValue(): string
     {
         return $this->value;

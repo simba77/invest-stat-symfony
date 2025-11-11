@@ -31,6 +31,11 @@ class FutureMultiplierRepository extends ServiceEntityRepository implements Futu
         return $this->findOneBy(['id' => $id]);
     }
 
+    public function findByTicker(string $ticker): ?FutureMultiplier
+    {
+        return $this->findOneBy(['ticker' => $ticker]);
+    }
+
     public function remove(FutureMultiplier $futureMultiplier): void
     {
         $em = $this->getEntityManager();

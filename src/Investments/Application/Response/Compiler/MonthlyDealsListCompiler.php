@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Response\Compiler;
 
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
+use App\Investments\Domain\Instruments\FutureMultiplierRepositoryInterface;
 use App\Investments\Domain\Operations\Coupon;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\Deals\DealData;
@@ -18,6 +19,7 @@ class MonthlyDealsListCompiler implements CompilerInterface
 {
     public function __construct(
         public readonly CurrencyService $currencyService,
+        public readonly FutureMultiplierRepositoryInterface $futureMultiplierRepository
     ) {
     }
 
@@ -32,7 +34,7 @@ class MonthlyDealsListCompiler implements CompilerInterface
         $result = [];
 
         foreach ($entry['deals'] as $deal) {
-            $dealData = new DealData($deal, $this->currencyService);
+            $dealData = new DealData($deal, $this->currencyService, $this->futureMultiplierRepository);
             $date = $deal->getClosingDate()?->format('Y.m') ?? '0';
 
             if (isset($result[$date])) {

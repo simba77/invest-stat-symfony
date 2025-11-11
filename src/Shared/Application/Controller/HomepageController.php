@@ -11,6 +11,7 @@ use App\Investments\Application\Response\Compiler\AnnualStatisticCompiler;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Analytics\StatisticRepositoryInterface;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
+use App\Investments\Domain\Instruments\FutureMultiplierRepositoryInterface;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\Deals\DealData;
 use App\Investments\Domain\Operations\Investment;
@@ -34,6 +35,7 @@ class HomepageController extends AbstractController
         public readonly AnnualStatisticCompiler $annualStatisticCompiler,
         public readonly StatisticRepositoryInterface $statisticRepository,
         public readonly DealRepositoryInterface $dealRepository,
+        private readonly FutureMultiplierRepositoryInterface $futureMultiplierRepository
     ) {
     }
 
@@ -51,7 +53,7 @@ class HomepageController extends AbstractController
         $dailyChange = '0';
         $allActiveDeals = $this->dealRepository->findByUserId($user->getId());
         foreach ($allActiveDeals as $deal) {
-            $dealData = new DealData($deal, $this->currencyService);
+            $dealData = new DealData($deal, $this->currencyService, $this->futureMultiplierRepository);
             $dailyChange = bcadd($dailyChange, $dealData->getFullDailyProfitInBaseCurrency(), 2);
         }
 
