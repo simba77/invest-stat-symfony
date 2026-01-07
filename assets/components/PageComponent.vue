@@ -91,7 +91,7 @@ const userNavigation = [
               </router-link>
             </div>
             <div class="hidden md:block">
-              <div class="ml-10 flex items-baseline space-x-4">
+              <div class="ml-10 flex items-center space-x-4">
                 <router-link
                   v-for="item in navigation"
                   :key="item.name"

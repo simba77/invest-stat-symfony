@@ -48,7 +48,7 @@ function showSellModal(item: Deal) {
   <DataTable :value="items" table-style="min-width: 50rem">
     <Column header="Name">
       <template #body="{data}">
-        <div class="font-extrabold">
+        <div v-tooltip="'Created: ' + data.createdAt" class="font-extrabold">
           <lock-closed-icon
             v-if="data.isBlocked"
             class="h-3 w-3 -mt-1 inline-block"
