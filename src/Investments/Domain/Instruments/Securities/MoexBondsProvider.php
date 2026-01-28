@@ -21,11 +21,16 @@ class MoexBondsProvider implements BondsProviderInterface
     public function getBonds(): array
     {
         $bonds = $this->httpClient->getBonds();
+        $tqobBonds = $this->httpClient->getBondsByBoard('TQOB');
+
+        $allBonds = [...$bonds['bonds'], ...$tqobBonds['bonds']];
+        $allMarketData = [...$bonds['marketData'], ...$tqobBonds['marketData']];
 
         $result = [];
-        foreach ($bonds['bonds'] as $bond) {
-            $marketData = array_filter($bonds['marketData'], fn($item) => $item['SECID'] === $bond['SECID']);
+        foreach ($allBonds as $bond) {
+            $marketData = array_filter($allMarketData, fn($item) => $item['SECID'] === $bond['SECID']);
             $price = $marketData[array_key_first($marketData)]['LCURRENTPRICE'] ?? '';
+
 
             $maturityDate = Carbon::parse($bond['MATDATE']);
             $nextCouponDate = Carbon::parse($bond['NEXTCOUPON']);
