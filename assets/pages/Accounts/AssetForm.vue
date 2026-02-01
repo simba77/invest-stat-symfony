@@ -154,6 +154,7 @@ onMounted(() => {
             name="buyPrice"
             label="Buy Price"
             placeholder="Buy Price"
+            type="number"
           />
           <input-text
             :key="'targetPrice' + componentKey"
@@ -163,6 +164,7 @@ onMounted(() => {
             name="targetPrice"
             label="Target Price"
             placeholder="Target Price"
+            type="number"
           />
         </div>
         <Divider />

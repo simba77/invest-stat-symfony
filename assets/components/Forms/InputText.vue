@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, reactive} from "vue";
+import {computed} from "vue";
 import {useDebounceFn} from "@vueuse/core";
 import {InputErrors} from "@/types/inputs";
 import InputText from 'primevue/inputtext';
@@ -15,7 +15,6 @@ interface InputProps {
   enterKeyHint?: string
   autocomplete?: string
   error?: InputErrors | null
-  help?: string | number
   disabled?: boolean
   readonly?: boolean
   required?: boolean
@@ -32,7 +31,6 @@ const props = withDefaults(defineProps<InputProps>(), {
   enterKeyHint: '',
   autocomplete: '',
   error: undefined,
-  help: '',
   disabled: false,
   readonly: false,
   required: false,
@@ -40,60 +38,110 @@ const props = withDefaults(defineProps<InputProps>(), {
   step: '.0001'
 })
 
-const emits = defineEmits(['update:modelValue'])
+const emits = defineEmits<{
+  (e: 'update:modelValue', value: string | number | null): void
+}>()
 
-const inputParams = reactive({
-  value: props.modelValue,
-  elementId: props.id ? props.id : props.name,
-  errorMessage: computed(() => {
-    return props.error?.violations
-      .filter((item) => {
-        return item.propertyPath === props.name;
-      })
-      .map((item) => {
-        return item.title;
-      })
-      .join('<br>');
-  }),
-  pattern: computed(() => {
-    if (props.type === 'number') {
-      return '[0-9]*'
-    }
-    return null
-  })
+const model = computed({
+  get: () => props.modelValue,
+  set: (value) => {
+    updateModelValue(value)
+  }
 })
 
-const updateModelValue = useDebounceFn(() => {
-  emits('update:modelValue', inputParams.value)
+const elementId = computed(() => props.id || props.name)
+const errorMessages = computed(
+  () => props.error?.violations
+    .filter(v => v.propertyPath === props.name)
+    .map(v => v.title) ?? []
+)
+
+const inputType = computed(() =>
+  props.type === 'number' ? 'text' : props.type
+)
+
+const inputMode = computed(() =>
+  props.type === 'number' ? 'decimal' : undefined
+)
+
+const updateModelValue = useDebounceFn((value: string | number | null) => {
+  emits('update:modelValue', value)
 }, props.inputDelay)
+
+const normalizeNumberInput = (value: string): string => {
+  let result = value
+    .replace(/\s+/g, '')
+    .replace(/,/g, '.')
+    .replace(/[^\d.-]/g, '')
+
+  const isNegative = result.startsWith('-')
+
+  result = result.replace(/-/g, '')
+
+  const [int, ...rest] = result.split('.')
+  const fraction = rest.join('')
+
+  return (isNegative ? '-' : '') + int + (fraction ? '.' + fraction : '')
+}
+
+const onInput = (event: Event) => {
+  if (props.type !== 'number') {
+    return
+  }
+
+  const target = event.target as HTMLInputElement
+  const normalized = normalizeNumberInput(target.value)
+
+  if (normalized !== target.value) {
+    target.value = normalized
+  }
+
+  model.value = normalized
+}
+
+const onPaste = (event: ClipboardEvent) => {
+  if (props.type !== 'number') {
+    return
+  }
+
+  const pasted = event.clipboardData?.getData('text')
+  if (!pasted) {
+    return
+  }
+
+  event.preventDefault()
+  model.value = normalizeNumberInput(pasted)
+}
 
 </script>
 
 <template>
   <div class="flex flex-col gap-2">
-    <label :for="inputParams.elementId">{{ label }}</label>
+    <label v-if="label" :for="elementId">{{ label }}</label>
     <InputText
-      :id="inputParams.elementId"
-      v-model="inputParams.value"
+      :id="elementId"
+      v-model="model"
       :placeholder="placeholder"
-      :invalid="!!(inputParams.errorMessage && inputParams.errorMessage.length > 0)"
-      :pattern="inputParams.pattern"
+      :invalid="errorMessages.length > 0"
       :autocomplete="autocomplete"
       :name="name"
       :enterkeyhint="enterKeyHint"
-      :type="type"
+      :type="inputType"
       :required="required"
       :readonly="readonly"
-      :step="step"
-      @update:model-value="updateModelValue"
+      :step="type === 'number' ? step : undefined"
+      :inputmode="inputMode"
+      :disabled="disabled"
+      @input="onInput"
+      @paste="onPaste"
     />
-    <Message v-if="help" size="small" severity="secondary" variant="simple">
-      <span v-html="help" />
+    <Message v-if="$slots.help" size="small" severity="secondary" variant="simple">
+      <slot name="help" />
     </Message>
-    <div
-      v-if="inputParams.errorMessage"
-      class="mt-1 text-sm text-red-500"
-      v-html="inputParams.errorMessage"
-    />
+    <ul v-if="errorMessages.length" class="text-sm text-red-500">
+      <li v-for="(msg, i) in errorMessages" :key="i">
+        {{ msg }}
+      </li>
+    </ul>
   </div>
 </template>

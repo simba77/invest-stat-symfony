@@ -97,6 +97,7 @@ onMounted(() => {
             name="sum"
             label="Amount of Deposit"
             placeholder="Amount of Deposit"
+            type="number"
           />
           <input-select
             :key="data.componentKey"

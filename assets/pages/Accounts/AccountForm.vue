@@ -1,69 +1,69 @@
-<script lang="ts">
-import PageComponent from "@/components/PageComponent.vue";
-import InputText from "@/components/Forms/InputText.vue";
-import axios from "axios";
-import Panel from "primevue/panel";
-import Button from "primevue/button";
+<script setup lang="ts">
+import { ref, reactive, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import axios from 'axios';
 
-export default {
-  name: "CategoryForm",
-  components: {Button, Panel, InputText, PageComponent},
-  data() {
-    return {
-      form: {
-        name: '',
-        balance: '0',
-        usdBalance: '0',
-        commission: '0',
-        futuresCommission: '0',
-        sort: 100,
-      },
-      loading: false,
-      errors: null,
-      componentKey: 0,
+import PageComponent from '@/components/PageComponent.vue';
+import InputText from '@/components/Forms/InputText.vue';
+import Panel from 'primevue/panel';
+import Button from 'primevue/button';
+
+const route = useRoute();
+const router = useRouter();
+
+const form = reactive({
+  name: '',
+  balance: '0',
+  usdBalance: '0',
+  commission: '0',
+  futuresCommission: '0',
+  sort: 100,
+});
+
+const loading = ref(false);
+const errors = ref<Record<string, any> | null>(null);
+const componentKey = ref(0);
+
+const submitForm = async () => {
+  loading.value = true;
+  errors.value = null;
+  const requestUrl = route.params.id
+    ? `/api/accounts/update/${route.params.id}`
+    : '/api/accounts/create';
+
+  try {
+    await axios.post(requestUrl, form);
+    router.push({ name: 'Accounts' });
+  } catch (error: any) {
+    if (error.response?.status === 422 && error.response.data) {
+      errors.value = error.response.data;
+      componentKey.value += 1;
+    } else {
+      alert('An error has occurred');
     }
-  },
-  mounted() {
-    if (this.$route.params.id) {
-      this.getForm(this.$route.params.id);
-    }
-  },
-  methods: {
-    submitForm() {
-      this.loading = true;
-      const requestUrl = this.$route.params.id ? '/api/accounts/update/' + this.$route.params.id : '/api/accounts/create'
-      axios.post(requestUrl, this.form)
-        .then(() => {
-          this.$router.push({name: 'Accounts'});
-        })
-        .catch((error) => {
-          if (error.response.status === 422 && error.response.data) {
-            this.errors = error.response.data;
-            this.componentKey += 1;
-          } else {
-            alert('An error has occurred');
-          }
-        })
-        .finally(() => {
-          this.loading = false;
-        })
-    },
-    getForm(id: number) {
-      this.loading = true;
-      axios.get('/api/accounts/get-form/' + id)
-        .then((response) => {
-          this.form = response.data;
-          this.componentKey += 1;
-        })
-        .catch(() => {
-          alert('An error has occurred');
-        })
-        .finally(() => {
-          this.loading = false;
-        })
-    }
+  } finally {
+    loading.value = false;
   }
-}
+};
+
+const getForm = async (id: number) => {
+  loading.value = true;
+  try {
+    const response = await axios.get(`/api/accounts/get-form/${id}`);
+    Object.assign(form, response.data);
+    componentKey.value += 1;
+  } catch {
+    alert('An error has occurred');
+  } finally {
+    loading.value = false;
+  }
+};
+
+onMounted(() => {
+  if (route.params.id) {
+    getForm(Number(route.params.id));
+  }
+});
 </script>
 
 <template>
@@ -71,8 +71,6 @@ export default {
     <Panel>
       <form
         class="space-y-6 w-full md:w-2/3 mx-auto"
-        action="#"
-        method="POST"
         @submit.prevent="submitForm"
       >
         <div>
@@ -83,6 +81,7 @@ export default {
             Enter the name of the account to group your assets
           </p>
         </div>
+
         <div class="w-full md:w-2/4">
           <input-text
             :key="componentKey"
@@ -93,6 +92,7 @@ export default {
             label="Account Name"
             placeholder="Enter an Account Name"
           />
+
           <input-text
             :key="componentKey"
             v-model.trim="form.balance"
@@ -101,7 +101,9 @@ export default {
             name="balance"
             label="Balance"
             placeholder="Enter Balance"
+            type="number"
           />
+
           <input-text
             :key="componentKey"
             v-model.trim="form.usdBalance"
@@ -110,7 +112,9 @@ export default {
             name="usdBalance"
             label="USD Balance"
             placeholder="Enter USD Balance"
+            type="number"
           />
+
           <input-text
             :key="componentKey"
             v-model.trim="form.commission"
@@ -119,6 +123,7 @@ export default {
             name="commission"
             label="Commission"
             placeholder="Commission"
+            type="number"
           />
 
           <input-text
@@ -129,6 +134,7 @@ export default {
             name="futuresCommission"
             label="Futures Commission"
             placeholder="Futures Commission"
+            type="number"
           />
 
           <input-text
@@ -142,7 +148,9 @@ export default {
             placeholder="Sort"
           />
         </div>
+
         <div class="buttons-divider" />
+
         <Button
           type="submit"
           class="btn btn-primary"
@@ -150,7 +158,7 @@ export default {
           label="Save"
         />
         <router-link
-          :to="{name: 'Accounts'}"
+          :to="{ name: 'Accounts' }"
           class="btn btn-secondary ml-3"
         >
           Back

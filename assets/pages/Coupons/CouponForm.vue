@@ -111,6 +111,7 @@ if (route.params.id) {
             name="amount"
             label="Amount"
             placeholder="Amount"
+            type="number"
           />
 
           <input-text

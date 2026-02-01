@@ -2,7 +2,6 @@
 import PageComponent from "@/components/PageComponent.vue";
 import InputText from "@/components/Forms/InputText.vue";
 import axios from "axios";
-import InputSelect from "@/components/Forms/InputSelect.vue";
 import {onMounted, reactive, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import useAsync from "@/utils/use-async";
@@ -74,6 +73,7 @@ onMounted(() => {
             name="value"
             label="Multiplier Value"
             placeholder="Multiplier Value"
+            type="number"
           />
         </div>
         <div class="buttons-divider" />

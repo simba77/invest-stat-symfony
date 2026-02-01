@@ -88,6 +88,7 @@ if (route.params.id) {
             name="sum"
             label="Sum"
             placeholder="Sum"
+            type="number"
           />
 
           <input-select

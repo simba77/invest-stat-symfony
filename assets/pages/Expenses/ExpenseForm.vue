@@ -99,6 +99,7 @@ onMounted(() => {
             name="sum"
             label="Amount of expense"
             placeholder="Amount of expense"
+            type="number"
           />
         </div>
         <div class="buttons-divider" />
