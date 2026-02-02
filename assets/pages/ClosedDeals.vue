@@ -9,26 +9,33 @@ import ClosedDealsTable from "@/components/Analytics/ClosedDealsTable.vue";
 import {usePage} from "@/composable/usePage";
 import {ClosedDealsListItem, ClosedDealsSummary} from "@/types/analytics";
 import axios from "axios";
+import Button from 'primevue/button';
 
 const {setPageTitle} = usePage()
 
 const closedDeals = ref<{ deals: ClosedDealsListItem[], summary: ClosedDealsSummary }>()
 const closedDealsByMonths = ref<{ profitByMonths: number[] }>()
 
-function startOfCurrentMonth(): string {
-  const now = new Date()
-  const start = new Date(now.getFullYear(), now.getMonth(), 1)
-
-  const day = String(start.getDate()).padStart(2, '0')
-  const month = String(start.getMonth() + 1).padStart(2, '0')
-  const year = start.getFullYear()
-
-  return `${day}.${month}.${year}`
+function formatDate(date: Date): string {
+  const d = String(date.getDate()).padStart(2, '0')
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const y = date.getFullYear()
+  return `${d}.${m}.${y}`
 }
 
+function startOfMonth(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth(), 1)
+}
+
+function endOfMonth(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth() + 1, 0)
+}
+
+const currentMonth = ref(startOfMonth(new Date()))
+
 const filter = reactive({
-  startDate: startOfCurrentMonth(),
-  endDate: '',
+  startDate: formatDate(startOfMonth(currentMonth.value)),
+  endDate: formatDate(endOfMonth(currentMonth.value)),
 })
 
 const {loading, run} = useAsync(
@@ -50,6 +57,31 @@ closedDealsByMonthsRun()
 
 setPageTitle("Closed Deals")
 
+
+function applyMonth(date: Date) {
+  filter.startDate = formatDate(startOfMonth(date))
+  filter.endDate = formatDate(endOfMonth(date))
+  run()
+}
+
+function prevMonth() {
+  currentMonth.value = new Date(
+    currentMonth.value.getFullYear(),
+    currentMonth.value.getMonth() - 1,
+    1
+  )
+  applyMonth(currentMonth.value)
+}
+
+function nextMonth() {
+  currentMonth.value = new Date(
+    currentMonth.value.getFullYear(),
+    currentMonth.value.getMonth() + 1,
+    1
+  )
+  applyMonth(currentMonth.value)
+}
+
 </script>
 
 <template>
@@ -58,12 +90,41 @@ setPageTitle("Closed Deals")
       <closed-deals-by-months-chart :profit-by-months="closedDealsByMonths?.profitByMonths" />
     </div>
 
-    <div class="mb-6 grid grid-flow-col auto-cols-max gap-4">
+    <div class="mb-6 grid grid-flow-col auto-cols-max gap-4 items-end">
       <div>
-        <input-date-component v-model="filter.startDate" name="startDate" label="Start Date" @update:model-value="run()" />
+        <input-date-component
+          v-model="filter.startDate"
+          name="startDate"
+          label="Start Date"
+          @update:model-value="run()"
+        />
       </div>
       <div>
-        <input-date-component v-model="filter.endDate" name="endDate" label="End Date" @update:model-value="run()" />
+        <input-date-component
+          v-model="filter.endDate"
+          name="endDate"
+          label="End Date"
+          @update:model-value="run()"
+        />
+      </div>
+      <div class="flex items-center gap-2">
+        <Button
+          label="←"
+          raised
+          rounded
+          variant="outlined"
+          @click="prevMonth"
+        />
+        <div class="font-medium">
+          {{ currentMonth.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' }) }}
+        </div>
+        <Button
+          label="→"
+          raised
+          rounded
+          variant="outlined"
+          @click="nextMonth"
+        />
       </div>
     </div>
 

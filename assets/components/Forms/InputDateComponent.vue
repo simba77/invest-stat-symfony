@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, useSlots } from 'vue'
+import { computed, watch, useSlots } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -41,12 +41,16 @@ const props = withDefaults(defineProps<InputProps>(), {
   clearable: false,
 })
 
-const emits = defineEmits(['update:modelValue'])
+const emits = defineEmits<{
+  (e: 'update:modelValue', value: string | number): void
+}>()
 const slots = useSlots()
 const { currentTheme } = useTemplate()
 
-// Основное значение
-const value = ref(props.modelValue)
+const value = computed({
+  get: () => props.modelValue,
+  set: (val) => emits('update:modelValue', val),
+})
 
 // Классы и идентификаторы
 const elementId = computed(() => props.id || props.name)
