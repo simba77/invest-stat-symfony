@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { computed, reactive, useSlots } from 'vue'
+import { ref, computed, watch, useSlots } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import {useTemplate} from "@/composable/useTemplate";
-
-const slots = useSlots()
-const {currentTheme} = useTemplate()
+import { useTemplate } from "@/composable/useTemplate"
 
 interface InputProps {
   modelValue: string | number
@@ -23,7 +20,7 @@ interface InputProps {
   readonly?: boolean
   required?: boolean
   inputDelay?: number
-  usePhoneFormatter?: boolean
+  clearable?: boolean
 }
 
 const props = withDefaults(defineProps<InputProps>(), {
@@ -41,79 +38,85 @@ const props = withDefaults(defineProps<InputProps>(), {
   readonly: false,
   required: false,
   inputDelay: 0,
-  usePhoneFormatter: false
+  clearable: false,
 })
 
 const emits = defineEmits(['update:modelValue'])
+const slots = useSlots()
+const { currentTheme } = useTemplate()
 
-const inputParams = reactive({
-  value: props.modelValue,
-  elementId: props.id ? props.id : props.name,
-  hasError: computed(() => !!props.error),
-  hasBefore: computed(() => !!slots.before),
-  errorMessage: computed(() => {
-    if (Array.isArray(props.error)) {
-      return props.error.join(',')
-    }
-    return props.error
-  })
-})
+// Основное значение
+const value = ref(props.modelValue)
 
-const updateModelValue = useDebounceFn(() => {
-  emits('update:modelValue', inputParams.value)
-}, props.inputDelay)
+// Классы и идентификаторы
+const elementId = computed(() => props.id || props.name)
+const hasError = computed(() => !!props.error)
+const errorMessage = computed(() => Array.isArray(props.error) ? props.error.join(', ') : props.error)
+const hasBefore = computed(() => !!slots.before)
+const isDark = computed(() => currentTheme.value === 'dark')
 
+// Классы для обертки и инпута
+const inputClasses = computed(() => ({
+  disabled: props.disabled,
+  'has-before-icon': hasBefore.value,
+  'is-invalid': hasError.value,
+}))
+
+// Дебаунс обновления v-model
+watch(value, useDebounceFn((val) => {
+  emits('update:modelValue', val)
+}, props.inputDelay))
 </script>
 
 <template>
   <div>
-    <label v-if="label" class="text-sm font-medium text-gray-700 dark:text-white block mb-1" :for="inputParams.elementId">
-      {{ label }} <span v-if="required" class="text-danger">*</span>
-      <v-menu v-if="help" placement="auto" class="d-inline-block">
+    <!-- Label + Help -->
+    <label
+      v-if="props.label"
+      :for="elementId"
+      class="text-sm font-medium text-gray-700 dark:text-white block mb-1"
+    >
+      {{ props.label }} <span v-if="props.required" class="text-danger">*</span>
+      <v-menu v-if="props.help" placement="auto" class="d-inline-block">
         <span class="badge rounded-pill bg-primary form-help-badge">?</span>
         <template #popper>
-          <div class="form-help-text" v-html="help" />
+          <div class="form-help-text" v-html="props.help" />
         </template>
       </v-menu>
     </label>
-    <div
-      :class=" {
-        'disabled': disabled,
-        'has-before-icon': inputParams.hasBefore,
-        'is-invalid': inputParams.hasError,
-      }"
-    >
+
+    <!-- Datepicker wrapper -->
+    <div :class="inputClasses">
+      <slot name="before" />
       <vue-date-picker
-        v-model="inputParams.value"
-        :class=" {
-          'disabled': disabled,
-          'has-before-icon': inputParams.hasBefore,
-          'is-invalid': inputParams.hasError,
-        }"
+        v-model="value"
+        :class="inputClasses"
         input-class-name="form-input"
         model-type="format"
         :locale="'ru'"
         :format="'dd.MM.yyyy'"
         :enable-time-picker="false"
         :auto-apply="true"
-        :placeholder="placeholder"
-        :name="name"
-        :disabled="disabled"
-        :required="required"
-        :readonly="readonly"
-        :dark="currentTheme === 'dark'"
-        @update:model-value="updateModelValue"
+        :placeholder="props.placeholder"
+        :name="props.name"
+        :disabled="props.disabled"
+        :required="props.required"
+        :readonly="props.readonly"
+        :dark="isDark"
+        :clearable="props.clearable"
+        :aria-invalid="hasError ? 'true' : 'false'"
+        :aria-describedby="hasError ? elementId + '-error' : null"
       />
     </div>
-    <div v-if="inputParams.hasError" class="invalid-feedback" v-text="inputParams.errorMessage" />
+
+    <!-- Ошибка -->
+    <div v-if="hasError" :id="elementId + '-error'" class="invalid-feedback">
+      {{ errorMessage }}
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.help {
-  margin-top: 0.25rem;
-}
-
 .calendar-icon {
   margin: -3px 0 0 8px;
 }

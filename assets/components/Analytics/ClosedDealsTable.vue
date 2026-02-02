@@ -75,7 +75,7 @@ const dealsGroup = useDealsGroup()
 
     <ColumnGroup type="footer">
       <Row>
-        <Column footer="Total (base currency):" colspan="3" class="font-bold" footer-style="text-align:right" />
+        <Column footer="Total (base currency):" :colspan="3" class="font-bold" footer-style="text-align:right" />
         <Column class="font-bold">
           <template #footer>
             <div>{{ formatPrice(summary.buyPrice, '₽') }}</div>
