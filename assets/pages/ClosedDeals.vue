@@ -90,8 +90,9 @@ function nextMonth() {
       <closed-deals-by-months-chart :profit-by-months="closedDealsByMonths?.profitByMonths" />
     </div>
 
-    <div class="mb-6 grid grid-flow-col auto-cols-max gap-4 items-end">
-      <div>
+    <div class="mb-6 grid gap-4 items-end grid-flow-row sm:grid-flow-row md:grid-flow-col md:auto-cols-max">
+      <!-- Start Date -->
+      <div class="w-full md:w-auto">
         <input-date-component
           v-model="filter.startDate"
           name="startDate"
@@ -99,7 +100,9 @@ function nextMonth() {
           @update:model-value="run()"
         />
       </div>
-      <div>
+
+      <!-- End Date -->
+      <div class="w-full md:w-auto">
         <input-date-component
           v-model="filter.endDate"
           name="endDate"
@@ -107,7 +110,9 @@ function nextMonth() {
           @update:model-value="run()"
         />
       </div>
-      <div class="flex items-center gap-2">
+
+      <!-- Month navigation -->
+      <div class="flex items-center gap-2 w-full md:w-auto justify-start md:justify-center">
         <Button
           label="←"
           raised
