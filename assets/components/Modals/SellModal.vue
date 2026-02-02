@@ -53,6 +53,7 @@ function sell() {
               class="mb-3"
               name="price"
               label="Sell Price"
+              type="number"
               placeholder="Enter an account name"
             />
           </div>
