@@ -107,7 +107,8 @@ class TInvestUpdateInstruments extends Command
     {
         $bonds = $this->httpClient->getAllBonds();
         foreach ($bonds as $item) {
-            if ($item->getExchange() !== 'MOEX' && $item->getExchange() !== 'moex_plus_bonds') {
+            $exchanges = ['MOEX', 'moex_plus_bonds', 'moex_morning_evening_ofz'];
+            if (! in_array($item->getExchange(), $exchanges)) {
                 continue;
             }
 
