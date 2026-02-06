@@ -5,8 +5,6 @@ import { useModal } from "@/composable/useModal";
 import DeleteDealModal from "@/components/Account/DeleteDealModal.vue";
 import SellModal from "@/components/Modals/SellModal.vue";
 import { useNumbers } from "@/composable/useNumbers";
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
 
 const {formatPrice, formatPercent, formatPriceWithSign, getPercent} = useNumbers()
 
