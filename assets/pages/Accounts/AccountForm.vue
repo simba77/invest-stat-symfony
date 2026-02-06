@@ -70,10 +70,10 @@ onMounted(() => {
   <page-component title="Add Account">
     <Panel>
       <form
-        class="space-y-6 w-full md:w-2/3 mx-auto"
+        class="w-full md:w-2/3 mx-auto"
         @submit.prevent="submitForm"
       >
-        <div>
+        <div class="pb-2">
           <h3 class="form-title">
             Account
           </h3>
@@ -82,7 +82,7 @@ onMounted(() => {
           </p>
         </div>
 
-        <div class="w-full md:w-2/4">
+        <div class="w-full md:w-2/4 mb-4">
           <input-text
             :key="componentKey"
             v-model="form.name"
@@ -149,7 +149,7 @@ onMounted(() => {
           />
         </div>
 
-        <div class="buttons-divider" />
+        <div class="buttons-divider mb-4" />
 
         <Button
           type="submit"

@@ -168,18 +168,20 @@ onMounted(() => {
           />
         </div>
         <Divider />
-        <Button
-          type="submit"
-          class="btn btn-primary"
-          :loading="loading"
-          label="Save"
-        />
-        <router-link
-          :to="{name: 'AccountDetail', params: {id: $route.params.account}}"
-          class="btn btn-secondary ml-3"
-        >
-          Back
-        </router-link>
+        <div>
+          <Button
+            type="submit"
+            class="btn btn-primary"
+            :loading="loading"
+            label="Save"
+          />
+          <router-link
+            :to="{name: 'AccountDetail', params: {id: $route.params.account}}"
+            class="btn btn-secondary ml-3"
+          >
+            Back
+          </router-link>
+        </div>
       </form>
     </div>
   </page-component>

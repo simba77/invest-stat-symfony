@@ -26,7 +26,7 @@ function confirmDeletion(account: Account) {
 </script>
 
 <template>
-  <div class="flex justify-between mb-2 mt-5 py-3 rounded">
+  <div class="flex justify-between mb-2 py-3 rounded">
     <div class="">
       <div class="font-extrabold text-lg">
         <router-link :to="{name: 'AccountDetail', params: {id: account.id}}">

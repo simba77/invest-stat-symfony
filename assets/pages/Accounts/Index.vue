@@ -26,7 +26,7 @@ setPageTitle('Accounts')
     ref="accounts"
     title="Accounts"
   >
-    <div class="mb-4 mt-3">
+    <div class="mb-2">
       <router-link
         :to="{name: 'CreateAccount'}"
         class="btn btn-primary"

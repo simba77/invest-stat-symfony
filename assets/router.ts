@@ -286,6 +286,14 @@ const routes: Array<RouteRecordRaw> = [
     },
     component: () => import('@/pages/FuturesMultipliers/MultiplierForm.vue')
   },
+  {
+    name: 'InstrumentShow',
+    path: '/instruments/show/:id',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('@/pages/Instruments/Show.vue')
+  },
 ];
 
 const router = createRouter({

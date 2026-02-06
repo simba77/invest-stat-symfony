@@ -45,121 +45,179 @@ function showSellModal(item: Deal) {
 </script>
 
 <template>
-  <DataTable :value="items" table-style="min-width: 50rem">
-    <Column header="Name">
-      <template #body="{data}">
-        <div v-tooltip="'Created: ' + data.createdAt" class="font-extrabold">
-          <lock-closed-icon
-            v-if="data.isBlocked"
-            class="h-3 w-3 -mt-1 inline-block"
-          />
-          {{ data.shortName }}
-        </div>
-        {{ data.ticker }}
-      </template>
-    </Column>
-    <Column field="quantity" header="Quantity" />
-    <Column header="Buy Price">
-      <template #body="{data}">
-        <div>{{ formatPrice(data.buyPrice, data.currency) }}</div>
-        <div class="text-xs text-gray-500">
-          {{ formatPrice(data.fullBuyPrice, data.currency) }}
-        </div>
-      </template>
-    </Column>
-    <Column header="Current Price">
-      <template #body="{data}">
-        <div>
-          {{ formatPrice(data.currentPrice, data.currency) }}
-          <span v-tooltip="'Prev price: ' + formatPrice(data.prevPrice, data.currency)" :class="data.dailyProfit > 0 ? 'text-green-600' : 'text-red-700'">
-            ({{ data.dailyProfit > 0 ? '+' : '-' }}{{ getPercent(data.dailyProfit, data.prevPrice) }}, {{ formatPrice(Math.abs(data.dailyProfit), data.currency) }})
-          </span>
-        </div>
-        <div class="text-xs text-gray-500">
-          {{ formatPrice(data.fullCurrentPrice, data.currency) }}
-          <span v-tooltip="'Prev full price: ' + formatPrice(data.fullPrevPrice, data.currency)" :class="data.fullDailyProfit > 0 ? 'text-green-600' : 'text-red-700'">
-            ({{ formatPriceWithSign(data.fullDailyProfit, data.currency) }})</span>
-        </div>
-      </template>
-    </Column>
-    <Column header="Target Price">
-      <template #body="{data}">
-        <template v-if="data.targetPrice < 0 || data.targetPrice > 0">
-          <div>{{ formatPrice(data.targetPrice, data.currency) }}</div>
-          <div class="text-xs text-gray-500">
-            {{ formatPrice(data.fullTargetPrice, data.currency) }}
-          </div>
-        </template>
-        <template v-else>
-          &mdash;
-        </template>
-      </template>
-    </Column>
-    <Column>
-      <template #header>
-        <div>
-          <div class="-mb-1.5 font-bold">
+  <table class="table table-dark table-hover align-middle" style="min-width: 50rem">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th class="text-end">
+          Quantity
+        </th>
+        <th>
+          Buy Price
+        </th>
+        <th>
+          Current Price
+        </th>
+        <th class="text-end">
+          Target Price
+        </th>
+        <th class="text-end">
+          <div class="fw-bold">
             Profit
           </div>
-          <span class="text-xs text-gray-400">(percent, commission)</span>
-        </div>
-      </template>
-      <template #body="{data}">
-        <div :class="[data.profit > 0 ? 'text-green-600' : 'text-red-700']">
-          <div>{{ formatPriceWithSign(data.profit, data.currency) }}</div>
-          <div class="text-xs">
-            ({{ formatPercent(data.profitPercent) }}, {{ formatPrice(data.commission, data.currency) }})
+          <span class="text-muted small">(percent, commission)</span>
+        </th>
+        <th class="text-end">
+          Target Profit
+        </th>
+        <th class="text-end">
+          Percent
+        </th>
+        <th v-if="!hideActions" class="text-end">
+          Actions
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr
+        v-for="data in items"
+        :key="data.id"
+        class="position-relative"
+      >
+        <!-- Name -->
+        <td>
+          <div
+            v-tooltip="'Created: ' + data.createdAt"
+            class="fw-bold"
+          >
+            <lock-closed-icon
+              v-if="data.isBlocked"
+              class="h-3 w-3 me-1"
+            />
+            {{ data.shortName }}
           </div>
-        </div>
-      </template>
-    </Column>
-    <Column header="Target Profit">
-      <template #body="{data}">
-        <template v-if="data.targetProfit > 0">
-          {{ formatPrice(data.targetProfit, data.currency) }}
-          <div class="text-xs">
-            ({{ formatPrice(data.fullTargetProfit, data.currency) }}, {{ formatPercent(data.fullTargetProfitPercent) }})
+          <div class="text-muted small">
+            {{ data.ticker }}
           </div>
-        </template>
-        <template v-else>
-          &mdash;
-        </template>
-      </template>
-    </Column>
-    <Column header="Percent">
-      <template #body="{data}">
-        {{ formatPercent(data.percent) }}
-      </template>
-    </Column>
-    <Column v-if="!hideActions" header="Actions">
-      <template #body="{data}">
-        <div class="">
-          <div class="flex justify-end items-center show-on-row-hover">
+        </td>
+
+        <!-- Quantity -->
+        <td class="text-end">
+          {{ data.quantity }}
+        </td>
+
+        <!-- Buy Price -->
+        <td class="text-nowrap">
+          <div>{{ formatPrice(data.buyPrice, data.currency) }}</div>
+          <div class="text-muted small">
+            {{ formatPrice(data.fullBuyPrice, data.currency) }}
+          </div>
+        </td>
+
+        <!-- Current Price -->
+        <td>
+          <div class="text-nowrap">
+            {{ formatPrice(data.currentPrice, data.currency) }}
+            <span
+              v-tooltip="'Prev price: ' + formatPrice(data.prevPrice, data.currency)"
+              :class="data.dailyProfit > 0 ? 'text-success' : 'text-danger'"
+            >
+              (
+              {{ data.dailyProfit > 0 ? '+' : '-' }}
+              {{ getPercent(data.dailyProfit, data.prevPrice) }},
+              {{ formatPrice(Math.abs(data.dailyProfit), data.currency) }}
+              )
+            </span>
+          </div>
+
+          <div class="text-muted small">
+            {{ formatPrice(data.fullCurrentPrice, data.currency) }}
+            <span
+              v-tooltip="'Prev full price: ' + formatPrice(data.fullPrevPrice, data.currency)"
+              :class="data.fullDailyProfit > 0 ? 'text-success' : 'text-danger'"
+            >
+              ({{ formatPriceWithSign(data.fullDailyProfit, data.currency) }})
+            </span>
+          </div>
+        </td>
+
+        <!-- Target Price -->
+        <td class="text-end text-nowrap">
+          <template v-if="data.targetPrice !== 0">
+            <div>{{ formatPrice(data.targetPrice, data.currency) }}</div>
+            <div class="text-muted small">
+              {{ formatPrice(data.fullTargetPrice, data.currency) }}
+            </div>
+          </template>
+          <template v-else>
+            &mdash;
+          </template>
+        </td>
+
+        <!-- Profit -->
+        <td class="text-end text-nowrap">
+          <div :class="data.profit > 0 ? 'text-success' : 'text-danger'">
+            <div>{{ formatPriceWithSign(data.profit, data.currency) }}</div>
+            <div class="small">
+              ({{ formatPercent(data.profitPercent) }},
+              {{ formatPrice(data.commission, data.currency) }})
+            </div>
+          </div>
+        </td>
+
+        <!-- Target Profit -->
+        <td class="text-end text-nowrap">
+          <template v-if="data.targetProfit > 0">
+            {{ formatPrice(data.targetProfit, data.currency) }}
+            <div class="small">
+              (
+              {{ formatPrice(data.fullTargetProfit, data.currency) }},
+              {{ formatPercent(data.fullTargetProfitPercent) }}
+              )
+            </div>
+          </template>
+          <template v-else>
+            &mdash;
+          </template>
+        </td>
+
+        <!-- Percent -->
+        <td class="text-end">
+          {{ formatPercent(data.percent) }}
+        </td>
+
+        <!-- Actions -->
+        <td v-if="!hideActions" class="text-end">
+          <div class="d-flex justify-content-end gap-2 show-on-row-hover">
             <router-link
-              :to="{name: 'EditAsset', params: {account: data.accountId, id: data.id}}"
-              class="text-gray-300 hover:text-gray-600 mr-2"
+              :to="{ name: 'EditAsset', params: { account: data.accountId, id: data.id } }"
+              class="text-muted hover-opacity"
               title="Edit"
             >
               <pencil-icon class="h-5 w-5" />
             </router-link>
-            <div
-              class="text-gray-300 hover:text-gray-600 mr-2 cursor-pointer"
+
+            <button
+              type="button"
+              class="btn btn-link p-0 text-muted hover-opacity"
               title="Sell"
               @click.prevent="showSellModal(data)"
             >
               <banknotes-icon class="h-5 w-5" />
-            </div>
+            </button>
+
             <button
               type="button"
-              class="text-gray-300 hover:text-red-500"
+              class="btn btn-link p-0 text-danger"
               title="Delete"
               @click="deleteDeal(data)"
             >
               <x-circle-icon class="h-5 w-5" />
             </button>
           </div>
-        </div>
-      </template>
-    </Column>
-  </DataTable>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </template>

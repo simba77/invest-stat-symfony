@@ -7,8 +7,6 @@ import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
 import {useNumbers} from "@/composable/useNumbers";
 import {useDashboard} from "@/composable/useDashboard";
 import {Dashboard} from "@/types/dashboard";
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
 import {usePage} from "@/composable/usePage";
 
 const {formatPrice, formatPercent} = useNumbers()
@@ -44,7 +42,7 @@ setPageTitle('')
           1 USD = {{ pageData.usd }}₽
         </div>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
         <stat-card
           v-for="(card, i) in pageData.summary"
           :key="i"
@@ -61,7 +59,7 @@ setPageTitle('')
         <div class="text-2xl font-extrabold mt-6 mb-3">
           Deposit Accounts
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           <stat-card
             v-for="(card, i) in pageData.depositAccounts"
             :key="i"
@@ -76,20 +74,26 @@ setPageTitle('')
         <div class="text-2xl font-extrabold mt-6 mb-7">
           Profit By Years
         </div>
+        <table class="table table-dark">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Start Year Profit (1 Jan)</th>
+              <th class="text-end">Percent</th>
+            </tr>
+          </thead>
 
-        <DataTable :value="pageData.statisticByYears">
-          <Column field="year" header="Year" />
-          <Column header="Start Year Profit (1 Jan)">
-            <template #body="{ data }">
-              {{ formatPrice(data.profit) }}
-            </template>
-          </Column>
-          <Column header="Percent">
-            <template #body="{ data }">
-              {{ formatPercent(data.profitPercent) }}
-            </template>
-          </Column>
-        </DataTable>
+          <tbody>
+            <tr
+              v-for="row in pageData.statisticByYears"
+              :key="row.year"
+            >
+              <td>{{ row.year }}</td>
+              <td>{{ formatPrice(row.profit) }}</td>
+              <td class="text-end">{{ formatPercent(row.profitPercent) }}</td>
+            </tr>
+          </tbody>
+        </table>
       </template>
     </template>
   </page-component>

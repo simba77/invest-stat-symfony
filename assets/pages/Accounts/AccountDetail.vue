@@ -20,7 +20,7 @@ provide('accounts', {getAccounts: getAccount})
 <template>
   <page-component :title="data?.account?.name ?? 'Loading...'">
     <template v-if="data">
-      <div class="flex justify-between mb-2 py-3 rounded items-center">
+      <div class="flex justify-between mb-3 rounded items-center">
         <div class="text-sm">
           <span class="font-light">Balance:</span> <span>{{ formatPrice(data.account.balance, '₽') }}</span> / <span>{{ formatPrice(data.account.usdBalance, '$') }}</span>
           <span class="font-light ml-3">Deposits:</span> <span>{{ formatPrice(data.account.deposits, '₽') }}</span>
@@ -47,7 +47,7 @@ provide('accounts', {getAccounts: getAccount})
       >
         <!-- Если групп блокировки больше одной, выводим название -->
         <template v-if="Object.keys(data.deals.dealsList).length > 1">
-          <div class="font-extrabold uppercase text-base mb-4">
+          <div class="font-extrabold uppercase text-base mb-2">
             {{ data.deals.statuses[groupedByStatusIndex]['name'] }}
           </div>
         </template>
@@ -57,7 +57,7 @@ provide('accounts', {getAccounts: getAccount})
           v-for="(groupedByInstrumentType, groupedByInstrumentTypeIndex) in groupedByStatus"
           :key="groupedByInstrumentTypeIndex"
         >
-          <div class="font-bold text-neutral-600 mb-4">
+          <div class="font-bold text-neutral-600 mb-2">
             {{ data.deals.instrumentTypes[groupedByInstrumentTypeIndex]['name'] }}
           </div>
 

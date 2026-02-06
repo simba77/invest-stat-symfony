@@ -32,6 +32,7 @@
     "@primevue/themes": "^4.2.5",
     "@vuepic/vue-datepicker": "^10.0.0",
     "@vueuse/core": "^12.0.0",
+    "bootstrap": "^5.3.8",
     "echarts": "^5.5.1",
     "floating-vue": "^5.2.2",
     "pinia": "^2.3.0",

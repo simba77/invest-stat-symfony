@@ -65,6 +65,7 @@ export interface Deal {
   fullCurrentPrice: number
   targetPrice: number
   fullTargetPrice: number
+  fullPrevPrice: number
   profit: number
   profitPercent: number
   dailyProfit: number

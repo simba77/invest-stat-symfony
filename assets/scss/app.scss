@@ -1,6 +1,10 @@
 @use "buttons";
 @use "forms";
 
+@import 'variables';
+@import 'bootstrap';
+@import 'tables';
+
 @import 'fonts/inter.css';
 
 @layer tailwind-base, primevue, tailwind-utilities;

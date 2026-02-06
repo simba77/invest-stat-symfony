@@ -78,7 +78,7 @@ const userNavigation = [
       as="nav"
       class="bg-indigo-600 shadow"
     >
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="container">
         <div class="flex items-center justify-between h-16">
           <div class="flex items-center">
             <div class="flex-shrink-0">
@@ -225,18 +225,18 @@ const userNavigation = [
 
     <header
       v-if="title"
-      class="shadow bg-white dark:bg-surface-900"
+      class="shadow dark:bg-surface-900"
     >
-      <div class="max-w-7xl mx-auto py-3.5 px-4 sm:px-6 lg:px-8">
-        <h1 class="text-xl font-bold">
+      <div class="container py-3">
+        <h1 class="text-xl font-bold mb-0">
           {{ props.title }}
         </h1>
       </div>
     </header>
     <main>
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <div class="container">
         <!-- Replace with your content -->
-        <div class="px-4 py-4 sm:px-0">
+        <div class="py-3">
           <slot />
         </div>
         <!-- /End replace -->
