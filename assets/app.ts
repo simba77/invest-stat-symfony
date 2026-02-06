@@ -13,6 +13,7 @@ import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
 import {definePreset} from "@primevue/themes";
 import 'primeicons/primeicons.css';
+import 'bootstrap';
 
 const app = createApp(AppComponent)
 app.use(createPinia())

@@ -4,6 +4,7 @@
 @import 'variables';
 @import 'bootstrap';
 @import 'tables';
+@import 'navbar';
 
 @import 'fonts/inter.css';
 
@@ -40,4 +41,8 @@
   .card {
     @apply bg-white dark:bg-zinc-900 dark:border dark:border-zinc-700 shadow rounded p-6;
   }
+}
+
+.collapse {
+  visibility: visible;
 }
