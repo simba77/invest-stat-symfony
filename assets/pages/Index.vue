@@ -79,7 +79,9 @@ setPageTitle('')
             <tr>
               <th>Year</th>
               <th>Start Year Profit (1 Jan)</th>
-              <th class="text-end">Percent</th>
+              <th class="text-end">
+                Percent
+              </th>
             </tr>
           </thead>
 
@@ -90,7 +92,9 @@ setPageTitle('')
             >
               <td>{{ row.year }}</td>
               <td>{{ formatPrice(row.profit) }}</td>
-              <td class="text-end">{{ formatPercent(row.profitPercent) }}</td>
+              <td class="text-end">
+                {{ formatPercent(row.profitPercent) }}
+              </td>
             </tr>
           </tbody>
         </table>

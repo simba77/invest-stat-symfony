@@ -56,90 +56,94 @@ if (route.params.id) {
 <template>
   <page-component title="Add Dividend">
     <div class="card">
-      <form
-        class="space-y-6 w-full md:w-2/3 mx-auto"
-        @submit.prevent="submitForm"
-      >
-        <div>
-          <h3 class="form-title">
-            Dividend
-          </h3>
-        </div>
-        <preloader-component v-if="loadingForm" />
-        <div
-          v-else
-          class="w-full md:w-2/4"
+      <div class="card-body py-4">
+        <form
+          class="space-y-6 w-full md:w-2/3 mx-auto"
+          @submit.prevent="submitForm"
         >
-          <input-select
-            :key="componentKey"
-            v-model.number="form.fields.accountId"
-            class="mb-3"
-            label="Account"
-            name="accountId"
-            placeholder="Select Account"
-            field-value="id"
-            :error="validationErrors"
-            :options="accounts"
-          />
+          <div>
+            <h3 class="form-title">
+              Dividend
+            </h3>
+          </div>
+          <preloader-component v-if="loadingForm" />
+          <div
+            v-else
+            class="w-full md:w-2/4"
+          >
+            <input-select
+              :key="componentKey"
+              v-model.number="form.fields.accountId"
+              class="mb-3"
+              label="Account"
+              name="accountId"
+              placeholder="Select Account"
+              field-value="id"
+              :error="validationErrors"
+              :options="accounts"
+            />
 
-          <input-text
-            :key="componentKey"
-            v-model.trim="form.fields.ticker"
-            :error="validationErrors"
-            class="mb-3"
-            name="ticker"
-            label="Ticker"
-            placeholder="Ticker"
-          />
+            <input-text
+              :key="componentKey"
+              v-model.trim="form.fields.ticker"
+              :error="validationErrors"
+              class="mb-3"
+              name="ticker"
+              label="Ticker"
+              placeholder="Ticker"
+            />
 
-          <input-select
-            :key="componentKey"
-            v-model="form.fields.stockMarket"
-            class="mb-3"
-            label="Stock Market"
-            name="stockMarket"
-            placeholder="Stock Market"
-            :error="validationErrors"
-            :options="[{value: 'SPB', name: 'SPB'}, {value: 'MOEX', name: 'MOEX'}]"
-          />
+            <input-select
+              :key="componentKey"
+              v-model="form.fields.stockMarket"
+              class="mb-3"
+              label="Stock Market"
+              name="stockMarket"
+              placeholder="Stock Market"
+              :error="validationErrors"
+              :options="[{value: 'SPB', name: 'SPB'}, {value: 'MOEX', name: 'MOEX'}]"
+            />
 
-          <input-text
-            :key="componentKey"
-            v-model.trim="form.fields.amount"
-            :error="validationErrors"
-            class="mb-3"
-            name="amount"
-            label="Amount"
-            placeholder="Amount"
-            type="number"
-          />
+            <input-text
+              :key="componentKey"
+              v-model.trim="form.fields.amount"
+              :error="validationErrors"
+              class="mb-3"
+              name="amount"
+              label="Amount"
+              placeholder="Amount"
+              type="number"
+            />
 
-          <input-text
-            :key="componentKey"
-            v-model="form.fields.date"
-            :error="validationErrors"
-            type="date"
-            class="mb-3"
-            name="date"
-            label="Date"
-            placeholder="Date"
-          />
-        </div>
-        <div class="buttons-divider" />
-        <button
-          type="submit"
-          class="btn btn-primary"
-          :disabled="loading"
-        >
-          Save
-        </button>
-        <router-link
-          :to="{name: 'Dividends'}"
-          class="btn btn-secondary ml-3"
-        >
-          Back
-        </router-link>
-      </form>
+            <input-text
+              :key="componentKey"
+              v-model="form.fields.date"
+              :error="validationErrors"
+              type="date"
+              class="mb-3"
+              name="date"
+              label="Date"
+              placeholder="Date"
+            />
+          </div>
+          <div class="buttons-divider" />
+          <div>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              :disabled="loading"
+            >
+              Save
+            </button>
+            <router-link
+              :to="{name: 'Dividends'}"
+              class="btn btn-secondary ml-3"
+            >
+              Back
+            </router-link>
+          </div>
+        </form>
+      </div>
     </div>
   </page-component>
 </template>

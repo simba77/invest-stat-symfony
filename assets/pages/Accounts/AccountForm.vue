@@ -5,7 +5,6 @@ import axios from 'axios';
 
 import PageComponent from '@/components/PageComponent.vue';
 import InputText from '@/components/Forms/InputText.vue';
-import Panel from 'primevue/panel';
 import Button from 'primevue/button';
 
 const route = useRoute();
@@ -68,102 +67,104 @@ onMounted(() => {
 
 <template>
   <page-component title="Add Account">
-    <Panel>
-      <form
-        class="w-full md:w-2/3 mx-auto"
-        @submit.prevent="submitForm"
-      >
-        <div class="pb-2">
-          <h3 class="form-title">
-            Account
-          </h3>
-          <p class="mt-1 text-sm text-gray-600">
-            Enter the name of the account to group your assets
-          </p>
-        </div>
-
-        <div class="w-full md:w-2/4 mb-4">
-          <input-text
-            :key="componentKey"
-            v-model="form.name"
-            :error="errors"
-            class="mb-3"
-            name="name"
-            label="Account Name"
-            placeholder="Enter an Account Name"
-          />
-
-          <input-text
-            :key="componentKey"
-            v-model.trim="form.balance"
-            :error="errors"
-            class="mb-3"
-            name="balance"
-            label="Balance"
-            placeholder="Enter Balance"
-            type="number"
-          />
-
-          <input-text
-            :key="componentKey"
-            v-model.trim="form.usdBalance"
-            :error="errors"
-            class="mb-3"
-            name="usdBalance"
-            label="USD Balance"
-            placeholder="Enter USD Balance"
-            type="number"
-          />
-
-          <input-text
-            :key="componentKey"
-            v-model.trim="form.commission"
-            :error="errors"
-            class="mb-3"
-            name="commission"
-            label="Commission"
-            placeholder="Commission"
-            type="number"
-          />
-
-          <input-text
-            :key="componentKey"
-            v-model.trim="form.futuresCommission"
-            :error="errors"
-            class="mb-3"
-            name="futuresCommission"
-            label="Futures Commission"
-            placeholder="Futures Commission"
-            type="number"
-          />
-
-          <input-text
-            :key="componentKey"
-            v-model.number="form.sort"
-            :error="errors"
-            class="mb-3"
-            type="number"
-            name="sort"
-            label="Sort"
-            placeholder="Sort"
-          />
-        </div>
-
-        <div class="buttons-divider mb-4" />
-
-        <Button
-          type="submit"
-          class="btn btn-primary"
-          :loading="loading"
-          label="Save"
-        />
-        <router-link
-          :to="{ name: 'Accounts' }"
-          class="btn btn-secondary ml-3"
+    <div class="card">
+      <div class="card-body py-4">
+        <form
+          class="w-full md:w-2/3 mx-auto"
+          @submit.prevent="submitForm"
         >
-          Back
-        </router-link>
-      </form>
-    </Panel>
+          <div class="pb-2">
+            <h3 class="form-title">
+              Account
+            </h3>
+            <p class="mt-1 text-sm text-gray-600">
+              Enter the name of the account to group your assets
+            </p>
+          </div>
+
+          <div class="w-full md:w-2/4 mb-4">
+            <input-text
+              :key="componentKey"
+              v-model="form.name"
+              :error="errors"
+              class="mb-3"
+              name="name"
+              label="Account Name"
+              placeholder="Enter an Account Name"
+            />
+
+            <input-text
+              :key="componentKey"
+              v-model.trim="form.balance"
+              :error="errors"
+              class="mb-3"
+              name="balance"
+              label="Balance"
+              placeholder="Enter Balance"
+              type="number"
+            />
+
+            <input-text
+              :key="componentKey"
+              v-model.trim="form.usdBalance"
+              :error="errors"
+              class="mb-3"
+              name="usdBalance"
+              label="USD Balance"
+              placeholder="Enter USD Balance"
+              type="number"
+            />
+
+            <input-text
+              :key="componentKey"
+              v-model.trim="form.commission"
+              :error="errors"
+              class="mb-3"
+              name="commission"
+              label="Commission"
+              placeholder="Commission"
+              type="number"
+            />
+
+            <input-text
+              :key="componentKey"
+              v-model.trim="form.futuresCommission"
+              :error="errors"
+              class="mb-3"
+              name="futuresCommission"
+              label="Futures Commission"
+              placeholder="Futures Commission"
+              type="number"
+            />
+
+            <input-text
+              :key="componentKey"
+              v-model.number="form.sort"
+              :error="errors"
+              class="mb-3"
+              type="number"
+              name="sort"
+              label="Sort"
+              placeholder="Sort"
+            />
+          </div>
+
+          <div class="buttons-divider mb-4" />
+
+          <Button
+            type="submit"
+            class="btn btn-primary"
+            :loading="loading"
+            label="Save"
+          />
+          <router-link
+            :to="{ name: 'Accounts' }"
+            class="btn btn-secondary ml-3"
+          >
+            Back
+          </router-link>
+        </form>
+      </div>
+    </div>
   </page-component>
 </template>

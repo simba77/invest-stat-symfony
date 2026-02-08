@@ -68,55 +68,59 @@ onMounted(() => {
 <template>
   <page-component title="Add Expense">
     <div class="card">
-      <form
-        class="space-y-6 w-full md:w-2/3 mx-auto"
-        action="#"
-        method="POST"
-        @submit.prevent="submitForm"
-      >
-        <div>
-          <h3 class="form-title">
-            Expense
-          </h3>
-          <p class="mt-1 text-sm text-gray-600">
-            Enter the name and amount of expense
-          </p>
-        </div>
-        <div class="w-full md:w-2/4">
-          <input-text
-            :key="data.componentKey"
-            v-model="data.form.name"
-            :error="data.errors"
-            name="name"
-            label="Category Name"
-            placeholder="Enter a category name"
-          />
-          <input-text
-            :key="data.componentKey"
-            v-model.trim="data.form.sum"
-            class="mt-3"
-            :error="data.errors"
-            name="sum"
-            label="Amount of expense"
-            placeholder="Amount of expense"
-            type="number"
-          />
-        </div>
-        <div class="buttons-divider" />
-        <button
-          type="submit"
-          class="btn btn-primary"
-          :disabled="data.loading"
+      <div class="card-body py-4">
+        <form
+          class="space-y-6 w-full md:w-2/3 mx-auto"
+          action="#"
+          method="POST"
+          @submit.prevent="submitForm"
         >
-          Save
-        </button>
-        <router-link
-          :to="{name: 'Expenses'}"
-          class="btn btn-secondary ml-3"
-        >
-          Back
-        </router-link>
-      </form>
+          <div>
+            <h3 class="form-title">
+              Expense
+            </h3>
+            <p class="mt-1 text-sm text-gray-600">
+              Enter the name and amount of expense
+            </p>
+          </div>
+          <div class="w-full md:w-2/4">
+            <input-text
+              :key="data.componentKey"
+              v-model="data.form.name"
+              :error="data.errors"
+              name="name"
+              label="Category Name"
+              placeholder="Enter a category name"
+            />
+            <input-text
+              :key="data.componentKey"
+              v-model.trim="data.form.sum"
+              class="mt-3"
+              :error="data.errors"
+              name="sum"
+              label="Amount of expense"
+              placeholder="Amount of expense"
+              type="number"
+            />
+          </div>
+          <div class="buttons-divider" />
+          <div>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              :disabled="data.loading"
+            >
+              Save
+            </button>
+            <router-link
+              :to="{name: 'Expenses'}"
+              class="btn btn-secondary ml-3"
+            >
+              Back
+            </router-link>
+          </div>
+        </form>
+      </div>
     </div>
   </page-component>
 </template>

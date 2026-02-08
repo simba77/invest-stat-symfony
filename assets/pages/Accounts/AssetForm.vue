@@ -86,103 +86,105 @@ onMounted(() => {
 <template>
   <page-component title="Add Asset">
     <div class="card">
-      <form
-        class="space-y-6 w-full md:w-2/3 mx-auto"
-        action="#"
-        method="POST"
-        @submit.prevent="submitForm"
-      >
-        <div>
-          <h3 class="form-title">
-            Asset
-          </h3>
-          <p class="mt-1 text-sm text-gray-600">
-            Enter the ticker and other params of asset
-          </p>
-        </div>
-        <div class="w-full md:w-2/4">
-          <checkbox-component
-            :key="componentKey"
-            v-model="form.isShort"
-            label="Short"
-            name="short"
-          />
-
-          <input-text
-            :key="'ticker' + tickerComponentKey"
-            v-model="form.ticker"
-            :error="errors"
-            class="mt-3"
-            name="name"
-            label="Ticker"
-            placeholder="Enter a ticker"
-            @update:model-value="getTickerData"
-          />
-
-          <div
-            v-if="tickerData"
-            class="mt-2"
-          >
-            {{ tickerData.shortName }}
+      <div class="card-body py-4">
+        <form
+          class="space-y-6 w-full md:w-2/3 mx-auto"
+          action="#"
+          method="POST"
+          @submit.prevent="submitForm"
+        >
+          <div>
+            <h3 class="form-title">
+              Asset
+            </h3>
+            <p class="mt-1 text-sm text-gray-600">
+              Enter the ticker and other params of asset
+            </p>
           </div>
+          <div class="w-full md:w-2/4">
+            <checkbox-component
+              :key="componentKey"
+              v-model="form.isShort"
+              label="Short"
+              name="short"
+            />
 
-          <input-select
-            :key="'stockMarket' + componentKey"
-            v-model="form.stockMarket"
-            :error="errors"
-            :options="[{value: 'SPB', name: 'SPB'}, {value: 'MOEX', name: 'MOEX'}]"
-            name="stockMarket"
-            class="mt-3"
-            label="Stock Market"
-            placeholder="Stock Market"
-          />
-          <input-text
-            :key="'quantity' + componentKey"
-            v-model.number="form.quantity"
-            :error="errors"
-            type="number"
-            class="mt-3"
-            name="quantity"
-            label="Quantity"
-            placeholder="Quantity"
-          />
-          <input-text
-            :key="'buyPrice' + componentKey"
-            v-model.trim="form.buyPrice"
-            :error="errors"
-            class="mt-3"
-            name="buyPrice"
-            label="Buy Price"
-            placeholder="Buy Price"
-            type="number"
-          />
-          <input-text
-            :key="'targetPrice' + componentKey"
-            v-model.trim="form.targetPrice"
-            :error="errors"
-            class="mt-3"
-            name="targetPrice"
-            label="Target Price"
-            placeholder="Target Price"
-            type="number"
-          />
-        </div>
-        <Divider />
-        <div>
-          <Button
-            type="submit"
-            class="btn btn-primary"
-            :loading="loading"
-            label="Save"
-          />
-          <router-link
-            :to="{name: 'AccountDetail', params: {id: $route.params.account}}"
-            class="btn btn-secondary ml-3"
-          >
-            Back
-          </router-link>
-        </div>
-      </form>
+            <input-text
+              :key="'ticker' + tickerComponentKey"
+              v-model="form.ticker"
+              :error="errors"
+              class="mt-3"
+              name="name"
+              label="Ticker"
+              placeholder="Enter a ticker"
+              @update:model-value="getTickerData"
+            />
+
+            <div
+              v-if="tickerData"
+              class="mt-2"
+            >
+              {{ tickerData.shortName }}
+            </div>
+
+            <input-select
+              :key="'stockMarket' + componentKey"
+              v-model="form.stockMarket"
+              :error="errors"
+              :options="[{value: 'SPB', name: 'SPB'}, {value: 'MOEX', name: 'MOEX'}]"
+              name="stockMarket"
+              class="mt-3"
+              label="Stock Market"
+              placeholder="Stock Market"
+            />
+            <input-text
+              :key="'quantity' + componentKey"
+              v-model.number="form.quantity"
+              :error="errors"
+              type="number"
+              class="mt-3"
+              name="quantity"
+              label="Quantity"
+              placeholder="Quantity"
+            />
+            <input-text
+              :key="'buyPrice' + componentKey"
+              v-model.trim="form.buyPrice"
+              :error="errors"
+              class="mt-3"
+              name="buyPrice"
+              label="Buy Price"
+              placeholder="Buy Price"
+              type="number"
+            />
+            <input-text
+              :key="'targetPrice' + componentKey"
+              v-model.trim="form.targetPrice"
+              :error="errors"
+              class="mt-3"
+              name="targetPrice"
+              label="Target Price"
+              placeholder="Target Price"
+              type="number"
+            />
+          </div>
+          <Divider />
+          <div>
+            <Button
+              type="submit"
+              class="btn btn-primary"
+              :loading="loading"
+              label="Save"
+            />
+            <router-link
+              :to="{name: 'AccountDetail', params: {id: $route.params.account}}"
+              class="btn btn-secondary ml-3"
+            >
+              Back
+            </router-link>
+          </div>
+        </form>
+      </div>
     </div>
   </page-component>
 </template>
