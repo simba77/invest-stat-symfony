@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {QuestionMarkCircleIcon, ArrowSmallUpIcon, ArrowSmallDownIcon} from "@heroicons/vue/24/solid";
 import {useNumbers} from "@/composable/useNumbers";
-import Card from 'primevue/card';
 
 const {formatPrice, formatPercent} = useNumbers()
 
@@ -28,8 +27,8 @@ withDefaults(defineProps<CardProps>(), {
 </script>
 
 <template>
-  <Card class="stat-card">
-    <template #content>
+  <div class="card">
+    <div class="card-body">
       <div class="text-gray-400 flex items-center">
         <div>{{ name }}</div>
         <div
@@ -48,25 +47,25 @@ withDefaults(defineProps<CardProps>(), {
         <div
           v-if="profit"
           v-tooltip="profitHelpText"
-          :class="[profit > 0 ? 'text-green-500' : 'text-red-500', 'rounded-full pr-1 flex items-center']"
+          :class="[profit > 0 ? 'text-success' : 'text-danger', 'rounded-full pr-1 flex items-center']"
         >
           <template v-if="profit > 0">
-            <arrow-small-up-icon class="h-4 mr-0.5 text-green-500 rotate-45" />
+            <arrow-small-up-icon class="h-4 mr-0.5 text-success rotate-45" />
           </template>
           <template v-else>
-            <arrow-small-down-icon class="h-4 mr-0.5 text-red-500 -rotate-45" />
+            <arrow-small-down-icon class="h-4 mr-0.5 text-danger -rotate-45" />
           </template>
           {{ formatPrice(profit, currency) }}
         </div>
         <div
           v-if="percent"
-          :class="[percent > 0 ? ' text-green-500' : ' text-red-500', 'pr-2 flex items-center']"
+          :class="[percent > 0 ? ' text-success' : ' text-danger', 'pr-2 flex items-center']"
         >
           <template v-if="!profit && percent > 0">
-            <arrow-small-up-icon class="h-4 mr-0.5 text-green-500 rotate-45" />
+            <arrow-small-up-icon class="h-4 mr-0.5 text-success rotate-45" />
           </template>
           <template v-else-if="!profit">
-            <arrow-small-down-icon class="h-4 mr-0.5 text-red-500 -rotate-45" />
+            <arrow-small-down-icon class="h-4 mr-0.5 text-danger -rotate-45" />
           </template>
           <template v-if="profit">
             ({{ formatPercent(percent) }})
@@ -76,19 +75,10 @@ withDefaults(defineProps<CardProps>(), {
           </template>
         </div>
       </div>
-    </template>
-  </Card>
+    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-.stat-card {
-  --p-card-body-padding: 1rem 1.25rem;
-  --p-card-color: #000;
-}
 
-.app-dark {
-  .stat-card {
-    --p-card-color: #fff;
-  }
-}
 </style>

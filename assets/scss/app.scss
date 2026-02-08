@@ -5,6 +5,7 @@
 @import 'bootstrap';
 @import 'tables';
 @import 'navbar';
+@import 'cards';
 
 @import 'fonts/inter.css';
 
@@ -36,10 +37,6 @@
 
   .form-checkbox-label {
     @apply ml-2 block text-sm text-gray-900 dark:text-white cursor-pointer;
-  }
-
-  .card {
-    @apply bg-white dark:bg-zinc-900 dark:border dark:border-zinc-700 shadow rounded p-6;
   }
 }
 
