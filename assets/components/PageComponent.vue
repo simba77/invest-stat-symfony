@@ -132,7 +132,7 @@ const userNavigation = [
                   class="bg-light rounded-circle d-flex align-items-center justify-content-center"
                   style="width: 36px; height: 36px"
                 >
-                  <UserIcon class="h-5 w-5 text-secondary" />
+                  <UserIcon class="h-5 w-5 text-dark" />
                 </span>
                 <strong>{{ user.name }}</strong>
               </button>
