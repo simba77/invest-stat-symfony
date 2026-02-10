@@ -74,7 +74,7 @@ setPageTitle('')
         <div class="text-2xl font-extrabold mt-6 mb-7">
           Profit By Years
         </div>
-        <table class="table table-dark">
+        <table class="table table-dark simple-table">
           <thead>
             <tr>
               <th>Year</th>

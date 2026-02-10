@@ -7,3 +7,11 @@
     @apply border-b dark:border-zinc-800
   }
 }
+
+.form-stack {
+  max-width: 420px;
+
+  > * + * {
+    margin-top: 1rem;
+  }
+}

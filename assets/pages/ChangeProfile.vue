@@ -52,52 +52,51 @@ const {loading, run: submitForm} = useAsync(() => {
               Your profile has been successfully changed
             </div>
 
-            <input-text
-              :key="componentKey"
-              v-model="form.name"
-              :error="errors"
-              :required="true"
-              name="name"
-              label="Name"
-              placeholder="Name"
-              class="mb-2"
-            />
+            <div class="form-stack">
+              <input-text
+                :key="componentKey"
+                v-model="form.name"
+                :error="errors"
+                :required="true"
+                name="name"
+                label="Name"
+                placeholder="Name"
+              />
 
-            <input-text
-              :key="componentKey"
-              v-model="form.email"
-              :error="errors"
-              :required="true"
-              type="email"
-              name="email"
-              label="E-mail"
-              placeholder="E-mail"
-              class="mb-2"
-            />
+              <input-text
+                :key="componentKey"
+                v-model="form.email"
+                :error="errors"
+                :required="true"
+                type="email"
+                name="email"
+                label="E-mail"
+                placeholder="E-mail"
+              />
 
-            <input-text
-              :key="componentKey"
-              v-model="form.salary"
-              :error="errors"
-              :required="true"
-              type="number"
-              step="1"
-              name="salary"
-              label="Salary"
-              placeholder="Salary"
-              class="mb-2"
-            />
+              <input-text
+                :key="componentKey"
+                v-model="form.salary"
+                :error="errors"
+                :required="true"
+                type="number"
+                step="1"
+                name="salary"
+                label="Salary"
+                placeholder="Salary"
+              />
 
-            <input-text
-              :key="componentKey"
-              v-model="form.password"
-              :error="errors"
-              type="password"
-              name="password"
-              label="Password"
-              placeholder="Password"
-              help="Enter a new password if you need to change it"
-            />
+              <input-text
+                :key="componentKey"
+                v-model="form.password"
+                :error="errors"
+                type="password"
+                name="password"
+                label="Password"
+                placeholder="Password"
+                help="Enter a new password if you need to change it"
+              />
+            </div>
 
             <hr class="my-4">
 
