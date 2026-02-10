@@ -1,30 +1,56 @@
-import {markRaw, ref, shallowRef} from "vue";
+import {markRaw, reactive, ref, shallowRef} from 'vue'
 
 interface ModalConfig {
   component: object
+  title?: string
   modelValue?: any
+  classes?: string
+  verticalCentered?: boolean
+  withTopMargin?: boolean // Добавляет отступ вверху для мобилок. Полезно на небольших модальных окнах
 }
 
-const isOpen = ref<boolean>(false);
-const view = shallowRef<any>({});
-const model = ref<object>({});
-
-function open(config: ModalConfig) {
-  isOpen.value = true;
-  model.value = config.modelValue ?? {};
-  view.value = markRaw(config.component);
+interface ModalParams {
+  classes: string
+  verticalCentered: boolean
+  isOpen: boolean
+  modelValue: any
 }
 
-function close() {
-  isOpen.value = false;
+const view = shallowRef<any>({})
+const modalInstance = ref<any>(null)
+
+const params = reactive<ModalParams>({
+  classes: '',
+  verticalCentered: false,
+  isOpen: false,
+  modelValue: {}
+})
+
+function init (modal: any) {
+  modalInstance.value = modal
+}
+
+function open (config: ModalConfig) {
+  modalInstance.value.show()
+  view.value = markRaw(config.component)
+
+  // Дополнительные параметры
+  params.isOpen = true
+  params.classes = config?.classes ?? ''
+  params.verticalCentered = config?.verticalCentered ?? true
+  params.modelValue = config?.modelValue ?? {}
+}
+
+function close () {
+  modalInstance.value.hide()
 }
 
 export const useModal = () => {
   return {
-    isOpen,
     view,
-    model,
+    params,
     close,
-    open
+    open,
+    init
   }
 }

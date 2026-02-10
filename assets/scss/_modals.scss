@@ -1,0 +1,26 @@
+.modal {
+  --bs-modal-header-border-color: transparent;
+  --bs-modal-header-border-width: 0;
+  --bs-modal-border-width: 0;
+  --bs-modal-border-radius: 10px;
+  --bs-modal-padding: 15px 15px 15px 15px;
+  --bs-modal-header-padding: 15px 15px 0 15px;
+
+  .modal-footer {
+    padding: 5px 10px;
+  }
+
+  .modal-content {
+    overflow: hidden;
+  }
+
+  .confirm-delete-modal {
+    --bs-modal-padding: 25px 25px 15px 25px;
+    background: #18181b;
+
+    .modal-footer {
+      background: #27272a;
+      border: none;
+    }
+  }
+}

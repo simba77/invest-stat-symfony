@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import BaseModal from "@/components/Modals/BaseModal.vue";
 import {useTemplate} from "@/composable/useTemplate";
 import {computed, onMounted} from "vue";
 import { useTitle } from '@vueuse/core'
 import {usePage} from "@/composable/usePage";
+import ModalComponent from "@/components/Modals/ModalComponent.vue";
 
 const {pageTitle} = usePage()
 const {setCurrentTheme} = useTemplate()
@@ -23,6 +23,6 @@ useTitle(title)
 <template>
   <div>
     <router-view />
-    <base-modal />
+    <modal-component />
   </div>
 </template>
