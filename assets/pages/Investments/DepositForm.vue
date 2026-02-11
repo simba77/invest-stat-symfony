@@ -113,19 +113,21 @@ onMounted(() => {
             />
           </div>
           <div class="buttons-divider" />
-          <button
-            type="submit"
-            class="btn btn-primary"
-            :disabled="data.loading"
-          >
-            Save
-          </button>
-          <router-link
-            :to="{name: 'Investments'}"
-            class="btn btn-secondary ml-3"
-          >
-            Back
-          </router-link>
+          <div>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              :disabled="data.loading"
+            >
+              Save
+            </button>
+            <router-link
+              :to="{name: 'Investments'}"
+              class="btn btn-secondary ml-3"
+            >
+              Back
+            </router-link>
+          </div>
         </form>
       </div>
     </div>
