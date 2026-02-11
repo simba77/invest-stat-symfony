@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import {DialogTitle} from '@headlessui/vue'
-import {BanknotesIcon} from '@heroicons/vue/24/outline'
+import { Banknote } from 'lucide-vue-next'
 import InputText from "@/components/Forms/InputText.vue";
 import {useModal} from "@/composable/useModal";
 import {ref} from "vue";
@@ -28,70 +27,72 @@ function sell() {
 </script>
 
 <template>
-  <form @submit.prevent="sell()">
-    <div class="bg-white dark:bg-zinc-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-      <div class="sm:flex sm:items-start">
-        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
-          <banknotes-icon
-            class="h-6 w-6 text-green-600"
-            aria-hidden="true"
-          />
+  <form class="sell-modal" @submit.prevent="sell()">
+    <div class="modal-body">
+      <div class="d-flex align-items-start gap-3">
+        <div
+          class="d-flex align-items-center justify-content-center rounded-circle bg-success bg-opacity-10 flex-shrink-0"
+          style="width: 40px; height: 40px;"
+        >
+          <Banknote class="text-success" :size="22" />
         </div>
-        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left flex-grow">
-          <DialogTitle
-            as="h3"
-            class="text-lg leading-6 font-medium text-gray-900 dark:text-white"
-          >
+        <div class="flex-grow">
+          <h3 class="modal-title mb-4 mt-1">
             Sell Asset: {{ modelValue.name }}
-          </DialogTitle>
-          <div class="mt-2">
+          </h3>
+          <div class="form-stack">
             <input-text
               v-model.trim="security.price"
               :error="validationErrors"
               :required="true"
               autocomplete="off"
-              class="mb-3"
               name="price"
               label="Sell Price"
               type="number"
               placeholder="Enter an account name"
             />
-          </div>
-          <div
-            v-if="!security.id"
-            class="mt-2"
-          >
-            <input-text
-              v-model="security.quantity"
-              :error="validationErrors"
-              :required="true"
-              type="number"
-              class="mb-3"
-              name="quantity"
-              label="Quantity"
-              autocomplete="off"
-              placeholder="Enter the Quantity to Sell"
-            />
+            <div
+              v-if="!security.id"
+              class="mt-2"
+            >
+              <input-text
+                v-model="security.quantity"
+                :error="validationErrors"
+                :required="true"
+                type="number"
+                class="mb-3"
+                name="quantity"
+                label="Quantity"
+                autocomplete="off"
+                placeholder="Enter the Quantity to Sell"
+              />
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="bg-gray-50 dark:bg-zinc-800 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+    <!-- Footer -->
+    <div class="modal-footer">
       <button
-        class="btn btn-danger mr-3 md:mr-0 ml-3"
-        type="submit"
-      >
-        Confirm
-      </button>
-      <button
-        class="btn btn-secondary"
         type="button"
+        class="btn btn-secondary"
         @click="modal.close()"
       >
         Cancel
       </button>
+
+      <button
+        type="submit"
+        class="btn btn-danger"
+      >
+        Confirm
+      </button>
     </div>
   </form>
 </template>
-
+<style scoped>
+.form-stack {
+  min-height: 100px;
+}
+</style>
 

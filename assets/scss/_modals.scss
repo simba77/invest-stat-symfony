@@ -23,4 +23,14 @@
       border: none;
     }
   }
+
+  .sell-modal {
+    --bs-modal-padding: 25px 25px 15px 25px;
+    background: #18181b;
+
+    .modal-footer {
+      background: #27272a;
+      border: none;
+    }
+  }
 }
