@@ -34,7 +34,7 @@ function confirmDelete() {
           class="d-flex align-items-center justify-content-center rounded-circle bg-red-light"
           style="width: 40px; height: 40px;"
         >
-          <TriangleAlert class="text-danger" :size="20" />
+          <triangle-alert class="text-danger" :size="20" />
         </div>
         <div>
           <h3 class="modal-title">
