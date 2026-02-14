@@ -19,13 +19,16 @@ class ShareRepository extends ServiceEntityRepository implements ShareRepository
         parent::__construct($registry, Share::class);
     }
 
-    #[\Override]
+    public function findById(int $id): ?Share
+    {
+        return $this->find($id);
+    }
+
     public function findByTickerAndStockMarket(string $ticker, string $stockMarket): ?Share
     {
         return $this->findOneBy(['ticker' => $ticker, 'stockMarket' => $stockMarket]);
     }
 
-    #[\Override]
     public function findByTUid(string $tUid): ?Share
     {
         return $this->findOneBy(['tUid' => $tUid]);

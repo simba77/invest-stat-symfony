@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Domain\Instruments;
 
+use App\Investments\Domain\Instruments\Currencies\Currency;
 use App\Investments\Infrastructure\Persistence\Repository\ShareRepository;
 use App\Shared\Domain\CreatedDateProvider;
 use App\Shared\Domain\CreatedDateProviderInterface;
@@ -23,7 +24,7 @@ class Share implements
     use CreatedDateProvider;
     use UpdatedDateProvider;
 
-    /** @psalm-suppress UnusedProperty  */
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -38,7 +39,7 @@ class Share implements
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $shortName = null;
 
-    /** @psalm-suppress UnusedProperty  */
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $latName = null;
 
@@ -54,22 +55,22 @@ class Share implements
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $lotSize = null;
 
-    /** @psalm-suppress UnusedProperty  */
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $isin = null;
 
-    /** @psalm-suppress UnusedProperty  */
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Column(type: Types::SMALLINT)]
     private int $type;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
     private ?string $prevPrice = null;
 
-    /** @psalm-suppress UnusedProperty  */
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $classCode = null;
 
-    /** @psalm-suppress UnusedProperty  */
+    /** @psalm-suppress UnusedProperty */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $sector = null;
 
@@ -179,6 +180,11 @@ class Share implements
         return $this;
     }
 
+    public function getIsin(): ?string
+    {
+        return $this->isin;
+    }
+
     public function getPrevPrice(): ?string
     {
         return $this->prevPrice;
@@ -215,5 +221,34 @@ class Share implements
         $this->tUid = $tUid;
 
         return $this;
+    }
+
+    public function getPriceDifference(): string
+    {
+        $prev = $this->prevPrice ?? '0';
+
+        return bcsub($this->price, $prev, 4);
+    }
+
+    public function getPriceChangePercent(): string
+    {
+        $prev = $this->prevPrice ?? '0';
+
+        if (bccomp($prev, '0', 4) === 0) {
+            return '0';
+        }
+
+        $difference = bcsub($this->price, $prev, 4);
+        return bcmul(bcdiv($difference, $prev, 8), '100', 4);
+    }
+
+    public function getPriceTrend(): PriceTrendEnum
+    {
+        return PriceTrendEnum::fromPrices($this->getPrice(), $this->getPrevPrice() ?? '0');
+    }
+
+    public function getCurrencyEnum(): Currency
+    {
+        return Currency::from($this->currency);
     }
 }

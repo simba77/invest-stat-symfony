@@ -8,7 +8,7 @@ use App\Investments\Application\Request\DTO\Instruments\CreateFutureMultiplierRe
 use App\Investments\Application\UseCases\Instruments\CreateFutureMultiplierUseCase;
 use App\Investments\Application\UseCases\Instruments\DeleteFutureMultiplierUseCase;
 use App\Investments\Application\UseCases\Instruments\ListFutureMultipliersUseCase;
-use App\Investments\Domain\Instruments\Exceptions\FutureMultiplierAlreadyExistsException;
+use App\Investments\Domain\Instruments\Exceptions\InstrumentNotFoundException;
 use App\Investments\Domain\Instruments\Exceptions\FutureMultiplierNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -40,7 +40,7 @@ class FutureMultipliersController extends AbstractController
     ): JsonResponse {
         try {
             $this->createFutureMultiplierUseCase->execute($requestDTO->ticker, $requestDTO->value);
-        } catch (FutureMultiplierAlreadyExistsException $e) {
+        } catch (InstrumentNotFoundException $e) {
             return new JsonResponse(['success' => false, 'message' => $e->getMessage()], 422);
         }
         return new JsonResponse(['success' => true]);
