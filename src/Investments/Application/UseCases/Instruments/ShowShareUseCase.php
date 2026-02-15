@@ -16,6 +16,7 @@ use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\Deals\DealData;
 use App\Investments\Domain\Operations\Deals\DealStatus;
 use App\Investments\Domain\Operations\Deals\GroupByTicker;
+use App\Investments\Domain\Operations\DividendRepositoryInterface;
 
 final readonly class ShowShareUseCase
 {
@@ -25,6 +26,7 @@ final readonly class ShowShareUseCase
         private CurrencyService $currencyService,
         private FutureMultiplierRepositoryInterface $futureMultiplierRepository,
         private ClosedDealsListCompiler $closedDealsListCompiler,
+        private DividendRepositoryInterface $dividendRepository,
     ) {
     }
 
@@ -56,7 +58,8 @@ final readonly class ShowShareUseCase
             portfolioPercent:         $activeDealsData->percent,
             closedDealsProfit:        $closedDealsData['summary']->profit,
             closedDealsProfitPercent: $closedDealsData['summary']->profitPercent,
-            closedDealsProfitTrend:   PriceTrendEnum::fromPrices($closedDealsData['summary']->sellPrice, $closedDealsData['summary']->buyPrice)
+            closedDealsProfitTrend:   PriceTrendEnum::fromPrices($closedDealsData['summary']->sellPrice, $closedDealsData['summary']->buyPrice),
+            sumOfDividends:           $this->dividendRepository->sumByTickerAndUserAndStockMarket($userId, $share->getTicker(), $share->getStockMarket()),
         );
 
         return new ShowShareResponseDTO(

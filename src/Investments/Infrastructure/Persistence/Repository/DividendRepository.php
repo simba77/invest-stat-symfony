@@ -24,4 +24,22 @@ class DividendRepository extends ServiceEntityRepository implements DividendRepo
     {
         return parent::findAll();
     }
+
+    public function sumByTickerAndUserAndStockMarket(int $userId, string $ticker, string $stockMarket): string
+    {
+        $qb = $this->createQueryBuilder('d');
+
+        $result = $qb
+            ->select('COALESCE(SUM(d.amount), 0) as total')
+            ->andWhere('d.user = :userId')
+            ->andWhere('d.ticker = :ticker')
+            ->andWhere('d.stockMarket = :stockMarket')
+            ->setParameter('userId', $userId)
+            ->setParameter('ticker', $ticker)
+            ->setParameter('stockMarket', $stockMarket)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return (string) $result;
+    }
 }

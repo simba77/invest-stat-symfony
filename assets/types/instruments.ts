@@ -11,6 +11,7 @@ export type ShowSharePortfolioDTO = {
   closedDealsProfit: string
   closedDealsProfitPercent: string
   closedDealsProfitTrend: PriceTrendEnum
+  sumOfDividends: string
 }
 
 export type ShowShareResponseDTO = {

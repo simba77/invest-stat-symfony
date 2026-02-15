@@ -33,11 +33,6 @@ const {run, loading} = useAsync(() => axios.get('/api/instrument/share/' + route
 
 run()
 
-
-const summaryStats = [
-  { label: 'Дивиденды', value: '11 915 ₽', subValue: 'Получено за всё время', trendClass: 'text-muted', icon: Wallet, textClass: '' },
-];
-
 const openPositions = [
   { date: '2023-10-15', account: 'Брокерский счет №1', type: 'Покупка', price: '4 100', qty: 10, total: '41 000' },
   { date: '2023-11-01', account: 'Брокерский счет №1', type: 'Покупка', price: '4 200', qty: 20, total: '84 000' },
@@ -155,7 +150,7 @@ const dividends = [
             </div>
           </div>
 
-          <!-- Прибыль по открытым позициям в портфеле -->
+          <!-- Прибыль по закрытым позициям в портфеле -->
           <div class="col-md-4 col-lg-2">
             <div class="card border-0 shadow-sm h-100 p-3">
               <div class="d-flex justify-content-between align-items-start mb-2">
@@ -173,17 +168,19 @@ const dividends = [
             </div>
           </div>
 
-
-          <div v-for="(stat, index) in summaryStats" :key="index" class="col-md-4 col-lg-2">
+          <!-- Сумма полученных дивидендов -->
+          <div class="col-md-4 col-lg-2">
             <div class="card border-0 shadow-sm h-100 p-3">
               <div class="d-flex justify-content-between align-items-start mb-2">
-                <span class="text-muted small">{{ stat.label }}</span>
-                <component :is="stat.icon" :size="16" :class="stat.trendClass" />
+                <span class="text-muted small">Дивиденды</span>
+                <wallet :size="16" />
               </div>
-              <h4 class="fw-bold mb-1" :class="stat.textClass">
-                {{ stat.value }}
+              <h4 class="fw-bold mb-1">
+                {{ formatPrice(+instrumentData.portfolio.sumOfDividends, instrumentData.currency) }}
               </h4>
-              <span class="text-muted x-small">{{ stat.subValue }}</span>
+              <span class="text-muted x-small">
+                Получено за всё время
+              </span>
             </div>
           </div>
         </div>
