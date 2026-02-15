@@ -11,7 +11,7 @@ interface AccountRepositoryInterface
     /**
      * @return array<int, array{account: Account, deposits_sum: string | null}>
      */
-    public function findByUserWithDeposits(User $user): array;
+    public function findByUserWithDeposits(int $userId): array;
 
     /**
      * @return array{account: Account, deposits_sum: string | null} | null

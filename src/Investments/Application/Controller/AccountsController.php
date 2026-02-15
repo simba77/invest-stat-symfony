@@ -36,7 +36,7 @@ class AccountsController extends AbstractController
     #[Route('/accounts', name: 'app_accounts_accounts_index')]
     public function index(#[CurrentUser] ?User $user): JsonResponse
     {
-        $accounts = $this->accountRepository->findByUserWithDeposits($user);
+        $accounts = $this->accountRepository->findByUserWithDeposits($user->getId());
         return $this->json($this->accountsListCompiler->compile($accounts));
     }
 

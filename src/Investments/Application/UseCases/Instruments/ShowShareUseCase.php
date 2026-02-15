@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\UseCases\Instruments;
 
+use App\Investments\Application\Response\Compiler\AccountsListCompiler;
 use App\Investments\Application\Response\Compiler\ClosedDealsListCompiler;
 use App\Investments\Application\Response\DTO\Instruments\ShowSharePortfolioDTO;
 use App\Investments\Application\Response\DTO\Instruments\ShowShareResponseDTO;
+use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
 use App\Investments\Domain\Instruments\Exceptions\InstrumentNotFoundException;
 use App\Investments\Domain\Instruments\FutureMultiplierRepositoryInterface;
@@ -27,6 +29,8 @@ final readonly class ShowShareUseCase
         private FutureMultiplierRepositoryInterface $futureMultiplierRepository,
         private ClosedDealsListCompiler $closedDealsListCompiler,
         private DividendRepositoryInterface $dividendRepository,
+        private AccountRepositoryInterface $accountRepository,
+        private AccountsListCompiler $accountsListCompiler,
     ) {
     }
 
@@ -37,9 +41,16 @@ final readonly class ShowShareUseCase
             throw new InstrumentNotFoundException(sprintf('Share with id %s not found', $id));
         }
 
+        $allAssetsSum = '0';
+        $accounts = $this->accountRepository->findByUserWithDeposits($userId);
+        $accountsList = $this->accountsListCompiler->compile($accounts);
+        foreach ($accountsList as $account) {
+            $allAssetsSum = bcadd($account->currentValue, $allAssetsSum, 2);
+        }
+
         $activeDeals = $this->dealRepository->findByUserAndShare($userId, $id, DealStatus::Active);
 
-        $dealsGroup = new GroupByTicker('7000000'); // TODO: Change sum
+        $dealsGroup = new GroupByTicker($allAssetsSum);
         foreach ($activeDeals as $deal) {
             $dealsGroup->addDeal(new DealData($deal, $this->currencyService, $this->futureMultiplierRepository));
         }

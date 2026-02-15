@@ -57,7 +57,7 @@ class HomepageController extends AbstractController
             $dailyChange = bcadd($dailyChange, $dealData->getFullDailyProfitInBaseCurrency(), 2);
         }
 
-        $accounts = $this->accountRepository->findByUserWithDeposits($user);
+        $accounts = $this->accountRepository->findByUserWithDeposits($user->getId());
         $accountsList = $this->accountsListCompiler->compile($accounts);
         foreach ($accountsList as $account) {
             $allAssetsSum = bcadd($account->currentValue, $allAssetsSum, 2);

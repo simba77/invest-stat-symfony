@@ -80,7 +80,7 @@ class PortfolioQueryHandler
     private function getAccountsBalance(User $user): string
     {
         $balance = '0';
-        $accounts = $this->accountRepository->findByUserWithDeposits($user);
+        $accounts = $this->accountRepository->findByUserWithDeposits($user->getId());
         foreach ($accounts as $account) {
             $balance = bcadd($balance, $this->accountBalanceCalculator->getTotalBalance($account['account']));
         }
