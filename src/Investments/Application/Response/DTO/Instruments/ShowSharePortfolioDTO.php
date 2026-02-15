@@ -16,6 +16,9 @@ final readonly class ShowSharePortfolioDTO
         public PriceTrendEnum $fullProfitTrend,
         public string $averageBuyPrice,
         public string $portfolioPercent,
+        public string $closedDealsProfit,
+        public string $closedDealsProfitPercent,
+        public PriceTrendEnum $closedDealsProfitTrend,
     ) {
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\UseCases\Instruments;
 
+use App\Investments\Application\Response\Compiler\ClosedDealsListCompiler;
 use App\Investments\Application\Response\DTO\Instruments\ShowSharePortfolioDTO;
 use App\Investments\Application\Response\DTO\Instruments\ShowShareResponseDTO;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
@@ -11,7 +12,6 @@ use App\Investments\Domain\Instruments\Exceptions\InstrumentNotFoundException;
 use App\Investments\Domain\Instruments\FutureMultiplierRepositoryInterface;
 use App\Investments\Domain\Instruments\PriceTrendEnum;
 use App\Investments\Domain\Instruments\ShareRepositoryInterface;
-use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\Deals\DealData;
 use App\Investments\Domain\Operations\Deals\DealStatus;
@@ -24,6 +24,7 @@ final readonly class ShowShareUseCase
         private DealRepositoryInterface $dealRepository,
         private CurrencyService $currencyService,
         private FutureMultiplierRepositoryInterface $futureMultiplierRepository,
+        private ClosedDealsListCompiler $closedDealsListCompiler,
     ) {
     }
 
@@ -34,23 +35,28 @@ final readonly class ShowShareUseCase
             throw new InstrumentNotFoundException(sprintf('Share with id %s not found', $id));
         }
 
-        $deals = $this->dealRepository->findByUserAndShare($userId, $id, DealStatus::Active);
+        $activeDeals = $this->dealRepository->findByUserAndShare($userId, $id, DealStatus::Active);
 
         $dealsGroup = new GroupByTicker('7000000'); // TODO: Change sum
-
-        foreach ($deals as $deal) {
+        foreach ($activeDeals as $deal) {
             $dealsGroup->addDeal(new DealData($deal, $this->currencyService, $this->futureMultiplierRepository));
         }
-        $allDealsData = $dealsGroup->getGroupData();
+        $activeDealsData = $dealsGroup->getGroupData();
+
+        $closedDeals = $this->dealRepository->findByUserAndShare($userId, $id, DealStatus::Closed);
+        $closedDealsData = $this->closedDealsListCompiler->compile($closedDeals);
 
         $portfolioDTO = new ShowSharePortfolioDTO(
-            quantity:          $allDealsData->quantity,
-            fullPrice:         $allDealsData->fullCurrentPrice,
-            fullProfit:        $allDealsData->profit,
-            fullProfitPercent: $allDealsData->profitPercent,
-            fullProfitTrend:   PriceTrendEnum::fromPrices($allDealsData->fullCurrentPrice, $allDealsData->fullBuyPrice),
-            averageBuyPrice:   $allDealsData->buyPrice,
-            portfolioPercent:  $allDealsData->percent,
+            quantity:                 $activeDealsData->quantity,
+            fullPrice:                $activeDealsData->fullCurrentPrice,
+            fullProfit:               $activeDealsData->profit,
+            fullProfitPercent:        $activeDealsData->profitPercent,
+            fullProfitTrend:          PriceTrendEnum::fromPrices($activeDealsData->fullCurrentPrice, $activeDealsData->fullBuyPrice),
+            averageBuyPrice:          $activeDealsData->buyPrice,
+            portfolioPercent:         $activeDealsData->percent,
+            closedDealsProfit:        $closedDealsData['summary']->profit,
+            closedDealsProfitPercent: $closedDealsData['summary']->profitPercent,
+            closedDealsProfitTrend:   PriceTrendEnum::fromPrices($closedDealsData['summary']->sellPrice, $closedDealsData['summary']->buyPrice)
         );
 
         return new ShowShareResponseDTO(

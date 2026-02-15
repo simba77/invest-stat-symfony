@@ -8,6 +8,9 @@ export type ShowSharePortfolioDTO = {
   fullProfitTrend: PriceTrendEnum
   averageBuyPrice: string
   portfolioPercent: string
+  closedDealsProfit: string
+  closedDealsProfitPercent: string
+  closedDealsProfitTrend: PriceTrendEnum
 }
 
 export type ShowShareResponseDTO = {

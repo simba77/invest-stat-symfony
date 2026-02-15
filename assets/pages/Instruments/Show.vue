@@ -35,7 +35,6 @@ run()
 
 
 const summaryStats = [
-  { label: 'Результат сделок', value: '+3 500 ₽', subValue: 'Реализованная прибыль', trendClass: 'text-success', icon: TrendingUp, textClass: 'text-success' },
   { label: 'Дивиденды', value: '11 915 ₽', subValue: 'Получено за всё время', trendClass: 'text-muted', icon: Wallet, textClass: '' },
 ];
 
@@ -152,6 +151,24 @@ const dividends = [
               <span class="text-muted x-small">
                 Средняя цена:
                 {{ formatPrice(+instrumentData.portfolio.averageBuyPrice, instrumentData.currency) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Прибыль по открытым позициям в портфеле -->
+          <div class="col-md-4 col-lg-2">
+            <div class="card border-0 shadow-sm h-100 p-3">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <span class="text-muted small">Результат сделок</span>
+                <trending-up v-if="instrumentData.portfolio.closedDealsProfitTrend === 'up'" :size="16" class="text-success" />
+                <trending-down v-else-if="instrumentData.portfolio.closedDealsProfitTrend === 'down'" :size="16" class="text-danger" />
+                <move-right v-else :size="16" />
+              </div>
+              <h4 class="fw-bold mb-1" :class="{'text-success': instrumentData.portfolio.closedDealsProfitTrend === 'up', 'text-danger': instrumentData.portfolio.closedDealsProfitTrend === 'down'}">
+                {{ formatPrice(+instrumentData.portfolio.closedDealsProfit, instrumentData.currency) }}
+              </h4>
+              <span class="text-muted x-small">
+                {{ instrumentData.portfolio.closedDealsProfitTrend === 'up' ? '+' : '' }}{{ (+instrumentData.portfolio.closedDealsProfitPercent).toFixed(2) }}%
               </span>
             </div>
           </div>
