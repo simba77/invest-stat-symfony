@@ -114,6 +114,8 @@ $body-color-dark: #fff;
 $body-bg-dark: #09090b;
 $link-color-dark: #fff;
 
+$body-secondary-color-dark: rgba($body-color-dark, .45);
+
 :root {
   --bs-primary: rgb(79 70 229 / var(--tw-bg-opacity, 1));
   --bs-secondary: #918d88;

@@ -24,6 +24,7 @@ final readonly class ShowShareResponseDTO
         public string $isin,
         public PriceTrendEnum $priceTrend,
         public ShowSharePortfolioDTO $portfolio,
+        public array $openPositions,
     ) {
     }
 }

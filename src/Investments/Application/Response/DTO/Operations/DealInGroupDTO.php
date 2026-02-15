@@ -37,6 +37,7 @@ class DealInGroupDTO
         public bool $isBlocked,
         public string $createdAt,
         public string $updatedAt,
+        public string $accountName = '',
     ) {
     }
 }

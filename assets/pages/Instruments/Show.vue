@@ -5,15 +5,12 @@ import {useModal} from "@/composable/useModal";
 import { useNumbers } from "@/composable/useNumbers";
 import {usePage} from "@/composable/usePage";
 import {ref} from "vue";
-import {
-  Building2, TrendingUp, TrendingDown,
-  Wallet, Plus, Pencil, Trash2, ExternalLink,
-  MoveRight
-} from 'lucide-vue-next';
+import { Building2, TrendingUp, TrendingDown, Wallet, Plus, MoveRight } from 'lucide-vue-next';
 import useAsync from "@/utils/use-async";
 import axios from "axios";
 import {useRoute} from "vue-router";
 import {ShowShareResponseDTO} from "@/types/instruments";
+import OpenDealsTable from "@/components/Instruments/OpenDealsTable.vue";
 
 const route = useRoute()
 const modal = useModal()
@@ -32,12 +29,6 @@ const {run, loading} = useAsync(() => axios.get('/api/instrument/share/' + route
 )
 
 run()
-
-const openPositions = [
-  { date: '2023-10-15', account: 'Брокерский счет №1', type: 'Покупка', price: '4 100', qty: 10, total: '41 000' },
-  { date: '2023-11-01', account: 'Брокерский счет №1', type: 'Покупка', price: '4 200', qty: 20, total: '84 000' },
-  { date: '2023-12-10', account: 'ИИС (Сбер)', type: 'Покупка', price: '4 300', qty: 20, total: '86 000' },
-];
 
 const closedPositions = [
   { openDate: '2023-05-10', account: 'Брокерский счет №1', closeDate: '2023-08-20', openPrice: '3 800', closePrice: '4 100', qty: 15, profit: 4500 },
@@ -194,40 +185,9 @@ const dividends = [
               <Plus :size="16" /> Добавить позицию
             </button>
           </div>
-          <div class="card border-0 shadow-sm">
+          <div class="shadow-sm">
             <div class="table-responsive">
-              <table class="table table-dark simple-table align-middle mb-0">
-                <thead>
-                  <tr>
-                    <th>Дата</th>
-                    <th>Счет</th>
-                    <th>Тип операции</th>
-                    <th>Цена</th>
-                    <th>Кол-во</th>
-                    <th>Объем</th>
-                    <th class="text-end">
-                      Действия
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="pos in openPositions" :key="pos.date">
-                    <td>{{ pos.date }}</td>
-                    <td>{{ pos.account }}</td>
-                    <td><span class="badge bg-dark">{{ pos.type }}</span></td>
-                    <td>{{ pos.price }} ₽</td>
-                    <td>{{ pos.qty }}</td>
-                    <td>{{ pos.total }} ₽</td>
-                    <td class="text-end text-muted">
-                      <div class="d-flex justify-content-end">
-                        <Pencil :size="16" class="me-3 cursor-pointer" />
-                        <Trash2 :size="16" class="me-3 cursor-pointer" />
-                        <ExternalLink :size="16" class="cursor-pointer" />
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <open-deals-table :items="instrumentData.openPositions" />
             </div>
           </div>
         </section>
