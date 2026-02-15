@@ -81,6 +81,26 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
     /**
      * @return array<int, Deal>
      */
+    public function findByUserAndShare(int $userId, int $shareId, DealStatus $status): array
+    {
+        return $this->createQueryBuilder('d')
+            ->select(['d', 's'])
+            ->leftJoin('d.share', 's')
+            ->andWhere('d.user = :userId')
+            ->andWhere('d.share = :shareId')
+            ->andWhere('d.status = :status')
+            ->setParameter('userId', $userId)
+            ->setParameter('shareId', $shareId)
+            ->setParameter('status', $status)
+            ->addOrderBy('s.type', 'DESC')
+            ->addOrderBy('d.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return array<int, Deal>
+     */
     #[\Override]
     public function findForAccount(int $accountId): array
     {

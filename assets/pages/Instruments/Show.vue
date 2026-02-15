@@ -35,9 +35,6 @@ run()
 
 
 const summaryStats = [
-  { label: 'В портфеле', value: '50 шт.', subValue: 'Общая ст-сть: 500 958 ₽', trendClass: 'text-muted', icon: null, textClass: '' },
-  { label: 'Прибыль', value: '+52%', subValue: '+149 235 ₽', trendClass: 'text-success', icon: TrendingUp, textClass: 'text-success' },
-  { label: 'Доля в портфеле', value: '5.89%', subValue: 'Средняя цена: 4 200 ₽', trendClass: 'text-muted', icon: null, textClass: '' },
   { label: 'Результат сделок', value: '+3 500 ₽', subValue: 'Реализованная прибыль', trendClass: 'text-success', icon: TrendingUp, textClass: 'text-success' },
   { label: 'Дивиденды', value: '11 915 ₽', subValue: 'Получено за всё время', trendClass: 'text-muted', icon: Wallet, textClass: '' },
 ];
@@ -90,6 +87,7 @@ const dividends = [
         </p>
 
         <div class="row g-3 mb-5">
+          <!-- Текущие данные по инструменту -->
           <div class="col-md-4 col-lg-2">
             <div class="card border-0 shadow-sm h-100 p-3">
               <div class="d-flex justify-content-between align-items-start mb-2">
@@ -104,6 +102,56 @@ const dividends = [
               <span class="text-muted x-small">
                 {{ formatPrice(+instrumentData.difference, instrumentData.currency) }}
                 ({{ instrumentData.priceTrend === 'up' ? '+' : '' }}{{ (+instrumentData.percent).toFixed(2) }}%) за сегодня
+              </span>
+            </div>
+          </div>
+
+          <!-- Количество и стоимость в портфеле -->
+          <div class="col-md-4 col-lg-2">
+            <div class="card border-0 shadow-sm h-100 p-3">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <span class="text-muted small">В портфеле</span>
+              </div>
+              <h4 class="fw-bold mb-1">
+                {{ instrumentData.portfolio.quantity }} шт.
+              </h4>
+              <span class="text-muted x-small">
+                Общая ст-сть:
+                {{ formatPrice(+instrumentData.portfolio.fullPrice, instrumentData.currency) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Прибыль по открытым позициям в портфеле -->
+          <div class="col-md-4 col-lg-2">
+            <div class="card border-0 shadow-sm h-100 p-3">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <span class="text-muted small">Прибыль</span>
+                <trending-up v-if="instrumentData.portfolio.fullProfitTrend === 'up'" :size="16" class="text-success" />
+                <trending-down v-else-if="instrumentData.portfolio.fullProfitTrend === 'down'" :size="16" class="text-danger" />
+                <move-right v-else :size="16" />
+              </div>
+              <h4 class="fw-bold mb-1" :class="{'text-success': instrumentData.portfolio.fullProfitTrend === 'up', 'text-danger': instrumentData.portfolio.fullProfitTrend === 'down'}">
+                {{ instrumentData.portfolio.fullProfitTrend === 'up' ? '+' : '' }}{{ (+instrumentData.portfolio.fullProfitPercent).toFixed(2) }}%
+              </h4>
+              <span class="text-muted x-small">
+                {{ instrumentData.portfolio.fullProfitTrend === 'up' ? '+' : '' }}{{ formatPrice(+instrumentData.portfolio.fullProfit, instrumentData.currency) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Доля в портфеле -->
+          <div class="col-md-4 col-lg-2">
+            <div class="card border-0 shadow-sm h-100 p-3">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <span class="text-muted small">Доля в портфеле</span>
+              </div>
+              <h4 class="fw-bold mb-1">
+                {{ (+instrumentData.portfolio.portfolioPercent).toFixed(2) }}%
+              </h4>
+              <span class="text-muted x-small">
+                Средняя цена:
+                {{ formatPrice(+instrumentData.portfolio.averageBuyPrice, instrumentData.currency) }}
               </span>
             </div>
           </div>

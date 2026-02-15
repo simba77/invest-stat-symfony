@@ -6,9 +6,11 @@ namespace App\Investments\Application\Controller;
 
 use App\Investments\Application\UseCases\Instruments\ShowShareUseCase;
 use App\Investments\Domain\Instruments\Exceptions\InstrumentNotFoundException;
+use App\Shared\Domain\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('IS_AUTHENTICATED', statusCode: 403)]
@@ -20,10 +22,10 @@ final class ShowInstrumentController extends AbstractController
     ) {
     }
 
-    public function __invoke(int $id): JsonResponse
+    public function __invoke(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
         try {
-        $share = $this->showShareUseCase->execute($id);
+        $share = $this->showShareUseCase->execute($id, $user->getId());
         } catch (InstrumentNotFoundException) {
             return new JsonResponse(['message' => 'Instrument not found'], 404);
         }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Domain\Operations;
 
 use App\Investments\Application\Request\DTO\Operations\DealsFilterRequestDTO;
+use App\Investments\Domain\Operations\Deals\DealStatus;
 
 interface DealRepositoryInterface
 {
@@ -24,6 +25,11 @@ interface DealRepositoryInterface
      * @return array<int, Deal>
      */
     public function findForUserAndAccount(int $userId, int $accountId): array;
+
+    /**
+     * @return array<int, Deal>
+     */
+    public function findByUserAndShare(int $userId, int $shareId, DealStatus $status): array;
 
     /**
      * @return array<int, Deal>

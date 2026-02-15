@@ -23,6 +23,7 @@ final readonly class ShowShareResponseDTO
         public string $lotSize,
         public string $isin,
         public PriceTrendEnum $priceTrend,
+        public ShowSharePortfolioDTO $portfolio,
     ) {
     }
 }

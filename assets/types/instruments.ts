@@ -1,3 +1,15 @@
+export type PriceTrendEnum = 'up' | 'down' | 'flat'
+
+export type ShowSharePortfolioDTO = {
+  quantity: number
+  fullPrice: string
+  fullProfit: string
+  fullProfitPercent: string
+  fullProfitTrend: PriceTrendEnum
+  averageBuyPrice: string
+  portfolioPercent: string
+}
+
 export type ShowShareResponseDTO = {
   id: number
   name: string
@@ -9,7 +21,8 @@ export type ShowShareResponseDTO = {
   prevPrice: string
   difference: string
   percent: string
-  priceTrend: 'up' | 'down' | 'flat'
+  priceTrend: PriceTrendEnum
   lotSize: string
   isin: string
+  portfolio: ShowSharePortfolioDTO
 }
