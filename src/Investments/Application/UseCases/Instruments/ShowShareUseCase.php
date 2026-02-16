@@ -73,23 +73,29 @@ final readonly class ShowShareUseCase
             sumOfDividends:           $this->dividendRepository->sumByTickerAndUserAndStockMarket($userId, $share->getTicker(), $share->getStockMarket()),
         );
 
+        if (!empty($closedDealsData['deals'])) {
+            $closedPositions = $closedDealsData['deals'][0]->getDeals() ?? [];
+        }
+
+
         return new ShowShareResponseDTO(
-            id:            $id,
-            name:          $share->getName(),
-            ticker:        $share->getTicker(),
-            logo:          null,
-            marketName:    $this->getMarket($share->getStockMarket()),
-            currency:      $share->getCurrencyEnum()->symbol(),
-            currencyCode:  $share->getCurrency(),
-            price:         $share->getPrice(),
-            prevPrice:     $share->getPrevPrice(),
-            difference:    $share->getPriceDifference(),
-            percent:       $share->getPriceChangePercent(),
-            lotSize:       $share->getLotSize(),
-            isin:          $share->getIsin(),
-            priceTrend:    $share->getPriceTrend(),
-            portfolio:     $portfolioDTO,
-            openPositions: $dealsGroup->getDeals(),
+            id:              $id,
+            name:            $share->getName(),
+            ticker:          $share->getTicker(),
+            logo:            null,
+            marketName:      $this->getMarket($share->getStockMarket()),
+            currency:        $share->getCurrencyEnum()->symbol(),
+            currencyCode:    $share->getCurrency(),
+            price:           $share->getPrice(),
+            prevPrice:       $share->getPrevPrice(),
+            difference:      $share->getPriceDifference(),
+            percent:         $share->getPriceChangePercent(),
+            lotSize:         $share->getLotSize(),
+            isin:            $share->getIsin(),
+            priceTrend:      $share->getPriceTrend(),
+            portfolio:       $portfolioDTO,
+            openPositions:   $dealsGroup->getDeals(),
+            closedPositions: $closedPositions ?? [],
         );
     }
 

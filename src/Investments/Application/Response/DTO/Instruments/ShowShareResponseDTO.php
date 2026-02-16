@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Response\DTO\Instruments;
 
+use App\Investments\Application\Response\DTO\Analytics\ClosedDealInGroupDTO;
+use App\Investments\Application\Response\DTO\Operations\DealInGroupDTO;
 use App\Investments\Domain\Instruments\PriceTrendEnum;
 
 final readonly class ShowShareResponseDTO
@@ -24,7 +26,10 @@ final readonly class ShowShareResponseDTO
         public string $isin,
         public PriceTrendEnum $priceTrend,
         public ShowSharePortfolioDTO $portfolio,
+        /** @var DealInGroupDTO[] */
         public array $openPositions,
+        /** @var ClosedDealInGroupDTO[] */
+        public array $closedPositions,
     ) {
     }
 }

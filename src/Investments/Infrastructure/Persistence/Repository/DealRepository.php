@@ -93,6 +93,7 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
             ->setParameter('shareId', $shareId)
             ->setParameter('status', $status->value)
             ->addOrderBy('s.type', 'DESC')
+            ->addOrderBy('d.closingDate', 'DESC')
             ->addOrderBy('d.id', 'ASC')
             ->getQuery()
             ->getResult();

@@ -1,4 +1,5 @@
 import {Deal} from "@/types/account";
+import {ClosedDeal} from "@/types/analytics";
 
 export type PriceTrendEnum = 'up' | 'down' | 'flat'
 
@@ -32,4 +33,5 @@ export type ShowShareResponseDTO = {
   isin: string
   portfolio: ShowSharePortfolioDTO
   openPositions: Deal[]
+  closedPositions: ClosedDeal[]
 }

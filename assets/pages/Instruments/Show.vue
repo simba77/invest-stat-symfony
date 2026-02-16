@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import PageComponent from "../../components/PageComponent.vue";
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
-import {useModal} from "@/composable/useModal";
 import { useNumbers } from "@/composable/useNumbers";
 import {usePage} from "@/composable/usePage";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import { Building2, TrendingUp, TrendingDown, Wallet, Plus, MoveRight } from 'lucide-vue-next';
 import useAsync from "@/utils/use-async";
 import axios from "axios";
@@ -13,7 +12,6 @@ import {ShowShareResponseDTO} from "@/types/instruments";
 import OpenDealsTable from "@/components/Instruments/OpenDealsTable.vue";
 
 const route = useRoute()
-const modal = useModal()
 const {formatPrice} = useNumbers()
 const {setPageTitle} = usePage()
 
@@ -30,15 +28,28 @@ const {run, loading} = useAsync(() => axios.get('/api/instrument/share/' + route
 
 run()
 
-const closedPositions = [
-  { openDate: '2023-05-10', account: 'Брокерский счет №1', closeDate: '2023-08-20', openPrice: '3 800', closePrice: '4 100', qty: 15, profit: 4500 },
-  { openDate: '2023-02-15', account: 'Брокерский счет №2', closeDate: '2023-04-05', openPrice: '3 500', closePrice: '3 400', qty: 10, profit: -1000 },
-];
-
 const dividends = [
   { date: '2023-09-15', account: 'Брокерский счет №1', tax: '-585', amount: '3 915' },
   { date: '2023-06-20', account: 'ИИС (Сбер)', tax: '0', amount: '8 000' },
 ];
+
+
+const showAllClosed = ref(false)
+
+const closedPositions = computed(() => {
+  return instrumentData.value?.closedPositions ?? []
+})
+
+const closedPositionsToShow = computed(() => {
+  return showAllClosed.value
+    ? closedPositions.value
+    : closedPositions.value.slice(0, 5)
+})
+
+const hiddenClosedCount = computed(() => {
+  const total = closedPositions.value.length
+  return total > 5 ? total - 5 : 0
+})
 
 </script>
 
@@ -192,7 +203,7 @@ const dividends = [
           </div>
         </section>
 
-        <section class="mb-5">
+        <section v-if="closedPositionsToShow.length > 0" class="mb-5">
           <h5 class="fw-bold mb-3">
             Закрытые позиции
           </h5>
@@ -202,7 +213,6 @@ const dividends = [
                 <thead>
                   <tr>
                     <th>Дата открытия</th>
-                    <th>Счет</th>
                     <th>Дата закрытия</th>
                     <th>Цена откр.</th>
                     <th>Цена закр.</th>
@@ -210,22 +220,53 @@ const dividends = [
                     <th class="text-end">
                       Фин. результат
                     </th>
+                    <th>Счет</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="pos in closedPositions" :key="pos.openDate">
-                    <td>{{ pos.openDate }}</td>
-                    <td>{{ pos.account }}</td>
-                    <td>{{ pos.closeDate }}</td>
-                    <td>{{ pos.openPrice }} ₽</td>
-                    <td>{{ pos.closePrice }} ₽</td>
-                    <td>{{ pos.qty }}</td>
-                    <td class="text-end fw-bold" :class="pos.profit > 0 ? 'text-success' : 'text-danger'">
-                      {{ pos.profit > 0 ? '↗' : '↘' }} {{ Math.abs(pos.profit) }} ₽
+                  <tr v-for="pos in closedPositionsToShow" :key="pos.id">
+                    <td>{{ pos.createdAt }}</td>
+                    <td>{{ pos.closingDate }}</td>
+                    <td>
+                      <div>
+                        {{ formatPrice(+pos.buyPrice, pos.currency) }}
+                      </div>
+                      <div class="text-xs text-muted">
+                        {{ formatPrice(+pos.fullBuyPrice, pos.currency) }}
+                      </div>
                     </td>
+                    <td>
+                      <div>
+                        {{ formatPrice(+pos.sellPrice, pos.currency) }}
+                      </div>
+                      <div class="text-xs text-muted">
+                        {{ formatPrice(+pos.fullSellPrice, pos.currency) }}
+                      </div>
+                    </td>
+                    <td>{{ pos.quantity }}</td>
+                    <td class="text-end fw-bold" :class="pos.profit > 0 ? 'text-success' : 'text-danger'">
+                      {{ pos.profit > 0 ? '↗' : '↘' }} {{ formatPrice(+pos.profit, pos.currency) }}
+                    </td>
+                    <td>{{ pos.accountId }}</td>
                   </tr>
                 </tbody>
               </table>
+              <div
+                v-if="hiddenClosedCount > 0"
+                class="text-center py-3"
+              >
+                <button
+                  class="btn btn-outline-light btn-sm"
+                  @click="showAllClosed = !showAllClosed"
+                >
+                  <template v-if="!showAllClosed">
+                    Показать ещё {{ hiddenClosedCount }}
+                  </template>
+                  <template v-else>
+                    Скрыть
+                  </template>
+                </button>
+              </div>
             </div>
           </div>
         </section>
@@ -282,8 +323,6 @@ const dividends = [
 
 <style scoped>
 .x-small { font-size: 0.75rem; }
-.cursor-pointer { cursor: pointer; transition: opacity 0.2s; }
-.cursor-pointer:hover { opacity: 0.7; }
 .card { border-radius: 12px; }
 .table thead th {
   font-weight: 500;

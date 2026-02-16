@@ -9,6 +9,7 @@ use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Operations\Investment;
 use App\Shared\Domain\User;
 use App\Shared\Infrastructure\Persistence\Doctrine\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -25,7 +26,6 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
      * @param int $userId
      * @return array<int, array{account: Account, deposits_sum: string | null}>
      */
-    #[\Override]
     public function findByUserWithDeposits(int $userId): array
     {
         return $this->createQueryBuilder('a')
@@ -38,13 +38,11 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
             ->getResult();
     }
 
-    #[\Override]
     public function getByIdAndUser(int $id, User $user): ?Account
     {
         return $this->findOneBy(['id' => $id, 'userId' => $user->getId()]);
     }
 
-    #[\Override]
     public function findByUser(User $user): array
     {
         return $this->findBy(['userId' => $user->getId()]);
@@ -65,8 +63,8 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
 
     /**
      * @return array{account: Account, deposits_sum: string} | null
+     * @throws NonUniqueResultException
      */
-    #[\Override]
     public function findByIdAndUserWithDeposits(int $id, User $user): ?array
     {
         return $this->createQueryBuilder('a')
@@ -84,19 +82,16 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
     /**
      * @return list<Account>
      */
-    #[\Override]
     public function findAll(): array
     {
         return parent::findAll();
     }
 
-    #[\Override]
     public function findById(int $id): ?Account
     {
         return $this->find($id);
     }
 
-    #[\Override]
     public function save(Account $account): void
     {
         $em = $this->getEntityManager();
@@ -104,7 +99,6 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
         $em->flush();
     }
 
-    #[\Override]
     public function remove(Account $account): void
     {
         $em = $this->getEntityManager();
