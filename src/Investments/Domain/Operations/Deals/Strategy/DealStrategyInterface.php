@@ -27,4 +27,6 @@ interface DealStrategyInterface
     public function getCommission(string $price, string $quantity): string;
 
     public function getCurrency(): string;
+
+    public function getInstrumentId(): ?int;
 }

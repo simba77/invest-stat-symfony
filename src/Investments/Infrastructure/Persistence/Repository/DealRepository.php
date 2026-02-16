@@ -91,7 +91,7 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
             ->andWhere('d.status = :status')
             ->setParameter('userId', $userId)
             ->setParameter('shareId', $shareId)
-            ->setParameter('status', $status)
+            ->setParameter('status', $status->value)
             ->addOrderBy('s.type', 'DESC')
             ->addOrderBy('d.id', 'ASC')
             ->getQuery()

@@ -22,7 +22,7 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
     }
 
     /**
-     * @param User $user
+     * @param int $userId
      * @return array<int, array{account: Account, deposits_sum: string | null}>
      */
     #[\Override]

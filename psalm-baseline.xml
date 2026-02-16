@@ -1,40 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="6.13.1@1e3b7f0a8ab32b23197b91107adc0a7ed8a05b51">
-  <file src="src/Deposits/Domain/Deposit.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getUser]]></code>
-      <code><![CDATA[setUser]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Deposits/Domain/DepositAccount.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getUser]]></code>
-      <code><![CDATA[setUser]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="src/Deposits/Infrastructure/Persistence/Repository/DepositRepository.php">
     <QueryBuilderSetParameter>
       <code><![CDATA[$user]]></code>
     </QueryBuilderSetParameter>
-  </file>
-  <file src="src/Expenses/Domain/Expense.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getCategory]]></code>
-      <code><![CDATA[getUserId]]></code>
-      <code><![CDATA[setUserId]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Expenses/Domain/ExpensesCategory.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getUserId]]></code>
-      <code><![CDATA[setId]]></code>
-      <code><![CDATA[setUserId]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Expenses/Domain/ExpensesCategoryRepositoryInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getById]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/Investments/Application/Operations/Deals/AccountDealsQueryHandler.php">
     <UnusedForeachValue>
@@ -50,11 +19,6 @@
     <UnusedForeachValue>
       <code><![CDATA[$groupByCurrency]]></code>
     </UnusedForeachValue>
-  </file>
-  <file src="src/Investments/Application/Request/DTO/Operations/DealsFilterRequestDTO.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$accountId]]></code>
-    </PossiblyUnusedProperty>
   </file>
   <file src="src/Investments/Application/Response/Compiler/AnnualStatisticCompiler.php">
     <InvalidOperand>
@@ -80,19 +44,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$entry]]></code>
     </MoreSpecificImplementedParamType>
-  </file>
-  <file src="src/Investments/Application/Response/DTO/Instruments/FutureMultiplierDto.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$ticker]]></code>
-      <code><![CDATA[$value]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Investments/Domain/Instruments/FutureMultiplier.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[setTicker]]></code>
-      <code><![CDATA[setValue]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/Investments/Domain/Operations/Deals/DealData.php">
     <UnusedProperty>

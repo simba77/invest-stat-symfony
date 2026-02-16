@@ -26,4 +26,8 @@
     <extraFiles allowMissingFiles="true">
         <directory name="./var/cache/dev/Symfony/Config"/>
     </extraFiles>
+    <issueHandlers>
+        <PossiblyUnusedMethod errorLevel="suppress" />
+        <PossiblyUnusedProperty errorLevel="suppress" />
+    </issueHandlers>
 </psalm>
