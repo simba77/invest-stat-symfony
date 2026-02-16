@@ -74,9 +74,8 @@ final readonly class ShowShareUseCase
         );
 
         if (!empty($closedDealsData['deals'])) {
-            $closedPositions = $closedDealsData['deals'][0]->getDeals() ?? [];
+            $closedPositions = $closedDealsData['deals'][0]->getDeals();
         }
-
 
         return new ShowShareResponseDTO(
             id:              $id,
