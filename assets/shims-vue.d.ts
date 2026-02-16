@@ -5,3 +5,11 @@ declare module "*.vue" {
 }
 
 declare module 'lodash';
+
+import 'vue'
+
+declare module 'vue' {
+  interface GlobalDirectives {
+    tooltip: any
+  }
+}

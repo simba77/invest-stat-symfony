@@ -30,49 +30,41 @@ class FutureStrategy implements DealStrategyInterface
         return $this->deal->getFuture() ?? throw new RuntimeException('Future is null');
     }
 
-    #[\Override]
     public function getName(): string
     {
         return $this->getFuture()->getShortName() ?? $this->getFuture()->getName();
     }
 
-    #[\Override]
     public function getSecurityType(): SecurityTypeEnum
     {
         return SecurityTypeEnum::Future;
     }
 
-    #[\Override]
     public function getBuyPrice(): string
     {
         return bcmul(bcmul($this->deal->getBuyPrice(), $this->getMultiplier(), 4), $this->getFuture()->getLotSize(), 4);
     }
 
-    #[\Override]
     public function getSellPrice(): string
     {
         return bcmul(bcmul($this->deal->getSellPrice() ?? '0', $this->getMultiplier(), 4), $this->getFuture()->getLotSize() ?? '1', 4);
     }
 
-    #[\Override]
     public function getCurrentPrice(): string
     {
         return bcmul(bcmul($this->deal->getFuture()->getPrice(), $this->getMultiplier(), 4), $this->deal->getFuture()->getLotSize(), 4);
     }
 
-    #[\Override]
     public function getPrevPrice(): string
     {
         return bcmul(bcmul($this->deal->getFuture()->getPrevPrice(), $this->getMultiplier(), 4), $this->deal->getFuture()->getLotSize(), 4);
     }
 
-    #[\Override]
     public function getCommission(string $price, string $quantity): string
     {
         return bcmul('5', $quantity, 4);
     }
 
-    #[\Override]
     public function getCurrency(): string
     {
         return $this->deal->getFuture()->getCurrency();
@@ -93,5 +85,10 @@ class FutureStrategy implements DealStrategyInterface
         }
 
         return $this->deal->getFuture()?->getStepPrice() ?? '1';
+    }
+
+    public function getInstrumentId(): ?int
+    {
+        return $this->deal->getFuture()->getId();
     }
 }

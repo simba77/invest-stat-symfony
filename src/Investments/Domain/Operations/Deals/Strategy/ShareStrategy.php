@@ -66,4 +66,9 @@ class ShareStrategy implements DealStrategyInterface
     {
         return $this->deal->getShare()?->getCurrency() ?? 'RUB';
     }
+
+    public function getInstrumentId(): ?int
+    {
+        return $this->deal->getShare()->getId();
+    }
 }

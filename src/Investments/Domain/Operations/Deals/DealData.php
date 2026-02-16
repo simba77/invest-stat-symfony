@@ -265,4 +265,14 @@ class DealData
         }
         return bcmul($this->getProfit(), $this->currencyService->getCurrencyRate($this->getCurrency()), 4);
     }
+
+    public function getInstrumentType(): string
+    {
+        return $this->strategy->getSecurityType()->getCode();
+    }
+
+    public function getInstrumentId(): ?int
+    {
+        return $this->strategy->getInstrumentId();
+    }
 }

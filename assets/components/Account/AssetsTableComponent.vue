@@ -54,7 +54,9 @@ function showSellModal(item: AssetsGroup) {
             v-if="data.groupData.isBlocked"
             class="h-3 w-3 -mt-1 inline-block"
           />
-          {{ data.groupData.shortName }}
+          <router-link :to="`/instruments/show/${data.groupData.instrumentType}/${data.groupData.instrumentId}`">
+            {{ data.groupData.shortName }}
+          </router-link>
         </div>
         {{ data.groupData.ticker }}
       </template>

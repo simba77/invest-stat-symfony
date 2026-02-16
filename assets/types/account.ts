@@ -50,6 +50,8 @@ export interface AssetsGroup {
   currency: string
   isBlocked: boolean
   isShort: boolean
+  instrumentType: 'share' | 'bond' | 'future'
+  instrumentId: number
 }
 
 export interface Deal {

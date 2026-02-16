@@ -288,7 +288,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     name: 'InstrumentShow',
-    path: '/instruments/show/:id',
+    path: '/instruments/show/:type/:id',
     meta: {
       requiresAuth: true,
     },

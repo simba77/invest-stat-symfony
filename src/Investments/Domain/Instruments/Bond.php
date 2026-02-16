@@ -117,6 +117,11 @@ class Bond implements
         $this->maturityDate = $maturityDate;
     }
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
     public function getTicker(): string
     {
         return $this->ticker;

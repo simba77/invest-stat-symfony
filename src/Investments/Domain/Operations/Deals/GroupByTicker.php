@@ -77,6 +77,8 @@ class GroupByTicker
             currency:            $firstDeal->getCurrencyName(),
             isShort:             $firstDeal->getType() === DealType::Short,
             isBlocked:           $firstDeal->getStatus() === DealStatus::Blocked,
+            instrumentType:      $firstDeal->getInstrumentType(),
+            instrumentId:        $firstDeal->getInstrumentId(),
         );
     }
 

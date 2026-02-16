@@ -110,6 +110,11 @@ class Future implements
         $this->stepPrice = $stepPrice;
     }
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
     public function getTicker(): string
     {
         return $this->ticker;

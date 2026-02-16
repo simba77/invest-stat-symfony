@@ -33,6 +33,8 @@ class DealListGroupByTickerDTO
         public string $currency,
         public bool $isShort,
         public bool $isBlocked,
+        public string $instrumentType = '',
+        public ?int $instrumentId = null,
     ) {
     }
 }

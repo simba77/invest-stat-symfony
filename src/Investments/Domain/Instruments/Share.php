@@ -103,6 +103,11 @@ class Share implements
         $this->prevPrice = $prevPrice;
     }
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
     public function getTicker(): string
     {
         return $this->ticker;
