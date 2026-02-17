@@ -1,0 +1,9 @@
+.btn-link {
+  --bs-btn-color: #fff;
+  --bs-btn-hover-color: #ccc;
+}
+
+.btn-link-danger {
+  --bs-btn-color: var(--bs-danger);
+  --bs-btn-hover-color: rgba(185, 28, 28, 0.7);
+}

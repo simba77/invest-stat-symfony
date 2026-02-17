@@ -1,28 +1,29 @@
 <script setup lang="ts">
-import {type AssetsGroup, AssetsGroupData, GroupSummary} from "@/types/account";
+import { Lock, Banknote, ArrowRight, ChevronDown } from "lucide-vue-next";
+import type { AssetsGroup, AssetsGroupData, GroupSummary } from "@/types/account";
 import { useDealsGroup } from "@/composable/useDealsGroup";
 import { useNumbers } from "@/composable/useNumbers";
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import Row from 'primevue/row';
-import ColumnGroup from 'primevue/columngroup';
 import SellModal from "@/components/Modals/SellModal.vue";
-import {useModal} from "@/composable/useModal";
-import {useRoute} from "vue-router";
-import {BanknotesIcon, LockClosedIcon, ArrowRightIcon} from "@heroicons/vue/24/outline";
+import { useModal } from "@/composable/useModal";
+import { useRoute } from "vue-router";
 import AssetsSubTable from "@/components/Account/AssetsSubTable.vue";
-const modal = useModal()
-const route = useRoute()
 
-const {formatPrice, formatPercent, formatPriceWithSign, getPercent} = useNumbers()
+const modal = useModal();
+const route = useRoute();
+const dealsGroup = useDealsGroup();
+
+const { formatPrice, formatPercent, formatPriceWithSign, getPercent } = useNumbers();
 
 defineProps<{
   assets: { [key: string]: AssetsGroupData },
   summary: GroupSummary,
   hideActions?: boolean
-}>()
+}>();
 
-const dealsGroup = useDealsGroup()
+function toggleGroup(ticker: string) {
+  const opened = dealsGroup.openedGroups.value;
+  opened[ticker] = !opened[ticker];
+}
 
 function showSellModal(item: AssetsGroup) {
   modal.open({
@@ -34,164 +35,186 @@ function showSellModal(item: AssetsGroup) {
       price: item.currentPrice,
       quantity: ''
     }
-  })
+  });
 }
-
 </script>
 
 <template>
-  <DataTable
-    v-model:expanded-rows="dealsGroup.openedGroups.value"
-    :value="assets"
-    data-key="groupData.ticker"
-    table-style="min-width: 60rem"
-  >
-    <Column expander style="width: 0" />
-    <Column header="Name">
-      <template #body="{data}">
-        <div class="font-extrabold">
-          <lock-closed-icon
-            v-if="data.groupData.isBlocked"
-            class="h-3 w-3 -mt-1 inline-block"
-          />
-          <router-link :to="`/instruments/show/${data.groupData.instrumentType}/${data.groupData.instrumentId}`">
-            {{ data.groupData.shortName }}
-          </router-link>
-        </div>
-        {{ data.groupData.ticker }}
-      </template>
-    </Column>
-    <Column field="groupData.quantity" header="Quantity" />
-    <Column header="Price">
-      <template #body="{data}">
-        <div class="flex">
-          <div class="text-nowrap">
-            {{ formatPrice(data.groupData.buyPrice, data.groupData.currency) }}
-          </div>
-          <div class="px-2">
-            <arrow-right-icon class="w-3 h-3 inline-block" />
-          </div>
-          <div class="text-nowrap">
-            {{ formatPrice(data.groupData.currentPrice, data.groupData.currency) }}
-            <span v-tooltip="'Prev price: ' + formatPrice(data.groupData.prevPrice, data.groupData.currency)" :class="data.groupData.dailyProfit > 0 ? 'text-green-600' : 'text-red-700'">
-              ({{ data.groupData.dailyProfit > 0 ? '+' : '-' }}{{ getPercent(data.groupData.dailyProfit, data.groupData.prevPrice) }}, {{ formatPrice(Math.abs(data.groupData.dailyProfit), data.groupData.currency) }})
-            </span>
-          </div>
-        </div>
-        <div class="flex items-center">
-          <div class="text-xs text-gray-500">
-            {{ formatPrice(data.groupData.fullBuyPrice, data.groupData.currency) }}
-          </div>
-          <div class="px-2">
-            <arrow-right-icon class="w-3 -mt-1 inline-block" />
-          </div>
-          <div class="text-xs text-gray-500">
-            {{ formatPrice(data.groupData.fullCurrentPrice, data.groupData.currency) }}
-            <span v-tooltip="'Prev full price: ' + formatPrice(data.groupData.fullPrevPrice, data.groupData.currency)" :class="data.groupData.fullDailyProfit > 0 ? 'text-green-600' : 'text-red-700'">
-              ({{ formatPriceWithSign(data.groupData.fullDailyProfit, data.groupData.currency) }})</span>
-          </div>
-        </div>
-      </template>
-    </Column>
-    <Column header="Target Price">
-      <template #body="{data}">
-        <template v-if="data.groupData.targetPrice < 0 || data.groupData.targetPrice > 0">
-          <div>{{ formatPrice(data.groupData.targetPrice, data.groupData.currency) }}</div>
-          <div class="text-xs text-gray-500">
-            {{ formatPrice(data.groupData.fullTargetPrice, data.groupData.currency) }}
-          </div>
-        </template>
-        <template v-else>
-          &mdash;
-        </template>
-      </template>
-    </Column>
-    <Column>
-      <template #header>
-        <div>
-          <div class="-mb-1.5 font-bold">
+  <table class="table simple-table table-dark table-hover align-middle" style="min-width: 60rem">
+    <thead>
+      <tr>
+        <th style="width: 40px;" />
+        <th>Name</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Target Price</th>
+        <th>
+          <div class="fw-bold">
             Profit
           </div>
-          <span class="text-xs text-gray-400">(percent, commission)</span>
-        </div>
-      </template>
-      <template #body="{data}">
-        <div :class="[data.groupData.profit > 0 ? 'text-green-600' : 'text-red-700']">
-          <div>{{ formatPriceWithSign(data.groupData.profit, data.groupData.currency) }}</div>
-          <div class="text-xs">
-            ({{ formatPercent(data.groupData.profitPercent) }}, {{ formatPrice(data.groupData.commission, data.groupData.currency) }})
-          </div>
-        </div>
-      </template>
-    </Column>
-    <Column header="Target Profit">
-      <template #body="{data}">
-        <template v-if="data.groupData.targetProfit > 0">
-          {{ formatPrice(data.groupData.targetProfit, data.groupData.currency) }}
-          <div class="text-xs">
-            ({{ formatPrice(data.groupData.fullTargetProfit, data.groupData.currency) }}, {{ formatPercent(data.groupData.targetProfitPercent) }})
-          </div>
-        </template>
-        <template v-else>
-          &mdash;
-        </template>
-      </template>
-    </Column>
-    <Column header="Percent">
-      <template #body="{data}">
-        {{ formatPercent(data.groupData.percent) }}
-      </template>
-    </Column>
-    <Column v-if="!hideActions" header="Actions">
-      <template #body="{data}">
-        <div
-          class="text-gray-300 hover:text-gray-600 mr-2 cursor-pointer"
-          title="Sell"
-          @click.stop="showSellModal(data.groupData)"
-        >
-          <banknotes-icon class="h-5 w-5 ml-auto" />
-        </div>
-      </template>
-    </Column>
+          <small class="text-muted">(percent, commission)</small>
+        </th>
+        <th>Target Profit</th>
+        <th>Percent</th>
+        <th v-if="!hideActions" class="text-end">
+          Actions
+        </th>
+      </tr>
+    </thead>
 
-    <ColumnGroup type="footer">
-      <Row>
-        <Column footer="Subtotal:" colspan="3" class="font-bold" footer-style="text-align:right" />
-        <Column class="font-bold">
-          <template #footer>
-            <div v-if="!summary.isBaseCurrency">
-              {{ formatPrice(summary.buyPrice, '$') }}
+    <tbody>
+      <template v-for="group in Object.values(assets)" :key="group.groupData.ticker">
+        <!-- Main row -->
+        <tr>
+          <td>
+            <button
+              class="btn btn-sm btn-link p-0 text-muted"
+              @click="toggleGroup(group.groupData.ticker)"
+            >
+              <ChevronDown
+                :size="20"
+                :class="{ 'rotate-180': dealsGroup.openedGroups.value[group.groupData.ticker] }"
+              />
+            </button>
+          </td>
+
+          <!-- Name -->
+          <td>
+            <div class="fw-bold d-flex align-items-center">
+              <Lock
+                v-if="group.groupData.isBlocked"
+                :size="12"
+                class="me-1"
+              />
+              <router-link
+                :to="`/instruments/show/${group.groupData.instrumentType}/${group.groupData.instrumentId}`"
+              >
+                {{ group.groupData.shortName }}
+              </router-link>
             </div>
-            <div>{{ formatPrice(summary.buyPriceInBaseCurrency, '₽') }}</div>
-          </template>
-        </Column>
-        <Column class="font-bold" colspan="2">
-          <template #footer>
-            <div v-if="!summary.isBaseCurrency">
-              {{ formatPrice(summary.currentPrice, '$') }}
-            </div>
-            <div>{{ formatPrice(summary.currentPriceInBaseCurrency, '₽') }} </div>
-          </template>
-        </Column>
-        <Column class="font-bold" colspan="4">
-          <template #footer>
-            <div :class="[summary.profit > 0 ? 'text-green-600' : 'text-red-700']">
-              <div v-if="!summary.isBaseCurrency">
-                {{ formatPrice(summary.profit, '$') }}
+            <small class="text-muted">
+              {{ group.groupData.ticker }}
+            </small>
+          </td>
+
+          <td>{{ group.groupData.quantity }}</td>
+
+          <!-- Price -->
+          <td>
+            <div class="d-flex align-items-center">
+              {{ formatPrice(group.groupData.buyPrice, group.groupData.currency) }}
+              <ArrowRight :size="14" class="mx-2 text-muted" />
+              <div class="text-nowrap">
+                {{ formatPrice(group.groupData.currentPrice, group.groupData.currency) }}
+                <span v-tooltip="'Prev price: ' + formatPrice(group.groupData.prevPrice, group.groupData.currency)" :class="group.groupData.dailyProfit > 0 ? 'text-success' : 'text-danger'">
+                  ({{ group.groupData.dailyProfit > 0 ? '+' : '-' }}{{ getPercent(group.groupData.dailyProfit, group.groupData.prevPrice) }}, {{ formatPrice(Math.abs(group.groupData.dailyProfit), group.groupData.currency) }})
+                </span>
               </div>
-              <div>{{ formatPrice(summary.profitInBaseCurrency, '₽') }}</div>
+            </div>
+
+            <small class="d-flex align-items-center text-muted">
+              {{ formatPrice(group.groupData.fullBuyPrice, group.groupData.currency) }}
+              <ArrowRight :size="12" class="mx-2 text-muted" />
+              <div class="text-nowrap">
+                {{ formatPrice(group.groupData.fullCurrentPrice, group.groupData.currency) }}
+                <span v-tooltip="'Prev full price: ' + formatPrice(group.groupData.fullPrevPrice, group.groupData.currency)" :class="group.groupData.fullDailyProfit > 0 ? 'text-success' : 'text-danger'">
+                  ({{ formatPriceWithSign(group.groupData.fullDailyProfit, group.groupData.currency) }})</span>
+              </div>
+            </small>
+          </td>
+
+          <!-- Target Price -->
+          <td>
+            <template v-if="group.groupData.targetPrice < 0 || group.groupData.targetPrice > 0">
+              <div>{{ formatPrice(group.groupData.targetPrice, group.groupData.currency) }}</div>
+              <div class="text-xs text-muted">
+                {{ formatPrice(group.groupData.fullTargetPrice, group.groupData.currency) }}
+              </div>
+            </template>
+            <template v-else>
+              &mdash;
+            </template>
+          </td>
+
+          <!-- Profit -->
+          <td>
+            <div :class="group.groupData.profit > 0 ? 'text-success' : 'text-danger'">
+              {{ formatPriceWithSign(group.groupData.profit, group.groupData.currency) }}
+              <div class="small">
+                ({{ formatPercent(group.groupData.profitPercent) }}, {{ formatPrice(group.groupData.commission, group.groupData.currency) }})
+              </div>
+            </div>
+          </td>
+
+          <!-- Target Profit -->
+          <td>
+            <template v-if="group.groupData.targetProfit > 0">
+              {{ formatPrice(group.groupData.targetProfit, group.groupData.currency) }}
               <div class="text-xs">
-                ({{ formatPercent(summary.profitPercent) }})
+                ({{ formatPrice(group.groupData.fullTargetProfit, group.groupData.currency) }}, {{ formatPercent(group.groupData.targetProfitPercent) }})
               </div>
-            </div>
-          </template>
-        </Column>
-      </Row>
-    </ColumnGroup>
+            </template>
+            <template v-else>
+              &mdash;
+            </template>
+          </td>
 
-    <template #expansion="slotProps">
-      <assets-sub-table :items="slotProps.data.deals" :hide-actions="hideActions" />
-    </template>
-  </DataTable>
+          <!-- Percent -->
+          <td>
+            {{ formatPercent(group.groupData.percent) }}
+          </td>
+
+          <!-- Actions -->
+          <td v-if="!hideActions" class="text-end">
+            <button
+              class="btn btn-sm btn-link text-muted"
+              @click.stop="showSellModal(group.groupData)"
+            >
+              <Banknote :size="20" />
+            </button>
+          </td>
+        </tr>
+
+        <!-- Expanded row -->
+        <tr
+          v-if="dealsGroup.openedGroups.value[group.groupData.ticker]"
+          class="bg-dark-subtle"
+        >
+          <td colspan="9" class="p-0">
+            <assets-sub-table
+              class="mb-0 sub-table"
+              :items="group.deals"
+              :hide-actions="hideActions"
+            />
+          </td>
+        </tr>
+      </template>
+    </tbody>
+
+    <!-- Footer -->
+    <tfoot class="custom-footer">
+      <tr class="fw-bold">
+        <td colspan="3" class="text-end">
+          Subtotal:
+        </td>
+        <td>
+          {{ formatPrice(summary.buyPriceInBaseCurrency, '₽') }}
+        </td>
+        <td colspan="2">
+          {{ formatPrice(summary.currentPriceInBaseCurrency, '₽') }}
+        </td>
+        <td
+          colspan="3"
+          :class="summary.profit > 0 ? 'text-success' : 'text-danger'"
+        >
+          {{ formatPrice(summary.profitInBaseCurrency, '₽') }}
+          <div class="small">
+            ({{ formatPercent(summary.profitPercent) }})
+          </div>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
 </template>
+
 

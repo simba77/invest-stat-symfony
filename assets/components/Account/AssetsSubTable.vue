@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LockClosedIcon, PencilIcon, XCircleIcon, BanknotesIcon } from "@heroicons/vue/24/outline";
+import { Lock, Pencil, XCircle, Banknote } from "lucide-vue-next";
 import type { Deal } from "@/types/account";
 import { useModal } from "@/composable/useModal";
 import DeleteDealModal from "@/components/Account/DeleteDealModal.vue";
@@ -87,11 +87,12 @@ function showSellModal(item: Deal) {
         <td>
           <div
             v-tooltip="'Created: ' + data.createdAt"
-            class="fw-bold"
+            class="d-flex fw-bold align-items-center"
           >
-            <lock-closed-icon
+            <lock
               v-if="data.isBlocked"
-              class="h-3 w-3 me-1"
+              class="me-1"
+              :size="12"
             />
             {{ data.shortName }}
           </div>
@@ -193,7 +194,7 @@ function showSellModal(item: Deal) {
               class="text-muted hover-opacity"
               title="Edit"
             >
-              <pencil-icon class="h-5 w-5" />
+              <pencil :size="20" />
             </router-link>
 
             <button
@@ -202,16 +203,16 @@ function showSellModal(item: Deal) {
               title="Sell"
               @click.prevent="showSellModal(data)"
             >
-              <banknotes-icon class="h-5 w-5" />
+              <banknote :size="20" />
             </button>
 
             <button
               type="button"
-              class="btn btn-link p-0 text-danger"
+              class="btn btn-link p-0 btn-link-danger"
               title="Delete"
               @click="deleteDeal(data)"
             >
-              <x-circle-icon class="h-5 w-5" />
+              <x-circle :size="20" />
             </button>
           </div>
         </td>
