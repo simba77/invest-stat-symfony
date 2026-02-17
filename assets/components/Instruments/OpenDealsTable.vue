@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { LockClosedIcon, PencilIcon, XCircleIcon, BanknotesIcon } from "@heroicons/vue/24/outline";
-import type { Deal } from "@/types/account";
-import { useModal } from "@/composable/useModal";
+import {LockClosedIcon, PencilIcon, XCircleIcon, BanknotesIcon} from "@heroicons/vue/24/outline";
+import type {Deal} from "@/types/account";
+import {useModal} from "@/composable/useModal";
 import DeleteDealModal from "@/components/Account/DeleteDealModal.vue";
 import SellModal from "@/components/Modals/SellModal.vue";
-import { useNumbers } from "@/composable/useNumbers";
-import { MoveRight } from 'lucide-vue-next';
+import {useNumbers} from "@/composable/useNumbers";
+import {MoveRight} from 'lucide-vue-next';
 
 const {formatPrice, formatPercent, formatPriceWithSign, getPercent} = useNumbers()
 
@@ -48,6 +48,7 @@ function showSellModal(item: Deal) {
     <thead>
       <tr>
         <th>Дата открытия</th>
+        <th>Счет</th>
         <th class="text-end">
           Кол-во
         </th>
@@ -84,8 +85,11 @@ function showSellModal(item: Deal) {
             v-if="data.isBlocked"
             class="h-3 w-3 me-1"
           />
-          {{ data.createdAt }}
+          <div>{{ data.createdAt }}</div>
         </td>
+
+        <!-- Account name -->
+        <td>{{ data.accountName }}</td>
 
         <!-- Quantity -->
         <td class="text-end">

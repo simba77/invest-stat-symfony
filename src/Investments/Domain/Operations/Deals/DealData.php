@@ -33,6 +33,11 @@ class DealData
         return $this->deal->getAccount()->getId() ?? throw new \RuntimeException('Account is not set');
     }
 
+    public function getAccountName(): string
+    {
+        return $this->deal->getAccount()->getName() ?? throw new \RuntimeException('Account name not set');
+    }
+
     public function getName(): string
     {
         return $this->strategy->getName();

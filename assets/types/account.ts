@@ -57,6 +57,7 @@ export interface AssetsGroup {
 export interface Deal {
   id: number
   accountId: number
+  accountName: number
   ticker: string
   shortName: string
   quantity: number

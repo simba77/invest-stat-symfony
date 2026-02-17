@@ -116,6 +116,7 @@ class GroupByTicker
                 isBlocked:               $deal->getStatus() === DealStatus::Blocked,
                 createdAt:               $deal->getCreatedAt(),
                 updatedAt:               $deal->getUpdatedAt() ?? '',
+                accountName:             $deal->getAccountName(),
             ),
             $this->deals
         );
