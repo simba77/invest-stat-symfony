@@ -65,6 +65,13 @@ $theme-colors: (
   "red-light": $red-light,
 );
 
+$custom-colors: (
+  "red-light": #fee5e7,
+  // или другие кастомные цвета
+);
+
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
 // Fonts
 $line-height-base: 1.5 !default;
 

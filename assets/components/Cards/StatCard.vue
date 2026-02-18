@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import {QuestionMarkCircleIcon, ArrowSmallUpIcon, ArrowSmallDownIcon} from "@heroicons/vue/24/solid";
-import {useNumbers} from "@/composable/useNumbers";
+import { HelpCircle, TrendingUp, TrendingDown } from 'lucide-vue-next'
+import { computed } from 'vue'
+import { useNumbers } from "@/composable/useNumbers"
 
-const {formatPrice, formatPercent} = useNumbers()
+const { formatPrice, formatPercent } = useNumbers()
 
 interface CardProps {
   name?: string
@@ -14,7 +15,7 @@ interface CardProps {
   profitHelpText?: string | null
 }
 
-withDefaults(defineProps<CardProps>(), {
+const props = withDefaults(defineProps<CardProps>(), {
   name: '',
   percent: undefined,
   total: 0,
@@ -24,49 +25,35 @@ withDefaults(defineProps<CardProps>(), {
   profitHelpText: ''
 })
 
+const isPositive = computed(() => (props.profit ?? props.percent ?? 0) > 0)
 </script>
 
 <template>
   <div class="card">
     <div class="card-body">
-      <div class="text-gray-400 flex items-center">
+      <div class="text-muted d-flex align-items-center">
         <div>{{ name }}</div>
-        <div
-          v-if="helpText"
-          v-tooltip="helpText"
-        >
-          <question-mark-circle-icon class="h-5 ml-1" />
-        </div>
+        <help-circle v-if="helpText" v-tooltip="helpText" :size="16" class="ms-2" />
       </div>
       <div class="mt-1">
-        <div class="text-lg md:text-3xl font-extrabold">
+        <div class="card-main-number fw-extrabold">
           {{ formatPrice(Number(total), currency) }}
         </div>
       </div>
-      <div v-if="profit || percent" class="flex text-sm mt-1">
+      <div v-if="profit || percent" class="d-flex fz-sm mt-1">
         <div
           v-if="profit"
           v-tooltip="profitHelpText"
-          :class="[profit > 0 ? 'text-success' : 'text-danger', 'rounded-full pr-1 flex items-center']"
+          :class="[isPositive ? 'text-success' : 'text-danger', 'rounded-full pe-1 d-flex align-items-center']"
         >
-          <template v-if="profit > 0">
-            <arrow-small-up-icon class="h-4 mr-0.5 text-success rotate-45" />
-          </template>
-          <template v-else>
-            <arrow-small-down-icon class="h-4 mr-0.5 text-danger -rotate-45" />
-          </template>
+          <component :is="isPositive ? TrendingUp : TrendingDown" :size="18" class="me-1" />
           {{ formatPrice(profit, currency) }}
         </div>
         <div
           v-if="percent"
-          :class="[percent > 0 ? ' text-success' : ' text-danger', 'pr-2 flex items-center']"
+          :class="[isPositive ? 'text-success' : 'text-danger', 'pe-2 d-flex align-items-center']"
         >
-          <template v-if="!profit && percent > 0">
-            <arrow-small-up-icon class="h-4 mr-0.5 text-success rotate-45" />
-          </template>
-          <template v-else-if="!profit">
-            <arrow-small-down-icon class="h-4 mr-0.5 text-danger -rotate-45" />
-          </template>
+          <component :is="isPositive ? TrendingUp : TrendingDown" v-if="!profit" :size="18" class="me-1" />
           <template v-if="profit">
             ({{ formatPercent(percent) }})
           </template>
@@ -80,5 +67,8 @@ withDefaults(defineProps<CardProps>(), {
 </template>
 
 <style lang="scss" scoped>
-
+.card-main-number {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
 </style>
