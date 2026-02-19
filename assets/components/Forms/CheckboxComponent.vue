@@ -1,22 +1,20 @@
 <script setup lang="ts">
-import {InputErrors} from "@/types/inputs";
-import {computed, reactive} from "vue";
+import { computed } from 'vue'
+import type { InputErrors } from '@/types/inputs'
 
-interface InputProps {
-  modelValue: number | string | boolean,
+interface InputCheckboxProps {
+  modelValue: boolean
   label: string
   name: string
   id?: string
   error?: InputErrors
-  help?: string | number
+  help?: string
   disabled?: boolean
   readonly?: boolean
   required?: boolean
 }
 
-const props = withDefaults(defineProps<InputProps>(), {
-  label: '',
-  name: '',
+const props = withDefaults(defineProps<InputCheckboxProps>(), {
   id: '',
   error: undefined,
   help: '',
@@ -25,59 +23,49 @@ const props = withDefaults(defineProps<InputProps>(), {
   required: false,
 })
 
+const emit = defineEmits<{
+  'update:modelValue': [value: boolean]
+}>()
 
-const emits = defineEmits(['update:modelValue'])
+const elementId = computed(() => props.id || props.name)
 
-const inputParams = reactive({
-  value: props.modelValue,
-  elementId: props.id ? props.id : props.name,
-  errorMessage: computed(() => {
-    return props.error?.violations
-      .filter((item) => {
-        return item.propertyPath === props.name;
-      })
-      .map((item) => {
-        return item.title;
-      })
-      .join('<br>');
-  })
+const errorMessage = computed(() => {
+  return props.error?.violations
+    .filter((item) => item.propertyPath === props.name)
+    .map((item) => item.title)
+    .join(', ')
 })
 
-const updateModelValue = () => {
-  emits('update:modelValue', inputParams.value)
-}
-
+const hasError = computed(() => !!errorMessage.value)
 </script>
 
 <template>
-  <div>
-    <div class="flex items-center">
-      <input
-        :id="inputParams.elementId"
-        v-model="inputParams.value"
-        :name="name"
-        :disabled="disabled"
-        :required="required"
-        :readonly="readonly"
-        :class="[inputParams.errorMessage ? 'is-invalid' : '']"
-        class="form-checkbox"
-        type="checkbox"
-        @change="updateModelValue"
-      >
-      <label
-        class="form-checkbox-label"
-        :for="inputParams.elementId"
-        v-text="label"
-      />
-    </div>
-    <span
-      v-if="inputParams.errorMessage"
-      class="invalid-feedback mt-0"
-    >{{ error }}</span>
-    <div
-      v-if="help"
-      class="small text-secondary opacity-75"
+  <div class="form-check">
+    <input
+      :id="elementId"
+      :checked="modelValue"
+      :name="name"
+      :disabled="disabled"
+      :readonly="readonly"
+      :required="required"
+      :aria-invalid="hasError"
+      :aria-describedby="hasError ? `${elementId}-feedback` : undefined"
+      class="form-check-input"
+      :class="{ 'is-invalid': hasError }"
+      type="checkbox"
+      @change="emit('update:modelValue', ($event.target as HTMLInputElement).checked)"
     >
+    <label :for="elementId" class="form-check-label">
+      {{ label }}
+    </label>
+    <div
+      v-if="hasError"
+      :id="`${elementId}-feedback`"
+      class="invalid-feedback d-block"
+    >
+      {{ errorMessage }}
+    </div>
+    <div v-if="help" class="form-text">
       {{ help }}
     </div>
   </div>

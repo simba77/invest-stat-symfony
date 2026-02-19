@@ -78,7 +78,7 @@ watch(value, useDebounceFn((val) => {
     <label
       v-if="props.label"
       :for="elementId"
-      class="text-sm font-medium text-gray-700 dark:text-white block mb-1"
+      class="fz-sm text-muted d-block mb-1"
     >
       {{ props.label }} <span v-if="props.required" class="text-danger">*</span>
       <v-menu v-if="props.help" placement="auto" class="d-inline-block">
@@ -95,7 +95,7 @@ watch(value, useDebounceFn((val) => {
       <vue-date-picker
         v-model="value"
         :class="inputClasses"
-        input-class-name="form-input"
+        input-class-name="form-control"
         model-type="format"
         :locale="'ru'"
         :format="'dd.MM.yyyy'"
@@ -127,5 +127,9 @@ watch(value, useDebounceFn((val) => {
 
 .dp__theme_dark {
   --dp-background-color: #000000;
+}
+
+.form-help-text {
+  padding: 5px 10px;
 }
 </style>

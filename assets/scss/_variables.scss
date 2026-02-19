@@ -28,17 +28,6 @@ $teal: #918d88;
 $cyan: #68B3C8;
 $brown: #66615B;
 $dark_brown: #7d4e3c;
-
-$white: #fff !default;
-$gray-100: #f4f3ef !default;
-$gray-200: #e9ecef !default;
-$gray-300: #dee2e6 !default;
-$gray-400: #ced4da !default;
-$gray-500: #adb5bd !default;
-$gray-600: #6c757d !default;
-$gray-700: #495057 !default;
-$gray-800: #343a40 !default;
-$gray-900: #212529 !default;
 $black: #000 !default;
 
 $primary: rgb(79 70 229) !default;
@@ -47,8 +36,8 @@ $success: $green !default;
 $info: $cyan !default;
 $warning: $yellow !default;
 $danger: $red !default;
-$light: $gray-100 !default;
-$dark: $gray-800 !default;
+$light: #f4f3ef !default;
+$dark: #343a40 !default;
 
 $theme-colors: (
   "primary": $primary,
@@ -97,8 +86,8 @@ $breadcrumb-item-padding: .5rem;
 $breadcrumb-margin-bottom: 1rem;
 
 $breadcrumb-bg: none !default;
-$breadcrumb-divider-color: $gray-600;
-$breadcrumb-active-color: $gray-600;
+$breadcrumb-divider-color: #6c757d;
+$breadcrumb-active-color: #6c757d;
 $breadcrumb-divider: quote("»");
 
 $breadcrumb-border-radius: $border-radius;
@@ -116,26 +105,11 @@ $btn-border-radius-sm: .2rem;
 // Forms
 $form-label-margin-bottom: 0.1rem;
 $input-bg: #f9f9f9;
+$form-select-focus-box-shadow: none;
+$form-select-focus-border-color: #94a3b8;
 
 $body-color-dark: #fff;
 $body-bg-dark: #09090b;
 $link-color-dark: #fff;
 
 $body-secondary-color-dark: rgba($body-color-dark, .45);
-
-:root {
-  --bs-primary: rgb(79 70 229 / var(--tw-bg-opacity, 1));
-  --bs-secondary: #918d88;
-  --bs-success: #42A084;
-  --bs-info: #68B3C8;
-  --bs-warning: #F3BB45;
-  --bs-danger: #b91c1c;
-
-  --primary-bg-text-color: #fff;
-
-  --border-color: #27272a;
-
-  --font-size-normal: 14px;
-  --font-size-small: 12px;
-  --font-size-x-small: 11px;
-}

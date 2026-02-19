@@ -67,7 +67,7 @@ function getValue(option: any) {
   <div>
     <label
       :for="inputParams.elementId"
-      class="block text-gray-700 dark:text-white"
+      class="form-label"
     >{{ label }}</label>
     <select
       :id="inputParams.elementId"
@@ -75,8 +75,7 @@ function getValue(option: any) {
       :required="required"
       :disabled="disabled"
       :name="name"
-      class="dark:bg-zinc-950 dark:focus:border-zinc-400 dark:focus:ring-0"
-      :class="[inputParams.errorMessage ? 'border-red-500' : '', 'form-select rounded w-full mt-1']"
+      :class="[inputParams.errorMessage ? 'is-invalid' : '', 'form-select mt-1']"
       @change="updateModelValue"
     >
       <option
@@ -94,7 +93,7 @@ function getValue(option: any) {
     />
     <div
       v-if="inputParams.errorMessage"
-      class="mt-1 text-sm text-red-500"
+      class="mt-1 text-sm invalid-feedback"
       v-html="inputParams.errorMessage"
     />
   </div>
