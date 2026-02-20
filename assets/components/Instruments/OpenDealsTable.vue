@@ -7,7 +7,7 @@ import SellModal from "@/components/Modals/SellModal.vue";
 import {useNumbers} from "@/composable/useNumbers";
 import {MoveRight} from 'lucide-vue-next';
 
-const {formatPrice, formatPercent, formatPriceWithSign, getPercent} = useNumbers()
+const {formatPrice, formatPercent, formatPriceWithSign} = useNumbers()
 
 defineProps<{
   items: Deal[],
