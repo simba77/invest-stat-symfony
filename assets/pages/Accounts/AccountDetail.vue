@@ -14,19 +14,18 @@ const {formatPrice} = useNumbers()
 getAccount(params.id);
 
 provide('accounts', {getAccounts: getAccount})
-
 </script>
 
 <template>
   <page-component :title="data?.account?.name ?? 'Loading...'">
     <template v-if="data">
-      <div class="flex justify-between mb-3 rounded items-center">
-        <div class="text-sm">
-          <span class="font-light">Balance:</span> <span>{{ formatPrice(data.account.balance, '₽') }}</span> / <span>{{ formatPrice(data.account.usdBalance, '$') }}</span>
-          <span class="font-light ml-3">Deposits:</span> <span>{{ formatPrice(data.account.deposits, '₽') }}</span>
-          <span class="font-light ml-3">Current Value:</span> <span>{{ formatPrice(data.account.currentValue, '₽') }}</span>
-          <span class="font-light ml-3">Profit: </span>
-          <span :class="[data.account.fullProfit > 0 ? 'text-green-600' : 'text-red-700']">
+      <div class="d-flex justify-content-between align-items-center mb-3 rounded">
+        <div>
+          <span class="fw-light">Balance:</span> <span>{{ formatPrice(data.account.balance, '₽') }}</span> / <span>{{ formatPrice(data.account.usdBalance, '$') }}</span>
+          <span class="fw-light ms-3">Deposits:</span> <span>{{ formatPrice(data.account.deposits, '₽') }}</span>
+          <span class="fw-light ms-3">Current Value:</span> <span>{{ formatPrice(data.account.currentValue, '₽') }}</span>
+          <span class="fw-light ms-3">Profit: </span>
+          <span :class="[data.account.fullProfit > 0 ? 'text-success' : 'text-danger']">
             {{ formatPrice(data.account.fullProfit, '₽') }}
           </span>
         </div>
@@ -47,7 +46,7 @@ provide('accounts', {getAccounts: getAccount})
       >
         <!-- Если групп блокировки больше одной, выводим название -->
         <template v-if="Object.keys(data.deals.dealsList).length > 1">
-          <div class="font-extrabold uppercase text-base mb-2">
+          <div class="fw-bold text-uppercase mb-2">
             {{ data.deals.statuses[groupedByStatusIndex]['name'] }}
           </div>
         </template>
@@ -57,7 +56,7 @@ provide('accounts', {getAccounts: getAccount})
           v-for="(groupedByInstrumentType, groupedByInstrumentTypeIndex) in groupedByStatus"
           :key="groupedByInstrumentTypeIndex"
         >
-          <div class="font-bold text-neutral-600 mb-2">
+          <div class="fw-bold text-muted mb-2">
             {{ data.deals.instrumentTypes[groupedByInstrumentTypeIndex]['name'] }}
           </div>
 
@@ -67,16 +66,16 @@ provide('accounts', {getAccounts: getAccount})
             v-for="(groupedByCurrency, groupedByCurrencyIndex) in groupedByInstrumentType"
             :key="groupedByCurrencyIndex"
           >
-            <div class="flex items-center">
-              <div class="font-bold text-sm mb-4">
+            <div class="d-flex align-items-center mb-4">
+              <div class="fw-bold small">
                 {{ data.deals.currencies[groupedByCurrencyIndex]['name'] }}
               </div>
-              <div class="flex-grow mb-4 ml-3 border-b dark:border-zinc-800" />
+              <div class="flex-grow-1 ms-3 border-bottom" />
             </div>
 
-            <div class="w-full overflow-x-auto mb-4">
+            <div class="table-responsive mb-4">
               <template v-if="Object.keys(groupedByCurrency).length < 1">
-                <div class="text-gray-500 text-sm">
+                <div class="text-muted small">
                   The List is Empty
                 </div>
               </template>

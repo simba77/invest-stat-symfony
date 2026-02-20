@@ -26,7 +26,7 @@ setPageTitle("Portfolio")
       >
         <!-- Если групп блокировки больше одной, выводим название -->
         <template v-if="Object.keys(portfolio.dealsList).length > 1">
-          <div class="font-extrabold uppercase text-base mb-4">
+          <div class="fw-extrabold text-uppercase mb-4">
             {{ portfolio?.statuses[groupedByStatusIndex]['name'] }}
           </div>
         </template>
@@ -36,7 +36,7 @@ setPageTitle("Portfolio")
           v-for="(groupedByInstrumentType, groupedByInstrumentTypeIndex) in groupedByStatus"
           :key="groupedByInstrumentTypeIndex"
         >
-          <div class="font-bold text-neutral-600 mb-4">
+          <div class="fw-bold text-muted mb-4">
             {{ portfolio?.instrumentTypes[groupedByInstrumentTypeIndex]['name'] }}
           </div>
 
@@ -46,11 +46,11 @@ setPageTitle("Portfolio")
             v-for="(groupedByCurrency, groupedByCurrencyIndex) in groupedByInstrumentType"
             :key="groupedByCurrencyIndex"
           >
-            <div class="flex items-center">
-              <div class="font-bold text-sm mb-4">
+            <div class="d-flex align-items-center">
+              <div class="fw-bold fz-sm mb-4">
                 {{ portfolio?.currencies[groupedByCurrencyIndex]['name'] }}
               </div>
-              <div class="flex-grow mb-4 ml-3 border-b dark:border-zinc-800" />
+              <div class="flex-grow-1 mb-4 ms-3 border-bottom" />
             </div>
 
             <div class="w-full overflow-x-auto mb-4">

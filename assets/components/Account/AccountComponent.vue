@@ -26,18 +26,18 @@ function confirmDeletion(account: Account) {
 </script>
 
 <template>
-  <div class="d-flex justify-content-between mb-2 py-3 rounded">
+  <div class="d-flex justify-content-between mb-2 py-3">
     <div class="">
-      <div class="font-extrabold text-lg">
+      <div class="fw-extrabold fz-lg">
         <router-link :to="{name: 'AccountDetail', params: {id: account.id}}">
           {{ account.name }}
         </router-link>
       </div>
-      <div class="text-sm">
-        <span class="font-light">Balance:</span> <span>{{ formatPrice(account.balance, '₽') }}</span> / <span>{{ formatPrice(account.usdBalance, '$') }}</span>
-        <span class="font-light ml-3">Deposits:</span> <span>{{ formatPrice(account.deposits, '₽') }}</span>
-        <span class="font-light ml-3">Current Value:</span> <span>{{ formatPrice(account.currentValue, '₽') }}</span>
-        <span class="font-light ml-3">Profit: </span>
+      <div class="fz-sm">
+        <span class="fw-light">Balance:</span> <span>{{ formatPrice(account.balance, '₽') }}</span> / <span>{{ formatPrice(account.usdBalance, '$') }}</span>
+        <span class="fw-light ms-3">Deposits:</span> <span>{{ formatPrice(account.deposits, '₽') }}</span>
+        <span class="fw-light ms-3">Current Value:</span> <span>{{ formatPrice(account.currentValue, '₽') }}</span>
+        <span class="fw-light ms-3">Profit: </span>
         <span :class="[account.fullProfit > 0 ? 'text-success' : 'text-danger']">
           {{ formatPrice(account.fullProfit, '₽') }}
         </span>
@@ -46,14 +46,14 @@ function confirmDeletion(account: Account) {
     <div class="d-flex align-items-center">
       <router-link
         :to="{name: 'AddAsset', params: {account: account.id}}"
-        class="btn btn-link p-0 mr-2"
+        class="btn btn-link p-0 me-2"
         title="Add Asset"
       >
         <circle-plus :size="20" />
       </router-link>
       <router-link
         :to="{name: 'EditAccount', params: {id: account.id}}"
-        class="btn btn-link p-0 mr-2"
+        class="btn btn-link p-0 me-2"
         title="Edit Account"
       >
         <pen :size="20" />

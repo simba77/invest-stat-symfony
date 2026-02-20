@@ -36,7 +36,7 @@ setPageTitle('Accounts')
     </div>
     <preloader-component v-if="loading" />
     <template v-if="!loading && accounts">
-      <div class="mb-6">
+      <div>
         <div
           v-for="(account, index) in accounts"
           :key="index"
