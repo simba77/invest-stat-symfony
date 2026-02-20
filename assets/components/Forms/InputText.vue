@@ -1,147 +1,121 @@
 <script setup lang="ts">
-import {computed} from "vue";
+import {computed, ref} from "vue";
 import {useDebounceFn} from "@vueuse/core";
 import {InputErrors} from "@/types/inputs";
-import InputText from 'primevue/inputtext';
-import Message from 'primevue/message';
 
 interface InputProps {
-  modelValue: number | string | null,
+  modelValue: number | string | null
   label: string
   placeholder: string
   name: string
   id?: string
   type?: string
-  enterKeyHint?: string
-  autocomplete?: string
   error?: InputErrors | null
   disabled?: boolean
   readonly?: boolean
   required?: boolean
   inputDelay?: number
-  step?: string
 }
 
 const props = withDefaults(defineProps<InputProps>(), {
-  label: '',
-  placeholder: '',
-  name: '',
-  id: '',
+  id: undefined,
   type: 'text',
-  enterKeyHint: '',
-  autocomplete: '',
   error: undefined,
-  disabled: false,
-  readonly: false,
-  required: false,
-  inputDelay: 100,
-  step: '.0001'
+  inputDelay: 100
 })
 
 const emits = defineEmits<{
-  (e: 'update:modelValue', value: string | number | null): void
+  (e: 'update:modelValue', value: string | null): void
 }>()
 
-const model = computed({
-  get: () => props.modelValue,
-  set: (value) => {
-    updateModelValue(value)
+const fieldId = computed(() => props.id || props.name)
+
+const errorMessages = computed(() =>
+  props.error?.violations?.filter(v => v.propertyPath === props.name).map(v => v.title) ?? []
+)
+
+const inputValue = ref(props.modelValue != null ? String(props.modelValue) : '')
+
+const debouncedEmit = useDebounceFn(
+  (value: string | null) => emits('update:modelValue', value),
+  props.inputDelay
+)
+
+/**
+ * Нормализация числового ввода
+ * - заменяет запятые на точки
+ * - удаляет лишние символы, кроме цифр, точки и минуса
+ * - оставляет один минус только в начале
+ * - оставляет только одну точку
+ */
+const normalize = (value: string): string => {
+  value = value.replace(/,/g, '.')
+  value = value.replace(/[^\d.-]/g, '')
+
+  const isNegative = value.startsWith('-')
+  value = value.replace(/-/g, '')
+  if (isNegative) value = '-' + value
+
+  const parts = value.split('.')
+  if (parts.length > 2) {
+    value = parts[0] + '.' + parts.slice(1).join('')
   }
-})
 
-const elementId = computed(() => props.id || props.name)
-const errorMessages = computed(
-  () => props.error?.violations
-    .filter(v => v.propertyPath === props.name)
-    .map(v => v.title) ?? []
-)
-
-const inputType = computed(() =>
-  props.type === 'number' ? 'text' : props.type
-)
-
-const inputMode = computed(() =>
-  props.type === 'number' ? 'decimal' : undefined
-)
-
-const updateModelValue = useDebounceFn((value: string | number | null) => {
-  emits('update:modelValue', value)
-}, props.inputDelay)
-
-const normalizeNumberInput = (value: string): string => {
-  let result = value
-    .replace(/\s+/g, '')
-    .replace(/,/g, '.')
-    .replace(/[^\d.-]/g, '')
-
-  const isNegative = result.startsWith('-')
-
-  result = result.replace(/-/g, '')
-
-  const [int, ...rest] = result.split('.')
-  const fraction = rest.join('')
-
-  return (isNegative ? '-' : '') + int + (fraction ? '.' + fraction : '')
+  return value
 }
 
 const onInput = (event: Event) => {
-  if (props.type !== 'number') {
-    return
-  }
-
   const target = event.target as HTMLInputElement
-  const normalized = normalizeNumberInput(target.value)
+  let value = target.value
 
-  if (normalized !== target.value) {
-    target.value = normalized
+  if (props.type === 'number') {
+    value = normalize(value)
+    inputValue.value = value
+    target.value = value
+
+    // пустое или неполное число -> emit null
+    if (!value || value === '-' || value === '.' || value === '-.' || value.endsWith('.')) {
+      debouncedEmit(null)
+      return
+    }
   }
 
-  model.value = normalized
+  inputValue.value = value
+  debouncedEmit(value)
 }
-
-const onPaste = (event: ClipboardEvent) => {
-  if (props.type !== 'number') {
-    return
-  }
-
-  const pasted = event.clipboardData?.getData('text')
-  if (!pasted) {
-    return
-  }
-
-  event.preventDefault()
-  model.value = normalizeNumberInput(pasted)
-}
-
 </script>
 
 <template>
-  <div class="flex flex-col gap-2">
-    <label v-if="label" :for="elementId">{{ label }}</label>
-    <InputText
-      :id="elementId"
-      v-model="model"
+  <div class="mb-3">
+    <label
+      v-if="label"
+      :for="fieldId"
+      class="form-label"
+    >
+      {{ label }}
+    </label>
+
+    <input
+      :id="fieldId"
+      :value="inputValue"
       :placeholder="placeholder"
-      :invalid="errorMessages.length > 0"
-      :autocomplete="autocomplete"
-      :name="name"
-      :enterkeyhint="enterKeyHint"
-      :type="inputType"
+      :class="['form-control', errorMessages.length && 'is-invalid']"
+      :type="type === 'number' ? 'text' : type"
       :required="required"
       :readonly="readonly"
-      :step="type === 'number' ? step : undefined"
-      :inputmode="inputMode"
       :disabled="disabled"
+      :inputmode="type === 'number' ? 'decimal' : undefined"
       @input="onInput"
-      @paste="onPaste"
-    />
-    <Message v-if="$slots.help" size="small" severity="secondary" variant="simple">
+    >
+
+    <div v-if="$slots.help" class="form-text">
       <slot name="help" />
-    </Message>
-    <ul v-if="errorMessages.length" class="text-sm text-red-500">
-      <li v-for="(msg, i) in errorMessages" :key="i">
+    </div>
+
+    <div v-if="errorMessages.length" class="invalid-feedback d-block">
+      <div v-for="(msg, i) in errorMessages" :key="i">
         {{ msg }}
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 </template>
