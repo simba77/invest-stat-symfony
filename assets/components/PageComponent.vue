@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
-import {Bars3Icon, XMarkIcon, UserIcon, SunIcon, MoonIcon} from '@heroicons/vue/24/outline'
+import {UserIcon, SunIcon, MoonIcon} from '@heroicons/vue/24/outline'
 import {authStore} from "@/stores/authStore";
 import {useRoute} from "vue-router";
 import Button from 'primevue/button';
@@ -9,7 +9,7 @@ const {toggleTheme, currentTheme} = useTemplate()
 
 const route = useRoute()
 
-const props = defineProps({
+defineProps({
   title: {
     type: String,
     default: null,
@@ -154,7 +154,7 @@ const userNavigation = [
     </nav>
 
     <!-- Page title -->
-    <header v-if="title" class="shadow-sm dark:bg-surface-900">
+    <header v-if="title" class="shadow-sm page-header">
       <div class="container py-3">
         <h1 class="mb-0">{{ title }}</h1>
       </div>

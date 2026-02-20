@@ -7,11 +7,11 @@ const { formatPrice, formatPercent } = useNumbers()
 
 interface CardProps {
   name?: string
-  percent?: number
+  percent?: number | string
   total?: number | string
   currency?: string
   helpText?: string
-  profit?: number | null
+  profit?: number | string | null
   profitHelpText?: string | null
 }
 
@@ -25,7 +25,7 @@ const props = withDefaults(defineProps<CardProps>(), {
   profitHelpText: ''
 })
 
-const isPositive = computed(() => (props.profit ?? props.percent ?? 0) > 0)
+const isPositive = computed(() => +(props.profit ?? props.percent ?? 0) > 0)
 </script>
 
 <template>
@@ -47,7 +47,7 @@ const isPositive = computed(() => (props.profit ?? props.percent ?? 0) > 0)
           :class="[isPositive ? 'text-success' : 'text-danger', 'rounded-full pe-1 d-flex align-items-center']"
         >
           <component :is="isPositive ? TrendingUp : TrendingDown" :size="18" class="me-1" />
-          {{ formatPrice(profit, currency) }}
+          {{ formatPrice(+profit, currency) }}
         </div>
         <div
           v-if="percent"
@@ -55,10 +55,10 @@ const isPositive = computed(() => (props.profit ?? props.percent ?? 0) > 0)
         >
           <component :is="isPositive ? TrendingUp : TrendingDown" v-if="!profit" :size="18" class="me-1" />
           <template v-if="profit">
-            ({{ formatPercent(percent) }})
+            ({{ formatPercent(+percent) }})
           </template>
           <template v-else>
-            {{ formatPercent(percent) }}
+            {{ formatPercent(+percent) }}
           </template>
         </div>
       </div>
