@@ -93,7 +93,7 @@ onMounted(() => {
           <div class="row justify-content-center">
             <div class="col-12 col-md-8 col-lg-8">
               <div>
-                <h3 class="form-title">
+                <h3 class="fw-bold">
                   Asset
                 </h3>
                 <p class="mt-1 text-sm text-muted">

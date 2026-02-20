@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PageComponent from "../../components/PageComponent.vue";
-import {XCircleIcon, PencilIcon} from "@heroicons/vue/24/outline";
+import { Pencil, XCircle } from "lucide-vue-next";
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
 import {useModal} from "@/composable/useModal";
 import {useNumbers} from "@/composable/useNumbers";
@@ -60,7 +60,7 @@ setPageTitle("Coupons")
           <th>Ticker</th>
           <th>Stock Market</th>
           <th>Account</th>
-          <th class="flex justify-end">
+          <th class="text-end">
             Actions
           </th>
         </tr>
@@ -77,19 +77,22 @@ setPageTitle("Coupons")
           <td>{{ dividend.accountName }}</td>
           <td class="table-actions">
             <template v-if="dividend.id">
-              <div class="flex justify-end items-center show-on-row-hover">
+              <div class="d-flex justify-content-end items-items-center show-on-row-hover">
                 <router-link
-                  class="text-gray-300 hover:text-gray-900 mr-3"
                   :to="{name: 'CouponEdit', params: {id: dividend.id}}"
+                  class="text-muted hover-opacity me-2"
+                  title="Edit"
                 >
-                  <pencil-icon class="h-5 w-5" />
+                  <pencil :size="20" />
                 </router-link>
+
                 <button
                   type="button"
-                  class="text-gray-300 hover:text-red-500"
+                  class="btn btn-link p-0 btn-link-danger"
+                  title="Delete"
                   @click="confirmDelete(dividend)"
                 >
-                  <x-circle-icon class="h-5 w-5" />
+                  <x-circle :size="20" />
                 </button>
               </div>
             </template>
