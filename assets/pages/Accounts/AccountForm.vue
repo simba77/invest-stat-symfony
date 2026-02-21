@@ -75,10 +75,10 @@ onMounted(() => {
             <div class="col-12 col-md-8 col-lg-8">
               <!-- Header -->
               <div class="mb-4">
-                <h3 class="fw-bold">
+                <div class="form-title">
                   Account
-                </h3>
-                <p class="text-muted">
+                </div>
+                <p class="form-description">
                   Enter the name of the account to group your assets
                 </p>
               </div>

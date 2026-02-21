@@ -42,7 +42,7 @@ setPageTitle('')
           1 USD = {{ pageData.usd }}₽
         </div>
       </div>
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 cards">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 cards-row">
         <div
           v-for="(card, i) in pageData.summary"
           :key="i"
@@ -64,7 +64,7 @@ setPageTitle('')
         <div class="fz-xl fw-extrabold mt-4 mb-3">
           Deposit Accounts
         </div>
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 cards mb-3">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 cards-row mb-3">
           <div
             v-for="(card, i) in pageData.depositAccounts"
             :key="i"
@@ -112,11 +112,3 @@ setPageTitle('')
     </template>
   </page-component>
 </template>
-
-<style scoped>
-.cards {
-  --bs-gutter-x: 16px;
-  --bs-gutter-y: 16px;
-}
-</style>
-

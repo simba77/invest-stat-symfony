@@ -49,9 +49,9 @@ if (route.params.id) {
           <div class="row justify-content-center">
             <div class="col-12 col-md-8 col-lg-8">
               <div class="mb-3">
-                <h3 class="fw-bold">
+                <div class="form-title">
                   Deposit Account
-                </h3>
+                </div>
               </div>
               <preloader-component v-if="savingAccounts.loadingForm.value || loadingForm" />
               <div

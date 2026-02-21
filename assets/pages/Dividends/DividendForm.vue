@@ -61,9 +61,9 @@ if (route.params.id) {
           <div class="row justify-content-center">
             <div class="col-12 col-md-8 col-lg-8">
               <div class="mb-3">
-                <h3 class="fw-bold">
+                <div class="form-title">
                   Dividend
-                </h3>
+                </div>
               </div>
               <preloader-component v-if="loadingForm" />
               <div
@@ -127,6 +127,11 @@ if (route.params.id) {
                   class="btn btn-primary"
                   :disabled="loading"
                 >
+                  <span
+                    v-if="loading"
+                    class="spinner-border spinner-border-sm me-2"
+                    role="status"
+                  />
                   Save
                 </button>
                 <router-link

@@ -66,48 +66,52 @@ onMounted(() => {
 </script>
 
 <template>
-  <page-component title="Add Category">
+  <page-component :title="route.params.id ? 'Edit Category' : 'Add Category'">
     <div class="card">
       <div class="card-body py-4">
-        <form
-          class="space-y-6 w-full md:w-2/3 mx-auto"
-          action="#"
-          method="POST"
-          @submit.prevent="submitForm"
-        >
-          <div>
-            <h3 class="form-title">
-              Category
-            </h3>
-            <p class="mt-1 text-sm text-gray-600">
-              Enter the name of the category to group expenses
-            </p>
-          </div>
-          <div class="w-full md:w-2/4">
-            <input-text
-              :key="data.componentKey"
-              v-model="data.form.name"
-              :error="data.errors"
-              name="name"
-              label="Category Name"
-              placeholder="Enter a category name"
-            />
-          </div>
-          <div class="buttons-divider" />
-          <div>
-            <button
-              type="submit"
-              class="btn btn-primary"
-              :disabled="data.loading"
-            >
-              Save
-            </button>
-            <router-link
-              :to="{name: 'Expenses'}"
-              class="btn btn-secondary ml-3"
-            >
-              Back
-            </router-link>
+        <form @submit.prevent="submitForm">
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-8">
+              <div class="mb-3">
+                <div class="form-title">
+                  Category
+                </div>
+                <p class="form-description">
+                  Enter the name of the category to group expenses
+                </p>
+              </div>
+              <div class="form-stack">
+                <input-text
+                  :key="data.componentKey"
+                  v-model="data.form.name"
+                  :error="data.errors"
+                  name="name"
+                  label="Category Name"
+                  placeholder="Enter a category name"
+                />
+              </div>
+              <hr class="my-4">
+              <div>
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  :disabled="data.loading"
+                >
+                  <span
+                    v-if="data.loading"
+                    class="spinner-border spinner-border-sm me-2"
+                    role="status"
+                  />
+                  Save
+                </button>
+                <router-link
+                  :to="{name: 'Expenses'}"
+                  class="btn btn-secondary ms-3"
+                >
+                  Back
+                </router-link>
+              </div>
+            </div>
           </div>
         </form>
       </div>

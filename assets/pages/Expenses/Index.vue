@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PageComponent from "../../components/PageComponent.vue";
-import {PencilIcon, XCircleIcon, PlusCircleIcon} from "@heroicons/vue/24/outline";
+import { Pen, CircleX, CirclePlus } from 'lucide-vue-next';
 import StatCard from "@/components/Cards/StatCard.vue";
 import {useModal} from "@/composable/useModal";
 import DeleteExpenseCategoryModal from "@/components/Expenses/DeleteExpenseCategoryModal.vue";
@@ -46,16 +46,20 @@ setPageTitle('Expenses')
 <template>
   <page-component title="Expenses">
     <template v-if="!expenses.loadingSummary.value && expenses.summary.value">
-      <div class="text-xl mb-3">
+      <div class="fz-xl mb-3">
         Summary
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 mb-5">
-        <stat-card
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 cards-row mb-4">
+        <div
           v-for="(card, i) in expenses.summary.value"
           :key="i"
-          :name="card.name"
-          :total="card.total"
-        />
+          class="col"
+        >
+          <stat-card
+            :name="card.name"
+            :total="card.total"
+          />
+        </div>
       </div>
     </template>
 
@@ -67,12 +71,12 @@ setPageTitle('Expenses')
         Create Category
       </router-link>
     </div>
-    <table class="simple-table white-header">
+    <table class="simple-table">
       <thead>
         <tr>
           <th>Name</th>
           <th>Sum</th>
-          <th class="flex justify-end">
+          <th class="text-end">
             Actions
           </th>
         </tr>
@@ -86,26 +90,26 @@ setPageTitle('Expenses')
             <td colspan="2">
               {{ cat.name }}
             </td>
-            <td class="flex justify-end items-center">
+            <td class="d-flex justify-content-end align-items-center">
               <template v-if="cat.id">
                 <router-link
                   :to="{name: 'AddExpense', params: {category: cat.id}}"
-                  class="text-gray-300 hover:text-gray-600 mr-2"
+                  class="btn btn-link p-0 me-2"
                 >
-                  <plus-circle-icon class="h-5 w-5" />
+                  <circle-plus :size="20" />
                 </router-link>
                 <router-link
                   :to="{name: 'EditCategory', params: {id: cat.id}}"
-                  class="text-gray-300 hover:text-gray-600 mr-2"
+                  class="btn btn-link p-0 me-2"
                 >
-                  <pencil-icon class="h-5 w-5" />
+                  <pen :size="20" />
                 </router-link>
                 <button
                   type="button"
-                  class="text-gray-300 hover:text-red-500"
+                  class="btn btn-link btn-link-danger"
                   @click="confirmDeleteCategory(cat)"
                 >
-                  <x-circle-icon class="h-5 w-5" />
+                  <circle-x :size="20" />
                 </button>
               </template>
             </td>
@@ -114,27 +118,27 @@ setPageTitle('Expenses')
             <tr
               v-for="(expense, i) in cat.expenses"
               :key="i"
-              :class="[expense.isTotal ? 'font-bold' : '']"
+              :class="[expense.isTotal ? 'fw-bold' : '']"
             >
-              <td :class="[expense.isSubTotal || expense.isTotal ? 'text-right' : '']">
+              <td :class="[expense.isSubTotal || expense.isTotal ? 'text-end' : '']">
                 {{ expense.name }}
               </td>
               <td>{{ formatPrice(expense.sum, expense.currency) }}</td>
               <td class="table-actions">
                 <template v-if="expense.id">
-                  <div class="flex justify-end items-center show-on-row-hover">
+                  <div class="justify-content-end align-items-center show-on-row-hover">
                     <router-link
                       :to="{name: 'EditExpense', params: {id: expense.id, category: cat.id}}"
-                      class="text-gray-300 hover:text-gray-600 mr-2"
+                      class="btn btn-link p-0 me-2 border-0"
                     >
-                      <pencil-icon class="h-5 w-5" />
+                      <pen :size="20" />
                     </router-link>
                     <button
                       type="button"
-                      class="text-gray-300 hover:text-red-500"
+                      class="btn btn-link btn-link-danger"
                       @click="confirmDeleteExpense(expense)"
                     >
-                      <x-circle-icon class="h-5 w-5" />
+                      <circle-x :size="20" />
                     </button>
                   </div>
                 </template>
