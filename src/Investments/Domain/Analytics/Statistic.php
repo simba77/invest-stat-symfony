@@ -10,6 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: StatisticRepository::class)]
+#[ORM\Index(columns: ['account_id', 'date'], name: 'statistic_account_date_idx')]
 class Statistic
 {
     /** @psalm-suppress UnusedProperty */
