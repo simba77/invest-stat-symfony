@@ -7,7 +7,6 @@
     "lint-fix": "eslint ./assets --ext .js,.ts,.vue --fix"
   },
   "devDependencies": {
-    "@tailwindcss/forms": "^0.5.8",
     "@types/bootstrap": "^5.2.10",
     "@typescript-eslint/eslint-plugin": "^8.18.0",
     "@typescript-eslint/parser": "^8.18.0",
@@ -17,20 +16,15 @@
     "axios": "^1.7.9",
     "eslint": "^8.57.1",
     "eslint-plugin-vue": "^9.32.0",
-    "postcss": "^8.4.49",
     "resolve-url-loader": "^5.0.0",
     "sass": "1.75.0",
     "sass-loader": "^16.0.4",
-    "tailwindcss": "^3.4.16",
     "typescript": "^5.7.2",
     "vite": "^6.0.3",
     "vite-plugin-eslint": "^1.8.1",
     "vue-tsc": "^2.1.10"
   },
   "dependencies": {
-    "@headlessui/vue": "^1.7.23",
-    "@heroicons/vue": "^2.2.0",
-    "@primevue/themes": "^4.2.5",
     "@vuepic/vue-datepicker": "^10.0.0",
     "@vueuse/core": "^12.0.0",
     "bootstrap": "^5.3.8",
@@ -38,9 +32,6 @@
     "floating-vue": "^5.2.2",
     "lucide-vue-next": "^0.563.0",
     "pinia": "^2.3.0",
-    "primeicons": "^7.0.0",
-    "primevue": "^4.2.5",
-    "tailwindcss-primeui": "^0.3.4",
     "vite-plugin-symfony": "^7.1.0",
     "vue": "^3.5.13",
     "vue-i18n": "^9.14.2",
