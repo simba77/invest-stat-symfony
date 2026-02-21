@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PageComponent from "@/components/PageComponent.vue"
-import {XCircleIcon, PencilIcon} from "@heroicons/vue/24/outline"
+import { Pencil, XCircle } from "lucide-vue-next";
 import {useDeposits} from '@/composable/useDeposits'
 import useAsync from "@/utils/use-async";
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
@@ -44,7 +44,7 @@ setPageTitle('Deposits')
       </router-link>
       <router-link
         :to="{name: 'DepositAccounts'}"
-        class="btn btn-secondary ml-2"
+        class="btn btn-secondary ms-2"
       >
         Accounts
       </router-link>
@@ -61,7 +61,7 @@ setPageTitle('Deposits')
           <th>Sum</th>
           <th>Type</th>
           <th>Account</th>
-          <th class="flex justify-end">
+          <th class="text-end">
             Actions
           </th>
         </tr>
@@ -78,19 +78,22 @@ setPageTitle('Deposits')
           <td>{{ item.accountName }}</td>
           <td class="table-actions">
             <template v-if="item.id">
-              <div class="flex justify-end items-center show-on-row-hover">
+              <div class="d-flex justify-content-end align-items-center show-on-row-hover">
                 <router-link
-                  class="text-gray-300 hover:text-gray-900 mr-3"
                   :to="{name: 'DepositEdit', params: {id: item.id}}"
+                  class="text-muted hover-opacity me-2"
+                  title="Edit"
                 >
-                  <pencil-icon class="h-5 w-5" />
+                  <pencil :size="20" />
                 </router-link>
+
                 <button
                   type="button"
-                  class="text-gray-300 hover:text-red-500"
+                  class="btn btn-link p-0 btn-link-danger"
+                  title="Delete"
                   @click="deleteDeposit(item)"
                 >
-                  <x-circle-icon class="h-5 w-5" />
+                  <x-circle :size="20" />
                 </button>
               </div>
             </template>

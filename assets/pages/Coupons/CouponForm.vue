@@ -57,10 +57,7 @@ if (route.params.id) {
   <page-component title="Add Coupon">
     <div class="card">
       <div class="card-body py-4">
-        <form
-          class="space-y-6 w-full md:w-2/3 mx-auto"
-          @submit.prevent="submitForm"
-        >
+        <form @submit.prevent="submitForm">
           <div class="row justify-content-center">
             <div class="col-12 col-md-8 col-lg-8">
               <div class="mb-4">
@@ -76,7 +73,6 @@ if (route.params.id) {
                 <input-select
                   :key="componentKey"
                   v-model.number="form.fields.accountId"
-                  class="mb-3"
                   label="Account"
                   name="accountId"
                   placeholder="Select Account"
@@ -89,7 +85,6 @@ if (route.params.id) {
                   :key="componentKey"
                   v-model.trim="form.fields.ticker"
                   :error="validationErrors"
-                  class="mb-3"
                   name="ticker"
                   label="Ticker"
                   placeholder="Ticker"
@@ -98,7 +93,6 @@ if (route.params.id) {
                 <input-select
                   :key="componentKey"
                   v-model="form.fields.stockMarket"
-                  class="mb-3"
                   label="Stock Market"
                   name="stockMarket"
                   placeholder="Stock Market"
@@ -110,7 +104,6 @@ if (route.params.id) {
                   :key="componentKey"
                   v-model.trim="form.fields.amount"
                   :error="validationErrors"
-                  class="mb-3"
                   name="amount"
                   label="Amount"
                   placeholder="Amount"
@@ -122,7 +115,6 @@ if (route.params.id) {
                   v-model="form.fields.date"
                   :error="validationErrors"
                   type="date"
-                  class="mb-3"
                   name="date"
                   label="Date"
                   placeholder="Date"

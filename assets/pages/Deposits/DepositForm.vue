@@ -55,81 +55,78 @@ if (route.params.id) {
   <page-component title="Add Deposit">
     <div class="card">
       <div class="card-body py-4">
-        <form
-          class="space-y-6 w-full md:w-2/3 mx-auto"
-          @submit.prevent="submitForm"
-        >
-          <div>
-            <h3 class="form-title">
-              Deposit
-            </h3>
-          </div>
-          <preloader-component v-if="loadingForm" />
-          <div
-            v-else
-            class="w-full md:w-2/4"
-          >
-            <input-select
-              :key="componentKey"
-              v-model.number="form.formData.accountId"
-              class="mb-3"
-              label="Account"
-              name="accountId"
-              placeholder="Select Account"
-              field-value="id"
-              :error="validationErrors"
-              :options="accounts?.items"
-            />
+        <form @submit.prevent="submitForm">
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-8">
+              <div class="mb-3">
+                <h3 class="fw-bold">
+                  Deposit
+                </h3>
+              </div>
+              <preloader-component v-if="loadingForm" />
+              <div
+                v-else
+                class="form-stack"
+              >
+                <input-select
+                  :key="componentKey"
+                  v-model.number="form.formData.accountId"
+                  label="Account"
+                  name="accountId"
+                  placeholder="Select Account"
+                  field-value="id"
+                  :error="validationErrors"
+                  :options="accounts?.items"
+                />
 
-            <input-text
-              :key="componentKey"
-              v-model.trim="form.formData.sum"
-              :error="validationErrors"
-              class="mb-3"
-              name="sum"
-              label="Sum"
-              placeholder="Sum"
-              type="number"
-            />
+                <input-text
+                  :key="componentKey"
+                  v-model.trim="form.formData.sum"
+                  :error="validationErrors"
+                  name="sum"
+                  label="Sum"
+                  placeholder="Sum"
+                  type="number"
+                />
 
-            <input-select
-              :key="componentKey"
-              v-model.number="form.formData.type"
-              class="mb-3"
-              label="Type"
-              name="type"
-              placeholder="Select Type"
-              field-value="id"
-              :error="validationErrors"
-              :options="[{id: 1, name: 'Deposit'}, {id: 2, name: 'Percent'}]"
-            />
+                <input-select
+                  :key="componentKey"
+                  v-model.number="form.formData.type"
+                  label="Type"
+                  name="type"
+                  placeholder="Select Type"
+                  field-value="id"
+                  :error="validationErrors"
+                  :options="[{id: 1, name: 'Deposit'}, {id: 2, name: 'Percent'}]"
+                />
 
-            <input-text
-              :key="componentKey"
-              v-model="form.formData.date"
-              :error="validationErrors"
-              type="date"
-              class="mb-3"
-              name="date"
-              label="Date"
-              placeholder="Date"
-            />
-          </div>
-          <div class="buttons-divider" />
-          <div>
-            <button
-              type="submit"
-              class="btn btn-primary"
-              :disabled="loading"
-            >
-              Save
-            </button>
-            <router-link
-              :to="{name: 'Deposits'}"
-              class="btn btn-secondary ml-3"
-            >
-              Back
-            </router-link>
+                <input-text
+                  :key="componentKey"
+                  v-model="form.formData.date"
+                  :error="validationErrors"
+                  type="date"
+                  name="date"
+                  label="Date"
+                  placeholder="Date"
+                />
+              </div>
+              <hr class="my-4">
+              <div>
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  :disabled="loading"
+                >
+                  Save
+                </button>
+                <router-link
+                  :to="{name: 'Deposits'}"
+                  class="btn btn-secondary ms-2"
+                >
+                  Back
+                </router-link>
+              </div>
+            </div>
           </div>
         </form>
       </div>

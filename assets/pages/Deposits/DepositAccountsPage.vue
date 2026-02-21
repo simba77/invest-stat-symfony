@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PageComponent from "@/components/PageComponent.vue"
-import {XCircleIcon, PencilIcon} from "@heroicons/vue/24/outline"
+import { Pencil, XCircle } from "lucide-vue-next";
 import {useDepositAccounts} from '@/composable/useDepositAccounts'
 import useAsync from "@/utils/use-async";
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
@@ -46,7 +46,7 @@ function deleteAccount(account: DepositAccount) {
         <tr>
           <th>#</th>
           <th>Name</th>
-          <th class="flex justify-end">
+          <th class="text-end">
             Actions
           </th>
         </tr>
@@ -60,19 +60,22 @@ function deleteAccount(account: DepositAccount) {
           <td>{{ item.name }}</td>
           <td class="table-actions">
             <template v-if="item.id">
-              <div class="flex justify-end items-center show-on-row-hover">
+              <div class="d-flex justify-content-end align-items-center show-on-row-hover">
                 <router-link
-                  class="text-gray-300 hover:text-gray-900 mr-3"
                   :to="{name: 'DepositAccountsEdit', params: {id: item.id}}"
+                  class="text-muted hover-opacity me-2"
+                  title="Edit"
                 >
-                  <pencil-icon class="h-5 w-5" />
+                  <pencil :size="20" />
                 </router-link>
+
                 <button
                   type="button"
-                  class="text-gray-300 hover:text-red-500"
+                  class="btn btn-link p-0 btn-link-danger"
+                  title="Delete"
                   @click="deleteAccount(item)"
                 >
-                  <x-circle-icon class="h-5 w-5" />
+                  <x-circle :size="20" />
                 </button>
               </div>
             </template>
@@ -89,7 +92,7 @@ function deleteAccount(account: DepositAccount) {
       </tbody>
     </table>
 
-    <div class="mt-5">
+    <div class="mt-4">
       <router-link
         :to="{name: 'Deposits'}"
         class="btn btn-secondary"
