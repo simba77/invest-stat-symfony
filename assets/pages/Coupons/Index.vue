@@ -77,7 +77,7 @@ setPageTitle("Coupons")
           <td>{{ dividend.accountName }}</td>
           <td class="table-actions">
             <template v-if="dividend.id">
-              <div class="d-flex justify-content-end items-items-center show-on-row-hover">
+              <div class="justify-content-end items-items-center show-on-row-hover">
                 <router-link
                   :to="{name: 'CouponEdit', params: {id: dividend.id}}"
                   class="text-muted hover-opacity me-2"

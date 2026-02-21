@@ -60,7 +60,7 @@ function deleteAccount(account: DepositAccount) {
           <td>{{ item.name }}</td>
           <td class="table-actions">
             <template v-if="item.id">
-              <div class="d-flex justify-content-end align-items-center show-on-row-hover">
+              <div class="justify-content-end align-items-center show-on-row-hover">
                 <router-link
                   :to="{name: 'DepositAccountsEdit', params: {id: item.id}}"
                   class="text-muted hover-opacity me-2"
