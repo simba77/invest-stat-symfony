@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PageComponent from "../../components/PageComponent.vue";
-import {XCircleIcon, PencilIcon} from "@heroicons/vue/24/outline";
+import { Pen, CircleX } from 'lucide-vue-next';
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
 import {useModal} from "@/composable/useModal";
 import {usePage} from "@/composable/usePage";
@@ -58,7 +58,7 @@ setPageTitle("Futures Multipliers")
         <tr>
           <th>Ticker</th>
           <th>Value</th>
-          <th class="flex justify-end">
+          <th class="text-end">
             Actions
           </th>
         </tr>
@@ -72,19 +72,19 @@ setPageTitle("Futures Multipliers")
           <td>{{ item.value }}</td>
           <td class="table-actions">
             <template v-if="item.id">
-              <div class="flex justify-end items-center show-on-row-hover">
+              <div class="justify-content-end align-items-center show-on-row-hover">
                 <router-link
-                  class="text-gray-300 hover:text-gray-900 mr-3"
+                  class="btn btn-link p-0 me-2 border-0"
                   :to="{name: 'FuturesMultipliersEdit', params: {id: item.id}}"
                 >
-                  <pencil-icon class="h-5 w-5" />
+                  <pen :size="20" />
                 </router-link>
                 <button
                   type="button"
-                  class="text-gray-300 hover:text-red-500"
+                  class="btn btn-link btn-link-danger"
                   @click="confirmDelete(item)"
                 >
-                  <x-circle-icon class="h-5 w-5" />
+                  <circle-x :size="20" />
                 </button>
               </div>
             </template>

@@ -38,60 +38,57 @@ onMounted(() => {
 </script>
 
 <template>
-  <page-component title="Add Multiplier">
+  <page-component :title="route.params.id ? 'Edit Multiplier' : 'Add Multiplier'">
     <div class="card">
       <div class="card-body py-4">
         <preloader-component v-if="loadingForm" />
-        <form
-          v-else
-          class="space-y-6 w-full md:w-2/3 mx-auto"
-          action="#"
-          method="POST"
-          @submit.prevent="submitForm"
-        >
-          <div>
-            <h3 class="form-title">
-              Multiplier
-            </h3>
-            <p class="mt-1 text-sm text-gray-600">
-              Enter the ticker and value of the multiplier
-            </p>
-          </div>
-          <div class="w-full md:w-2/4">
-            <input-text
-              :key="componentKey"
-              v-model="formData.ticker"
-              :error="validationErrors"
-              name="ticker"
-              label="Ticker"
-              placeholder="Ticker"
-            />
-            <input-text
-              :key="componentKey"
-              v-model.trim="formData.value"
-              class="mt-3"
-              :error="validationErrors"
-              name="value"
-              label="Multiplier Value"
-              placeholder="Multiplier Value"
-              type="number"
-            />
-          </div>
-          <div class="buttons-divider" />
-          <div>
-            <button
-              type="submit"
-              class="btn btn-primary"
-              :disabled="loading"
-            >
-              Save
-            </button>
-            <router-link
-              :to="{name: 'FuturesMultipliers'}"
-              class="btn btn-secondary ml-3"
-            >
-              Back
-            </router-link>
+        <form v-else @submit.prevent="submitForm">
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-8">
+              <div class="mb-3">
+                <div class="form-title">
+                  Multiplier
+                </div>
+                <p class="form-description">
+                  Enter the ticker and value of the multiplier
+                </p>
+              </div>
+              <div class="form-stack">
+                <input-text
+                  :key="componentKey"
+                  v-model="formData.ticker"
+                  :error="validationErrors"
+                  name="ticker"
+                  label="Ticker"
+                  placeholder="Ticker"
+                />
+                <input-text
+                  :key="componentKey"
+                  v-model.trim="formData.value"
+                  :error="validationErrors"
+                  name="value"
+                  label="Multiplier Value"
+                  placeholder="Multiplier Value"
+                  type="number"
+                />
+              </div>
+              <hr class="my-4">
+              <div>
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  :disabled="loading"
+                >
+                  Save
+                </button>
+                <router-link
+                  :to="{name: 'FuturesMultipliers'}"
+                  class="btn btn-secondary ms-2"
+                >
+                  Back
+                </router-link>
+              </div>
+            </div>
           </div>
         </form>
       </div>
