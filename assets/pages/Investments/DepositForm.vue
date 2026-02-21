@@ -63,70 +63,67 @@ onMounted(() => {
 </script>
 
 <template>
-  <page-component title="Add Deposit">
+  <page-component :title="route.params.id ? 'Edit Deposit' : 'Add Deposit'">
     <div class="card">
       <div class="card-body py-4">
-        <form
-          class="space-y-6 w-full md:w-2/3 mx-auto"
-          action="#"
-          method="POST"
-          @submit.prevent="submitForm"
-        >
-          <div>
-            <h3 class="form-title">
-              Deposit
-            </h3>
-            <p class="mt-1 text-sm text-gray-600">
-              Enter the date and amount of expense
-            </p>
-          </div>
-          <div class="w-full md:w-2/4">
-            <input-text
-              :key="data.componentKey"
-              v-model="data.form.date"
-              :error="data.errors"
-              type="date"
-              name="date"
-              label="Date"
-              placeholder="Date"
-            />
-            <input-text
-              :key="data.componentKey"
-              v-model.trim="data.form.sum"
-              class="mt-3"
-              :error="data.errors"
-              name="sum"
-              label="Amount of Deposit"
-              placeholder="Amount of Deposit"
-              type="number"
-            />
-            <input-select
-              :key="data.componentKey"
-              v-model.number="data.form.account"
-              class="mt-3"
-              label="Account"
-              name="account"
-              placeholder="Select Account"
-              field-value="id"
-              :error="data.errors"
-              :options="data.accounts"
-            />
-          </div>
-          <div class="buttons-divider" />
-          <div>
-            <button
-              type="submit"
-              class="btn btn-primary"
-              :disabled="data.loading"
-            >
-              Save
-            </button>
-            <router-link
-              :to="{name: 'Investments'}"
-              class="btn btn-secondary ml-3"
-            >
-              Back
-            </router-link>
+        <form @submit.prevent="submitForm">
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-8">
+              <div class="mb-3">
+                <div class="form-title">
+                  Deposit
+                </div>
+                <p class="form-description">
+                  Enter the date and amount of expense
+                </p>
+              </div>
+              <div class="form-stack">
+                <input-text
+                  :key="data.componentKey"
+                  v-model="data.form.date"
+                  :error="data.errors"
+                  type="date"
+                  name="date"
+                  label="Date"
+                  placeholder="Date"
+                />
+                <input-text
+                  :key="data.componentKey"
+                  v-model.trim="data.form.sum"
+                  :error="data.errors"
+                  name="sum"
+                  label="Amount of Deposit"
+                  placeholder="Amount of Deposit"
+                  type="number"
+                />
+                <input-select
+                  :key="data.componentKey"
+                  v-model.number="data.form.account"
+                  label="Account"
+                  name="account"
+                  placeholder="Select Account"
+                  field-value="id"
+                  :error="data.errors"
+                  :options="data.accounts"
+                />
+              </div>
+              <hr class="my-4">
+              <div>
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  :disabled="data.loading"
+                >
+                  Save
+                </button>
+                <router-link
+                  :to="{name: 'Investments'}"
+                  class="btn btn-secondary ms-2"
+                >
+                  Back
+                </router-link>
+              </div>
+            </div>
           </div>
         </form>
       </div>
