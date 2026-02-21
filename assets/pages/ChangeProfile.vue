@@ -44,15 +44,21 @@ const {loading, run: submitForm} = useAsync(() => {
           @submit.prevent="submitForm"
         >
           <div class="col-12 col-md-8 col-lg-8">
-            <!-- Success message -->
-            <div
-              v-if="success"
-              class="alert alert-success"
-            >
-              Your profile has been successfully changed
+            <div class="mb-3">
+              <div class="form-title">
+                Change Profile
+              </div>
             </div>
 
             <div class="form-stack">
+              <!-- Success message -->
+              <div
+                v-if="success"
+                class="alert alert-success"
+              >
+                Your profile has been successfully changed
+              </div>
+
               <input-text
                 :key="componentKey"
                 v-model="form.name"
