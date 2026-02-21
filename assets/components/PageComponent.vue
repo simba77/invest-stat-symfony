@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import {Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
-import {UserIcon, SunIcon, MoonIcon} from '@heroicons/vue/24/outline'
+import { Sun, Moon, User } from 'lucide-vue-next'
 import {authStore} from "@/stores/authStore";
 import {useRoute} from "vue-router";
-import Button from 'primevue/button';
 import {useTemplate} from "@/composable/useTemplate";
 const {toggleTheme, currentTheme} = useTemplate()
 
@@ -16,7 +14,7 @@ defineProps({
   }
 })
 
-const user = authStore().userData;
+const userData = authStore().userData;
 
 const navigation = [
   {
@@ -67,7 +65,7 @@ const navigation = [
 ]
 const userNavigation = [
   {name: 'Change Profile', href: '/change-profile'},
-  {name: 'Logout', href: '/api/logout'},
+  {name: 'Logout', href: '/api/logout', external: true},
 ]
 </script>
 <template>
@@ -76,7 +74,7 @@ const userNavigation = [
       <div class="container">
         <!-- Logo -->
         <router-link class="navbar-brand d-flex align-items-center" to="/">
-          <img src="../images/workflow-mark-indigo-300.svg" alt="Logo" width="32" height="32" />
+          <img src="../images/workflow-mark-indigo-300.svg" alt="Logo" width="32" height="32">
         </router-link>
 
         <!-- Burger -->
@@ -86,11 +84,11 @@ const userNavigation = [
           data-bs-toggle="collapse"
           data-bs-target="#mainNavbar"
         >
-          <span class="navbar-toggler-icon"></span>
+          <span class="navbar-toggler-icon" />
         </button>
 
         <!-- Content -->
-        <div class="collapse navbar-collapse" id="mainNavbar">
+        <div id="mainNavbar" class="collapse navbar-collapse">
           <!-- Left menu -->
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li
@@ -111,16 +109,20 @@ const userNavigation = [
           <!-- Right controls -->
           <div class="d-flex align-items-center gap-3">
             <!-- Theme switch -->
-            <Button
-              rounded
-              size="small"
-              text
-              class="border-0"
+            <button
+              type="button"
+              class="btn btn-link text-white border-0 p-0"
               @click="toggleTheme()"
             >
-              <SunIcon v-if="currentTheme === 'light'" class="h-5 w-5" />
-              <MoonIcon v-else class="h-5 w-5" />
-            </Button>
+              <Sun
+                v-if="currentTheme === 'light'"
+                :size="20"
+              />
+              <Moon
+                v-else
+                :size="20"
+              />
+            </button>
 
             <!-- User dropdown -->
             <div class="dropdown">
@@ -129,12 +131,12 @@ const userNavigation = [
                 data-bs-toggle="dropdown"
               >
                 <span
-                  class="bg-light rounded-circle d-flex align-items-center justify-content-center"
+                  class="bg-light rounded-circle d-flex align-items-center justify-content-center text-dark"
                   style="width: 36px; height: 36px"
                 >
-                  <UserIcon class="h-5 w-5 text-dark" />
+                  <User :size="18" />
                 </span>
-                <strong>{{ user.name }}</strong>
+                <strong>{{ userData?.name }}</strong>
               </button>
 
               <ul class="dropdown-menu dropdown-menu-end">
@@ -142,9 +144,10 @@ const userNavigation = [
                   v-for="item in userNavigation"
                   :key="item.name"
                 >
-                  <a class="dropdown-item" :href="item.href">
+                  <a v-if="item?.external" class="dropdown-item" :href="item.href">{{ item.name }}</a>
+                  <router-link v-else class="dropdown-item" :to="item.href">
                     {{ item.name }}
-                  </a>
+                  </router-link>
                 </li>
               </ul>
             </div>
@@ -156,7 +159,9 @@ const userNavigation = [
     <!-- Page title -->
     <header v-if="title" class="shadow-sm page-header">
       <div class="container py-3">
-        <h1 class="mb-0">{{ title }}</h1>
+        <h1 class="mb-0">
+          {{ title }}
+        </h1>
       </div>
     </header>
 
@@ -165,10 +170,3 @@ const userNavigation = [
     </main>
   </div>
 </template>
-
-
-<style scoped lang="scss">
-.switch-theme-btn {
-
-}
-</style>
