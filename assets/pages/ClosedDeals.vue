@@ -9,7 +9,6 @@ import ClosedDealsTable from "@/components/Analytics/ClosedDealsTable.vue";
 import {usePage} from "@/composable/usePage";
 import {ClosedDealsListItem, ClosedDealsSummary} from "@/types/analytics";
 import axios from "axios";
-import Button from 'primevue/button';
 
 const {setPageTitle} = usePage()
 
@@ -57,7 +56,6 @@ closedDealsByMonthsRun()
 
 setPageTitle("Closed Deals")
 
-
 function applyMonth(date: Date) {
   filter.startDate = formatDate(startOfMonth(date))
   filter.endDate = formatDate(endOfMonth(date))
@@ -81,18 +79,19 @@ function nextMonth() {
   )
   applyMonth(currentMonth.value)
 }
-
 </script>
 
 <template>
   <page-component title="Closed Deals">
-    <div v-if="closedDealsByMonths?.profitByMonths">
-      <closed-deals-by-months-chart :profit-by-months="closedDealsByMonths?.profitByMonths" />
+    <div v-if="closedDealsByMonths?.profitByMonths" class="mb-4">
+      <closed-deals-by-months-chart
+        :profit-by-months="closedDealsByMonths?.profitByMonths"
+      />
     </div>
 
-    <div class="mb-6 grid gap-4 items-end grid-flow-row sm:grid-flow-row md:grid-flow-col md:auto-cols-max">
-      <!-- Start Date -->
-      <div class="w-full md:w-auto">
+    <!-- Filters -->
+    <div class="row g-3 align-items-end mb-4">
+      <div class="col-12 col-md-auto">
         <input-date-component
           v-model="filter.startDate"
           name="startDate"
@@ -101,8 +100,7 @@ function nextMonth() {
         />
       </div>
 
-      <!-- End Date -->
-      <div class="w-full md:w-auto">
+      <div class="col-12 col-md-auto">
         <input-date-component
           v-model="filter.endDate"
           name="endDate"
@@ -111,29 +109,33 @@ function nextMonth() {
         />
       </div>
 
-      <!-- Month navigation -->
-      <div class="flex items-center gap-2 w-full md:w-auto justify-start md:justify-center">
-        <Button
-          label="←"
-          raised
-          rounded
-          variant="outlined"
-          @click="prevMonth"
-        />
-        <div class="font-medium">
-          {{ currentMonth.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' }) }}
+      <div class="col-12 col-md-auto">
+        <div class="d-flex align-items-center gap-2">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            @click="prevMonth"
+          >
+            ←
+          </button>
+
+          <div class="fw-medium px-2">
+            {{ currentMonth.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' }) }}
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            @click="nextMonth"
+          >
+            →
+          </button>
         </div>
-        <Button
-          label="→"
-          raised
-          rounded
-          variant="outlined"
-          @click="nextMonth"
-        />
       </div>
     </div>
 
     <preloader-component v-if="loading" />
+
     <div v-else-if="closedDeals">
       <closed-deals-table
         :assets="closedDeals.deals"
