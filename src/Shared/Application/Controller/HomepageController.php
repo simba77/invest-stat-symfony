@@ -14,6 +14,7 @@ use App\Investments\Domain\Instruments\Currencies\CurrencyService;
 use App\Investments\Domain\Instruments\FutureMultiplierRepositoryInterface;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\Deals\DealData;
+use App\Investments\Domain\Operations\Deals\DealStatus;
 use App\Investments\Domain\Operations\Investment;
 use App\Shared\Domain\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -50,17 +51,26 @@ class HomepageController extends AbstractController
             return $item->total > 0;
         });
 
+        $blockedAssetsSum = '0';
         $dailyChange = '0';
         $allActiveDeals = $this->dealRepository->findByUserId($user->getId());
         foreach ($allActiveDeals as $deal) {
             $dealData = new DealData($deal, $this->currencyService, $this->futureMultiplierRepository);
             $dailyChange = bcadd($dailyChange, $dealData->getFullDailyProfitInBaseCurrency(), 2);
+
+            if ($dealData->getStatus() === DealStatus::Blocked) {
+                $blockedAssetsSum = bcadd($blockedAssetsSum, $dealData->getFullCurrentPriceInBaseCurrency());
+            }
         }
 
         $accounts = $this->accountRepository->findByUserWithDeposits($user->getId());
         $accountsList = $this->accountsListCompiler->compile($accounts);
         foreach ($accountsList as $account) {
             $allAssetsSum = bcadd($account->currentValue, $allAssetsSum, 2);
+
+            if ($account->id === 1) {
+                $blockedAssetsSum = bcadd($blockedAssetsSum, bcmul($account->usdBalance, $this->currencyService->getUSDRUBRate()), 2);
+            }
         }
 
         $profit = bcsub($allAssetsSum, $invested, 2);
@@ -111,6 +121,18 @@ class HomepageController extends AbstractController
                         'name'     => 'Saving + All Brokers Assets',
                         'helpText' => 'Assets for The Current Day + Deposits',
                         'total'    => bcadd($allAssetsSum, $depositsSum, 2),
+                        'currency' => '₽',
+                    ],
+
+                    [
+                        'name'     => 'Blocked Assets',
+                        'total'    => $blockedAssetsSum,
+                        'currency' => '₽',
+                    ],
+
+                    [
+                        'name'     => 'Liquid assets',
+                        'total'    => bcsub(bcadd($allAssetsSum, $depositsSum, 2), $blockedAssetsSum, 2),
                         'currency' => '₽',
                     ],
                 ],
