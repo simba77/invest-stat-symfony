@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Investments\Application\Operations;
 
 use App\Investments\Application\Response\DTO\Operations\InvestmentResponseDTO;
-use App\Investments\Infrastructure\Persistence\Repository\InvestmentRepository;
+use App\Investments\Domain\Operations\InvestmentRepositoryInterface;
 use App\Shared\Domain\User;
 
 class InvestmentsService
 {
     public function __construct(
-        private readonly InvestmentRepository $investmentRepository
+        private readonly InvestmentRepositoryInterface $investmentRepository
     ) {
     }
 

@@ -6,6 +6,7 @@ namespace App\Investments\Infrastructure\Persistence\Repository;
 
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Operations\Investment;
+use App\Investments\Domain\Operations\InvestmentRepositoryInterface;
 use App\Shared\Infrastructure\Persistence\Doctrine\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
@@ -13,7 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Investment>
  */
-class InvestmentRepository extends ServiceEntityRepository
+class InvestmentRepository extends ServiceEntityRepository implements InvestmentRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -24,6 +25,7 @@ class InvestmentRepository extends ServiceEntityRepository
      * @param int $userId
      * @return array<int, array{investment: Investment, account_name: string}>
      */
+    #[\Override]
     public function getByUserId(int $userId): array
     {
         return $this->createQueryBuilder('inv')
@@ -37,6 +39,7 @@ class InvestmentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    #[\Override]
     public function getSumByUserId(int $userId): string
     {
         return (string) $this->createQueryBuilder('inv')
