@@ -41,7 +41,7 @@ final readonly class GetHomepageDataUseCase
     {
         $invested = $this->investmentRepository->getSumByUserId($user->getId());
         $allAssetsSum = '0';
-        $depositsSum = $this->depositRepository->getSumOfDepositsForUser($user);
+        $depositsSum = $this->depositRepository->getSumOfDepositsForUserId($user->getId());
         $depositAccounts = $this->getNotEmptyDepositAccounts($user);
 
         $blockedAssetsSum = '0';

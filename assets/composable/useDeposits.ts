@@ -2,12 +2,26 @@ import {ref} from "vue";
 import axios from "axios";
 import useAsync from "@/utils/use-async";
 import {Deposit} from '@/types/depositAccount'
+import {PaginatedResponse} from '@/types/pagination'
 
-const deposits = ref<{ items: Deposit[] }>()
+const deposits = ref<PaginatedResponse<Deposit>>()
+const currentPage = ref(1)
+const perPage = ref(20)
 
 export const useDeposits = () => {
-  async function getDeposits() {
-    deposits.value = await axios.get('/api/deposits').then((response) => response.data);
+  async function getDeposits(page: number = currentPage.value) {
+    currentPage.value = page
+
+    deposits.value = await axios.get('/api/deposits', {
+      params: {
+        page: currentPage.value,
+        perPage: perPage.value,
+      },
+    }).then((response) => response.data);
+
+    if (deposits.value?.pagination?.page) {
+      currentPage.value = deposits.value.pagination.page
+    }
   }
 
   async function deleteDeposit(id: number) {
@@ -42,6 +56,8 @@ export const useDeposits = () => {
 
   return {
     deposits,
+    currentPage,
+    perPage,
     creating,
     form,
     formErrors,

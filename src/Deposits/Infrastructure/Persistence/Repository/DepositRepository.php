@@ -6,9 +6,8 @@ namespace App\Deposits\Infrastructure\Persistence\Repository;
 
 use App\Deposits\Domain\Deposit;
 use App\Deposits\Domain\DepositRepositoryInterface;
-use App\Shared\Domain\User;
 use App\Shared\Infrastructure\Persistence\Doctrine\ServiceEntityRepository;
-use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -22,11 +21,11 @@ class DepositRepository extends ServiceEntityRepository implements DepositReposi
     }
 
     #[\Override]
-    public function getSumOfDepositsForUser(User $user): string
+    public function getSumOfDepositsForUserId(int $userId): string
     {
         $data = $this->createQueryBuilder('d')
-            ->andWhere('d.user = :user')
-            ->setParameter('user', $user)
+            ->andWhere('IDENTITY(d.user) = :userId')
+            ->setParameter('userId', $userId)
             ->select("SUM(d.sum) as sum_of_deposits")
             ->getQuery()
             ->getOneOrNullResult();
@@ -35,15 +34,53 @@ class DepositRepository extends ServiceEntityRepository implements DepositReposi
     }
 
     #[\Override]
-    public function getDepositsForUser(User $user): array
+    public function getDepositsForUserId(int $userId): array
     {
-        return $this->findBy(['user' => $user], ['date' => Criteria::DESC]);
+        return $this->createQueryBuilder('d')
+            ->andWhere('IDENTITY(d.user) = :userId')
+            ->setParameter('userId', $userId)
+            ->orderBy('d.date', Order::Descending->value)
+            ->addOrderBy('d.id', Order::Descending->value)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /** @return array<Deposit> */
+    #[\Override]
+    public function getDepositsPageForUserId(int $userId, int $offset, int $limit): array
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('IDENTITY(d.user) = :userId')
+            ->setParameter('userId', $userId)
+            ->orderBy('d.date', Order::Descending->value)
+            ->addOrderBy('d.id', Order::Descending->value)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
     }
 
     #[\Override]
-    public function getDepositByIdAndUser(int $id, User $user): ?Deposit
+    public function countByUserId(int $userId): int
     {
-        return $this->findOneBy(['id' => $id, 'user' => $user]);
+        return (int) $this->createQueryBuilder('d')
+            ->select('COUNT(d.id)')
+            ->andWhere('IDENTITY(d.user) = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    #[\Override]
+    public function getDepositByIdAndUserId(int $id, int $userId): ?Deposit
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.id = :id')
+            ->andWhere('IDENTITY(d.user) = :userId')
+            ->setParameter('id', $id)
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     #[\Override]

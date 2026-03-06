@@ -4,19 +4,45 @@ import { Pencil, XCircle } from "lucide-vue-next";
 import {useDeposits} from '@/composable/useDeposits'
 import useAsync from "@/utils/use-async";
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
+import PaginationComponent from "@/components/Common/PaginationComponent.vue";
 import {Deposit} from "@/types/depositAccount";
 import {useModal} from "@/composable/useModal";
 import DeleteDepositModal from "@/components/Deposits/DeleteDepositModal.vue";
 import { useNumbers } from "@/composable/useNumbers";
 import {usePage} from "@/composable/usePage";
+import {computed, watch} from "vue";
+import {useRoute, useRouter} from "vue-router";
 
 const deposits = useDeposits()
 const modal = useModal()
-const {loading, run: getDeposits} = useAsync(() => deposits.getDeposits())
+const {loading, run: getDeposits} = useAsync(deposits.getDeposits)
 const {formatPrice} = useNumbers()
 const {setPageTitle} = usePage()
+const route = useRoute()
+const router = useRouter()
 
-getDeposits()
+const routePage = computed(() => {
+  const value = Number(route.query.page ?? 1)
+
+  if (!Number.isFinite(value) || value < 1) {
+    return 1
+  }
+
+  return Math.floor(value)
+})
+
+watch(routePage, (value) => {
+  getDeposits(value).then(() => {
+    const actualPage = deposits.deposits.value?.pagination?.page
+
+    if (actualPage && actualPage !== value) {
+      router.replace({
+        name: 'Deposits',
+        query: actualPage > 1 ? {page: String(actualPage)} : {}
+      })
+    }
+  })
+}, {immediate: true})
 
 function deleteDeposit(deposit: Deposit) {
   modal.open({
@@ -26,6 +52,13 @@ function deleteDeposit(deposit: Deposit) {
       title: 'Delete Confirmation',
       text: 'Are you sure you want to delete the deposit <b>#'+ deposit.id + '</b>?',
     }
+  })
+}
+
+function changePage(page: number) {
+  router.push({
+    name: 'Deposits',
+    query: page > 1 ? {page: String(page)} : {}
   })
 }
 
@@ -109,6 +142,17 @@ setPageTitle('Deposits')
         </tr>
       </tbody>
     </table>
+
+    <div class="d-flex justify-content-between align-items-center mt-3 gap-2 flex-wrap">
+      <div class="text-muted small">
+        Total: {{ deposits.deposits.value?.pagination?.totalItems ?? 0 }}
+      </div>
+      <pagination-component
+        :page="deposits.deposits.value?.pagination?.page ?? 1"
+        :total-pages="deposits.deposits.value?.pagination?.totalPages ?? 1"
+        :disabled="loading"
+        @change="changePage"
+      />
+    </div>
   </page-component>
 </template>
-

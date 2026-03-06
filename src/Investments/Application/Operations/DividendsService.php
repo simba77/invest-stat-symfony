@@ -7,7 +7,7 @@ namespace App\Investments\Application\Operations;
 use App\Investments\Application\Response\DTO\Operations\DividendListItemDTO;
 use App\Investments\Infrastructure\Persistence\Repository\DividendRepository;
 use App\Shared\Domain\User;
-use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Order;
 
 class DividendsService
 {
@@ -22,7 +22,7 @@ class DividendsService
      */
     public function getDividendsForUser(?User $user): array
     {
-        $dividends = $this->dividendRepository->findBy(['user' => $user], ['date' => Criteria::DESC, 'id' => Criteria::DESC]);
+        $dividends = $this->dividendRepository->findBy(['user' => $user], ['date' => Order::Descending->value, 'id' => Order::Descending->value]);
         $result = [];
         foreach ($dividends as $dividend) {
             $result[] = new DividendListItemDTO(

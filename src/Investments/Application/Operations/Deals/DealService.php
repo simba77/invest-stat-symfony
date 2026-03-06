@@ -16,7 +16,7 @@ use App\Investments\Domain\Operations\Deals\DealType;
 use App\Investments\Domain\Operations\Deals\Exceptions\NoDealsException;
 use App\Shared\Domain\User;
 use Carbon\Carbon;
-use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Order;
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
 
@@ -54,7 +54,7 @@ class DealService
                     'ticker' => $dto->ticker,
                     'status' => DealStatus::Active,
                 ],
-                ['id' => Criteria::ASC]
+                ['id' => Order::Ascending->value]
             );
         if (empty($deals)) {
             throw new NoDealsException('No Deals for this Ticker and Account');
