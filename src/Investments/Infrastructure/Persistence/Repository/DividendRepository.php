@@ -25,6 +25,36 @@ class DividendRepository extends ServiceEntityRepository implements DividendRepo
         return parent::findAll();
     }
 
+    /**
+     * @return array<Dividend>
+     */
+    #[\Override]
+    public function getPageByUserId(int $userId, int $offset, int $limit): array
+    {
+        return $this->createQueryBuilder('d')
+            ->select(['d', 'a'])
+            ->leftJoin('d.account', 'a')
+            ->andWhere('IDENTITY(d.user) = :userId')
+            ->setParameter('userId', $userId)
+            ->orderBy('d.date', 'DESC')
+            ->addOrderBy('d.id', 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    #[\Override]
+    public function countByUserId(int $userId): int
+    {
+        return (int) $this->createQueryBuilder('d')
+            ->select('COUNT(d.id)')
+            ->andWhere('IDENTITY(d.user) = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function sumByTickerAndUserAndStockMarket(int $userId, string $ticker, string $stockMarket): string
     {
         $qb = $this->createQueryBuilder('d');

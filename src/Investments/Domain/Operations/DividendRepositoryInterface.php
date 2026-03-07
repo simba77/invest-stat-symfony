@@ -11,5 +11,12 @@ interface DividendRepositoryInterface
      */
     public function findAll(): array;
 
+    /**
+     * @return array<Dividend>
+     */
+    public function getPageByUserId(int $userId, int $offset, int $limit): array;
+
+    public function countByUserId(int $userId): int;
+
     public function sumByTickerAndUserAndStockMarket(int $userId, string $ticker, string $stockMarket): string;
 }

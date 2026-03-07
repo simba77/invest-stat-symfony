@@ -6,7 +6,3 @@ export interface Dividend {
   amount: number
   accountName: string
 }
-
-export interface DividendsPage {
-  items: Dividend[]
-}
