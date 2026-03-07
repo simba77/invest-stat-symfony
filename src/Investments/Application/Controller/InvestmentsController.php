@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Controller;
 
-use App\Investments\Application\Operations\InvestmentsService;
 use App\Investments\Application\Request\DTO\Operations\InvestmentRequestDTO;
 use App\Investments\Application\Response\Compiler\AccountsSimpleListCompiler;
+use App\Investments\Application\UseCases\GetInvestmentsPageUseCase;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Operations\Investment;
+use App\Shared\Application\Pagination\PageRequestFactory;
 use App\Shared\Domain\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,17 +27,23 @@ class InvestmentsController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly InvestmentsService $investmentsService,
+        private readonly GetInvestmentsPageUseCase $getInvestmentsPageUseCase,
         protected readonly AccountRepositoryInterface $accountRepository,
         protected readonly AccountsSimpleListCompiler $accountsSimpleListCompiler,
     ) {
     }
 
     #[Route('/investments', name: 'app_investments_investments_index')]
-    public function index(#[CurrentUser] ?User $user): JsonResponse
+    public function index(Request $request, #[CurrentUser] ?User $user): JsonResponse
     {
-        $items = $this->investmentsService->getInvestmentsForUser($user);
-        return $this->json(['items' => $items]);
+        if (! $user) {
+            throw $this->createAccessDeniedException('Authentication required.');
+        }
+
+        $page = max(1, $request->query->getInt('page', 1));
+        $perPage = $request->query->getInt('perPage', PageRequestFactory::DEFAULT_PER_PAGE);
+
+        return $this->json($this->getInvestmentsPageUseCase->execute($user, $page, $perPage));
     }
 
     #[Route('/investments/create', name: 'app_investments_investments_create', requirements: ['categoryId' => '\d+'], methods: ['POST'])]

@@ -3,23 +3,56 @@ import PageComponent from "../../components/PageComponent.vue";
 import { Pen, CircleX } from 'lucide-vue-next';
 import {useInvestments} from "@/composable/useInvestments";
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue";
+import PaginationComponent from "@/components/Common/PaginationComponent.vue";
 import {Investment} from "@/types/investments";
 import {useModal} from "@/composable/useModal";
 import ConfirmDeleteInvestmentModal from "@/components/Investments/ConfirmDeleteInvestmentModal.vue";
 import { useNumbers } from "@/composable/useNumbers";
 import {usePage} from "@/composable/usePage";
+import {computed, watch} from "vue";
+import {useRoute, useRouter} from "vue-router";
 
 const {investments, getInvestments, loadingInvestments} = useInvestments()
 const modal = useModal()
 const {formatPrice} = useNumbers()
 const {setPageTitle} = usePage()
+const route = useRoute()
+const router = useRouter()
 
-getInvestments()
+const routePage = computed(() => {
+  const value = Number(route.query.page ?? 1)
+
+  if (!Number.isFinite(value) || value < 1) {
+    return 1
+  }
+
+  return Math.floor(value)
+})
+
+watch(routePage, (value) => {
+  getInvestments(value).then(() => {
+    const actualPage = investments.value?.pagination?.page
+
+    if (actualPage && actualPage !== value) {
+      router.replace({
+        name: 'Investments',
+        query: actualPage > 1 ? {page: String(actualPage)} : {}
+      })
+    }
+  })
+}, {immediate: true})
 
 function confirmDelete(item: Investment) {
   modal.open({
     component: ConfirmDeleteInvestmentModal,
     modelValue: item
+  })
+}
+
+function changePage(page: number) {
+  router.push({
+    name: 'Investments',
+    query: page > 1 ? {page: String(page)} : {}
   })
 }
 
@@ -89,5 +122,17 @@ setPageTitle("Investments")
         </tr>
       </tbody>
     </table>
+
+    <div class="d-flex justify-content-between align-items-center mt-3 gap-2 flex-wrap">
+      <div class="text-muted small">
+        Total: {{ investments.pagination?.totalItems ?? 0 }}
+      </div>
+      <pagination-component
+        :page="investments.pagination?.page ?? 1"
+        :total-pages="investments.pagination?.totalPages ?? 1"
+        :disabled="loadingInvestments"
+        @change="changePage"
+      />
+    </div>
   </page-component>
 </template>

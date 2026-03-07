@@ -39,6 +39,37 @@ class InvestmentRepository extends ServiceEntityRepository implements Investment
             ->getResult();
     }
 
+    /**
+     * @return array<int, array{investment: Investment, account_name: string}>
+     */
+    #[\Override]
+    public function getPageByUserId(int $userId, int $offset, int $limit): array
+    {
+        return $this->createQueryBuilder('inv')
+            ->select(['inv as investment'])
+            ->leftJoin(Account::class, 'acc', Join::WITH, 'inv.account = acc.id')
+            ->andWhere('inv.userId = :userId')
+            ->addSelect(['acc.name as account_name'])
+            ->setParameter('userId', $userId)
+            ->orderBy('inv.date', 'DESC')
+            ->addOrderBy('inv.id', 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    #[\Override]
+    public function countByUserId(int $userId): int
+    {
+        return (int) $this->createQueryBuilder('inv')
+            ->select('COUNT(inv.id)')
+            ->andWhere('inv.userId = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     #[\Override]
     public function getSumByUserId(int $userId): string
     {
