@@ -37,7 +37,7 @@ Instructions for coding agents in this repository.
   - `composer cs-check`
   - `npm ci`
   - `npm run build`
-- For backend changes, run Psalm and relevant PHPUnit tests.
+- For backend changes, run `composer cs-check`.
 - For frontend changes, run ESLint and `npm run build`.
 
 ## Optional Docker/Makefile Workflow
