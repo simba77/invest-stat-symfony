@@ -18,6 +18,13 @@ interface CouponRepositoryInterface
      */
     public function findByUser(?User $user): array;
 
+    /**
+     * @return array<Coupon>
+     */
+    public function getPageByUserId(int $userId, int $offset, int $limit): array;
+
+    public function countByUserId(int $userId): int;
+
     public function save(Coupon $coupon): void;
 
     public function remove(Coupon $coupon): void;

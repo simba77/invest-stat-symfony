@@ -33,6 +33,36 @@ class CouponRepository extends ServiceEntityRepository implements CouponReposito
         return $this->findBy(['user' => $user], ['date' => Order::Descending->value, 'id' => Order::Descending->value]);
     }
 
+    /**
+     * @return array<Coupon>
+     */
+    #[\Override]
+    public function getPageByUserId(int $userId, int $offset, int $limit): array
+    {
+        return $this->createQueryBuilder('c')
+            ->select(['c', 'a'])
+            ->leftJoin('c.account', 'a')
+            ->andWhere('IDENTITY(c.user) = :userId')
+            ->setParameter('userId', $userId)
+            ->orderBy('c.date', Order::Descending->value)
+            ->addOrderBy('c.id', Order::Descending->value)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    #[\Override]
+    public function countByUserId(int $userId): int
+    {
+        return (int) $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->andWhere('IDENTITY(c.user) = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     #[\Override]
     public function findByIdAndUser(int $id, User $user): ?Coupon
     {

@@ -10,11 +10,13 @@ use App\Investments\Application\Operations\Coupons\UpdateCouponCommand;
 use App\Investments\Application\Request\DTO\Operations\CreateCouponRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\UpdateCouponRequestDTO;
 use App\Investments\Application\Response\Compiler\CouponFormCompiler;
-use App\Investments\Application\Response\Compiler\CouponListCompiler;
+use App\Investments\Application\UseCases\GetCouponsPageUseCase;
 use App\Investments\Domain\Operations\CouponRepositoryInterface;
+use App\Shared\Application\Pagination\PageRequestFactory;
 use App\Shared\Domain\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -27,17 +29,23 @@ class CouponsController extends AbstractController
 {
     public function __construct(
         private readonly CouponRepositoryInterface $couponRepository,
-        private readonly CouponListCompiler $couponListCompiler,
+        private readonly GetCouponsPageUseCase $getCouponsPageUseCase,
         private readonly MessageBusInterface $messageBus,
         private readonly CouponFormCompiler $couponFormCompiler,
     ) {
     }
 
     #[Route('/coupons', name: 'app_coupons_index')]
-    public function index(#[CurrentUser] ?User $user): JsonResponse
+    public function index(Request $request, #[CurrentUser] ?User $user): JsonResponse
     {
-        $coupons = $this->couponRepository->findByUser($user);
-        return $this->json(['items' => $this->couponListCompiler->compile($coupons)]);
+        if (! $user) {
+            throw $this->createAccessDeniedException('Authentication required.');
+        }
+
+        $page = max(1, $request->query->getInt('page', 1));
+        $perPage = $request->query->getInt('perPage', PageRequestFactory::DEFAULT_PER_PAGE);
+
+        return $this->json($this->getCouponsPageUseCase->execute($user, $page, $perPage));
     }
 
     #[Route('/coupons/create', name: 'app_coupons_create', requirements: ['categoryId' => '\d+'], methods: ['POST'])]

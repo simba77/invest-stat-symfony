@@ -6,7 +6,3 @@ export interface Coupon {
   amount: number
   accountName: string
 }
-
-export interface CouponsPage {
-  items: Coupon[]
-}
