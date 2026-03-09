@@ -9,6 +9,7 @@ use App\Investments\Application\Request\DTO\Operations\UpdateDividendRequestDTO;
 use App\Investments\Application\UseCases\GetDividendsPageUseCase;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Operations\Dividend;
+use App\Investments\Domain\Tax\TaxCalculatorInterface;
 use App\Shared\Application\Pagination\PageRequestFactory;
 use App\Shared\Domain\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,6 +28,7 @@ class DividendsController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly GetDividendsPageUseCase $getDividendsPageUseCase,
+        private readonly TaxCalculatorInterface $taxCalculator,
     ) {
     }
 
@@ -46,13 +48,20 @@ class DividendsController extends AbstractController
     #[Route('/dividends/create', name: 'app_dividends_create', requirements: ['categoryId' => '\d+'], methods: ['POST'])]
     public function create(#[MapRequestPayload] CreateDividendRequestDTO $dto, #[CurrentUser] ?User $user): Response
     {
+        if (! $user) {
+            throw $this->createAccessDeniedException('Authentication required.');
+        }
+
         $account = $this->em->getRepository(Account::class)->find($dto->accountId);
+        $tax = $this->taxCalculator->calculateFromNet($dto->amount, $user->getTaxProfile());
+
         $dividend = new Dividend(
             user:        $user,
             account:     $account,
             ticker:      $dto->ticker,
             stockMarket: $dto->stockMarket,
             amount:      $dto->amount,
+            tax:         $tax->tax,
             date:        new \DateTimeImmutable($dto->date),
         );
 
@@ -86,13 +95,20 @@ class DividendsController extends AbstractController
     #[Route('/dividends/update/{id}', name: 'app_dividends_edit', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function edit(int $id, #[MapRequestPayload] UpdateDividendRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
     {
+        if (! $user) {
+            throw $this->createAccessDeniedException('Authentication required.');
+        }
+
         $dividend = $this->em->getRepository(Dividend::class)->findOneBy(['id' => $id, 'user' => $user]);
         if (! $dividend) {
             throw $this->createNotFoundException('No dividend found for id ' . $id);
         }
+
+        $tax = $this->taxCalculator->calculateFromNet($dto->amount, $user->getTaxProfile());
         $account = $this->em->getRepository(Account::class)->find($dto->accountId);
         $dividend->setDate(new \DateTimeImmutable($dto->date));
         $dividend->setAmount($dto->amount);
+        $dividend->setTax($tax->tax);
         $dividend->setTicker($dto->ticker);
         $dividend->setStockMarket($dto->stockMarket);
         $dividend->setAccount($account);

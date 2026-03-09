@@ -20,7 +20,6 @@ use App\Investments\Domain\Operations\Deals\DealData;
 use App\Investments\Domain\Operations\Deals\DealStatus;
 use App\Investments\Domain\Operations\Deals\GroupByTicker;
 use App\Investments\Domain\Operations\DividendRepositoryInterface;
-use App\Investments\Domain\Tax\TaxCalculatorInterface;
 use App\Shared\Domain\User;
 
 final readonly class ShowShareUseCase
@@ -34,7 +33,6 @@ final readonly class ShowShareUseCase
         private DividendRepositoryInterface $dividendRepository,
         private AccountRepositoryInterface $accountRepository,
         private AccountsListCompiler $accountsListCompiler,
-        private TaxCalculatorInterface $taxCalculator,
     ) {
     }
 
@@ -80,17 +78,15 @@ final readonly class ShowShareUseCase
 
         $dividends = $this->dividendRepository->findByUserAndTickerAndStockMarket($userId, $share->getTicker(), $share->getStockMarket());
         $dividendsList = [];
-        $taxProfile = $user->getTaxProfile();
         foreach ($dividends as $dividend) {
             $amount = $dividend->getAmount() ?? '0';
-            $tax = $this->taxCalculator->calculateFromNet($amount, $taxProfile);
 
             $dividendsList[] = new ShowShareDividendDTO(
                 id:          $dividend->getId() ?? 0,
                 date:        $dividend->getDate()->format('d.m.Y'),
                 accountName: $dividend->getAccount()?->getName() ?? '',
                 amount:      $amount,
-                tax:         $tax->tax,
+                tax:         $dividend->getTax(),
             );
         }
 

@@ -85,6 +85,7 @@ setPageTitle("Dividends")
         <tr>
           <th>Date</th>
           <th>Sum</th>
+          <th>Tax</th>
           <th>Ticker</th>
           <th>Stock Market</th>
           <th>Account</th>
@@ -100,6 +101,7 @@ setPageTitle("Dividends")
         >
           <td>{{ dividend.date }}</td>
           <td>{{ formatPrice(dividend.amount) }}</td>
+          <td>{{ formatPrice(dividend.tax) }}</td>
           <td>{{ dividend.ticker }}</td>
           <td>{{ dividend.stockMarket }}</td>
           <td>{{ dividend.accountName }}</td>

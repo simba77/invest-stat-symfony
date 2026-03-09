@@ -15,6 +15,7 @@ class DividendListItemDTO
         public string $ticker,
         public string $stockMarket,
         public string $amount,
+        public string $tax,
         public string $accountName
     ) {
     }

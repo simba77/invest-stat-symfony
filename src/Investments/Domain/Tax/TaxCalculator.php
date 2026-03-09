@@ -12,13 +12,13 @@ final readonly class TaxCalculator implements TaxCalculatorInterface
     public function calculateFromNet(string $netAmount, TaxProfile $taxProfile): TaxBreakdown
     {
         $ratePercent = $taxProfile->ratePercent();
-        $roundedNetAmount = bcround($netAmount, 2);
+        $roundedNetAmount = bcround($netAmount, 4);
 
         if (! $taxProfile->isTaxApplied()) {
             return new TaxBreakdown(
                 gross: $roundedNetAmount,
                 net: $roundedNetAmount,
-                tax: '0.00',
+                tax: '0.0000',
                 ratePercent: $ratePercent,
                 isTaxApplied: false,
             );
@@ -32,9 +32,9 @@ final readonly class TaxCalculator implements TaxCalculatorInterface
         $taxAmount = bcsub($grossAmount, $netAmount, 8);
 
         return new TaxBreakdown(
-            gross: bcround($grossAmount, 2),
+            gross: bcround($grossAmount, 4),
             net: $roundedNetAmount,
-            tax: bcround($taxAmount, 2),
+            tax: bcround($taxAmount, 4),
             ratePercent: $ratePercent,
             isTaxApplied: true,
         );

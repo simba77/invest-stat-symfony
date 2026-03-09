@@ -3,6 +3,7 @@ export interface Dividend {
   date: string
   ticker: string
   stockMarket: string
-  amount: number
+  amount: string
+  tax: string
   accountName: string
 }

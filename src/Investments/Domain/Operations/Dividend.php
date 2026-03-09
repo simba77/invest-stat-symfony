@@ -54,6 +54,9 @@ class Dividend implements
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4)]
     private string $amount;
 
+    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4)]
+    private string $tax;
+
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private \DateTimeInterface $date;
 
@@ -63,6 +66,7 @@ class Dividend implements
         string $ticker,
         string $stockMarket,
         string $amount,
+        string $tax,
         \DateTimeInterface $date
     ) {
         $this->user = $user;
@@ -70,6 +74,7 @@ class Dividend implements
         $this->ticker = $ticker;
         $this->stockMarket = $stockMarket;
         $this->amount = $amount;
+        $this->tax = $tax;
         $this->date = $date;
     }
 
@@ -123,6 +128,18 @@ class Dividend implements
     public function setAmount(string $amount): static
     {
         $this->amount = $amount;
+
+        return $this;
+    }
+
+    public function getTax(): string
+    {
+        return $this->tax;
+    }
+
+    public function setTax(string $tax): static
+    {
+        $this->tax = $tax;
 
         return $this;
     }

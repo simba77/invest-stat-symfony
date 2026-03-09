@@ -41,6 +41,7 @@ final readonly class GetDividendsPageUseCase
                 ticker: $dividend->getTicker(),
                 stockMarket: $dividend->getStockMarket(),
                 amount: $dividend->getAmount(),
+                tax: $dividend->getTax(),
                 accountName: $dividend->getAccount()->getName(),
             );
         }
