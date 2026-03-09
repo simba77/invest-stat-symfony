@@ -37,3 +37,6 @@ services:
 
   App\Investments\Domain\Instruments\Securities\SharesProviderInterface:
     class: App\Investments\Domain\Instruments\Securities\MoexSharesProvider
+
+  App\Investments\Domain\Tax\TaxCalculatorInterface:
+    class: App\Investments\Domain\Tax\TaxCalculator

@@ -30,6 +30,8 @@ final readonly class ShowShareResponseDTO
         public array $openPositions,
         /** @var ClosedDealInGroupDTO[] */
         public array $closedPositions,
+        /** @var ShowShareDividendDTO[] */
+        public array $dividends,
     ) {
     }
 }

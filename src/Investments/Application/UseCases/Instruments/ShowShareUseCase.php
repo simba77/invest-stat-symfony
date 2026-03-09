@@ -6,6 +6,7 @@ namespace App\Investments\Application\UseCases\Instruments;
 
 use App\Investments\Application\Response\Compiler\AccountsListCompiler;
 use App\Investments\Application\Response\Compiler\ClosedDealsListCompiler;
+use App\Investments\Application\Response\DTO\Instruments\ShowShareDividendDTO;
 use App\Investments\Application\Response\DTO\Instruments\ShowSharePortfolioDTO;
 use App\Investments\Application\Response\DTO\Instruments\ShowShareResponseDTO;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
@@ -19,6 +20,8 @@ use App\Investments\Domain\Operations\Deals\DealData;
 use App\Investments\Domain\Operations\Deals\DealStatus;
 use App\Investments\Domain\Operations\Deals\GroupByTicker;
 use App\Investments\Domain\Operations\DividendRepositoryInterface;
+use App\Investments\Domain\Tax\TaxCalculatorInterface;
+use App\Shared\Domain\User;
 
 final readonly class ShowShareUseCase
 {
@@ -31,11 +34,13 @@ final readonly class ShowShareUseCase
         private DividendRepositoryInterface $dividendRepository,
         private AccountRepositoryInterface $accountRepository,
         private AccountsListCompiler $accountsListCompiler,
+        private TaxCalculatorInterface $taxCalculator,
     ) {
     }
 
-    public function execute(int $id, int $userId): ShowShareResponseDTO
+    public function execute(int $id, User $user): ShowShareResponseDTO
     {
+        $userId = $user->getId();
         $share = $this->shareRepository->findById($id);
         if (! $share) {
             throw new InstrumentNotFoundException(sprintf('Share with id %s not found', $id));
@@ -73,7 +78,23 @@ final readonly class ShowShareUseCase
             sumOfDividends:           $this->dividendRepository->sumByTickerAndUserAndStockMarket($userId, $share->getTicker(), $share->getStockMarket()),
         );
 
-        if (!empty($closedDealsData['deals'])) {
+        $dividends = $this->dividendRepository->findByUserAndTickerAndStockMarket($userId, $share->getTicker(), $share->getStockMarket());
+        $dividendsList = [];
+        $taxProfile = $user->getTaxProfile();
+        foreach ($dividends as $dividend) {
+            $amount = $dividend->getAmount() ?? '0';
+            $tax = $this->taxCalculator->calculateFromNet($amount, $taxProfile);
+
+            $dividendsList[] = new ShowShareDividendDTO(
+                id:          $dividend->getId() ?? 0,
+                date:        $dividend->getDate()->format('d.m.Y'),
+                accountName: $dividend->getAccount()?->getName() ?? '',
+                amount:      $amount,
+                tax:         $tax->tax,
+            );
+        }
+
+        if (! empty($closedDealsData['deals'])) {
             $closedPositions = $closedDealsData['deals'][0]->getDeals();
         }
 
@@ -95,6 +116,7 @@ final readonly class ShowShareUseCase
             portfolio:       $portfolioDTO,
             openPositions:   $dealsGroup->getDeals(),
             closedPositions: $closedPositions ?? [],
+            dividends:       $dividendsList,
         );
     }
 

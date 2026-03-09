@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Shared\Application\Request\DTO;
 
+use App\Shared\Domain\TaxProfile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class ChangeProfileRequestDTO
@@ -20,4 +21,16 @@ class ChangeProfileRequestDTO
 
     #[Assert\Type(['type' => ['numeric']])]
     public string $salary;
+
+    #[Assert\NotBlank]
+    #[Assert\Choice(callback: [self::class, 'getTaxProfiles'])]
+    public string $taxProfile = TaxProfile::Ndfl13->value;
+
+    /**
+     * @return list<string>
+     */
+    public static function getTaxProfiles(): array
+    {
+        return array_map(static fn (TaxProfile $profile): string => $profile->value, TaxProfile::cases());
+    }
 }

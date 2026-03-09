@@ -52,6 +52,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['authUserData'])]
     private ?string $salary = null;
 
+    #[ORM\Column(length: 20, options: ['default' => TaxProfile::Ndfl13->value])]
+    #[Groups(['authUserData'])]
+    private string $taxProfile = TaxProfile::Ndfl13->value;
+
     public function __construct()
     {
         $this->deals = new ArrayCollection();
@@ -179,6 +183,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setSalary(?string $salary): static
     {
         $this->salary = $salary;
+
+        return $this;
+    }
+
+    public function getTaxProfile(): TaxProfile
+    {
+        return TaxProfile::tryFrom($this->taxProfile) ?? TaxProfile::Ndfl13;
+    }
+
+    public function setTaxProfile(TaxProfile $taxProfile): static
+    {
+        $this->taxProfile = $taxProfile->value;
 
         return $this;
     }

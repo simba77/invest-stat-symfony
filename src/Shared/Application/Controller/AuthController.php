@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Shared\Application\Controller;
 
 use App\Shared\Application\Request\DTO\ChangeProfileRequestDTO;
+use App\Shared\Domain\TaxProfile;
 use App\Shared\Domain\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -46,6 +47,7 @@ class AuthController extends AbstractController
         $user->setName($DTO->name);
         $user->setEmail($DTO->email);
         $user->setSalary($DTO->salary);
+        $user->setTaxProfile(TaxProfile::from($DTO->taxProfile));
 
         if (! empty($DTO->password)) {
             $password = $this->passwordHasher->hashPassword($user, $DTO->password);

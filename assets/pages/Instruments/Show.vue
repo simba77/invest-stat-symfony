@@ -28,13 +28,8 @@ const {run, loading} = useAsync(() => axios.get('/api/instrument/share/' + route
 
 run()
 
-const dividends = [
-  { date: '2023-09-15', account: 'Брокерский счет №1', tax: '-585', amount: '3 915' },
-  { date: '2023-06-20', account: 'ИИС (Сбер)', tax: '0', amount: '8 000' },
-];
-
-
 const showAllClosed = ref(false)
+const showAllDividends = ref(false)
 
 const closedPositions = computed(() => {
   return instrumentData.value?.closedPositions ?? []
@@ -48,6 +43,21 @@ const closedPositionsToShow = computed(() => {
 
 const hiddenClosedCount = computed(() => {
   const total = closedPositions.value.length
+  return total > 5 ? total - 5 : 0
+})
+
+const dividends = computed(() => {
+  return instrumentData.value?.dividends ?? []
+})
+
+const dividendsToShow = computed(() => {
+  return showAllDividends.value
+    ? dividends.value
+    : dividends.value.slice(0, 5)
+})
+
+const hiddenDividendsCount = computed(() => {
+  const total = dividends.value.length
   return total > 5 ? total - 5 : 0
 })
 
@@ -296,18 +306,39 @@ const hiddenClosedCount = computed(() => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="div in dividends" :key="div.date">
+                  <tr v-for="div in dividendsToShow" :key="div.id">
                     <td>{{ div.date }}</td>
-                    <td>{{ div.account }}</td>
+                    <td>{{ div.accountName }}</td>
                     <td class="text-end text-muted small">
-                      {{ div.tax }} ₽
+                      {{ formatPrice(+div.tax, instrumentData.currency) }}
                     </td>
                     <td class="text-end fw-bold text-success">
-                      {{ div.amount }} ₽
+                      {{ formatPrice(+div.amount, instrumentData.currency) }}
+                    </td>
+                  </tr>
+                  <tr v-if="dividendsToShow.length < 1">
+                    <td colspan="4" class="text-center py-4 text-muted">
+                      Список дивидендов пуст
                     </td>
                   </tr>
                 </tbody>
               </table>
+              <div
+                v-if="hiddenDividendsCount > 0"
+                class="text-center py-3"
+              >
+                <button
+                  class="btn btn-outline-light btn-sm"
+                  @click="showAllDividends = !showAllDividends"
+                >
+                  <template v-if="!showAllDividends">
+                    Показать ещё {{ hiddenDividendsCount }}
+                  </template>
+                  <template v-else>
+                    Скрыть
+                  </template>
+                </button>
+              </div>
             </div>
           </div>
         </section>

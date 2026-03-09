@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import PageComponent from "@/components/PageComponent.vue";
 import InputText from "@/components/Forms/InputText.vue";
+import InputSelect from "@/components/Forms/InputSelect.vue";
 import axios from "axios";
 import {reactive, ref} from 'vue'
 import useAsync from '@/utils/use-async'
@@ -14,8 +15,15 @@ const form = reactive({
   name: userData?.name,
   email: userData?.email,
   salary: userData?.salary,
+  taxProfile: userData?.taxProfile ?? 'ndfl_13',
   password: '',
 })
+
+const taxProfileOptions = [
+  {name: 'No tax', value: 'none'},
+  {name: 'NDFL 13%', value: 'ndfl_13'},
+  {name: 'NDFL 15%', value: 'ndfl_15'},
+]
 
 const {loading, run: submitForm} = useAsync(() => {
   return axios.post('/api/change-profile', form)
@@ -92,6 +100,17 @@ const {loading, run: submitForm} = useAsync(() => {
                 placeholder="Salary"
               />
 
+              <input-select
+                :key="componentKey"
+                v-model="form.taxProfile"
+                :error="errors"
+                :required="true"
+                name="taxProfile"
+                label="Tax Profile"
+                placeholder="Tax Profile"
+                :options="taxProfileOptions"
+              />
+
               <input-text
                 :key="componentKey"
                 v-model="form.password"
@@ -133,4 +152,3 @@ const {loading, run: submitForm} = useAsync(() => {
     </div>
   </page-component>
 </template>
-

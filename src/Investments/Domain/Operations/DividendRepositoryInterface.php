@@ -19,4 +19,9 @@ interface DividendRepositoryInterface
     public function countByUserId(int $userId): int;
 
     public function sumByTickerAndUserAndStockMarket(int $userId, string $ticker, string $stockMarket): string;
+
+    /**
+     * @return array<Dividend>
+     */
+    public function findByUserAndTickerAndStockMarket(int $userId, string $ticker, string $stockMarket): array;
 }

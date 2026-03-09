@@ -17,6 +17,14 @@ export type ShowSharePortfolioDTO = {
   sumOfDividends: string
 }
 
+export type ShowShareDividendDTO = {
+  id: number
+  date: string
+  accountName: string
+  amount: string
+  tax: string
+}
+
 export type ShowShareResponseDTO = {
   id: number
   name: string
@@ -34,4 +42,5 @@ export type ShowShareResponseDTO = {
   portfolio: ShowSharePortfolioDTO
   openPositions: Deal[]
   closedPositions: ClosedDeal[]
+  dividends: ShowShareDividendDTO[]
 }

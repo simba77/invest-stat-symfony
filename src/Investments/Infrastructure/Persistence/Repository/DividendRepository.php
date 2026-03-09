@@ -72,4 +72,25 @@ class DividendRepository extends ServiceEntityRepository implements DividendRepo
 
         return (string) $result;
     }
+
+    /**
+     * @return array<Dividend>
+     */
+    #[\Override]
+    public function findByUserAndTickerAndStockMarket(int $userId, string $ticker, string $stockMarket): array
+    {
+        return $this->createQueryBuilder('d')
+            ->select(['d', 'a'])
+            ->leftJoin('d.account', 'a')
+            ->andWhere('IDENTITY(d.user) = :userId')
+            ->andWhere('d.ticker = :ticker')
+            ->andWhere('d.stockMarket = :stockMarket')
+            ->setParameter('userId', $userId)
+            ->setParameter('ticker', $ticker)
+            ->setParameter('stockMarket', $stockMarket)
+            ->orderBy('d.date', 'DESC')
+            ->addOrderBy('d.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

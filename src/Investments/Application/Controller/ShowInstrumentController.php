@@ -24,8 +24,12 @@ final class ShowInstrumentController extends AbstractController
 
     public function __invoke(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
+        if (! $user) {
+            throw $this->createAccessDeniedException('Authentication required.');
+        }
+
         try {
-        $share = $this->showShareUseCase->execute($id, $user->getId());
+            $share = $this->showShareUseCase->execute($id, $user);
         } catch (InstrumentNotFoundException) {
             return new JsonResponse(['message' => 'Instrument not found'], 404);
         }
