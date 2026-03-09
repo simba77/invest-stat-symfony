@@ -29,5 +29,6 @@
     <issueHandlers>
         <PossiblyUnusedMethod errorLevel="suppress" />
         <PossiblyUnusedProperty errorLevel="suppress" />
+        <PossiblyUnusedReturnValue errorLevel="suppress" />
     </issueHandlers>
 </psalm>
