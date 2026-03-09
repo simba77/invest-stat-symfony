@@ -31,6 +31,7 @@ class DividendsService
                 ticker:      $dividend->getTicker(),
                 stockMarket: $dividend->getStockMarket(),
                 amount:      $dividend->getAmount(),
+                tax:         $dividend->getTax(),
                 accountName: $dividend->getAccount()->getName()
             );
         }
