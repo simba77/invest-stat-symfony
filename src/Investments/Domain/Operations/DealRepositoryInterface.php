@@ -34,6 +34,16 @@ interface DealRepositoryInterface
     /**
      * @return array<int, Deal>
      */
+    public function findByUserAndBond(int $userId, int $bondId, DealStatus $status): array;
+
+    /**
+     * @return array<int, Deal>
+     */
+    public function findByUserAndFuture(int $userId, int $futureId, DealStatus $status): array;
+
+    /**
+     * @return array<int, Deal>
+     */
     public function findForAccount(int $accountId): array;
 
     public function save(Deal $deal): void;

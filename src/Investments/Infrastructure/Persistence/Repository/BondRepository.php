@@ -20,6 +20,12 @@ class BondRepository extends ServiceEntityRepository implements BondRepositoryIn
     }
 
     #[\Override]
+    public function findById(int $id): ?Bond
+    {
+        return $this->find($id);
+    }
+
+    #[\Override]
     public function findByTickerAndStockMarket(string $ticker, string $stockMarket): ?Bond
     {
         return $this->findOneBy(['ticker' => $ticker, 'stockMarket' => $stockMarket]);

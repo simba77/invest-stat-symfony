@@ -103,6 +103,48 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
      * @return array<int, Deal>
      */
     #[\Override]
+    public function findByUserAndBond(int $userId, int $bondId, DealStatus $status): array
+    {
+        return $this->createQueryBuilder('d')
+            ->select(['d', 'b'])
+            ->leftJoin('d.bond', 'b')
+            ->andWhere('d.user = :userId')
+            ->andWhere('d.bond = :bondId')
+            ->andWhere('d.status = :status')
+            ->setParameter('userId', $userId)
+            ->setParameter('bondId', $bondId)
+            ->setParameter('status', $status->value)
+            ->addOrderBy('d.closingDate', 'DESC')
+            ->addOrderBy('d.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return array<int, Deal>
+     */
+    #[\Override]
+    public function findByUserAndFuture(int $userId, int $futureId, DealStatus $status): array
+    {
+        return $this->createQueryBuilder('d')
+            ->select(['d', 'f'])
+            ->leftJoin('d.future', 'f')
+            ->andWhere('d.user = :userId')
+            ->andWhere('d.future = :futureId')
+            ->andWhere('d.status = :status')
+            ->setParameter('userId', $userId)
+            ->setParameter('futureId', $futureId)
+            ->setParameter('status', $status->value)
+            ->addOrderBy('d.closingDate', 'DESC')
+            ->addOrderBy('d.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return array<int, Deal>
+     */
+    #[\Override]
     public function findForAccount(int $accountId): array
     {
         return $this->createQueryBuilder('d')

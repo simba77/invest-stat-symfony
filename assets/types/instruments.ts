@@ -26,11 +26,13 @@ export type ShowShareDividendDTO = {
 }
 
 export type ShowShareResponseDTO = {
+  instrumentType: 'share' | 'bond' | 'future'
   id: number
   name: string
   ticker: string
   logo: string | null
   marketName: string
+  stockMarket: string
   currency: string
   price: string
   prevPrice: string
@@ -43,4 +45,10 @@ export type ShowShareResponseDTO = {
   openPositions: Deal[]
   closedPositions: ClosedDeal[]
   dividends: ShowShareDividendDTO[]
+  details: {
+    couponAccumulated?: string | null
+    stepPrice?: string | null
+  }
 }
+
+export type ShowInstrumentResponseDTO = ShowShareResponseDTO

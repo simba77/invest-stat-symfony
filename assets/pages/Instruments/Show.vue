@@ -8,7 +8,7 @@ import { Building2, TrendingUp, TrendingDown, Wallet, Plus, MoveRight } from 'lu
 import useAsync from "@/utils/use-async";
 import axios from "axios";
 import {useRoute} from "vue-router";
-import {ShowShareResponseDTO} from "@/types/instruments";
+import {ShowInstrumentResponseDTO} from "@/types/instruments";
 import OpenDealsTable from "@/components/Instruments/OpenDealsTable.vue";
 
 const route = useRoute()
@@ -17,9 +17,22 @@ const {setPageTitle} = usePage()
 
 setPageTitle('Просмотр данных по инструменту')
 
-const instrumentData = ref<ShowShareResponseDTO | null>(null)
+const instrumentData = ref<ShowInstrumentResponseDTO | null>(null)
 
-const {run, loading} = useAsync(() => axios.get('/api/instrument/share/' + route.params.id)
+const instrumentTypeLabelMap: Record<'share' | 'bond' | 'future', string> = {
+  share: 'Акция',
+  bond: 'Облигация',
+  future: 'Фьючерс',
+}
+
+const instrumentTypeLabel = computed(() => {
+  const type = instrumentData.value?.instrumentType
+  return type ? instrumentTypeLabelMap[type] : ''
+})
+
+const isShareInstrument = computed(() => instrumentData.value?.instrumentType === 'share')
+
+const {run, loading} = useAsync(() => axios.get('/api/instrument/' + route.params.type + '/' + route.params.id)
   .then((response) => {
     instrumentData.value = response.data
     setPageTitle(instrumentData.value?.name ?? 'Просмотр данных по инструменту')
@@ -84,7 +97,7 @@ const hiddenDividendsCount = computed(() => {
           </div>
           <div class="d-flex gap-2">
             <span class="badge bg-dark text-white border py-2 px-3">{{ instrumentData.marketName }}</span>
-            <span class="badge border-dark text-white border py-2 px-3">Акция</span>
+            <span class="badge border-dark text-white border py-2 px-3">{{ instrumentTypeLabel }}</span>
           </div>
         </div>
 
@@ -181,7 +194,7 @@ const hiddenDividendsCount = computed(() => {
           </div>
 
           <!-- Сумма полученных дивидендов -->
-          <div class="col-md-4 col-lg-2">
+          <div v-if="isShareInstrument" class="col-md-4 col-lg-2">
             <div class="card border-0 shadow-sm h-100 p-3">
               <div class="d-flex justify-content-between align-items-start mb-2">
                 <span class="text-muted small">Дивиденды</span>
@@ -281,7 +294,7 @@ const hiddenDividendsCount = computed(() => {
           </div>
         </section>
 
-        <section>
+        <section v-if="isShareInstrument">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="fw-bold mb-0">
               Дивиденды

@@ -80,12 +80,13 @@ function showSellModal(item: Deal) {
       >
         <!-- Name -->
         <td>
-          <lock
-            v-if="data.isBlocked"
-            :size="16"
-            class="me-1"
-          />
-          <div>{{ data.createdAt }}</div>
+          <div class="d-inline-flex align-items-center gap-1">
+            <lock
+              v-if="data.isBlocked"
+              :size="16"
+            />
+            <span>{{ data.createdAt }}</span>
+          </div>
         </td>
 
         <!-- Account name -->

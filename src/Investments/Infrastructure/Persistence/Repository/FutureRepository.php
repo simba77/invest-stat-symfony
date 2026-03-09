@@ -20,6 +20,12 @@ class FutureRepository extends ServiceEntityRepository implements FutureReposito
     }
 
     #[\Override]
+    public function findById(int $id): ?Future
+    {
+        return $this->find($id);
+    }
+
+    #[\Override]
     public function findByTickerAndStockMarket(string $ticker, string $stockMarket): ?Future
     {
         return $this->findOneBy(['ticker' => $ticker, 'stockMarket' => $stockMarket]);
