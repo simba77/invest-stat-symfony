@@ -4,12 +4,19 @@ declare(strict_types=1);
 
 namespace App\Investments\Domain\Operations;
 
+use App\Shared\Domain\User;
+
 interface DividendRepositoryInterface
 {
     /**
      * @return array<Dividend>
      */
     public function findAll(): array;
+
+    /**
+     * @return array<Dividend>
+     */
+    public function findByUser(?User $user): array;
 
     /**
      * @return array<Dividend>

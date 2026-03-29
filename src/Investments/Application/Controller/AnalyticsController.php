@@ -45,8 +45,8 @@ class AnalyticsController extends AbstractController
                 'profitByMonths' => $this->monthlyDealsListCompiler->compile(
                     [
                         'deals'     => $this->dealRepository->getClosedDealsForUserByFilter($user->getId(), $filter),
-                        'dividends' => $this->dividendRepository->findAll(),
-                        'coupons'   => $this->couponRepository->findAll(),
+                        'dividends' => $this->dividendRepository->findByUser($user),
+                        'coupons'   => $this->couponRepository->findByUser($user),
                     ],
                 ),
             ]

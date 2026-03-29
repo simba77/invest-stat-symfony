@@ -6,7 +6,9 @@ namespace App\Investments\Infrastructure\Persistence\Repository;
 
 use App\Investments\Domain\Operations\Dividend;
 use App\Investments\Domain\Operations\DividendRepositoryInterface;
+use App\Shared\Domain\User;
 use App\Shared\Infrastructure\Persistence\Doctrine\ServiceEntityRepository;
+use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -23,6 +25,15 @@ class DividendRepository extends ServiceEntityRepository implements DividendRepo
     public function findAll(): array
     {
         return parent::findAll();
+    }
+
+    /**
+     * @return array<Dividend>
+     */
+    #[\Override]
+    public function findByUser(?User $user): array
+    {
+        return $this->findBy(['user' => $user], ['date' => Order::Descending->value, 'id' => Order::Descending->value]);
     }
 
     /**
