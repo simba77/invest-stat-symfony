@@ -129,6 +129,7 @@ final readonly class GetHomepageDataUseCase
                 [
                     'yearsData'  => $this->statisticRepository->getStatisticByYears($userId),
                     'latestData' => $this->statisticRepository->getLatestStatistic($userId),
+                    'cashFlows'  => $this->investmentRepository->getDailyCashFlowsByUserId($userId),
                 ]
             ),
         ];

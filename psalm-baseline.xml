@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.15.1@28dc127af1b5aecd52314f6f645bafc10d0e11f9">
+<files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
   <file src="src/Investments/Application/Operations/Deals/AccountDealsQueryHandler.php">
     <UnusedForeachValue>
       <code><![CDATA[$groupByCurrency]]></code>
@@ -18,24 +18,11 @@
   <file src="src/Investments/Application/Response/Compiler/AnnualStatisticCompiler.php">
     <InvalidOperand>
       <code><![CDATA[$data['balance']]]></code>
-      <code><![CDATA[$data['balance']]]></code>
-      <code><![CDATA[$data['current_value']]]></code>
       <code><![CDATA[$data['current_value']]]></code>
       <code><![CDATA[$data['investments']]]></code>
-      <code><![CDATA[$data['investments']]]></code>
-      <code><![CDATA[$data['profit']]]></code>
       <code><![CDATA[$data['profit']]]></code>
       <code><![CDATA[$data['usd_balance']]]></code>
-      <code><![CDATA[$data['usd_balance']]]></code>
-      <code><![CDATA[$statByYear['profit'] * 100]]></code>
-      <code><![CDATA[($statByYear['profit'] * 100 / $statByYears[$prevKey]['profit']) - 100]]></code>
     </InvalidOperand>
-    <InvalidReturnStatement>
-      <code><![CDATA[$statByYears]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[array<int, mixed>]]></code>
-    </InvalidReturnType>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$entry]]></code>
     </MoreSpecificImplementedParamType>

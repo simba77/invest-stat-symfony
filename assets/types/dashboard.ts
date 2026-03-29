@@ -16,6 +16,7 @@ interface StatisticYear {
   year: string
   profit: number
   profitPercent: number
+  annualReturnPercent: number
 }
 
 export interface Dashboard {

@@ -19,4 +19,9 @@ interface InvestmentRepositoryInterface
     public function countByUserId(int $userId): int;
 
     public function getSumByUserId(int $userId): string;
+
+    /**
+     * @return list<array{date: string, sum: string}>
+     */
+    public function getDailyCashFlowsByUserId(int $userId): array;
 }

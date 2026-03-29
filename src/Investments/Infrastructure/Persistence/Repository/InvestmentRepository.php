@@ -80,4 +80,22 @@ class InvestmentRepository extends ServiceEntityRepository implements Investment
             ->getQuery()
             ->getOneOrNullResult()['allInvestments'];
     }
+
+    /**
+     * @return list<array{date: string, sum: string}>
+     */
+    #[\Override]
+    public function getDailyCashFlowsByUserId(int $userId): array
+    {
+        return $this->getEntityManager()->getConnection()
+            ->executeQuery(
+                'SELECT DATE(inv.date) as date, SUM(inv.sum) as sum
+                 FROM investments inv
+                 WHERE inv.user_id = :userId
+                 GROUP BY DATE(inv.date)
+                 ORDER BY DATE(inv.date) ASC',
+                ['userId' => $userId]
+            )
+            ->fetchAllAssociative();
+    }
 }
