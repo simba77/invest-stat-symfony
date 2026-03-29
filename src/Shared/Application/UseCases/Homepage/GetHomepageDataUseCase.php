@@ -39,14 +39,16 @@ final readonly class GetHomepageDataUseCase
      */
     public function execute(User $user): array
     {
-        $invested = $this->investmentRepository->getSumByUserId($user->getId());
+        $userId = $user->getId();
+
+        $invested = $this->investmentRepository->getSumByUserId($userId);
         $allAssetsSum = '0';
-        $depositsSum = $this->depositRepository->getSumOfDepositsForUserId($user->getId());
+        $depositsSum = $this->depositRepository->getSumOfDepositsForUserId($userId);
         $depositAccounts = $this->getNotEmptyDepositAccounts($user);
 
         $blockedAssetsSum = '0';
         $dailyChange = '0';
-        $allActiveDeals = $this->dealRepository->findByUserId($user->getId());
+        $allActiveDeals = $this->dealRepository->findByUserId($userId);
         foreach ($allActiveDeals as $deal) {
             $dealData = new DealData($deal, $this->currencyService, $this->futureMultiplierRepository);
             $dailyChange = bcadd($dailyChange, $dealData->getFullDailyProfitInBaseCurrency(), 2);
@@ -56,7 +58,7 @@ final readonly class GetHomepageDataUseCase
             }
         }
 
-        $accounts = $this->accountRepository->findByUserWithDeposits($user->getId());
+        $accounts = $this->accountRepository->findByUserWithDeposits($userId);
         $accountsList = $this->accountsListCompiler->compile($accounts);
         foreach ($accountsList as $account) {
             $allAssetsSum = bcadd($account->currentValue, $allAssetsSum, 2);
@@ -125,8 +127,8 @@ final readonly class GetHomepageDataUseCase
             ],
             'statisticByYears' => $this->annualStatisticCompiler->compile(
                 [
-                    'yearsData'  => $this->statisticRepository->getStatisticByYears(),
-                    'latestData' => $this->statisticRepository->getLatestStatistic(),
+                    'yearsData'  => $this->statisticRepository->getStatisticByYears($userId),
+                    'latestData' => $this->statisticRepository->getLatestStatistic($userId),
                 ]
             ),
         ];
