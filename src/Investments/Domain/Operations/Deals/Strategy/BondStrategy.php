@@ -43,12 +43,24 @@ class BondStrategy implements DealStrategyInterface
 
     public function getCurrentPrice(): string
     {
-        return bcdiv(bcmul($this->getBond()->getPrice(), $this->getBond()->getLotSize(), 4), '100', 4);
+        $price = bcdiv(
+            bcmul($this->getBond()->getPrice(), $this->getBond()->getLotSize() ?? '0', 4),
+            '100',
+            4
+        );
+
+        return bcadd($price, $this->getBond()->getCouponAccumulated() ?? '0', 4);
     }
 
     public function getPrevPrice(): string
     {
-        return bcdiv(bcmul($this->getBond()->getPrevPrice(), $this->getBond()->getLotSize(), 4), '100', 4);
+        $price = bcdiv(
+            bcmul($this->getBond()->getPrevPrice() ?? '0', $this->getBond()->getLotSize() ?? '0', 4),
+            '100',
+            4
+        );
+
+        return bcadd($price, $this->getBond()->getCouponAccumulated() ?? '0', 4);
     }
 
     public function getCommission(string $price, string $quantity): string
