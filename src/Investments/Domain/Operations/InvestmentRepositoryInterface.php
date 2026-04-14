@@ -20,6 +20,8 @@ interface InvestmentRepositoryInterface
 
     public function getSumByUserId(int $userId): string;
 
+    public function getGrossSumByUserId(int $userId): string;
+
     /**
      * @return list<array{date: string, sum: string}>
      */

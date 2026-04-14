@@ -81,6 +81,18 @@ class InvestmentRepository extends ServiceEntityRepository implements Investment
             ->getOneOrNullResult()['allInvestments'];
     }
 
+    #[\Override]
+    public function getGrossSumByUserId(int $userId): string
+    {
+        return (string) $this->createQueryBuilder('inv')
+            ->select('SUM(inv.sum) as grossInvestments')
+            ->where('inv.userId = :user_id')
+            ->andWhere('inv.sum > 0')
+            ->setParameter('user_id', $userId)
+            ->getQuery()
+            ->getOneOrNullResult()['grossInvestments'];
+    }
+
     /**
      * @return list<array{date: string, sum: string}>
      */

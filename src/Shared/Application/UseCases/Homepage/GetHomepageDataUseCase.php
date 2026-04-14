@@ -41,7 +41,8 @@ final readonly class GetHomepageDataUseCase
     {
         $userId = $user->getId();
 
-        $invested = $this->investmentRepository->getSumByUserId($userId);
+        $grossInvested = $this->investmentRepository->getGrossSumByUserId($userId);
+        $netCashFlow = $this->investmentRepository->getSumByUserId($userId);
         $allAssetsSum = '0';
         $depositsSum = $this->depositRepository->getSumOfDepositsForUserId($userId);
         $depositAccounts = $this->getNotEmptyDepositAccounts($user);
@@ -68,9 +69,9 @@ final readonly class GetHomepageDataUseCase
             }
         }
 
-        $profit = bcsub($allAssetsSum, $invested, 2);
-        if ($invested > 0) {
-            $profitPercent = bcmul(bcdiv($profit, $invested, 5), '100', 2);
+        $profit = bcsub($allAssetsSum, $netCashFlow, 2);
+        if (bccomp($grossInvested, '0', 2) > 0) {
+            $profitPercent = bcmul(bcdiv($profit, $grossInvested, 5), '100', 2);
         }
 
         return [
@@ -79,7 +80,7 @@ final readonly class GetHomepageDataUseCase
             'summary'          => [
                 [
                     'name'     => 'The Invested Amount',
-                    'total'    => $invested,
+                    'total'    => $grossInvested,
                     'currency' => '₽',
                 ],
                 [
@@ -90,7 +91,7 @@ final readonly class GetHomepageDataUseCase
                 [
                     'name'     => 'Deposits + Investments',
                     'helpText' => 'Deposits + Investments',
-                    'total'    => bcadd($invested, $depositsSum, 2),
+                    'total'    => bcadd($grossInvested, $depositsSum, 2),
                     'currency' => '₽',
                 ],
                 [
