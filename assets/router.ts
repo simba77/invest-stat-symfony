@@ -196,6 +196,15 @@ const routes: Array<RouteRecordRaw> = [
   },
 
   {
+    name: 'DepositStats',
+    path: '/deposits/stats',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('@/pages/Deposits/DepositStatsPage.vue')
+  },
+
+  {
     name: 'Portfolio',
     path: '/portfolio',
     meta: {

@@ -98,4 +98,35 @@ class DepositRepository extends ServiceEntityRepository implements DepositReposi
         $em->remove($deposit);
         $em->flush();
     }
+
+    #[\Override]
+    public function getTransactionsByAccount(int $userId): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $rows = $conn->executeQuery(
+            'SELECT deposit_account_id, `sum`, date FROM deposits WHERE user_id = :userId ORDER BY deposit_account_id, date ASC, id ASC',
+            ['userId' => $userId]
+        )->fetchAllAssociative();
+
+        $grouped = [];
+        foreach ($rows as $row) {
+            $grouped[(int) $row['deposit_account_id']][] = ['sum' => $row['sum'], 'date' => $row['date']];
+        }
+        return $grouped;
+    }
+
+    #[\Override]
+    public function getMonthlyStats(int $userId): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT DATE_FORMAT(date, '%Y.%m') as month,
+                       SUM(CASE WHEN type = 1 THEN `sum` ELSE 0 END) as deposits,
+                       SUM(CASE WHEN type = 2 THEN `sum` ELSE 0 END) as profit
+                FROM deposits
+                WHERE user_id = :userId
+                GROUP BY DATE_FORMAT(date, '%Y.%m')
+                ORDER BY month ASC";
+
+        return $conn->executeQuery($sql, ['userId' => $userId])->fetchAllAssociative();
+    }
 }

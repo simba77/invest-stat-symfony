@@ -16,52 +16,55 @@ defineProps({
 
 const userData = authStore().userData;
 
-const navigation = [
+interface NavItem {
+  name: string
+  routeName: string | null
+  children?: { name: string; routeName: string }[]
+}
+
+const analyticsRoutes = ['ClosedDeals', 'DepositStats']
+
+const navigation: NavItem[] = [
   {
     name: 'Portfolio',
     routeName: 'Portfolio',
-    current: route.name === 'Portfolio'
   },
   {
     name: 'Accounts',
     routeName: 'Accounts',
-    current: route.name === 'Accounts'
   },
   {
-    name: 'Closed Deals',
-    routeName: 'ClosedDeals',
-    current: route.name === 'ClosedDeals'
+    name: 'Analytics',
+    routeName: null,
+    children: [
+      { name: 'Closed Deals', routeName: 'ClosedDeals' },
+      { name: 'Deposit Stats', routeName: 'DepositStats' },
+    ],
   },
   {
     name: 'Expenses',
     routeName: 'Expenses',
-    current: route.name === 'Expenses'
   },
   {
     name: 'Deposits',
     routeName: 'Deposits',
-    current: route.name === 'Deposits'
   },
   {
     name: 'Investments',
     routeName: 'Investments',
-    current: route.name === 'Investments'
   },
   {
     name: 'Dividends',
     routeName: 'Dividends',
-    current: route.name === 'Dividends'
   },
   {
     name: 'Coupons',
     routeName: 'Coupons',
-    current: route.name === 'Coupons'
   },
   {
     name: 'Future Multipliers',
     routeName: 'FuturesMultipliers',
-    current: route.name === 'FuturesMultipliers'
-  }
+  },
 ]
 const userNavigation = [
   {name: 'Change Profile', href: '/change-profile'},
@@ -91,19 +94,47 @@ const userNavigation = [
         <div id="mainNavbar" class="collapse navbar-collapse">
           <!-- Left menu -->
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li
+            <template
               v-for="item in navigation"
-              :key="item.routeName"
-              class="nav-item"
+              :key="item.routeName ?? item.name"
             >
-              <router-link
-                class="nav-link"
-                :class="{ active: route.name === item.routeName }"
-                :to="{ name: item.routeName }"
-              >
-                {{ item.name }}
-              </router-link>
-            </li>
+              <!-- Dropdown item -->
+              <li v-if="item.children" class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  :class="{ active: analyticsRoutes.includes(String(route.name)) }"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                >
+                  {{ item.name }}
+                </a>
+                <ul class="dropdown-menu">
+                  <li
+                    v-for="child in item.children"
+                    :key="child.routeName"
+                  >
+                    <router-link
+                      class="dropdown-item"
+                      :class="{ active: route.name === child.routeName }"
+                      :to="{ name: child.routeName }"
+                    >
+                      {{ child.name }}
+                    </router-link>
+                  </li>
+                </ul>
+              </li>
+              <!-- Regular item -->
+              <li v-else class="nav-item">
+                <router-link
+                  class="nav-link"
+                  :class="{ active: route.name === item.routeName }"
+                  :to="{ name: item.routeName! }"
+                >
+                  {{ item.name }}
+                </router-link>
+              </li>
+            </template>
           </ul>
 
           <!-- Right controls -->

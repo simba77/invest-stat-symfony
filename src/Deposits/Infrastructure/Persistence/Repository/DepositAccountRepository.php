@@ -44,6 +44,25 @@ class DepositAccountRepository extends ServiceEntityRepository implements Deposi
     }
 
     #[\Override]
+    public function getAccountStats(User $user): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT da.id,
+                       da.name,
+                       COALESCE(SUM(d.sum), 0) as balance,
+                       COALESCE(SUM(CASE WHEN d.type = 2 THEN d.sum ELSE 0 END), 0) as profit,
+                       COALESCE(SUM(CASE WHEN d.type = 1 AND d.sum > 0 THEN d.sum ELSE 0 END), 0) as gross_invested,
+                       MIN(d.date) as start_date
+                FROM deposit_accounts da
+                LEFT JOIN deposits d ON d.deposit_account_id = da.id
+                WHERE da.user_id = :userId
+                GROUP BY da.id, da.name
+                ORDER BY balance DESC, profit DESC";
+
+        return $conn->executeQuery($sql, ['userId' => $user->getId()])->fetchAllAssociative();
+    }
+
+    #[\Override]
     public function getByIdAndUser(int $id, User $user): ?DepositAccount
     {
         return $this->findOneBy(['id' => $id, 'user' => $user]);

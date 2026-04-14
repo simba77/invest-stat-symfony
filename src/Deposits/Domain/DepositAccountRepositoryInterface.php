@@ -17,6 +17,11 @@ interface DepositAccountRepositoryInterface
      */
     public function getWithSummary(User $user): array;
 
+    /**
+     * @return list<array{id: int, name: string, balance: string, profit: string, gross_invested: string}>
+     */
+    public function getAccountStats(User $user): array;
+
     public function getByIdAndUser(int $id, User $user): ?DepositAccount;
 
     public function save(DepositAccount $depositAccount): void;

@@ -21,4 +21,15 @@ interface DepositRepositoryInterface
     public function save(Deposit $deposit): void;
 
     public function remove(Deposit $deposit): void;
+
+    /** @return array<array{month: string, deposits: string, profit: string}> */
+    public function getMonthlyStats(int $userId): array;
+
+    /**
+     * Returns all transactions grouped by account_id, ordered by date and id asc.
+     * Used to calculate active days (periods when balance > 0).
+     *
+     * @return array<int, array<array{sum: string, date: string}>>
+     */
+    public function getTransactionsByAccount(int $userId): array;
 }
