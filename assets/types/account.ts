@@ -53,6 +53,7 @@ export interface AssetsGroup {
   instrumentType: 'share' | 'bond' | 'future'
   instrumentId: number
   bondPercent: number | null
+  bondBuyPercent: number | null
 }
 
 export interface Deal {
@@ -84,6 +85,7 @@ export interface Deal {
   isBlocked: boolean
   instrumentType: 'share' | 'bond' | 'future'
   bondPercent: number | null
+  bondBuyPercent: number | null
   createdAt: string
   updatedAt: string
 }

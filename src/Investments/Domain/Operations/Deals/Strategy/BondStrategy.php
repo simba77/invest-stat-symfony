@@ -82,4 +82,9 @@ class BondStrategy implements DealStrategyInterface
     {
         return $this->getBond()->getPrice();
     }
+
+    public function getBondBuyPercent(): ?string
+    {
+        return $this->deal->getBuyPrice();
+    }
 }

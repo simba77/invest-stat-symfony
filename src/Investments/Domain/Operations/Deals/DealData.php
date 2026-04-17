@@ -285,4 +285,9 @@ class DealData
     {
         return $this->strategy->getBondPercent();
     }
+
+    public function getBondBuyPercent(): ?string
+    {
+        return $this->strategy->getBondBuyPercent();
+    }
 }

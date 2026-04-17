@@ -96,4 +96,9 @@ class FutureStrategy implements DealStrategyInterface
     {
         return null;
     }
+
+    public function getBondBuyPercent(): ?string
+    {
+        return null;
+    }
 }

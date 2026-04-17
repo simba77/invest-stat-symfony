@@ -36,6 +36,7 @@ class DealListGroupByTickerDTO
         public string $instrumentType = '',
         public ?int $instrumentId = null,
         public ?string $bondPercent = null,
+        public ?string $bondBuyPercent = null,
     ) {
     }
 }

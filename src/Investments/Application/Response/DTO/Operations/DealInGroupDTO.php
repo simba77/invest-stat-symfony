@@ -40,6 +40,7 @@ class DealInGroupDTO
         public string $accountName = '',
         public string $instrumentType = '',
         public ?string $bondPercent = null,
+        public ?string $bondBuyPercent = null,
     ) {
     }
 }

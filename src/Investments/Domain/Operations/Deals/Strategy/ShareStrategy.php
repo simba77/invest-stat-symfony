@@ -76,4 +76,9 @@ class ShareStrategy implements DealStrategyInterface
     {
         return null;
     }
+
+    public function getBondBuyPercent(): ?string
+    {
+        return null;
+    }
 }

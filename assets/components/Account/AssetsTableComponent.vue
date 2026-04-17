@@ -103,13 +103,17 @@ function showSellModal(item: AssetsGroup) {
           <!-- Price -->
           <td>
             <div class="d-flex align-items-center">
-              {{ formatPrice(group.groupData.buyPrice, group.groupData.currency) }}
-              <ArrowRight :size="14" class="mx-2 text-muted" />
-              <div class="text-nowrap">
+              <div style="line-height: 1.2">
+                {{ formatPrice(group.groupData.buyPrice, group.groupData.currency) }}
+                <div v-if="group.groupData.bondBuyPercent !== null" class="text-muted small">{{ Number(group.groupData.bondBuyPercent).toFixed(2) }}%</div>
+              </div>
+              <ArrowRight :size="14" class="mx-2 text-muted flex-shrink-0" />
+              <div class="text-nowrap" style="line-height: 1.2">
                 {{ formatPrice(group.groupData.currentPrice, group.groupData.currency) }}
                 <span v-tooltip="'Prev price: ' + formatPrice(group.groupData.prevPrice, group.groupData.currency)" :class="group.groupData.dailyProfit > 0 ? 'text-success' : 'text-danger'">
                   ({{ group.groupData.dailyProfit > 0 ? '+' : '-' }}{{ getPercent(group.groupData.dailyProfit, group.groupData.prevPrice) }}, {{ formatPrice(Math.abs(group.groupData.dailyProfit), group.groupData.currency) }})
                 </span>
+                <div v-if="group.groupData.bondPercent !== null" class="text-muted small">{{ Number(group.groupData.bondPercent).toFixed(2) }}%</div>
               </div>
             </div>
 

@@ -40,6 +40,7 @@ class GroupByTicker
         $fullTargetProfit = '0';
         $fullDailyProfit = '0';
         $commission = '0';
+        $weightedBuyPercent = '0';
         foreach ($this->deals as $deal) {
             $quantity += $deal->getQuantity();
             $fullBuyPrice = bcadd($fullBuyPrice, $deal->getFullBuyPrice(), 4);
@@ -51,7 +52,18 @@ class GroupByTicker
             $fullDailyProfit = bcadd($fullDailyProfit, $deal->getFullDailyProfit(), 2);
             $commission = bcadd($commission, $deal->getCommission(), 2);
             $fullTargetProfit = bcadd($fullTargetProfit, $deal->getFullTargetProfit(), 4);
+            if ($deal->getBondBuyPercent() !== null) {
+                $weightedBuyPercent = bcadd(
+                    $weightedBuyPercent,
+                    bcmul($deal->getBondBuyPercent(), (string) $deal->getQuantity(), 4),
+                    4
+                );
+            }
         }
+
+        $bondBuyPercent = $firstDeal->getBondBuyPercent() !== null
+            ? bcdiv($weightedBuyPercent, (string) $quantity, 4)
+            : null;
 
         return new DealListGroupByTickerDTO(
             ticker:              $firstDeal->getTicker(),
@@ -80,6 +92,7 @@ class GroupByTicker
             instrumentType:      $firstDeal->getInstrumentType(),
             instrumentId:        $firstDeal->getInstrumentId(),
             bondPercent:         $firstDeal->getBondPercent(),
+            bondBuyPercent:      $bondBuyPercent,
         );
     }
 
@@ -120,6 +133,7 @@ class GroupByTicker
                 accountName:             $deal->getAccountName(),
                 instrumentType:          $deal->getInstrumentType(),
                 bondPercent:             $deal->getBondPercent(),
+                bondBuyPercent:          $deal->getBondBuyPercent(),
             ),
             $this->deals
         );

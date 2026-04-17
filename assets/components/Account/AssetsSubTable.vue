@@ -109,7 +109,10 @@ function showSellModal(item: Deal) {
 
         <!-- Buy Price -->
         <td class="text-nowrap">
-          <div>{{ formatPrice(data.buyPrice, data.currency) }}</div>
+          <div style="line-height: 1.2">
+            {{ formatPrice(data.buyPrice, data.currency) }}
+            <div v-if="data.bondBuyPercent !== null" class="text-muted small">{{ Number(data.bondBuyPercent).toFixed(2) }}%</div>
+          </div>
           <div class="text-muted small">
             {{ formatPrice(data.fullBuyPrice, data.currency) }}
           </div>
@@ -117,7 +120,7 @@ function showSellModal(item: Deal) {
 
         <!-- Current Price -->
         <td>
-          <div class="text-nowrap">
+          <div class="text-nowrap" style="line-height: 1.2">
             {{ formatPrice(data.currentPrice, data.currency) }}
             <span
               v-tooltip="'Prev price: ' + formatPrice(data.prevPrice, data.currency)"
@@ -129,6 +132,7 @@ function showSellModal(item: Deal) {
               {{ formatPrice(Math.abs(data.dailyProfit), data.currency) }}
               )
             </span>
+            <div v-if="data.bondPercent !== null" class="text-muted small">{{ Number(data.bondPercent).toFixed(2) }}%</div>
           </div>
 
           <div class="text-muted small">
