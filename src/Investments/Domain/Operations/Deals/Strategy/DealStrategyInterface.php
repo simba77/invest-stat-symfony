@@ -29,4 +29,6 @@ interface DealStrategyInterface
     public function getCurrency(): string;
 
     public function getInstrumentId(): ?int;
+
+    public function getBondPercent(): ?string;
 }

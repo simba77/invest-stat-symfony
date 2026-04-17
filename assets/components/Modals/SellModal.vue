@@ -47,9 +47,9 @@ function sell() {
               :required="true"
               autocomplete="off"
               name="price"
-              label="Sell Price"
+              :label="security.isBond ? 'Sell Percent (%)' : 'Sell Price'"
               type="number"
-              placeholder="Enter an account name"
+              :placeholder="security.isBond ? 'Enter percent of face value' : 'Enter sell price'"
             />
             <div
               v-if="!security.id"

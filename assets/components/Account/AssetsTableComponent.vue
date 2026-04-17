@@ -32,8 +32,9 @@ function showSellModal(item: AssetsGroup) {
       accountId: route.params.id,
       ticker: item.ticker,
       name: item.shortName,
-      price: item.currentPrice,
-      quantity: ''
+      price: item.instrumentType === 'bond' ? (item.bondPercent ?? item.currentPrice) : item.currentPrice,
+      quantity: '',
+      isBond: item.instrumentType === 'bond',
     }
   });
 }

@@ -34,8 +34,9 @@ function showSellModal(item: Deal) {
       accountId: item.accountId,
       ticker: item.ticker,
       name: item.shortName,
-      price: item.currentPrice,
-      quantity: item.quantity
+      price: item.instrumentType === 'bond' ? (item.bondPercent ?? item.currentPrice) : item.currentPrice,
+      quantity: item.quantity,
+      isBond: item.instrumentType === 'bond',
     }
   })
 }

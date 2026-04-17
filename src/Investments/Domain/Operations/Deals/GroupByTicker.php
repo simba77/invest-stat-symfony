@@ -79,6 +79,7 @@ class GroupByTicker
             isBlocked:           $firstDeal->getStatus() === DealStatus::Blocked,
             instrumentType:      $firstDeal->getInstrumentType(),
             instrumentId:        $firstDeal->getInstrumentId(),
+            bondPercent:         $firstDeal->getBondPercent(),
         );
     }
 
@@ -117,6 +118,8 @@ class GroupByTicker
                 createdAt:               $deal->getCreatedAt(),
                 updatedAt:               $deal->getUpdatedAt() ?? '',
                 accountName:             $deal->getAccountName(),
+                instrumentType:          $deal->getInstrumentType(),
+                bondPercent:             $deal->getBondPercent(),
             ),
             $this->deals
         );

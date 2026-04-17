@@ -35,6 +35,7 @@ class DealListGroupByTickerDTO
         public bool $isBlocked,
         public string $instrumentType = '',
         public ?int $instrumentId = null,
+        public ?string $bondPercent = null,
     ) {
     }
 }

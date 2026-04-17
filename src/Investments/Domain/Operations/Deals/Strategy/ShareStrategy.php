@@ -71,4 +71,9 @@ class ShareStrategy implements DealStrategyInterface
     {
         return $this->deal->getShare()->getId();
     }
+
+    public function getBondPercent(): ?string
+    {
+        return null;
+    }
 }

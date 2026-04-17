@@ -280,4 +280,9 @@ class DealData
     {
         return $this->strategy->getInstrumentId();
     }
+
+    public function getBondPercent(): ?string
+    {
+        return $this->strategy->getBondPercent();
+    }
 }

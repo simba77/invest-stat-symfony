@@ -38,6 +38,8 @@ class DealInGroupDTO
         public string $createdAt,
         public string $updatedAt,
         public string $accountName = '',
+        public string $instrumentType = '',
+        public ?string $bondPercent = null,
     ) {
     }
 }

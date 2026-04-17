@@ -52,6 +52,7 @@ export interface AssetsGroup {
   isShort: boolean
   instrumentType: 'share' | 'bond' | 'future'
   instrumentId: number
+  bondPercent: number | null
 }
 
 export interface Deal {
@@ -81,6 +82,8 @@ export interface Deal {
   currency: string
   isShort: boolean
   isBlocked: boolean
+  instrumentType: 'share' | 'bond' | 'future'
+  bondPercent: number | null
   createdAt: string
   updatedAt: string
 }
@@ -122,4 +125,5 @@ export interface SellSecurity {
   name: string
   price: number
   quantity: number
+  isBond: boolean
 }

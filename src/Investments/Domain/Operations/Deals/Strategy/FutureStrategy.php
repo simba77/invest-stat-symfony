@@ -91,4 +91,9 @@ class FutureStrategy implements DealStrategyInterface
     {
         return $this->deal->getFuture()->getId();
     }
+
+    public function getBondPercent(): ?string
+    {
+        return null;
+    }
 }
