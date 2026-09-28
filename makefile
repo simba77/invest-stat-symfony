@@ -61,13 +61,12 @@ verify-js:
 	@echo "==> vite build"
 	@npm run build
 
-# Recreates the test database from the entity mapping and loads tests/Fixtures.
-# The schema is not built from migrations: the migration history cannot run on an empty database.
+# Recreates the test database from the migrations and loads tests/Fixtures.
 test-db:
 	@test -n "$(PHP_CONTAINER)" -a -n "$(DB_CONTAINER)" || { echo "The containers are not running, start them with 'make up'" >&2; exit 1; }
 	@echo "==> test database"
 	@docker exec $(DB_CONTAINER) sh -c 'mariadb -uroot -p"$$MYSQL_ROOT_PASSWORD" -e "GRANT ALL PRIVILEGES ON \`$${MYSQL_DATABASE}_test\`.* TO \"$$MYSQL_USER\"@\"%\""'
 	@docker exec $(PHP_CONTAINER) php bin/console doctrine:database:drop --env=test --force --if-exists --quiet
 	@docker exec $(PHP_CONTAINER) php bin/console doctrine:database:create --env=test --quiet
-	@docker exec $(PHP_CONTAINER) php bin/console doctrine:schema:create --env=test --quiet
+	@docker exec $(PHP_CONTAINER) php bin/console doctrine:migrations:migrate --env=test --no-interaction --quiet
 	@docker exec $(PHP_CONTAINER) php bin/console doctrine:fixtures:load --env=test --no-interaction --quiet

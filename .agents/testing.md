@@ -19,9 +19,8 @@ docker exec $(docker ps -q -f name=invest-stat-symfony.php-fpm) php bin/phpunit 
 
 ## Test database
 
-`make test-db` grants the app user access to `<db>_test`, drops and recreates it, builds the
-schema from the entity mapping (`doctrine:schema:create`, not migrations) and loads the
-fixtures from `tests/Fixtures/`.
+`make test-db` grants the app user access to `<db>_test`, drops and recreates it, runs all
+migrations (the same schema as production) and loads the fixtures from `tests/Fixtures/`.
 
 * Fixtures are registered only in the `test` environment (`when@test` in `config/services.yaml`).
 * One fixture class per context (`UserFixtures`, `ExpensesFixtures`, …); share entities via

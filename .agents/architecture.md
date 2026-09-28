@@ -49,6 +49,7 @@ Note: `Application/Command/` holds Symfony **console** commands, which are also 
 Schema changes go through Doctrine migrations in `migrations/`. Generate with
 `php bin/console make:migration` inside the PHP container and review the SQL before keeping it.
 
-The migration history cannot be replayed on an empty database (`Version20230814140723` alters
-`messenger_messages`, which Messenger created itself), so the test database is built from the
-mapping instead — keep the mapping and migrations in sync.
+The whole history must replay on an empty database: `make test-db` builds the test database
+from it. Executed migrations never run again in production, so an old migration may be edited
+only to make it replayable, with the same end schema; if it depends on state created outside
+migrations, branch on `$schema->hasTable()` (see `Version20230814140723`).
