@@ -16,11 +16,12 @@ security:
     main:
       lazy: true
       provider: app_user_provider
+      # A signed cookie instead of rotating database tokens: nothing can get out of sync,
+      # so a device stays logged in until the cookie expires or the password changes.
       remember_me:
         secret: '%kernel.secret%'
-        lifetime: 604800
-        token_provider:
-          doctrine: true
+        signature_properties: [password]
+        lifetime: 31536000 # one year, renewed whenever the cookie restores a session
         remember_me_parameter: remember_me # the login form's checkbox, sent in the JSON body
       json_login:
         remember_me: true
