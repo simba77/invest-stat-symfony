@@ -10,6 +10,7 @@ use App\Expenses\Application\Response\Compiler\ExpenseItemCompiler;
 use App\Expenses\Application\Response\Compiler\ExpensesSummaryCompiler;
 use App\Expenses\Application\UpdateExpenseCommand;
 use App\Expenses\Domain\ExpenseRepositoryInterface;
+use App\Expenses\Domain\ExpensesCategoryRepositoryInterface;
 use App\Shared\Domain\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -28,12 +29,17 @@ class ExpenseController extends AbstractController
         public ExpenseRepositoryInterface $expenseRepository,
         public ExpenseItemCompiler $expenseItemCompiler,
         public ExpensesSummaryCompiler $expenseSummaryCompiler,
+        public ExpensesCategoryRepositoryInterface $expensesCategoryRepository,
     ) {
     }
 
     #[Route('/expenses/{categoryId}/create', name: 'app_expenses_expense', requirements: ['categoryId' => '\d+'], methods: ['POST'])]
     public function create(int $categoryId, #[MapRequestPayload] CreateExpenseRequestDTO $dto, #[CurrentUser] ?User $user): Response
     {
+        if (! $this->expensesCategoryRepository->getByIdAndUser($categoryId, $user)) {
+            throw $this->createNotFoundException('No category found for id ' . $categoryId);
+        }
+
         $this->messageBus->dispatch(new CreateExpenseCommand($dto->name, $dto->sum, $categoryId, $user));
         return $this->json(['success' => true]);
     }
@@ -42,6 +48,10 @@ class ExpenseController extends AbstractController
     public function getById(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
         $expense = $this->expenseRepository->getByIdAndUser($id, $user);
+        if (! $expense) {
+            throw $this->createNotFoundException('No expense found for id ' . $id);
+        }
+
         return $this->json($this->expenseItemCompiler->compile($expense));
     }
 

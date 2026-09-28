@@ -62,6 +62,10 @@ class ExpensesCategoryController extends AbstractController
     public function getById(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
         $category = $this->expensesCategoryRepository->getByIdAndUser($id, $user);
+        if (! $category) {
+            throw $this->createNotFoundException('No category found for id ' . $id);
+        }
+
         return $this->json(new ExpenseCategoryDTO($category->getId(), $category->getName(), []));
     }
 
