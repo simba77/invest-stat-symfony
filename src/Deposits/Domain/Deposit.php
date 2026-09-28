@@ -46,7 +46,7 @@ class Deposit implements
     private User $user;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private DepositAccount $depositAccount;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]

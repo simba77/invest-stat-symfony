@@ -20,7 +20,7 @@ function deleteAccount(account: DepositAccount) {
     modelValue: {
       id: account.id,
       title: 'Delete Confirmation',
-      text: 'Are you sure you want to delete "<b>'+ account.name + '</b>"?',
+      text: 'Are you sure you want to delete "<b>'+ account.name + '</b>"? All deposits of this account will be deleted too.',
     }
   })
 }
