@@ -17,6 +17,7 @@ class CreateDepositRequestDTO
         public string $sum,
 
         #[Assert\NotBlank]
+        #[Assert\Choice(choices: [1, 2])] // 1 - deposit, 2 - percent
         public int $type,
 
         #[Assert\NotBlank]
