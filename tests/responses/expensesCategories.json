@@ -2,15 +2,18 @@
   "items": [
     {
       "id": 1,
-      "name": "Shops and Others"
+      "name": "Shops and Others",
+      "expenses": []
     },
     {
       "id": 2,
-      "name": "Regular Payments"
+      "name": "Regular Payments",
+      "expenses": []
     },
     {
       "id": 3,
-      "name": "Base Expenses"
+      "name": "Base Expenses",
+      "expenses": []
     }
   ]
 }
