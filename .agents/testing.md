@@ -27,6 +27,8 @@ migrations (the same schema as production) and loads the fixtures from `tests/Fi
   references and declare `DependentFixtureInterface`.
 * The database is fresh, so auto-increment ids are predictable (the first category is `id: 1`)
   and expected JSON may rely on them.
-* There is no per-test transaction rollback: data written by one test is visible to the
-  next ones. Tests that write data must not depend on execution order; re-run `make test-db`
-  to get a clean state.
+* `dama/doctrine-test-bundle` wraps every test in a transaction and rolls it back, so each
+  test starts with just the fixtures and may write freely. Two limits: auto-increment values
+  are not rolled back (never assert ids of rows a test creates), and statements with an
+  implicit commit (DDL, `TRUNCATE`) break the isolation.
+* The bundle is pinned to `~8.2.0`: newer versions need PHPUnit 10+.

@@ -1,0 +1,7 @@
+when@test:
+  dama_doctrine_test:
+    # Every test runs in a transaction that is rolled back afterwards
+    enable_static_connection:
+      default: true
+    enable_static_meta_data_cache: true
+    enable_static_query_cache: true

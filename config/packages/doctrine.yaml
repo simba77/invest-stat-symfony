@@ -39,6 +39,8 @@ when@test:
     dbal:
       # "TEST_TOKEN" is typically set by ParaTest
       dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+      # Required by dama/doctrine-test-bundle, which wraps every test in a transaction
+      use_savepoints: true
 
 when@prod:
   doctrine:
