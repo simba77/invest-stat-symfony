@@ -45,6 +45,22 @@ prepare-dev:
 	cp -R .docker/certbot/conf/live/test-app.loc .docker/certbot/conf/live/${APP_HOST}
 	cp .docker/docker-compose.dev.yml ./docker-compose.override.yml
 
+verify: verify-php verify-js
+
+verify-php: test-db
+	@echo "==> psalm"
+	@docker exec $(PHP_CONTAINER) composer cs-check
+	@echo "==> lint:container"
+	@docker exec $(PHP_CONTAINER) php bin/console lint:container
+	@echo "==> phpunit"
+	@docker exec $(PHP_CONTAINER) php bin/phpunit
+
+verify-js:
+	@echo "==> eslint"
+	@npm run lint
+	@echo "==> vite build"
+	@npm run build
+
 # Recreates the test database from the entity mapping and loads tests/Fixtures.
 # The schema is not built from migrations: the migration history cannot run on an empty database.
 test-db:
