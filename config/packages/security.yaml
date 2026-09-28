@@ -21,6 +21,7 @@ security:
         lifetime: 604800
         token_provider:
           doctrine: true
+        remember_me_parameter: remember_me # the login form's checkbox, sent in the JSON body
       json_login:
         remember_me: true
         check_path: app_auth_login
