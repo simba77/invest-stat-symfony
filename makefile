@@ -1,6 +1,8 @@
 -include .env .env.local
 
 USER_ID ?= $(shell id -u)
+PHP_CONTAINER = $(shell docker ps -q -f name=${COMPOSE_PROJECT_NAME}.php-fpm)
+DB_CONTAINER = $(shell docker ps -q -f name=${COMPOSE_PROJECT_NAME}.mariadb)
 
 restart: stop up
 
@@ -42,3 +44,14 @@ backup-db:
 prepare-dev:
 	cp -R .docker/certbot/conf/live/test-app.loc .docker/certbot/conf/live/${APP_HOST}
 	cp .docker/docker-compose.dev.yml ./docker-compose.override.yml
+
+# Recreates the test database from the entity mapping and loads tests/Fixtures.
+# The schema is not built from migrations: the migration history cannot run on an empty database.
+test-db:
+	@test -n "$(PHP_CONTAINER)" -a -n "$(DB_CONTAINER)" || { echo "The containers are not running, start them with 'make up'" >&2; exit 1; }
+	@echo "==> test database"
+	@docker exec $(DB_CONTAINER) sh -c 'mariadb -uroot -p"$$MYSQL_ROOT_PASSWORD" -e "GRANT ALL PRIVILEGES ON \`$${MYSQL_DATABASE}_test\`.* TO \"$$MYSQL_USER\"@\"%\""'
+	@docker exec $(PHP_CONTAINER) php bin/console doctrine:database:drop --env=test --force --if-exists --quiet
+	@docker exec $(PHP_CONTAINER) php bin/console doctrine:database:create --env=test --quiet
+	@docker exec $(PHP_CONTAINER) php bin/console doctrine:schema:create --env=test --quiet
+	@docker exec $(PHP_CONTAINER) php bin/console doctrine:fixtures:load --env=test --no-interaction --quiet

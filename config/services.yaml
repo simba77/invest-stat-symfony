@@ -40,3 +40,13 @@ services:
 
   App\Investments\Domain\Tax\TaxCalculatorInterface:
     class: App\Investments\Domain\Tax\TaxCalculator
+
+when@test:
+  services:
+    _defaults:
+      autowire: true
+      autoconfigure: true
+
+    # Test database fixtures, loaded by `make test-db`
+    App\Tests\Fixtures\:
+      resource: '../tests/Fixtures/'
