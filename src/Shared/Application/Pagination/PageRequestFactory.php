@@ -9,10 +9,15 @@ final readonly class PageRequestFactory
     public const int DEFAULT_PER_PAGE = 20;
     public const int MAX_PER_PAGE = 100;
 
-    public function create(int $page, int $perPage): PageRequestDTO
+    /**
+     * A page past the last one is served as the last page, so the items always match
+     * the page number reported in the pagination meta.
+     */
+    public function create(int $page, int $perPage, int $totalItems): PageRequestDTO
     {
-        $normalizedPage = max(1, $page);
         $normalizedPerPage = $this->normalizePerPage($perPage);
+        $lastPage = max(1, (int) ceil($totalItems / $normalizedPerPage));
+        $normalizedPage = min(max(1, $page), $lastPage);
         $offset = ($normalizedPage - 1) * $normalizedPerPage;
 
         return new PageRequestDTO(

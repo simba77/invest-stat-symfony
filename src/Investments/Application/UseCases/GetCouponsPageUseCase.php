@@ -28,9 +28,8 @@ final readonly class GetCouponsPageUseCase
     public function execute(User $user, int $page = 1, int $perPage = PageRequestFactory::DEFAULT_PER_PAGE): PaginatedResponseDTO
     {
         $userId = $user->getId();
-        $pageRequest = $this->pageRequestFactory->create($page, $perPage);
-
         $totalItems = $this->couponRepository->countByUserId($userId);
+        $pageRequest = $this->pageRequestFactory->create($page, $perPage, $totalItems);
         $pagination = $this->paginationMetaFactory->create($pageRequest->page, $pageRequest->perPage, $totalItems);
 
         $coupons = $this->couponRepository->getPageByUserId($userId, $pageRequest->offset, $pageRequest->perPage);

@@ -26,9 +26,8 @@ final readonly class GetDividendsPageUseCase
     public function execute(User $user, int $page = 1, int $perPage = PageRequestFactory::DEFAULT_PER_PAGE): PaginatedResponseDTO
     {
         $userId = $user->getId();
-        $pageRequest = $this->pageRequestFactory->create($page, $perPage);
-
         $totalItems = $this->dividendRepository->countByUserId($userId);
+        $pageRequest = $this->pageRequestFactory->create($page, $perPage, $totalItems);
         $pagination = $this->paginationMetaFactory->create($pageRequest->page, $pageRequest->perPage, $totalItems);
 
         $dividends = $this->dividendRepository->getPageByUserId($userId, $pageRequest->offset, $pageRequest->perPage);
