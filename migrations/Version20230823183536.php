@@ -19,7 +19,13 @@ final class Version20230823183536 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
+        // expenses_categories was renamed to expense_categories by hand on existing databases,
+        // so an empty database has to replay the rename here.
+        if (! $schema->hasTable('expense_categories') && $schema->hasTable('expenses_categories')) {
+            $this->addSql('ALTER TABLE expenses DROP FOREIGN KEY FK_2496F35B12469DE2');
+            $this->addSql('RENAME TABLE expenses_categories TO expense_categories');
+        }
+
         $this->addSql('ALTER TABLE expenses ADD CONSTRAINT FK_2496F35B12469DE2 FOREIGN KEY (category_id) REFERENCES expense_categories (id)');
     }
 
