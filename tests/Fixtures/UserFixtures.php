@@ -16,6 +16,7 @@ final class UserFixtures extends Fixture
 {
     public const string ADMIN_EMAIL = 'admin@admin.com';
     public const string OTHER_USER_EMAIL = 'other@example.com';
+    public const string PASSWORD = 'password';
 
     public function __construct(
         private readonly UserPasswordHasherInterface $passwordHasher,
@@ -35,7 +36,7 @@ final class UserFixtures extends Fixture
         $user = new User();
         $user->setEmail($email);
         $user->setName($name);
-        $user->setPassword($this->passwordHasher->hashPassword($user, 'password'));
+        $user->setPassword($this->passwordHasher->hashPassword($user, self::PASSWORD));
 
         return $user;
     }

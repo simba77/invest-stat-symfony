@@ -44,7 +44,9 @@ abstract class ApiTestCase extends WebTestCase
 
     protected function getJson(string $uri): void
     {
-        $this->sendJson('GET', $uri);
+        $this->beforeRequest();
+        // Like the SPA (axios): a GET carries neither a body nor a Content-Type
+        $this->client->request('GET', $uri, server: ['HTTP_ACCEPT' => 'application/json']);
     }
 
     /**
@@ -52,7 +54,8 @@ abstract class ApiTestCase extends WebTestCase
      */
     protected function postJson(string $uri, array $payload = []): void
     {
-        $this->sendJson('POST', $uri, $payload);
+        $this->beforeRequest();
+        $this->client->jsonRequest('POST', $uri, $payload);
     }
 
     protected function responseJson(): mixed
@@ -127,14 +130,10 @@ abstract class ApiTestCase extends WebTestCase
         return $user;
     }
 
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function sendJson(string $method, string $uri, array $payload = []): void
+    private function beforeRequest(): void
     {
         // Like a real request, the application starts with an empty identity map
         // and reads everything the test prepared from the database.
         $this->entityManager()->clear();
-        $this->client->jsonRequest($method, $uri, $payload);
     }
 }

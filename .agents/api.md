@@ -14,6 +14,16 @@ consumed by the Vue SPA.
 * Respond with `$this->json(...)` / `JsonResponse`; mutations usually return `['success' => true]`.
 * Controllers only map HTTP: business logic goes to handlers, use cases, or domain services.
 
+## Authentication
+
+* `json_login` on `POST /api/login` (`username`, `password`, `remember_me`); `GET /api/login`
+  returns the current user or 401. Session storage is native PHP files and gets garbage-collected.
+* Remember-me is a signed cookie (`config/packages/security.yaml`): one year, renewed whenever it
+  restores a session, invalidated for all devices by a password change. No database tokens.
+* Do not add `LoginSuccessEvent` listeners that touch `RememberMeBadge`: the event also fires
+  for remember-me logins, and a badge there makes Symfony clear the device's cookie.
+* Covered by `tests/Shared/Application/Controller/AuthControllerTest.php`.
+
 ## Requests
 
 * Body mapping: `#[MapRequestPayload] CreateDepositRequestDTO $dto`.
