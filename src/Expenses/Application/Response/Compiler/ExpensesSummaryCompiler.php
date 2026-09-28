@@ -26,10 +26,11 @@ class ExpensesSummaryCompiler implements CompilerInterface
     public function compile(mixed $entry): array
     {
         $expenses = $this->expenseRepository->getSumForUser($entry->getId());
+        $salary = $entry->getSalary() ?? '0';
         return [
             [
                 'name'     => 'Salary',
-                'total'    => $entry->getSalary() ?? '0',
+                'total'    => $salary,
                 'helpText' => 'Monthly Salary',
             ],
             [
@@ -39,7 +40,7 @@ class ExpensesSummaryCompiler implements CompilerInterface
             ],
             [
                 'name'     => 'Salary - Expenses',
-                'total'    => bcsub($entry->getSalary(), $expenses, 2),
+                'total'    => bcsub($salary, $expenses, 2),
                 'helpText' => 'Free Money for Investments',
             ],
         ];
