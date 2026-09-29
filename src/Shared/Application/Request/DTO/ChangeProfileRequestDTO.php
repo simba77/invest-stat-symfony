@@ -19,8 +19,9 @@ class ChangeProfileRequestDTO
 
     public ?string $password;
 
+    /** The form sends null when the salary field is empty */
     #[Assert\Type(['type' => ['numeric']])]
-    public string $salary;
+    public ?string $salary = null;
 
     #[Assert\NotBlank]
     #[Assert\Choice(callback: [self::class, 'getTaxProfiles'])]
