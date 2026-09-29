@@ -30,7 +30,7 @@ class DepositRepository extends ServiceEntityRepository implements DepositReposi
             ->getQuery()
             ->getOneOrNullResult();
 
-        return (string) $data['sum_of_deposits'];
+        return (string) ($data['sum_of_deposits'] ?? '0');
     }
 
     #[\Override]

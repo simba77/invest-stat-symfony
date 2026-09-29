@@ -74,6 +74,11 @@ final readonly class GetHomepageDataUseCase
             $profitPercent = bcmul(bcdiv($profit, $grossInvested, 5), '100', 2);
         }
 
+        $dailyChangePercent = '0';
+        if (bccomp($allAssetsSum, '0', 2) !== 0) {
+            $dailyChangePercent = bcmul(bcdiv($dailyChange, $allAssetsSum, 5), '100', 2);
+        }
+
         return [
             'usd'              => $this->currencyService->getUSDRUBRate(),
             'depositAccounts'  => $depositAccounts,
@@ -98,7 +103,7 @@ final readonly class GetHomepageDataUseCase
                     'name'        => 'All Assets',
                     'helpText'    => 'The sum of all assets held by brokers',
                     'dailyChange' => $dailyChange,
-                    'percent'     => bcmul(bcdiv($dailyChange, $allAssetsSum, 5), '100', 2),
+                    'percent'     => $dailyChangePercent,
                     'total'       => $allAssetsSum,
                     'currency'    => '₽',
                 ],

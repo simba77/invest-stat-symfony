@@ -73,24 +73,28 @@ class InvestmentRepository extends ServiceEntityRepository implements Investment
     #[\Override]
     public function getSumByUserId(int $userId): string
     {
-        return (string) $this->createQueryBuilder('inv')
+        $data = $this->createQueryBuilder('inv')
             ->select('SUM(inv.sum) as allInvestments')
             ->where('inv.userId = :user_id')
             ->setParameter('user_id', $userId)
             ->getQuery()
-            ->getOneOrNullResult()['allInvestments'];
+            ->getOneOrNullResult();
+
+        return (string) ($data['allInvestments'] ?? '0');
     }
 
     #[\Override]
     public function getGrossSumByUserId(int $userId): string
     {
-        return (string) $this->createQueryBuilder('inv')
+        $data = $this->createQueryBuilder('inv')
             ->select('SUM(inv.sum) as grossInvestments')
             ->where('inv.userId = :user_id')
             ->andWhere('inv.sum > 0')
             ->setParameter('user_id', $userId)
             ->getQuery()
-            ->getOneOrNullResult()['grossInvestments'];
+            ->getOneOrNullResult();
+
+        return (string) ($data['grossInvestments'] ?? '0');
     }
 
     /**
