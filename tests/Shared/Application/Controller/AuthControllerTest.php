@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Shared\Application\Controller;
 
+use App\Shared\Domain\TaxProfile;
+use App\Shared\Domain\User;
 use App\Tests\Fixtures\UserFixtures;
 use App\Tests\Support\ApiTestCase;
 use Symfony\Component\BrowserKit\Cookie;
@@ -104,14 +106,114 @@ final class AuthControllerTest extends ApiTestCase
         $this->logIn(rememberMe: true);
         $cookie = $this->rememberMeCookie();
         $admin = $this->admin();
-        $passwordHasher = static::getContainer()->get(UserPasswordHasherInterface::class);
-        $admin->setPassword($passwordHasher->hashPassword($admin, 'new password'));
+        $admin->setPassword($this->passwordHasher()->hashPassword($admin, 'new password'));
         $this->persist($admin);
 
         $this->continueWithOnly($cookie);
         $this->getJson('/api/login');
 
         self::assertResponseStatusCodeSame(401);
+    }
+
+    public function testChangeProfileRejectsAnonymousRequest(): void
+    {
+        $this->postJson('/api/change-profile', $this->profile());
+
+        self::assertResponseStatusCodeSame(403);
+    }
+
+    public function testChangeProfileUpdatesUserAndKeepsPasswordWhenItIsEmpty(): void
+    {
+        $admin = $this->admin();
+        $this->loginAs($admin);
+
+        $this->postJson('/api/change-profile', $this->profile());
+
+        self::assertResponseIsSuccessful();
+        self::assertSame(['success' => true], $this->responseJson());
+        $user = $this->findFresh(User::class, $admin->getId());
+        self::assertNotNull($user);
+        self::assertSame('New Name', $user->getName());
+        self::assertSame('new@example.com', $user->getEmail());
+        self::assertSame('150000.00', $user->getSalary());
+        self::assertSame(TaxProfile::Ndfl15, $user->getTaxProfile());
+        self::assertTrue($this->passwordHasher()->isPasswordValid($user, UserFixtures::PASSWORD));
+    }
+
+    public function testChangeProfileChangesPasswordWhenGiven(): void
+    {
+        $admin = $this->admin();
+        $this->loginAs($admin);
+
+        $this->postJson('/api/change-profile', $this->profile(['password' => 'new password']));
+
+        self::assertResponseIsSuccessful();
+        $user = $this->findFresh(User::class, $admin->getId());
+        self::assertNotNull($user);
+        self::assertTrue($this->passwordHasher()->isPasswordValid($user, 'new password'));
+    }
+
+    public function testChangeProfileAllowsUserWithoutSalary(): void
+    {
+        // The form sends null when the salary field is empty
+        $admin = $this->admin();
+        $this->loginAs($admin);
+
+        $this->postJson('/api/change-profile', $this->profile(['salary' => null]));
+
+        self::assertResponseIsSuccessful();
+        self::assertNull($this->findFresh(User::class, $admin->getId())?->getSalary());
+    }
+
+    /**
+     * @dataProvider invalidProfiles
+     *
+     * @param array<string, mixed> $overrides
+     */
+    public function testChangeProfileRejectsInvalidData(array $overrides, string $violatedField): void
+    {
+        $admin = $this->admin();
+        $this->loginAs($admin);
+
+        $this->postJson('/api/change-profile', $this->profile($overrides));
+
+        $this->assertViolatedFields([$violatedField]);
+        self::assertSame(UserFixtures::ADMIN_EMAIL, $this->findFresh(User::class, $admin->getId())?->getEmail());
+    }
+
+    /**
+     * @return iterable<string, array{array<string, mixed>, string}>
+     */
+    public static function invalidProfiles(): iterable
+    {
+        yield 'name shorter than 3 characters' => [['name' => 'ab'], 'name'];
+        yield 'blank email' => [['email' => ''], 'email'];
+        yield 'not an email' => [['email' => 'not-an-email'], 'email'];
+        yield 'email of another user' => [['email' => UserFixtures::OTHER_USER_EMAIL], 'email'];
+        yield 'salary is not a number' => [['salary' => 'a lot'], 'salary'];
+        yield 'unknown tax profile' => [['taxProfile' => 'vat_20'], 'taxProfile'];
+    }
+
+    /**
+     * What the profile form sends.
+     *
+     * @param array<string, mixed> $overrides
+     * @return array<string, mixed>
+     */
+    private function profile(array $overrides = []): array
+    {
+        return array_replace([
+            'name'       => 'New Name',
+            'email'      => 'new@example.com',
+            'salary'     => '150000.00',
+            'taxProfile' => TaxProfile::Ndfl15->value,
+            'password'   => '',
+        ], $overrides);
+    }
+
+    private function passwordHasher(): UserPasswordHasherInterface
+    {
+        return static::getContainer()->get(UserPasswordHasherInterface::class);
     }
 
     private function logIn(bool $rememberMe, string $password = UserFixtures::PASSWORD): void

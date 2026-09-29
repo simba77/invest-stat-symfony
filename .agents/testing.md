@@ -17,6 +17,10 @@ Tests mirror `src/`: `tests/<Context>/<Layer>/.../<Class>Test.php`.
 
 * Controllers — functional tests extending `App\Tests\Support\ApiTestCase`: real kernel,
   router, security, validation and database.
+* Other services that need the container or the database (Doctrine listeners, console
+  commands) — `KernelTestCase` with `App\Tests\Support\InteractsWithDatabase`; console commands
+  through `CommandTester`. Freeze time with Symfony's `ClockSensitiveTrait::mockTime()`:
+  services read it from `Psr\Clock\ClockInterface`.
 * Domain logic with real computation (calculations, grouping, tax) — unit tests on plain
   `TestCase`, no container and no database.
 * Per-context test data helpers — a trait next to the tests (`tests/Expenses/CreatesExpenses.php`).
