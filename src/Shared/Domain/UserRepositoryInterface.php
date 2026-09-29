@@ -7,4 +7,6 @@ namespace App\Shared\Domain;
 interface UserRepositoryInterface
 {
     public function findById(int $id): ?User;
+
+    public function findByEmail(string $email): ?User;
 }

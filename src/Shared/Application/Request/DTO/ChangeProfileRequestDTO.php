@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Shared\Application\Request\DTO;
 
+use App\Shared\Application\Request\Constraint\UniqueUserEmail;
 use App\Shared\Domain\TaxProfile;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -15,6 +16,8 @@ class ChangeProfileRequestDTO
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 200)]
+    #[Assert\Email]
+    #[UniqueUserEmail]
     public string $email;
 
     public ?string $password;
