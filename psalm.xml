@@ -26,6 +26,9 @@
     <extraFiles allowMissingFiles="true">
         <directory name="./var/cache/dev/Symfony/Config"/>
     </extraFiles>
+    <stubs>
+        <file name="stubs/protobuf.phpstub"/>
+    </stubs>
     <issueHandlers>
         <PossiblyUnusedMethod errorLevel="suppress" />
         <PossiblyUnusedProperty errorLevel="suppress" />

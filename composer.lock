@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b4c996a2122a04f8785c1d9da43c88d7",
+    "content-hash": "d9e7157191e786d112014ea2a97c272f",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -1651,16 +1651,16 @@
         },
         {
             "name": "grpc/grpc",
-            "version": "1.78.0",
+            "version": "1.82.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/grpc/grpc-php.git",
-                "reference": "9891a9aa0de41c4ceb07a50dbb5a3aa96c229082"
+                "reference": "be984cb608f21e96453b3cfe54c748cc7b192250"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/grpc/grpc-php/zipball/9891a9aa0de41c4ceb07a50dbb5a3aa96c229082",
-                "reference": "9891a9aa0de41c4ceb07a50dbb5a3aa96c229082",
+                "url": "https://api.github.com/repos/grpc/grpc-php/zipball/be984cb608f21e96453b3cfe54c748cc7b192250",
+                "reference": "be984cb608f21e96453b3cfe54c748cc7b192250",
                 "shasum": ""
             },
             "require": {
@@ -1689,30 +1689,30 @@
                 "rpc"
             ],
             "support": {
-                "source": "https://github.com/grpc/grpc-php/tree/v1.78.0"
+                "source": "https://github.com/grpc/grpc-php/tree/v1.82.0"
             },
-            "time": "2026-03-25T08:47:43+00:00"
+            "time": "2026-07-03T09:39:53+00:00"
         },
         {
             "name": "metaseller/tinkoff-invest-api-v2-php",
-            "version": "0.4.24",
+            "version": "0.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/metaseller/tinkoff-invest-api-v2-php.git",
-                "reference": "a2422c109be39321ab3147092f89880fb3dcf21f"
+                "reference": "5ba70444707a64998564f061a6c282078ecb7b05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/metaseller/tinkoff-invest-api-v2-php/zipball/a2422c109be39321ab3147092f89880fb3dcf21f",
-                "reference": "a2422c109be39321ab3147092f89880fb3dcf21f",
+                "url": "https://api.github.com/repos/metaseller/tinkoff-invest-api-v2-php/zipball/5ba70444707a64998564f061a6c282078ecb7b05",
+                "reference": "5ba70444707a64998564f061a6c282078ecb7b05",
                 "shasum": ""
             },
             "require": {
                 "ext-bcmath": "*",
-                "ext-grpc": "^1.43",
+                "ext-grpc": "^1.74",
                 "ext-json": "*",
-                "google/protobuf": "^3.19",
-                "grpc/grpc": "^1.42",
+                "google/protobuf": "^3.25.1",
+                "grpc/grpc": "^1.74",
                 "php": ">=7.4.0"
             },
             "require-dev": {
@@ -1741,18 +1741,21 @@
                     "email": "igor@frolenkov.ru"
                 }
             ],
-            "description": "Unofficial PHP SDK for Tinkoff Invest API v2",
+            "description": "Unofficial PHP SDK for T-Invest API v2",
             "homepage": "https://github.com/metaseller/tinkoff-invest-api-v2-php",
             "keywords": [
-                "invest api",
+                "T-Invest API PHP SDK",
+                "invest api sdk",
                 "php",
+                "t-invest",
+                "t-investments",
                 "tinkoff"
             ],
             "support": {
                 "issues": "https://github.com/metaseller/tinkoff-invest-api-v2-php/issues",
-                "source": "https://github.com/metaseller/tinkoff-invest-api-v2-php/tree/0.4.24"
+                "source": "https://github.com/metaseller/tinkoff-invest-api-v2-php/tree/0.5.7"
             },
-            "time": "2025-12-18T10:15:18+00:00"
+            "time": "2026-09-23T13:07:48+00:00"
         },
         {
             "name": "monolog/monolog",

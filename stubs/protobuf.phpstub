@@ -1,0 +1,15 @@
+<?php
+
+namespace Google\Protobuf;
+
+/**
+ * Generated T-Invest models reference the protobuf 4.x public class in docblocks,
+ * while the installed protobuf 3.x runtime returns Google\Protobuf\Internal\RepeatedField.
+ *
+ * @template T
+ * @implements \ArrayAccess<int, T>
+ * @implements \IteratorAggregate<int, T>
+ */
+class RepeatedField implements \ArrayAccess, \IteratorAggregate, \Countable
+{
+}
