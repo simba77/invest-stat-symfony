@@ -50,3 +50,10 @@ when@test:
     # Test database fixtures, loaded by `make test-db`
     App\Tests\Fixtures\:
       resource: '../tests/Fixtures/'
+
+    # Broker API calls are answered by a fake the tests configure
+    App\Tests\Investments\BrokerSync\FakeBrokerClientFactory:
+      public: true
+
+    App\Investments\Domain\BrokerSync\Client\BrokerClientFactoryInterface:
+      alias: App\Tests\Investments\BrokerSync\FakeBrokerClientFactory

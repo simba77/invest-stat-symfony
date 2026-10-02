@@ -12,4 +12,10 @@ namespace Google\Protobuf;
  */
 class RepeatedField implements \ArrayAccess, \IteratorAggregate, \Countable
 {
+    /**
+     * @return \Traversable<int, T>
+     */
+    public function getIterator(): \Traversable
+    {
+    }
 }
