@@ -41,6 +41,9 @@ services:
   App\Investments\Domain\Tax\TaxCalculatorInterface:
     class: App\Investments\Domain\Tax\TaxCalculator
 
+  App\Investments\Domain\Instruments\ShareSplitProviderInterface:
+    class: App\Investments\Infrastructure\Http\MoexShareSplitProvider
+
 when@test:
   services:
     _defaults:
@@ -57,3 +60,9 @@ when@test:
 
     App\Investments\Domain\BrokerSync\Client\BrokerClientFactoryInterface:
       alias: App\Tests\Investments\BrokerSync\FakeBrokerClientFactory
+
+    App\Tests\Investments\Instruments\FakeShareSplitProvider:
+      public: true
+
+    App\Investments\Domain\Instruments\ShareSplitProviderInterface:
+      alias: App\Tests\Investments\Instruments\FakeShareSplitProvider

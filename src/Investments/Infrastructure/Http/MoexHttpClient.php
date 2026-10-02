@@ -51,6 +51,25 @@ class MoexHttpClient
     }
 
     /**
+     * Splits and consolidations of shares traded on MOEX.
+     *
+     * @return list<array{tradedate: string, secid: string, before: string, after: string}>
+     */
+    public function getSplits(): array
+    {
+        $data = $this->getData('/iss/statistics/engines/stock/splits.xml');
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+        $rows = $propertyAccessor->getValue($data, '[data][rows][row]') ?? [];
+        // A single row is not wrapped into a list by the XML to array conversion
+        if (isset($rows['@attributes'])) {
+            $rows = [$rows];
+        }
+
+        /** @var list<array{tradedate: string, secid: string, before: string, after: string}> */
+        return array_column($rows, '@attributes');
+    }
+
+    /**
      * @return array{shares: list<mixed>, marketData: list<mixed>}
      */
     public function getSharesByBoard(string $board): array
