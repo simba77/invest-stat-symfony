@@ -25,6 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DealRepository::class)]
 #[ORM\Table(name: 'deals')]
+#[ORM\UniqueConstraint(name: 'deal_external_id', columns: ['account_id', 'external_id'])]
 #[ORM\Index(columns: ['user_id', 'status'], name: 'user_status')]
 class Deal implements
     CreatedDateProviderInterface,
@@ -36,6 +37,7 @@ class Deal implements
     use UpdatedDateProvider;
     use CreatedByProvider;
     use UpdatedByProvider;
+    use SyncedRecord;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -91,6 +93,18 @@ class Deal implements
     #[ORM\ManyToOne(targetEntity: Future::class)]
     #[ORM\JoinColumn(nullable: true)]
     private ?Future $future = null;
+
+    /**
+     * Commission the broker charged for opening the deal; null when only estimated.
+     *
+     * @var numeric-string|null
+     */
+    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
+    private ?string $buyCommission = null;
+
+    /** @var numeric-string|null */
+    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
+    private ?string $sellCommission = null;
 
     /**
      * @param User $user
@@ -309,6 +323,34 @@ class Deal implements
     public function setFuture(?Future $future): static
     {
         $this->future = $future;
+        return $this;
+    }
+
+    /**
+     * @return numeric-string|null
+     */
+    public function getBuyCommission(): ?string
+    {
+        return $this->buyCommission;
+    }
+
+    /**
+     * @return numeric-string|null
+     */
+    public function getSellCommission(): ?string
+    {
+        return $this->sellCommission;
+    }
+
+    /**
+     * @param numeric-string|null $buyCommission
+     * @param numeric-string|null $sellCommission
+     */
+    public function setCommissions(?string $buyCommission, ?string $sellCommission): static
+    {
+        $this->buyCommission = $buyCommission;
+        $this->sellCommission = $sellCommission;
+
         return $this;
     }
 }

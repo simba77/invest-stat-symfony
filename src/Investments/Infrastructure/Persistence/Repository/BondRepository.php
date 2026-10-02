@@ -34,6 +34,7 @@ class BondRepository extends ServiceEntityRepository implements BondRepositoryIn
     #[\Override]
     public function findByTUid(string $tUid): ?Bond
     {
-        return $this->findOneBy(['tUid' => $tUid]);
+        // The same instrument can be listed on several exchanges; the first one listed wins
+        return $this->findOneBy(['tUid' => $tUid], ['id' => 'ASC']);
     }
 }

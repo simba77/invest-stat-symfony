@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Domain\Operations;
 
+use App\Investments\Domain\Accounts\Account;
 interface InvestmentRepositoryInterface
 {
     /**
@@ -26,4 +27,11 @@ interface InvestmentRepositoryInterface
      * @return list<array{date: string, sum: string}>
      */
     public function getDailyCashFlowsByUserId(int $userId): array;
+
+    /**
+     * Every record of the account, in the order they were created.
+     *
+     * @return list<Investment>
+     */
+    public function findByAccount(Account $account): array;
 }

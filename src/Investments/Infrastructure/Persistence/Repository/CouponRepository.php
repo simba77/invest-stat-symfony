@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Infrastructure\Persistence\Repository;
 
+use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Operations\Coupon;
 use App\Investments\Domain\Operations\CouponRepositoryInterface;
 use App\Shared\Domain\User;
@@ -89,5 +90,15 @@ class CouponRepository extends ServiceEntityRepository implements CouponReposito
         $em = $this->getEntityManager();
         $em->remove($coupon);
         $em->flush();
+    }
+
+    /**
+     * @return list<Coupon>
+     */
+    #[\Override]
+    public function findByAccount(Account $account): array
+    {
+        /** @var list<Coupon> */
+        return $this->findBy(['account' => $account], ['id' => 'ASC']);
     }
 }

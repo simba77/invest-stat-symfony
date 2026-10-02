@@ -7,6 +7,7 @@ namespace App\Tests\Investments\Application\Controller;
 use App\Investments\Domain\BrokerSync\BrokerAccountLink;
 use App\Investments\Domain\BrokerSync\BrokerOperation;
 use App\Investments\Domain\BrokerSync\Client\ExternalAccount;
+use App\Investments\Domain\BrokerSync\Client\ExternalPositions;
 use App\Investments\Domain\BrokerSync\FeeAllocation;
 use App\Tests\Investments\BrokerSync\CreatesBrokerLinks;
 use App\Tests\Investments\BrokerSync\Operations;
@@ -243,6 +244,7 @@ final class BrokerSyncControllerTest extends ApiTestCase
         $account = $this->createAccount($admin);
         $this->linkAccount($account);
         $this->brokerClient()->operations = [Operations::deposit('1', '2026-01-01 10:00:00', '100')];
+        $this->brokerClient()->positions = new ExternalPositions(['RUB' => '100'], []);
         $this->loginAs($admin);
 
         $this->postJson('/api/accounts/' . $account->getId() . '/broker-sync/run');

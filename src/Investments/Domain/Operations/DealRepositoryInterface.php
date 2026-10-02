@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Domain\Operations;
 
 use App\Investments\Application\Request\DTO\Operations\DealsFilterRequestDTO;
+use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Operations\Deals\DealStatus;
 
 interface DealRepositoryInterface
@@ -64,4 +65,11 @@ interface DealRepositoryInterface
      * @return array<int, Deal>
      */
     public function getAllActiveDealsWithFuturesAndTUid(): array;
+
+    /**
+     * Every record of the account, in the order they were created.
+     *
+     * @return list<Deal>
+     */
+    public function findByAccount(Account $account): array;
 }

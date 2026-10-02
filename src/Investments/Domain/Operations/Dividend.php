@@ -20,6 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DividendRepository::class)]
 #[ORM\Table(name: 'dividends')]
+#[ORM\UniqueConstraint(name: 'dividend_external_id', columns: ['account_id', 'external_id'])]
 class Dividend implements
     CreatedDateProviderInterface,
     UpdatedDateProviderInterface,
@@ -30,6 +31,7 @@ class Dividend implements
     use UpdatedDateProvider;
     use CreatedByProvider;
     use UpdatedByProvider;
+    use SyncedRecord;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

@@ -19,6 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: InvestmentRepository::class)]
 #[ORM\Table(name: 'investments')]
+#[ORM\UniqueConstraint(name: 'investment_external_id', columns: ['account_id', 'external_id'])]
 class Investment implements
     CreatedUserProviderInterface,
     UpdatedUserProviderInterface,
@@ -29,6 +30,7 @@ class Investment implements
     use UpdatedByProvider;
     use CreatedDateProvider;
     use UpdatedDateProvider;
+    use SyncedRecord;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

@@ -114,4 +114,14 @@ class InvestmentRepository extends ServiceEntityRepository implements Investment
             )
             ->fetchAllAssociative();
     }
+
+    /**
+     * @return list<Investment>
+     */
+    #[\Override]
+    public function findByAccount(Account $account): array
+    {
+        /** @var list<Investment> */
+        return $this->findBy(['account' => $account], ['id' => 'ASC']);
+    }
 }

@@ -20,4 +20,8 @@ interface BrokerClientInterface
      * @return iterable<ExternalOperation>
      */
     public function getOperations(string $token, string $accountId, \DateTimeImmutable $from, \DateTimeImmutable $to): iterable;
+
+    public function getPositions(string $token, string $accountId): ExternalPositions;
+
+    public function findInstrument(string $token, string $instrumentUid): ?ExternalInstrument;
 }

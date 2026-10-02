@@ -128,6 +128,12 @@ class DealData
 
     public function getCommission(): string
     {
+        // A synced deal knows what the broker charged; a manual one estimates by the account rate
+        $buyCommission = $this->deal->getBuyCommission();
+        if ($buyCommission !== null) {
+            return bcadd($buyCommission, $this->deal->getSellCommission() ?? '0', 4);
+        }
+
         return $this->strategy->getCommission($this->getFullCurrentPrice(), (string) $this->getQuantity());
     }
 

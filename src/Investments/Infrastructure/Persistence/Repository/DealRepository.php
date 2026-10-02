@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Infrastructure\Persistence\Repository;
 
 use App\Investments\Application\Request\DTO\Operations\DealsFilterRequestDTO;
+use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Instruments\Share;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
@@ -284,5 +285,15 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
         $em = $this->getEntityManager();
         $em->remove($deal);
         $em->flush();
+    }
+
+    /**
+     * @return list<Deal>
+     */
+    #[\Override]
+    public function findByAccount(Account $account): array
+    {
+        /** @var list<Deal> */
+        return $this->findBy(['account' => $account], ['id' => 'ASC']);
     }
 }

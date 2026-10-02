@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Domain\Operations;
 
+use App\Investments\Domain\Accounts\Account;
 use App\Shared\Domain\User;
 
 interface DividendRepositoryInterface
@@ -31,4 +32,11 @@ interface DividendRepositoryInterface
      * @return array<Dividend>
      */
     public function findByUserAndTickerAndStockMarket(int $userId, string $ticker, string $stockMarket): array;
+
+    /**
+     * Every record of the account, in the order they were created.
+     *
+     * @return list<Dividend>
+     */
+    public function findByAccount(Account $account): array;
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Infrastructure\Persistence\Repository;
 
+use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Operations\Dividend;
 use App\Investments\Domain\Operations\DividendRepositoryInterface;
 use App\Shared\Domain\User;
@@ -103,5 +104,15 @@ class DividendRepository extends ServiceEntityRepository implements DividendRepo
             ->addOrderBy('d.id', 'DESC')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @return list<Dividend>
+     */
+    #[\Override]
+    public function findByAccount(Account $account): array
+    {
+        /** @var list<Dividend> */
+        return $this->findBy(['account' => $account], ['id' => 'ASC']);
     }
 }

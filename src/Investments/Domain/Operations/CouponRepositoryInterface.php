@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Domain\Operations;
 
+use App\Investments\Domain\Accounts\Account;
 use App\Shared\Domain\User;
 
 interface CouponRepositoryInterface
@@ -32,4 +33,11 @@ interface CouponRepositoryInterface
     public function findByIdAndUser(int $id, User $user): ?Coupon;
 
     public function findById(int $id): ?Coupon;
+
+    /**
+     * Every record of the account, in the order they were created.
+     *
+     * @return list<Coupon>
+     */
+    public function findByAccount(Account $account): array;
 }

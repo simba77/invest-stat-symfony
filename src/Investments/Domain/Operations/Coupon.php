@@ -12,8 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CouponRepository::class)]
 #[ORM\Table(name: 'coupons')]
+#[ORM\UniqueConstraint(name: 'coupon_external_id', columns: ['account_id', 'external_id'])]
 class Coupon
 {
+    use SyncedRecord;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
