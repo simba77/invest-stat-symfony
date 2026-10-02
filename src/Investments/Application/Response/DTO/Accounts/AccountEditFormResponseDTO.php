@@ -16,6 +16,7 @@ class AccountEditFormResponseDTO
         public string $commission,
         public string $futuresCommission,
         public int $sort,
+        public bool $isSynced,
     ) {
     }
 }

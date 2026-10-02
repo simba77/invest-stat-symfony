@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Controller;
 
+use App\Investments\Application\BrokerSync\SyncedAccountGuard;
 use App\Investments\Application\Request\DTO\Operations\CreateDividendRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\UpdateDividendRequestDTO;
 use App\Investments\Application\UseCases\GetDividendsPageUseCase;
@@ -29,6 +30,7 @@ class DividendsController extends AbstractController
         private readonly EntityManagerInterface $em,
         private readonly GetDividendsPageUseCase $getDividendsPageUseCase,
         private readonly TaxCalculatorInterface $taxCalculator,
+        private readonly SyncedAccountGuard $syncedAccountGuard,
     ) {
     }
 
@@ -53,6 +55,7 @@ class DividendsController extends AbstractController
         }
 
         $account = $this->em->getRepository(Account::class)->find($dto->accountId);
+        $this->syncedAccountGuard->assertManual($account);
         $tax = $this->taxCalculator->calculateFromNet($dto->amount, $user->getTaxProfile());
 
         $dividend = new Dividend(
@@ -106,6 +109,7 @@ class DividendsController extends AbstractController
 
         $tax = $this->taxCalculator->calculateFromNet($dto->amount, $user->getTaxProfile());
         $account = $this->em->getRepository(Account::class)->find($dto->accountId);
+        $this->syncedAccountGuard->assertManual($dividend->getAccount(), $account);
         $dividend->setDate(new \DateTimeImmutable($dto->date));
         $dividend->setAmount($dto->amount);
         $dividend->setTax($tax->tax);
@@ -124,6 +128,7 @@ class DividendsController extends AbstractController
         if (! $investment) {
             throw $this->createNotFoundException('No dividend found for id ' . $id);
         }
+        $this->syncedAccountGuard->assertManual($investment->getAccount());
         $this->em->remove($investment);
         $this->em->flush();
 

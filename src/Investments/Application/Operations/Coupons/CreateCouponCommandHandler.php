@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Operations\Coupons;
 
+use App\Investments\Application\BrokerSync\SyncedAccountGuard;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Operations\Coupon;
 use App\Investments\Domain\Operations\CouponRepositoryInterface;
@@ -18,6 +19,7 @@ class CreateCouponCommandHandler
         private readonly CouponRepositoryInterface $couponRepository,
         private readonly UserRepositoryInterface $userRepository,
         private readonly AccountRepositoryInterface $accountRepository,
+        private readonly SyncedAccountGuard $syncedAccountGuard,
     ) {
     }
 
@@ -35,6 +37,8 @@ class CreateCouponCommandHandler
         if (! $account) {
             throw new NotFoundException(sprintf('Account with id "%s" not found', $command->userId));
         }
+
+        $this->syncedAccountGuard->assertManual($account);
 
         $coupon = new Coupon(
             user:        $user,

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Operations\Deals;
 
 use App\Investments\Application\Accounts\AccountBalanceCalculator;
+use App\Investments\Application\BrokerSync\SyncedAccountGuard;
 use App\Investments\Application\Request\DTO\Operations\SellDealRequestDTO;
 use App\Investments\Application\Response\DTO\Instruments\SecurityDTO;
 use App\Investments\Domain\Accounts\Account;
@@ -26,11 +27,13 @@ class DealService
         private readonly EntityManagerInterface $entityManager,
         private readonly SecuritiesService $securitiesService,
         private readonly AccountBalanceCalculator $accountBalanceCalculator,
+        private readonly SyncedAccountGuard $syncedAccountGuard,
     ) {
     }
 
     public function sellOne(Deal $deal, SellDealRequestDTO $dto): void
     {
+        $this->syncedAccountGuard->assertManual($deal->getAccount());
         $deal->setStatus(DealStatus::Closed);
         $deal->setSellPrice($dto->price);
         $deal->setClosingDate(Carbon::now());
@@ -45,6 +48,7 @@ class DealService
 
     public function sellAsNeeded(User $user, Account $account, SellDealRequestDTO $dto): void
     {
+        $this->syncedAccountGuard->assertManual($account);
         $needToSell = $dto->quantity;
         $deals = $this->entityManager->getRepository(Deal::class)
             ->findBy(

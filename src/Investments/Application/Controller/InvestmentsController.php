@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Controller;
 
+use App\Investments\Application\BrokerSync\SyncedAccountGuard;
 use App\Investments\Application\Request\DTO\Operations\InvestmentRequestDTO;
 use App\Investments\Application\Response\Compiler\AccountsSimpleListCompiler;
 use App\Investments\Application\UseCases\GetInvestmentsPageUseCase;
@@ -30,6 +31,7 @@ class InvestmentsController extends AbstractController
         private readonly GetInvestmentsPageUseCase $getInvestmentsPageUseCase,
         protected readonly AccountRepositoryInterface $accountRepository,
         protected readonly AccountsSimpleListCompiler $accountsSimpleListCompiler,
+        private readonly SyncedAccountGuard $syncedAccountGuard,
     ) {
     }
 
@@ -50,6 +52,7 @@ class InvestmentsController extends AbstractController
     public function create(#[MapRequestPayload] InvestmentRequestDTO $dto, #[CurrentUser] ?User $user): Response
     {
         $account = $this->em->getRepository(Account::class)->find($dto->account);
+        $this->syncedAccountGuard->assertManual($account);
         $inv = new Investment($dto->sum, new \DateTimeImmutable($dto->date), $account, $user->getId());
         $this->em->persist($inv);
         $this->em->flush();
@@ -90,6 +93,7 @@ class InvestmentsController extends AbstractController
             throw $this->createNotFoundException('No investment found for id ' . $id);
         }
         $account = $this->em->getRepository(Account::class)->find($dto->account);
+        $this->syncedAccountGuard->assertManual($investment->getAccount(), $account);
         $investment->setDate(new \DateTimeImmutable($dto->date));
         $investment->setSum($dto->sum);
         $investment->setAccount($account);
@@ -105,6 +109,7 @@ class InvestmentsController extends AbstractController
         if (! $investment) {
             throw $this->createNotFoundException('No investment found for id ' . $id);
         }
+        $this->syncedAccountGuard->assertManual($investment->getAccount());
         $this->em->remove($investment);
         $this->em->flush();
 

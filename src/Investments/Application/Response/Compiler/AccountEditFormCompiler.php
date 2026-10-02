@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Response\Compiler;
 
+use App\Investments\Application\BrokerSync\SyncedAccountGuard;
 use App\Investments\Application\Response\DTO\Accounts\AccountEditFormResponseDTO;
 use App\Investments\Domain\Accounts\Account;
 use App\Shared\Infrastructure\Compiler\CompilerInterface;
@@ -13,6 +14,11 @@ use App\Shared\Infrastructure\Compiler\CompilerInterface;
  */
 class AccountEditFormCompiler implements CompilerInterface
 {
+    public function __construct(
+        private readonly SyncedAccountGuard $syncedAccountGuard,
+    ) {
+    }
+
     /**
      * @param Account $entry
      * @return AccountEditFormResponseDTO
@@ -27,6 +33,7 @@ class AccountEditFormCompiler implements CompilerInterface
             commission:        $entry->getCommission(),
             futuresCommission: $entry->getFuturesCommission(),
             sort:              $entry->getSort(),
+            isSynced:          $this->syncedAccountGuard->isSynced($entry),
         );
     }
 }

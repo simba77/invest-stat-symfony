@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Accounts;
 
+use App\Investments\Application\BrokerSync\SyncedAccountGuard;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 
 use App\Shared\Infrastructure\Symfony\NotFoundException;
@@ -12,8 +13,10 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 class UpdateAccountCommandHandler
 {
-    public function __construct(public readonly AccountRepositoryInterface $accountRepository)
-    {
+    public function __construct(
+        public readonly AccountRepositoryInterface $accountRepository,
+        private readonly SyncedAccountGuard $syncedAccountGuard,
+    ) {
     }
 
     public function __invoke(UpdateAccountCommand $command): void
@@ -24,8 +27,11 @@ class UpdateAccountCommandHandler
         }
 
         $account->setName($command->name);
-        $account->setBalance($command->balance);
-        $account->setUsdBalance($command->usdBalance);
+        // The cash of a synced account comes from the broker
+        if (! $this->syncedAccountGuard->isSynced($account)) {
+            $account->setBalance($command->balance);
+            $account->setUsdBalance($command->usdBalance);
+        }
         $account->setCommission($command->commission);
         $account->setFuturesCommission($command->futuresCommission);
         $account->setSort($command->sort);

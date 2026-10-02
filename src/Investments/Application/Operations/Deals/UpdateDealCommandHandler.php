@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Operations\Deals;
 
 use App\Investments\Application\Accounts\AccountBalanceCalculator;
+use App\Investments\Application\BrokerSync\SyncedAccountGuard;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\Deals\DealType;
 use App\Investments\Infrastructure\Persistence\Repository\BondRepository;
@@ -21,6 +22,7 @@ class UpdateDealCommandHandler
         public readonly ShareRepository $shareRepository,
         public readonly BondRepository $bondRepository,
         public readonly FutureRepository $futuresRepository,
+        private readonly SyncedAccountGuard $syncedAccountGuard,
     ) {
     }
 
@@ -31,6 +33,7 @@ class UpdateDealCommandHandler
         $future = $this->futuresRepository->findOneBy(['ticker' => $command->ticker, 'stockMarket' => $command->stockMarket]);
 
         $deal = $this->dealRepository->findById($command->id);
+        $this->syncedAccountGuard->assertManual($deal->getAccount());
 
         $deal->setTicker($command->ticker);
         $deal->setStockMarket($command->stockMarket);

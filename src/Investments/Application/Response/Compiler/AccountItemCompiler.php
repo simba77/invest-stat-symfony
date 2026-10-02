@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Response\Compiler;
 
 use App\Investments\Application\Accounts\AccountBalanceCalculator;
+use App\Investments\Application\BrokerSync\SyncedAccountGuard;
 use App\Investments\Application\Response\DTO\Accounts\AccountItemResponseDTO;
 use App\Investments\Domain\Accounts\Account;
 use App\Shared\Infrastructure\Compiler\CompilerInterface;
@@ -16,6 +17,7 @@ class AccountItemCompiler implements CompilerInterface
 {
     public function __construct(
         private readonly AccountBalanceCalculator $accountBalanceCalculator,
+        private readonly SyncedAccountGuard $syncedAccountGuard,
     ) {
     }
 
@@ -38,6 +40,7 @@ class AccountItemCompiler implements CompilerInterface
             deposits:     $sumDeposits,
             currentValue: $totalBalance,
             fullProfit:   bcsub($totalBalance, $sumDeposits, 2),
+            isSynced:     $this->syncedAccountGuard->isSynced($account),
         );
     }
 }

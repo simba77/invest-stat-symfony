@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Operations\Deals;
 
 use App\Investments\Application\Accounts\AccountBalanceCalculator;
+use App\Investments\Application\BrokerSync\SyncedAccountGuard;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Instruments\Bond;
@@ -31,6 +32,7 @@ class CreateDealCommandHandler
         private readonly AccountBalanceCalculator $accountBalanceCalculatorCalculator,
         private readonly SecuritiesService $securitiesService,
         private readonly EntityManagerInterface $entityManager,
+        private readonly SyncedAccountGuard $syncedAccountGuard,
     ) {
     }
 
@@ -45,6 +47,7 @@ class CreateDealCommandHandler
         if ($account->getUserId() !== $command->userId) {
             throw new NotFoundException('The account does not belong to the user');
         }
+        $this->syncedAccountGuard->assertManual($account);
 
         $bondRepository = $this->entityManager->getRepository(Bond::class);
         $sharesRepository = $this->entityManager->getRepository(Share::class);

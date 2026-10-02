@@ -17,6 +17,7 @@ class AccountItemResponseDTO
         public string $deposits,
         public string $currentValue,
         public string $fullProfit,
+        public bool $isSynced,
     ) {
     }
 }
