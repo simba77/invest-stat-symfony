@@ -53,3 +53,20 @@ The whole history must replay on an empty database: `make test-db` builds the te
 from it. Executed migrations never run again in production, so an old migration may be edited
 only to make it replayable, with the same end schema; if it depends on state created outside
 migrations, branch on `$schema->hasTable()` (see `Version20230814140723`).
+
+## Broker sync
+
+Accounts linked to a broker (`BrokerAccountLink`, one per account, encrypted token) get their
+records from the broker instead of manual input. Code: `Investments/*/BrokerSync`.
+
+* `broker:sync` (scheduled, and the "Sync now" button) imports operations into the
+  `broker_operations` journal, then replays the whole journal (`Ledger\LedgerReplayer`: FIFO lots,
+  shorts, trade fee allocation, share splits from `share_splits`) and writes the result into deals,
+  dividends, coupons and investments matched by `external_id` (`LedgerProjector`).
+  Cash balances come from the broker positions; `PositionsReconciler` reports differences.
+* Records of a synced account carry `source = broker`; manual changes to such an account are
+  refused (`SyncedAccountGuard`, HTTP 409). Unlinking keeps the records and makes them editable.
+* A new broker: implement `Domain/BrokerSync/Client/BrokerClientInterface`, map its operation types
+  to `BrokerOperationType`, add the provider to `BrokerProvider` and `BrokerClientFactory`.
+* Tests use `tests/Investments/BrokerSync/FakeBrokerClient` (wired in `config/services.yaml` for
+  `when@test`) and `Operations` to build broker operations.
