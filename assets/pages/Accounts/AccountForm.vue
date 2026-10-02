@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import PageComponent from '@/components/PageComponent.vue';
 import InputText from '@/components/Forms/InputText.vue';
+import BrokerSyncForm from '@/components/Account/BrokerSyncForm.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -19,6 +20,7 @@ const form = reactive({
 });
 
 const loading = ref(false);
+const isSynced = ref(false);
 const errors = ref<Record<string, any> | null>(null);
 const componentKey = ref(0);
 
@@ -47,8 +49,9 @@ const submitForm = async () => {
 const getForm = async (id: number) => {
   loading.value = true;
   try {
-    const response = await axios.get(`/api/accounts/get-form/${id}`);
-    Object.assign(form, response.data);
+    const { isSynced: synced, ...data } = (await axios.get(`/api/accounts/get-form/${id}`)).data;
+    Object.assign(form, data);
+    isSynced.value = synced;
     componentKey.value += 1;
   } catch {
     alert('An error has occurred');
@@ -102,6 +105,7 @@ onMounted(() => {
                   label="Balance"
                   placeholder="Enter Balance"
                   type="number"
+                  :disabled="isSynced"
                 />
 
                 <input-text
@@ -112,7 +116,14 @@ onMounted(() => {
                   label="USD Balance"
                   placeholder="Enter USD Balance"
                   type="number"
+                  :disabled="isSynced"
                 />
+                <div
+                  v-if="isSynced"
+                  class="small text-muted"
+                >
+                  The balances of a synced account come from the broker.
+                </div>
 
                 <input-text
                   :key="componentKey"
@@ -174,6 +185,12 @@ onMounted(() => {
         </form>
       </div>
     </div>
+
+    <broker-sync-form
+      v-if="route.params.id"
+      :account-id="Number(route.params.id)"
+      @changed="getForm(Number(route.params.id))"
+    />
   </page-component>
 </template>
 

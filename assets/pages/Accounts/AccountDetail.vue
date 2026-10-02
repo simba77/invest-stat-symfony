@@ -3,8 +3,10 @@ import PageComponent from '@/components/PageComponent.vue'
 import useAccounts from '@/composable/useAccounts'
 import {useRoute} from 'vue-router'
 import AssetsTableComponent from '@/components/Account/AssetsTableComponent.vue'
+import BrokerSyncStatus from '@/components/Account/BrokerSyncStatus.vue'
+import BrokerExpenses from '@/components/Account/BrokerExpenses.vue'
 import PreloaderComponent from '@/components/Common/PreloaderComponent.vue'
-import {provide} from 'vue'
+import {provide, ref} from 'vue'
 import { useNumbers } from "@/composable/useNumbers";
 
 const {params} = useRoute()
@@ -12,6 +14,13 @@ const {account: data, getAccount} = useAccounts()
 const {formatPrice} = useNumbers()
 
 getAccount(params.id);
+
+const expenses = ref<InstanceType<typeof BrokerExpenses> | null>(null)
+
+function reloadSynced() {
+  getAccount(params.id)
+  expenses.value?.load()
+}
 
 provide('accounts', {getAccounts: getAccount})
 </script>
@@ -29,7 +38,7 @@ provide('accounts', {getAccounts: getAccount})
             {{ formatPrice(data.account.fullProfit, '₽') }}
           </span>
         </div>
-        <div>
+        <div v-if="!data.account.isSynced">
           <router-link
             :to="{name: 'AddAsset', params: {account: data.account.id}}"
             class="btn btn-primary"
@@ -39,6 +48,12 @@ provide('accounts', {getAccounts: getAccount})
           </router-link>
         </div>
       </div>
+
+      <broker-sync-status
+        v-if="data.account.isSynced"
+        :account-id="data.account.id"
+        @synced="reloadSynced"
+      />
 
       <template
         v-for="(groupedByStatus, groupedByStatusIndex) in data.deals.dealsList"
@@ -84,6 +99,7 @@ provide('accounts', {getAccounts: getAccount})
                 <assets-table-component
                   :assets="groupedByCurrency"
                   :summary="data.deals.summary[groupedByStatusIndex][groupedByInstrumentTypeIndex][groupedByCurrencyIndex]"
+                  :hide-actions="data.account.isSynced"
                 />
               </template>
             </div>
@@ -92,6 +108,12 @@ provide('accounts', {getAccounts: getAccount})
         </template>
         <!-- // Вывод типа инструмента -->
       </template>
+
+      <broker-expenses
+        v-if="data.account.isSynced"
+        ref="expenses"
+        :account-id="data.account.id"
+      />
     </template>
     <preloader-component v-else />
   </page-component>
