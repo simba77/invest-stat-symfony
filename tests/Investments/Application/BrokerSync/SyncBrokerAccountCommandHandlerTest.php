@@ -89,6 +89,9 @@ final class SyncBrokerAccountCommandHandlerTest extends KernelTestCase
         self::assertSame(Operations::uid('TMON@'), $etf->getTUid());
         self::assertSame('SPB', $etf->getStockMarket());
         self::assertSame('Money market', $etf->getName());
+        // Valued at the last trade until the price update quotes it
+        self::assertSame('150.0000', $etf->getPrice());
+        self::assertSame('320.0000', $sber?->getPrice());
 
         $dividends = $this->findFreshBy(Dividend::class, ['account' => $account->getId()]);
         self::assertSame(

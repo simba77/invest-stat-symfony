@@ -98,12 +98,14 @@ final class LedgerProjector
             }
         }
 
+        $lastPrices = $this->lastTradePrices($lots);
         $created = [];
         foreach ($lots as $lot) {
             $instrument = $this->instrument($lot->getInstrument(), $lookup);
             if ($instrument === null) {
                 continue;
             }
+            $this->priceUnquoted($instrument, $lastPrices[$lot->getInstrument()->uid] ?? null);
 
             $deal = $synced[$lot->getKey()] ?? null;
             unset($synced[$lot->getKey()]);
@@ -159,6 +161,50 @@ final class LedgerProjector
             bcadd($lot->getOpenCommission(), '0', 4),
             $lot->isOpen() ? null : bcadd($lot->getCloseCommission(), '0', 4),
         );
+    }
+
+    /**
+     * The price of the latest trade of every instrument.
+     *
+     * @param list<Lot> $lots
+     * @return array<string, numeric-string> by broker uid
+     */
+    private function lastTradePrices(array $lots): array
+    {
+        $latest = [];
+        foreach ($lots as $lot) {
+            $uid = $lot->getInstrument()->uid;
+            $events = [[$lot->getOpenedAt(), $lot->getOpenPrice()]];
+            $closedAt = $lot->getClosedAt();
+            $closePrice = $lot->getClosePrice();
+            if ($closedAt !== null && $closePrice !== null) {
+                $events[] = [$closedAt, $closePrice];
+            }
+            foreach ($events as [$at, $price]) {
+                if (! isset($latest[$uid]) || $latest[$uid][0] < $at) {
+                    $latest[$uid] = [$at, $price];
+                }
+            }
+        }
+
+        return array_map(static fn (array $event): string => $event[1], $latest);
+    }
+
+    /**
+     * An instrument the sync has just added has no quote until prices are updated;
+     * until then it is valued at its last trade, not at zero.
+     *
+     * @param numeric-string|null $lastPrice
+     */
+    private function priceUnquoted(Share|Bond $instrument, ?string $lastPrice): void
+    {
+        if ($lastPrice === null || ! is_numeric($instrument->getPrice()) || bccomp($instrument->getPrice(), '0', 4) !== 0) {
+            return;
+        }
+
+        $price = $this->price($lastPrice, $instrument);
+        $instrument->setPrice($price);
+        $instrument->setPrevPrice($price);
     }
 
     /**
