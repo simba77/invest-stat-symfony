@@ -10,6 +10,11 @@ interface BrokerAccountLinkRepositoryInterface
 {
     public function findByAccount(Account $account): ?BrokerAccountLink;
 
+    /**
+     * @return list<BrokerAccountLink>
+     */
+    public function findEnabled(): array;
+
     public function save(BrokerAccountLink $link): void;
 
     public function remove(BrokerAccountLink $link): void;

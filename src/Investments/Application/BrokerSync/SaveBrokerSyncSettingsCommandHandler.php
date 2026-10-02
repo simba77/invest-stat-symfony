@@ -7,6 +7,7 @@ namespace App\Investments\Application\BrokerSync;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\BrokerSync\BrokerAccountLink;
 use App\Investments\Domain\BrokerSync\BrokerAccountLinkRepositoryInterface;
+use App\Investments\Domain\BrokerSync\BrokerOperationRepositoryInterface;
 use App\Investments\Domain\BrokerSync\Client\BrokerClientFactoryInterface;
 use App\Investments\Domain\BrokerSync\Client\ExternalAccount;
 use App\Investments\Domain\BrokerSync\Client\ExternalAccountNotFoundException;
@@ -23,6 +24,7 @@ final readonly class SaveBrokerSyncSettingsCommandHandler
     public function __construct(
         private AccountRepositoryInterface $accountRepository,
         private BrokerAccountLinkRepositoryInterface $linkRepository,
+        private BrokerOperationRepositoryInterface $operationRepository,
         private BrokerClientFactoryInterface $clientFactory,
         private TokenCipherInterface $tokenCipher,
     ) {
@@ -58,7 +60,7 @@ final readonly class SaveBrokerSyncSettingsCommandHandler
             if ($command->token !== null) {
                 $link->replaceToken($this->tokenCipher->encrypt($command->token));
             }
-            $link->reconfigure(
+            $accountChanged = $link->reconfigure(
                 provider:                $command->provider,
                 externalAccountId:       $externalAccount->id,
                 externalAccountName:     $externalAccount->name,
@@ -66,6 +68,9 @@ final readonly class SaveBrokerSyncSettingsCommandHandler
                 feeAllocation:           $command->feeAllocation,
                 enabled:                 $command->enabled,
             );
+            if ($accountChanged) {
+                $this->operationRepository->removeByLink($link);
+            }
         }
 
         $this->linkRepository->save($link);

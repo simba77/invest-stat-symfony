@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace App\Tests\Investments\Application\Controller;
 
 use App\Investments\Domain\BrokerSync\BrokerAccountLink;
+use App\Investments\Domain\BrokerSync\BrokerOperation;
 use App\Investments\Domain\BrokerSync\Client\ExternalAccount;
 use App\Investments\Domain\BrokerSync\FeeAllocation;
 use App\Tests\Investments\BrokerSync\CreatesBrokerLinks;
+use App\Tests\Investments\BrokerSync\Operations;
 use App\Tests\Support\ApiTestCase;
+use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 
 final class BrokerSyncControllerTest extends ApiTestCase
 {
+    use ClockSensitiveTrait;
     use CreatesBrokerLinks;
 
     /**
@@ -31,6 +35,7 @@ final class BrokerSyncControllerTest extends ApiTestCase
     {
         yield 'show' => ['GET', '/api/accounts/1/broker-sync'];
         yield 'save' => ['POST', '/api/accounts/1/broker-sync'];
+        yield 'run' => ['POST', '/api/accounts/1/broker-sync/run'];
         yield 'delete' => ['POST', '/api/accounts/1/broker-sync/delete'];
         yield 'external accounts' => ['POST', '/api/accounts/1/broker-sync/external-accounts'];
     }
@@ -210,6 +215,72 @@ final class BrokerSyncControllerTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame(404);
         self::assertSame([], $this->findFreshBy(BrokerAccountLink::class, ['account' => $account->getId()]));
+    }
+
+    public function testSaveDropsOperationsOfPreviousExternalAccount(): void
+    {
+        $admin = $this->admin();
+        $account = $this->createAccount($admin);
+        $link = $this->linkAccount($account, externalAccountId: '1000');
+        $this->persist(new BrokerOperation($link, Operations::deposit('1', '2026-01-01 10:00:00', '100')));
+        $this->brokerHasAccounts(new ExternalAccount('2000', 'Other', null, true));
+        $this->loginAs($admin);
+
+        $this->postJson('/api/accounts/' . $account->getId() . '/broker-sync', [
+            'provider'          => 'tinvest',
+            'externalAccountId' => '2000',
+            'feeAllocation'     => 'per_operation',
+        ]);
+
+        self::assertResponseIsSuccessful();
+        self::assertSame([], $this->findFreshBy(BrokerOperation::class, ['link' => $link->getId()]));
+    }
+
+    public function testRunSyncsAccountAndReturnsStatus(): void
+    {
+        static::mockTime('2026-10-02 12:00:00');
+        $admin = $this->admin();
+        $account = $this->createAccount($admin);
+        $this->linkAccount($account);
+        $this->brokerClient()->operations = [Operations::deposit('1', '2026-01-01 10:00:00', '100')];
+        $this->loginAs($admin);
+
+        $this->postJson('/api/accounts/' . $account->getId() . '/broker-sync/run');
+
+        self::assertResponseIsSuccessful();
+        /** @var array{settings: array<string, mixed>} $body */
+        $body = $this->responseJson();
+        self::assertSame('2026-10-02T12:00:00+00:00', $body['settings']['lastSyncedAt']);
+        self::assertSame('success', $body['settings']['lastSyncStatus']);
+        self::assertCount(1, $this->findFreshBy(BrokerOperation::class, []));
+    }
+
+    public function testRunReportsBrokerFailure(): void
+    {
+        $admin = $this->admin();
+        $account = $this->createAccount($admin);
+        $this->linkAccount($account);
+        $this->brokerClient()->failure = 'T-Bank rejected the token';
+        $this->loginAs($admin);
+
+        $this->postJson('/api/accounts/' . $account->getId() . '/broker-sync/run');
+
+        self::assertResponseStatusCodeSame(502);
+        self::assertSame(['message' => 'T-Bank rejected the token'], $this->responseJson());
+        $link = $this->findFreshBy(BrokerAccountLink::class, ['account' => $account->getId()])[0];
+        self::assertSame('failed', $link->getLastSyncStatus()?->value);
+    }
+
+    public function testRunLeavesAccountOfOtherUserAlone(): void
+    {
+        $account = $this->createAccount($this->otherUser());
+        $this->linkAccount($account);
+        $this->loginAs($this->admin());
+
+        $this->postJson('/api/accounts/' . $account->getId() . '/broker-sync/run');
+
+        self::assertResponseStatusCodeSame(404);
+        self::assertSame([], $this->brokerClient()->operationRequests);
     }
 
     public function testDeleteUnlinksAccount(): void

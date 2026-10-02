@@ -6,6 +6,7 @@ namespace App\Investments\Application\Controller;
 
 use App\Investments\Application\BrokerSync\DeleteBrokerSyncSettingsCommand;
 use App\Investments\Application\BrokerSync\SaveBrokerSyncSettingsCommand;
+use App\Investments\Application\BrokerSync\SyncBrokerAccountCommand;
 use App\Investments\Application\Request\DTO\BrokerSync\BrokerSyncSettingsRequestDTO;
 use App\Investments\Application\Request\DTO\BrokerSync\ExternalAccountsRequestDTO;
 use App\Investments\Application\Response\Compiler\BrokerSyncPageCompiler;
@@ -70,6 +71,16 @@ final class BrokerSyncController extends AbstractController
         );
 
         return $this->json(['success' => true]);
+    }
+
+    #[Route('/accounts/{id}/broker-sync/run', name: 'app_accounts_broker_sync_run', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function run(int $id, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $account = $this->account($id, $this->user($user));
+
+        $this->commandBus->dispatch(new SyncBrokerAccountCommand($id));
+
+        return $this->json($this->brokerSyncPageCompiler->compile($this->linkRepository->findByAccount($account)));
     }
 
     #[Route('/accounts/{id}/broker-sync/delete', name: 'app_accounts_broker_sync_delete', requirements: ['id' => '\d+'], methods: ['POST'])]

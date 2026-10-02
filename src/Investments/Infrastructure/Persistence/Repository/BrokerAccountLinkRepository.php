@@ -27,6 +27,13 @@ class BrokerAccountLinkRepository extends ServiceEntityRepository implements Bro
     }
 
     #[\Override]
+    public function findEnabled(): array
+    {
+        /** @var list<BrokerAccountLink> */
+        return $this->findBy(['enabled' => true], ['id' => 'ASC']);
+    }
+
+    #[\Override]
     public function save(BrokerAccountLink $link): void
     {
         $em = $this->getEntityManager();
