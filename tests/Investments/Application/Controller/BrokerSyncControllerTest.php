@@ -6,6 +6,7 @@ namespace App\Tests\Investments\Application\Controller;
 
 use App\Investments\Domain\BrokerSync\BrokerAccountLink;
 use App\Investments\Domain\BrokerSync\BrokerOperation;
+use App\Investments\Domain\BrokerSync\BrokerOperationType;
 use App\Investments\Domain\BrokerSync\Client\ExternalAccount;
 use App\Investments\Domain\BrokerSync\Client\ExternalPositions;
 use App\Investments\Domain\BrokerSync\FeeAllocation;
@@ -37,6 +38,7 @@ final class BrokerSyncControllerTest extends ApiTestCase
         yield 'show' => ['GET', '/api/accounts/1/broker-sync'];
         yield 'save' => ['POST', '/api/accounts/1/broker-sync'];
         yield 'run' => ['POST', '/api/accounts/1/broker-sync/run'];
+        yield 'expenses' => ['GET', '/api/accounts/1/broker-sync/expenses'];
         yield 'delete' => ['POST', '/api/accounts/1/broker-sync/delete'];
         yield 'external accounts' => ['POST', '/api/accounts/1/broker-sync/external-accounts'];
     }
@@ -283,6 +285,46 @@ final class BrokerSyncControllerTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame(404);
         self::assertSame([], $this->brokerClient()->operationRequests);
+    }
+
+    public function testExpensesSumAccountFeesAndTaxesByYear(): void
+    {
+        $admin = $this->admin();
+        $account = $this->createAccount($admin);
+        $link = $this->linkAccount($account);
+        $this->persist(
+            new BrokerOperation($link, Operations::fee('1', '2025-12-31 20:00:00', '-3.96', BrokerOperationType::ManagementFee)),
+            new BrokerOperation($link, Operations::fee('2', '2026-01-01 22:00:00', '-3.97', BrokerOperationType::ManagementFee)),
+            new BrokerOperation($link, Operations::fee('3', '2026-01-02 22:00:00', '-3.97', BrokerOperationType::ManagementFee)),
+            new BrokerOperation($link, Operations::fee('4', '2026-03-02 22:15:00', '-161.65', BrokerOperationType::PerformanceFee)),
+            new BrokerOperation($link, Operations::fee('5', '2026-01-01 01:26:24', '-1', BrokerOperationType::Tax)),
+            new BrokerOperation($link, Operations::fee('6', '2026-01-05 10:00:00', '-26.99', parentId: '7')),
+        );
+        $this->loginAs($admin);
+
+        $this->getJson('/api/accounts/' . $account->getId() . '/broker-sync/expenses');
+
+        self::assertResponseIsSuccessful();
+        self::assertSame([
+            'items' => [
+                ['year' => 2026, 'type' => 'management_fee', 'name' => 'Management fee', 'amount' => '7.94'],
+                ['year' => 2026, 'type' => 'performance_fee', 'name' => 'Performance fee', 'amount' => '161.65'],
+                ['year' => 2026, 'type' => 'tax', 'name' => 'Tax', 'amount' => '1.00'],
+                ['year' => 2025, 'type' => 'management_fee', 'name' => 'Management fee', 'amount' => '3.96'],
+            ],
+            'total' => '174.55',
+        ], $this->responseJson());
+    }
+
+    public function testExpensesNeedLinkedAccount(): void
+    {
+        $admin = $this->admin();
+        $account = $this->createAccount($admin);
+        $this->loginAs($admin);
+
+        $this->getJson('/api/accounts/' . $account->getId() . '/broker-sync/expenses');
+
+        self::assertResponseStatusCodeSame(404);
     }
 
     public function testDeleteUnlinksAccount(): void

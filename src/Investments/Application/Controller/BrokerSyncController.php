@@ -10,6 +10,7 @@ use App\Investments\Application\BrokerSync\SyncBrokerAccountCommand;
 use App\Investments\Application\Request\DTO\BrokerSync\BrokerSyncSettingsRequestDTO;
 use App\Investments\Application\Request\DTO\BrokerSync\ExternalAccountsRequestDTO;
 use App\Investments\Application\Response\Compiler\BrokerSyncPageCompiler;
+use App\Investments\Application\UseCases\BrokerSync\GetBrokerExpensesUseCase;
 use App\Investments\Application\UseCases\BrokerSync\ListExternalAccountsUseCase;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
@@ -36,6 +37,7 @@ final class BrokerSyncController extends AbstractController
         private readonly BrokerAccountLinkRepositoryInterface $linkRepository,
         private readonly BrokerSyncPageCompiler $brokerSyncPageCompiler,
         private readonly ListExternalAccountsUseCase $listExternalAccountsUseCase,
+        private readonly GetBrokerExpensesUseCase $getBrokerExpensesUseCase,
         private readonly SyncCommandBusInterface $commandBus,
     ) {
     }
@@ -81,6 +83,15 @@ final class BrokerSyncController extends AbstractController
         $this->commandBus->dispatch(new SyncBrokerAccountCommand($id));
 
         return $this->json($this->brokerSyncPageCompiler->compile($this->linkRepository->findByAccount($account)));
+    }
+
+    #[Route('/accounts/{id}/broker-sync/expenses', name: 'app_accounts_broker_sync_expenses', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function expenses(int $id, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $link = $this->linkRepository->findByAccount($this->account($id, $this->user($user)))
+            ?? throw $this->createNotFoundException('Account ' . $id . ' is not linked to a broker');
+
+        return $this->json($this->getBrokerExpensesUseCase->execute($link));
     }
 
     #[Route('/accounts/{id}/broker-sync/delete', name: 'app_accounts_broker_sync_delete', requirements: ['id' => '\d+'], methods: ['POST'])]

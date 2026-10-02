@@ -19,6 +19,14 @@ interface BrokerOperationRepositoryInterface
      */
     public function findExecuted(BrokerAccountLink $link): array;
 
+    /**
+     * Executed operations of the given types, in the order they happened.
+     *
+     * @param list<BrokerOperationType> $types
+     * @return list<BrokerOperation>
+     */
+    public function findExecutedByTypes(BrokerAccountLink $link, array $types): array;
+
     public function countByLink(BrokerAccountLink $link): int;
 
     /**

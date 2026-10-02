@@ -8,6 +8,7 @@ use App\Investments\Domain\BrokerSync\BrokerAccountLink;
 use App\Investments\Domain\BrokerSync\BrokerOperation;
 use App\Investments\Domain\BrokerSync\BrokerOperationRepositoryInterface;
 use App\Investments\Domain\BrokerSync\BrokerOperationState;
+use App\Investments\Domain\BrokerSync\BrokerOperationType;
 use App\Shared\Infrastructure\Persistence\Doctrine\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -54,6 +55,27 @@ class BrokerOperationRepository extends ServiceEntityRepository implements Broke
             ->andWhere('o.state = :state')
             ->setParameter('link', $link->getId())
             ->setParameter('state', BrokerOperationState::Executed)
+            ->orderBy('o.executedAt', 'ASC')
+            ->addOrderBy('o.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    #[\Override]
+    public function findExecutedByTypes(BrokerAccountLink $link, array $types): array
+    {
+        if ($types === []) {
+            return [];
+        }
+
+        /** @var list<BrokerOperation> */
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.link = :link')
+            ->andWhere('o.state = :state')
+            ->andWhere('o.type IN (:types)')
+            ->setParameter('link', $link->getId())
+            ->setParameter('state', BrokerOperationState::Executed)
+            ->setParameter('types', array_map(static fn (BrokerOperationType $type) => $type->value, $types))
             ->orderBy('o.executedAt', 'ASC')
             ->addOrderBy('o.id', 'ASC')
             ->getQuery()
