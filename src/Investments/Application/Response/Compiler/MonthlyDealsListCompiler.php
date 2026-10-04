@@ -6,6 +6,7 @@ namespace App\Investments\Application\Response\Compiler;
 
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
 use App\Investments\Domain\Instruments\FutureMultiplierRepositoryInterface;
+use App\Investments\Domain\Instruments\ShareRepositoryInterface;
 use App\Investments\Domain\Operations\Coupon;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\Deals\DealData;
@@ -19,7 +20,8 @@ class MonthlyDealsListCompiler implements CompilerInterface
 {
     public function __construct(
         public readonly CurrencyService $currencyService,
-        public readonly FutureMultiplierRepositoryInterface $futureMultiplierRepository
+        public readonly FutureMultiplierRepositoryInterface $futureMultiplierRepository,
+        private readonly ShareRepositoryInterface $shareRepository,
     ) {
     }
 
@@ -44,15 +46,19 @@ class MonthlyDealsListCompiler implements CompilerInterface
             }
         }
 
+        /** @var array<string, string> $currencies share currency by market and ticker */
+        $currencies = [];
         foreach ($entry['dividends'] as $dividend) {
             $date = $dividend->getDate()?->format('Y.m') ?? '0';
+            $amount = $this->dividendInBaseCurrency($dividend, $currencies);
             if (isset($result[$date])) {
-                $result[$date] = bcadd($result[$date], $dividend->getAmount(), 2);
+                $result[$date] = bcadd($result[$date], $amount, 2);
             } else {
-                $result[$date] = $dividend->getAmount() ?? '0';
+                $result[$date] = $amount;
             }
         }
 
+        // Coupons are recorded in roubles, as they reached the account, also for bonds in other currencies
         foreach ($entry['coupons'] as $coupon) {
             $date = $coupon->getDate()?->format('Y.m') ?? '0';
             if (isset($result[$date])) {
@@ -65,5 +71,26 @@ class MonthlyDealsListCompiler implements CompilerInterface
         ksort($result);
 
         return $result;
+    }
+
+    /**
+     * Dividends are recorded in the currency the share trades in, e.g. dollars on SPB.
+     *
+     * @param array<string, string> $currencies
+     */
+    private function dividendInBaseCurrency(Dividend $dividend, array &$currencies): string
+    {
+        $amount = $dividend->getAmount() ?? '0';
+        $key = $dividend->getStockMarket() . ':' . $dividend->getTicker();
+        if (! isset($currencies[$key])) {
+            $share = $this->shareRepository->findByTickerAndStockMarket((string) $dividend->getTicker(), (string) $dividend->getStockMarket());
+            $currencies[$key] = $share?->getCurrency() ?? 'RUB';
+        }
+
+        if ($currencies[$key] === 'RUB') {
+            return $amount;
+        }
+
+        return bcmul($amount, $this->currencyService->getCurrencyRate($currencies[$key]), 4);
     }
 }
