@@ -40,13 +40,17 @@ class MoexHttpClient
     }
 
     /**
-     * @return list<mixed>
+     * Indicative rates of the recent clearing sessions, several rows per currency pair.
+     *
+     * @return list<array{tradedate: string, tradetime: string, secid: string, rate: string, clearing: string}>
      */
     public function getCurrencyRates(): array
     {
         $data = $this->getData('/iss/statistics/engines/futures/markets/indicativerates/securities.xml');
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
         $currencies = $propertyAccessor->getValue($data, '[data][0][rows][row]') ?? [];
+
+        /** @var list<array{tradedate: string, tradetime: string, secid: string, rate: string, clearing: string}> */
         return array_column($currencies, '@attributes');
     }
 
