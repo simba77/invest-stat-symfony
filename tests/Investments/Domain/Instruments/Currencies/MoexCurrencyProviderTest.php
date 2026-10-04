@@ -40,14 +40,57 @@ final class MoexCurrencyProviderTest extends TestCase
 
         self::assertSame(
             [
-                ['RUB', 'USD', '83.48390'],
-                ['RUB', 'CNY', '12.49630'],
+                ['RUB', 'USD', '83.48390', '2026-10-02'],
+                ['RUB', 'CNY', '12.49630', '2026-10-02'],
             ],
             array_map(
-                static fn (CurrencyRateInterface $rate) => [$rate->getBaseCurrency(), $rate->getTargetCurrency(), $rate->getRate()],
+                static fn (CurrencyRateInterface $rate) => [$rate->getBaseCurrency(), $rate->getTargetCurrency(), $rate->getRate(), $rate->getDate()->format('Y-m-d')],
                 $rates,
             ),
         );
+    }
+
+    public function testHistoryKeepsTheLastRateOfEveryDayFromAllPages(): void
+    {
+        $requests = [];
+        $pages = [
+            ['2026-01-15', ['13:45:00' => '75.10', '18:30:00' => '75.30'], 0, 3],
+            ['2026-01-16', ['18:30:00' => '78.00'], 2, 3],
+        ];
+        $responses = [];
+        foreach (['USD/RUB', 'HKD/RUB', 'EUR/RUB', 'CNY/RUB'] as $pair) {
+            foreach ($pages as [$day, $rates, $index, $total]) {
+                $responses[] = static function (string $method, string $url) use (&$requests, $pair, $day, $rates, $index, $total): MockResponse {
+                    $requests[] = $url;
+                    $rows = '';
+                    foreach ($rates as $time => $rate) {
+                        $rows .= sprintf('<row tradedate="%s" tradetime="%s" secid="%s" rate="%s" clearing="mc" />', $day, $time, $pair, $rate);
+                    }
+
+                    return new MockResponse(sprintf(
+                        '<?xml version="1.0" encoding="UTF-8"?><document><data id="securities"><rows>%s</rows></data>'
+                        . '<data id="securities.cursor"><rows><row INDEX="%d" TOTAL="%d" PAGESIZE="2" /></rows></data></document>',
+                        $rows,
+                        $index,
+                        $total,
+                    ));
+                };
+            }
+        }
+        $provider = new MoexCurrencyProvider(new MoexHttpClient(new MockHttpClient($responses)));
+
+        $rates = $provider->getRateHistory(new \DateTimeImmutable('2026-01-15'), new \DateTimeImmutable('2026-01-31'));
+
+        self::assertSame(
+            ['USD 2026-01-15 75.30', 'USD 2026-01-16 78.00'],
+            array_slice(array_map(
+                static fn (CurrencyRateInterface $rate) => sprintf('%s %s %s', $rate->getTargetCurrency(), $rate->getDate()->format('Y-m-d'), $rate->getRate()),
+                $rates,
+            ), 0, 2),
+        );
+        self::assertCount(8, $rates);
+        self::assertStringContainsString('/securities/USD/RUB.xml?from=2026-01-15&till=2026-01-31&start=0', $requests[0]);
+        self::assertStringContainsString('&start=2', $requests[1]);
     }
 
     private function providerAnswering(string $xml): MoexCurrencyProvider

@@ -30,6 +30,8 @@ class ScheduleCommand extends Command
             // Tasks
             $scheduler->php($rootDir . '/bin/console accounts:save-stat')->everyMinute(30);
             $scheduler->php($rootDir . '/bin/console currency:get-rates')->everyMinute();
+            // Fills in the days the minute updates missed
+            $scheduler->php($rootDir . '/bin/console currency:get-rate-history --from=-7days')->daily(4);
             $scheduler->php($rootDir . '/bin/console securities:get-moex-bonds')->everyMinute(15);
             $scheduler->php($rootDir . '/bin/console securities:get-moex-futures')->everyMinute(15);
             $scheduler->php($rootDir . '/bin/console securities:get-moex-shares')->everyMinute(15);

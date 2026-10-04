@@ -55,6 +55,33 @@ class MoexHttpClient
     }
 
     /**
+     * Indicative rates of a currency pair, such as "USD/RUB", for every clearing session of the period.
+     *
+     * @return list<array{tradedate: string, tradetime: string, secid: string, rate: string, clearing: string}>
+     */
+    public function getCurrencyRateHistory(string $pair, \DateTimeImmutable $from, \DateTimeImmutable $till): array
+    {
+        $rows = [];
+        $start = 0;
+        do {
+            $data = $this->getData(sprintf(
+                '/iss/statistics/engines/futures/markets/indicativerates/securities/%s.xml?from=%s&till=%s&start=%d',
+                $pair,
+                $from->format('Y-m-d'),
+                $till->format('Y-m-d'),
+                $start,
+            ));
+            $page = $this->rowsOf($data, 'securities');
+            array_push($rows, ...$page);
+            $cursor = $this->rowsOf($data, 'securities.cursor')[0] ?? null;
+            $start += (int) ($cursor['PAGESIZE'] ?? 0);
+        } while ($page !== [] && $cursor !== null && $start < (int) $cursor['TOTAL']);
+
+        /** @var list<array{tradedate: string, tradetime: string, secid: string, rate: string, clearing: string}> */
+        return $rows;
+    }
+
+    /**
      * Splits and consolidations of shares traded on MOEX.
      *
      * @return list<array{tradedate: string, secid: string, before: string, after: string}>
@@ -71,6 +98,39 @@ class MoexHttpClient
 
         /** @var list<array{tradedate: string, secid: string, before: string, after: string}> */
         return array_column($rows, '@attributes');
+    }
+
+    /**
+     * The rows of a data block of an ISS response, found by its id.
+     *
+     * @param array<string, mixed> $data
+     * @return list<array<string, string>>
+     */
+    private function rowsOf(array $data, string $id): array
+    {
+        $blocks = $data['data'] ?? [];
+        // A single block is not wrapped into a list by the XML to array conversion
+        if (is_array($blocks) && isset($blocks['@attributes'])) {
+            $blocks = [$blocks];
+        }
+
+        foreach (is_array($blocks) ? $blocks : [] as $block) {
+            if (! is_array($block) || ($block['@attributes']['id'] ?? null) !== $id) {
+                continue;
+            }
+            $rows = $block['rows']['row'] ?? [];
+            if (! is_array($rows)) {
+                return [];
+            }
+            if (isset($rows['@attributes'])) {
+                $rows = [$rows];
+            }
+
+            /** @var list<array<string, string>> */
+            return array_column($rows, '@attributes');
+        }
+
+        return [];
     }
 
     /**

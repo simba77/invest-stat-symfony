@@ -46,9 +46,9 @@ trait CreatesInvestmentRecords
         return $bond;
     }
 
-    private function createCurrencyRate(string $currency, string $rate): void
+    private function createCurrencyRate(string $currency, string $rate, string $date = '2026-01-01'): void
     {
-        $this->persist(new CurrencyRate('RUB', $currency, $rate));
+        $this->persist(new CurrencyRate('RUB', $currency, $rate, new \DateTimeImmutable($date)));
     }
 
     private function createDividend(

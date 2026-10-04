@@ -57,7 +57,7 @@ final class HomepageControllerTest extends ApiTestCase
         $this->createDeposit($closed, '-300.00');
         $this->createAccount($admin, 'Empty');
         $this->createDeposit($this->createAccount($this->otherUser()), '999.00');
-        $this->persist(new CurrencyRate('RUB', 'USD', '95.5000'));
+        $this->persist(new CurrencyRate('RUB', 'USD', '95.5000', new \DateTimeImmutable('2026-01-15')));
         $this->loginAs($admin);
 
         $this->getJson('/api/dashboard');

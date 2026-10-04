@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Command;
 
 use App\Investments\Application\Accounts\AccountBalanceCalculator;
-use App\Investments\Domain\Instruments\Currencies\CurrencyProviderInterface;
-use App\Investments\Domain\Instruments\CurrencyRate;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Investments\Application\Instruments\CurrencyRatesUpdater;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,8 +19,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class GetCurrencyRatesCommand extends Command
 {
     public function __construct(
-        private readonly CurrencyProviderInterface $currencyProvider,
-        private readonly EntityManagerInterface $em,
+        private readonly CurrencyRatesUpdater $currencyRatesUpdater,
         private readonly AccountBalanceCalculator $accountBalanceCalculator
     ) {
         parent::__construct();
@@ -32,18 +29,7 @@ class GetCurrencyRatesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $currencyRateRepo = $this->em->getRepository(CurrencyRate::class);
-        $rates = $this->currencyProvider->getCurrencyRates();
-        foreach ($rates as $item) {
-            $rate = $currencyRateRepo->findOneBy(['baseCurrency' => $item->getBaseCurrency(), 'targetCurrency' => $item->getTargetCurrency()]);
-            if ($rate) {
-                $rate->setRate($item->getRate());
-            } else {
-                $rate = new CurrencyRate($item->getBaseCurrency(), $item->getTargetCurrency(), $item->getRate());
-            }
-            $this->em->persist($rate);
-            $this->em->flush();
-        }
+        $this->currencyRatesUpdater->updateCurrent();
 
         $this->accountBalanceCalculator->recalculateBalanceForAllAccounts();
 

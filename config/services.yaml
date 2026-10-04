@@ -66,3 +66,9 @@ when@test:
 
     App\Investments\Domain\Instruments\ShareSplitProviderInterface:
       alias: App\Tests\Investments\Instruments\FakeShareSplitProvider
+
+    App\Tests\Investments\Instruments\FakeCurrencyProvider:
+      public: true
+
+    App\Investments\Domain\Instruments\Currencies\CurrencyProviderInterface:
+      alias: App\Tests\Investments\Instruments\FakeCurrencyProvider

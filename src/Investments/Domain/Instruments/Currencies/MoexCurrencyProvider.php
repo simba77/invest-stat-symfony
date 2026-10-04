@@ -38,7 +38,7 @@ class MoexCurrencyProvider implements CurrencyProviderInterface
 
             $moment = $item['tradedate'] . ' ' . $item['tradetime'];
             if (! isset($latest[$secId]) || $latest[$secId]['moment'] < $moment) {
-                $latest[$secId] = ['moment' => $moment, 'rate' => $item['rate']];
+                $latest[$secId] = ['moment' => $moment, 'rate' => $item['rate'], 'date' => $item['tradedate']];
             }
         }
 
@@ -47,8 +47,33 @@ class MoexCurrencyProvider implements CurrencyProviderInterface
             $currency = explode('/', $secId);
 
             $result[] = new CurrencyRateDTO(
-                $currency[1], $currency[0], $item['rate']
+                $currency[1], $currency[0], $item['rate'], new \DateTimeImmutable($item['date'])
             );
+        }
+
+        return $result;
+    }
+
+    /**
+     * MOEX sets the rate several times a day; the day keeps the last one.
+     */
+    #[\Override]
+    public function getRateHistory(\DateTimeImmutable $from, \DateTimeImmutable $till): array
+    {
+        $result = [];
+        foreach (self::SEC_IDS as $secId) {
+            $days = [];
+            foreach ($this->httpClient->getCurrencyRateHistory($secId, $from, $till) as $item) {
+                $day = $item['tradedate'];
+                if (! isset($days[$day]) || $days[$day]['time'] < $item['tradetime']) {
+                    $days[$day] = ['time' => $item['tradetime'], 'rate' => $item['rate']];
+                }
+            }
+
+            $currency = explode('/', $secId);
+            foreach ($days as $day => $item) {
+                $result[] = new CurrencyRateDTO($currency[1], $currency[0], $item['rate'], new \DateTimeImmutable((string) $day));
+            }
         }
 
         return $result;

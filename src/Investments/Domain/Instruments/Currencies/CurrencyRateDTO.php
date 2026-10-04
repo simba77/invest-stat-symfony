@@ -10,6 +10,7 @@ class CurrencyRateDTO implements CurrencyRateInterface
         public string $baseCurrency,
         public string $targetCurrency,
         public string $rate,
+        public \DateTimeImmutable $date,
     ) {
     }
 
@@ -38,5 +39,11 @@ class CurrencyRateDTO implements CurrencyRateInterface
     public function getRate(): string
     {
         return $this->rate;
+    }
+
+    #[\Override]
+    public function getDate(): \DateTimeImmutable
+    {
+        return $this->date;
     }
 }

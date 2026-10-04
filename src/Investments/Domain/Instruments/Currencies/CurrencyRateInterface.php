@@ -27,4 +27,9 @@ interface CurrencyRateInterface
      * @return string
      */
     public function getRate(): string;
+
+    /**
+     * The exchange day the rate was set for.
+     */
+    public function getDate(): \DateTimeImmutable;
 }
