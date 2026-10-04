@@ -225,20 +225,26 @@ class DealData
         return $this->deal->getClosingDate()?->format('d.m.Y H:i');
     }
 
+    /**
+     * At the rate of the day the deal was opened: that is what it cost in roubles.
+     */
     public function getBuyPriceInBaseCurrency(): string
     {
         if ($this->getCurrency() === 'RUB') {
             return $this->getBuyPrice();
         }
-        return bcmul($this->getBuyPrice(), $this->currencyService->getCurrencyRate($this->getCurrency()), 4);
+        return bcmul($this->getBuyPrice(), $this->rateWhenOpened(), 4);
     }
 
+    /**
+     * At the rate of the day the deal was closed: that is what it brought in roubles.
+     */
     public function getSellPriceInBaseCurrency(): string
     {
         if ($this->getCurrency() === 'RUB') {
             return $this->getSellPrice();
         }
-        return bcmul($this->getSellPrice(), $this->currencyService->getCurrencyRate($this->getCurrency()), 4);
+        return bcmul($this->getSellPrice(), $this->rateWhenClosed(), 4);
     }
 
     public function getFullBuyPriceInBaseCurrency(): string
@@ -264,12 +270,65 @@ class DealData
         return bcmul($this->getCurrentPriceInBaseCurrency(), (string) $this->getQuantity(), 4);
     }
 
+    /**
+     * The result in roubles, as the tax counts it: what the deal brought or is worth now at the rate
+     * of that day, less what it cost at the rate of the day it was opened. So it includes the change
+     * of the currency rate, and a deal can earn roubles while losing dollars.
+     */
     public function getProfitInBaseCurrency(): string
     {
         if ($this->getCurrency() === 'RUB') {
             return $this->getProfit();
         }
-        return bcmul($this->getProfit(), $this->currencyService->getCurrencyRate($this->getCurrency()), 4);
+        // The price of a future is not money paid: its result is converted as a whole
+        if ($this->getSecurityType() === SecurityTypeEnum::Future) {
+            return bcmul($this->getProfit(), $this->rateWhenClosed(), 4);
+        }
+
+        $cost = $this->getFullBuyPriceInBaseCurrency();
+        $value = $this->deal->getStatus() === DealStatus::Closed
+            ? $this->getFullSellPriceInBaseCurrency()
+            : $this->getFullCurrentPriceInBaseCurrency();
+        $result = $this->deal->getType() === DealType::Short ? bcsub($cost, $value, 4) : bcsub($value, $cost, 4);
+
+        return bcsub($result, $this->getCommissionInBaseCurrency(), 4);
+    }
+
+    /**
+     * Each commission at the rate of the day it was charged; an estimated one when the deal is closed.
+     */
+    private function getCommissionInBaseCurrency(): string
+    {
+        $buyCommission = $this->deal->getBuyCommission();
+        if ($buyCommission !== null) {
+            return bcadd(
+                bcmul($buyCommission, $this->rateWhenOpened(), 4),
+                bcmul($this->deal->getSellCommission() ?? '0', $this->rateWhenClosed(), 4),
+                4,
+            );
+        }
+
+        return bcmul($this->getCommission(), $this->rateWhenClosed(), 4);
+    }
+
+    /**
+     * @return numeric-string
+     */
+    private function rateWhenOpened(): string
+    {
+        return $this->currencyService->getCurrencyRateOn($this->getCurrency(), $this->deal->createdAt());
+    }
+
+    /**
+     * The rate of the closing day, or the current one while the deal is open.
+     */
+    private function rateWhenClosed(): string
+    {
+        $closedAt = $this->deal->getStatus() === DealStatus::Closed ? $this->deal->getClosingDate() : null;
+
+        return $closedAt !== null
+            ? $this->currencyService->getCurrencyRateOn($this->getCurrency(), $closedAt)
+            : $this->currencyService->getCurrencyRate($this->getCurrency());
     }
 
     public function getInstrumentType(): string

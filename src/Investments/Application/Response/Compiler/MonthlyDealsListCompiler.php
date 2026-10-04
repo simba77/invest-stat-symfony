@@ -74,7 +74,8 @@ class MonthlyDealsListCompiler implements CompilerInterface
     }
 
     /**
-     * Dividends are recorded in the currency the share trades in, e.g. dollars on SPB.
+     * Dividends are recorded in the currency the share trades in, e.g. dollars on SPB,
+     * and count in roubles at the rate of the day they were paid.
      *
      * @param array<string, string> $currencies
      */
@@ -91,6 +92,11 @@ class MonthlyDealsListCompiler implements CompilerInterface
             return $amount;
         }
 
-        return bcmul($amount, $this->currencyService->getCurrencyRate($currencies[$key]), 4);
+        $paidAt = $dividend->getDate();
+        $rate = $paidAt !== null
+            ? $this->currencyService->getCurrencyRateOn($currencies[$key], $paidAt)
+            : $this->currencyService->getCurrencyRate($currencies[$key]);
+
+        return bcmul($amount, $rate, 4);
     }
 }

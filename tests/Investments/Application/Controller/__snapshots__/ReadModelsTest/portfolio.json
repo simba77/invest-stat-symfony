@@ -460,11 +460,11 @@
                 },
                 "USD": {
                     "buyPrice": "450.0000",
-                    "buyPriceInBaseCurrency": "36000.0000",
+                    "buyPriceInBaseCurrency": "45000.0000",
                     "currentPrice": "600.0000",
                     "currentPriceInBaseCurrency": "48000.0000",
                     "profit": "148.2000",
-                    "profitInBaseCurrency": "11856.0000",
+                    "profitInBaseCurrency": "2856.0000",
                     "profitPercent": "32.93",
                     "isBaseCurrency": false
                 }

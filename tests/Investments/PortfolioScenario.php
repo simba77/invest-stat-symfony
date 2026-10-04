@@ -39,8 +39,13 @@ trait PortfolioScenario
      */
     private function createPortfolio(User $owner): array
     {
-        $this->createCurrencyRate('USD', '80');
-        $this->createCurrencyRate('CNY', '11');
+        // Past rates value past deals and payouts; the latest one values what is held now
+        $this->createCurrencyRate('USD', '75', '2023-05-05');
+        $this->createCurrencyRate('USD', '100', '2024-11-05');
+        $this->createCurrencyRate('USD', '78', '2026-01-20');
+        $this->createCurrencyRate('USD', '90', '2026-02-05');
+        $this->createCurrencyRate('USD', '80', '2026-03-02');
+        $this->createCurrencyRate('CNY', '11', '2026-03-02');
 
         $sber = new Share('SBER', 'Сбербанк', 'MOEX', 'RUB', '300', ShareTypeEnum::Stock->value, shortName: 'Сбер', lotSize: '10', isin: 'RU0009029540', prevPrice: '290');
         $gazp = new Share('GAZP', 'Газпром', 'MOEX', 'RUB', '150', ShareTypeEnum::Stock->value, shortName: 'Газпром', lotSize: '10', isin: 'RU0007661625', prevPrice: '160');

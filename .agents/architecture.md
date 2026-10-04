@@ -70,3 +70,14 @@ records from the broker instead of manual input. Code: `Investments/*/BrokerSync
   to `BrokerOperationType`, add the provider to `BrokerProvider` and `BrokerClientFactory`.
 * Tests use `tests/Investments/BrokerSync/FakeBrokerClient` (wired in `config/services.yaml` for
   `when@test`) and `Operations` to build broker operations.
+
+## Currency rates
+
+`currency_rates` keeps one rate per currency and exchange day (MOEX indicative rates, the last one
+of the day): `currency:get-rates` rewrites the current day every minute, `currency:get-rate-history`
+fills in past days (daily for the last week; run it with `--from=<date>` to load more).
+
+* What is held now is valued at the latest rate: `CurrencyService::getCurrencyRate()`.
+* What happened in the past is valued at the rate of its day: `CurrencyService::getCurrencyRateOn()`.
+  A deal's result in roubles is counted as the tax does: proceeds at the rate of the closing day
+  less the cost at the rate of the opening day, so it includes the change of the rate.
