@@ -16,9 +16,9 @@ use App\Investments\Domain\Operations\Deals\DealStatus;
 use App\Investments\Domain\Operations\Deals\DealType;
 use App\Investments\Domain\Operations\Deals\Exceptions\NoDealsException;
 use App\Shared\Domain\User;
-use Carbon\Carbon;
 use Doctrine\Common\Collections\Order;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Clock\ClockInterface;
 use RuntimeException;
 
 class DealService
@@ -28,6 +28,7 @@ class DealService
         private readonly SecuritiesService $securitiesService,
         private readonly AccountBalanceCalculator $accountBalanceCalculator,
         private readonly SyncedAccountGuard $syncedAccountGuard,
+        private readonly ClockInterface $clock,
     ) {
     }
 
@@ -36,7 +37,7 @@ class DealService
         $this->syncedAccountGuard->assertManual($deal->getAccount());
         $deal->setStatus(DealStatus::Closed);
         $deal->setSellPrice($dto->price);
-        $deal->setClosingDate(Carbon::now());
+        $deal->setClosingDate($this->now());
         $this->entityManager->persist($deal);
 
         $this->changeAccountBalance($deal, $dto);
@@ -74,7 +75,7 @@ class DealService
                 // Set the sell status and set the quantity
                 $deal->setQuantity($needToSell);
                 $deal->setStatus(DealStatus::Closed);
-                $deal->setClosingDate(Carbon::now());
+                $deal->setClosingDate($this->now());
                 $deal->setSellPrice($dto->price);
                 $this->entityManager->persist($deal);
                 $needToSell = 0;
@@ -83,7 +84,7 @@ class DealService
 
             // Set the sell status and reduce quantity that need to sell
             $deal->setStatus(DealStatus::Closed);
-            $deal->setClosingDate(Carbon::now());
+            $deal->setClosingDate($this->now());
             $deal->setSellPrice($dto->price);
             $this->entityManager->persist($deal);
             $needToSell -= $deal->getQuantity();
@@ -98,7 +99,7 @@ class DealService
             $additionalDeal = clone $deal;
             $additionalDeal->setQuantity($needToSell);
             $additionalDeal->setStatus(DealStatus::Closed);
-            $additionalDeal->setClosingDate(Carbon::now());
+            $additionalDeal->setClosingDate($this->now());
             $additionalDeal->setSellPrice($dto->price);
             $this->entityManager->persist($additionalDeal);
         }
@@ -108,6 +109,11 @@ class DealService
         $this->accountBalanceCalculator->recalculateBalance($account);
 
         $this->entityManager->flush();
+    }
+
+    private function now(): \DateTime
+    {
+        return \DateTime::createFromImmutable($this->clock->now());
     }
 
     private function changeAccountBalance(Deal $deal, SellDealRequestDTO $dto): void
