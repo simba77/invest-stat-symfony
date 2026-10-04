@@ -1,0 +1,58 @@
+{
+    "id": "<id>",
+    "instrumentType": "future",
+    "name": "Si-3.26",
+    "ticker": "SiH6",
+    "logo": null,
+    "marketName": "Мосбиржа",
+    "stockMarket": "MOEX",
+    "currency": "₽",
+    "currencyCode": "RUB",
+    "price": "90000.0000",
+    "prevPrice": "89000.0000",
+    "difference": "1000.0000",
+    "percent": "1.1235",
+    "lotSize": "1.0000",
+    "isin": null,
+    "priceTrend": "up",
+    "portfolio": {
+        "quantity": 0,
+        "fullPrice": "0",
+        "fullProfit": "0",
+        "fullProfitPercent": "0",
+        "fullProfitTrend": "flat",
+        "averageBuyPrice": "0",
+        "portfolioPercent": "0",
+        "closedDealsProfit": "2995.00",
+        "closedDealsProfitPercent": "3.52",
+        "closedDealsProfitTrend": "up",
+        "sumOfDividends": "0"
+    },
+    "openPositions": [],
+    "closedPositions": [
+        {
+            "id": "<id>",
+            "accountId": "<id>",
+            "ticker": "SiH6",
+            "shortName": "Si-3.26",
+            "quantity": 1,
+            "buyPrice": "85000.0000",
+            "fullBuyPrice": "85000.0000",
+            "sellPrice": "88000.0000",
+            "fullSellPrice": "88000.0000",
+            "profit": "2995.0000",
+            "profitPercent": "3.5200",
+            "commission": "5.0000",
+            "currency": "₽",
+            "isShort": false,
+            "isBlocked": false,
+            "createdAt": "25.01.2026 12:00",
+            "updatedAt": "02.03.2026 09:00",
+            "closingDate": "01.02.2026 12:00"
+        }
+    ],
+    "dividends": [],
+    "details": {
+        "stepPrice": "1.0000"
+    }
+}

@@ -51,9 +51,15 @@ trait CreatesInvestmentRecords
         $this->persist(new CurrencyRate('RUB', $currency, $rate));
     }
 
-    private function createDividend(Account $account, string $ticker = 'SBER', string $amount = '100', string $date = '2026-01-15', string $stockMarket = 'MOEX'): Dividend
-    {
-        $dividend = new Dividend($this->owner($account), $account, $ticker, $stockMarket, $amount, '0', new \DateTimeImmutable($date));
+    private function createDividend(
+        Account $account,
+        string $ticker = 'SBER',
+        string $amount = '100',
+        string $date = '2026-01-15',
+        string $stockMarket = 'MOEX',
+        string $tax = '0',
+    ): Dividend {
+        $dividend = new Dividend($this->owner($account), $account, $ticker, $stockMarket, $amount, $tax, new \DateTimeImmutable($date));
         $this->persist($dividend);
 
         return $dividend;

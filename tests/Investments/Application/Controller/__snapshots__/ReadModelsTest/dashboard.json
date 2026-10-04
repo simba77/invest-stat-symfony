@@ -1,0 +1,77 @@
+{
+    "usd": "80",
+    "depositAccounts": [],
+    "summary": [
+        {
+            "name": "The Invested Amount",
+            "total": "115000.00",
+            "currency": "₽"
+        },
+        {
+            "name": "Deposits",
+            "total": "0",
+            "currency": "₽"
+        },
+        {
+            "name": "Deposits + Investments",
+            "helpText": "Deposits + Investments",
+            "total": "115000.00",
+            "currency": "₽"
+        },
+        {
+            "name": "All Assets",
+            "helpText": "The sum of all assets held by brokers",
+            "dailyChange": "2310.00",
+            "percent": "1.80",
+            "total": "128125.00",
+            "currency": "₽"
+        },
+        {
+            "name": "Profit",
+            "helpText": "Assets for The Current Day - The Invested Amount",
+            "percent": "28.80",
+            "total": "33125.00",
+            "currency": "₽"
+        },
+        {
+            "name": "Saving + All Brokers Assets",
+            "helpText": "Assets for The Current Day + Deposits",
+            "total": "128125.00",
+            "currency": "₽"
+        },
+        {
+            "name": "Blocked Assets",
+            "total": "1200",
+            "currency": "₽"
+        },
+        {
+            "name": "Liquid assets",
+            "total": "126925.00",
+            "currency": "₽"
+        }
+    ],
+    "statisticByYears": [
+        {
+            "year": 2025,
+            "date": "2025-01-02T10:00:00+00:00",
+            "balance": 1000,
+            "usd_balance": 0,
+            "investments": 0,
+            "current_value": 1000,
+            "profit": 1000,
+            "profitPercent": 1350,
+            "annualReturnPercent": 20.88
+        },
+        {
+            "year": 2026,
+            "date": "2026-01-03T10:00:00+00:00",
+            "balance": 55000,
+            "usd_balance": 100,
+            "investments": 115000,
+            "current_value": 129500,
+            "profit": 14500,
+            "profitPercent": 159.31,
+            "annualReturnPercent": 20.23
+        }
+    ]
+}

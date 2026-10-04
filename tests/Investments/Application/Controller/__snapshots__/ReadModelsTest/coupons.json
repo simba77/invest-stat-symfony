@@ -1,0 +1,20 @@
+{
+    "items": [
+        {
+            "id": "<id>",
+            "date": "20.02.2026",
+            "ticker": "SU26238RMFS4",
+            "stockMarket": "MOEX",
+            "amount": "120.0000",
+            "accountName": "Main broker"
+        }
+    ],
+    "pagination": {
+        "page": 1,
+        "perPage": 20,
+        "totalItems": 1,
+        "totalPages": 1,
+        "hasPrev": false,
+        "hasNext": false
+    }
+}

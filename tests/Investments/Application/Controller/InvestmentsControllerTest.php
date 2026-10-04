@@ -5,12 +5,27 @@ declare(strict_types=1);
 namespace App\Tests\Investments\Application\Controller;
 
 use App\Investments\Domain\Operations\Investment;
+use App\Investments\Domain\Accounts\Account;
 use App\Tests\Investments\CreatesInvestmentRecords;
 use App\Tests\Support\ApiTestCase;
 
 final class InvestmentsControllerTest extends ApiTestCase
 {
     use CreatesInvestmentRecords;
+
+    public function testCreateCountsDepositButLeavesCashUntouched(): void
+    {
+        $admin = $this->admin();
+        $account = $this->createAccount($admin, balance: '1000');
+        $this->loginAs($admin);
+
+        $this->postJson('/api/investments/create', ['account' => $account->getId(), 'sum' => '5000', 'date' => '2026-01-15']);
+
+        self::assertResponseIsSuccessful();
+        $deposits = $this->findFreshBy(Investment::class, ['account' => $account->getId()]);
+        self::assertSame(['5000.00', '2026-01-15'], [$deposits[0]->getSum(), $deposits[0]->getDate()?->format('Y-m-d')]);
+        self::assertSame('1000.0000', $this->findFresh(Account::class, $account->getId())?->getBalance());
+    }
 
     public function testCreateRejectsOtherUsersAccount(): void
     {

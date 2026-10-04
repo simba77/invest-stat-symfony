@@ -1,0 +1,33 @@
+{
+    "items": [
+        {
+            "id": "<id>",
+            "sum": "-20000.00",
+            "date": "15.01.2026",
+            "account": "Main broker",
+            "currency": "₽"
+        },
+        {
+            "id": "<id>",
+            "sum": "15000.00",
+            "date": "01.09.2025",
+            "account": "Second broker",
+            "currency": "₽"
+        },
+        {
+            "id": "<id>",
+            "sum": "100000.00",
+            "date": "01.06.2025",
+            "account": "Main broker",
+            "currency": "₽"
+        }
+    ],
+    "pagination": {
+        "page": 1,
+        "perPage": 20,
+        "totalItems": 3,
+        "totalPages": 1,
+        "hasPrev": false,
+        "hasNext": false
+    }
+}

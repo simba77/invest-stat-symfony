@@ -39,6 +39,19 @@ Tests mirror `src/`: `tests/<Context>/<Layer>/.../<Class>Test.php`.
   * invalid payload → `assertViolatedFields([...])` (422 with `violations[].propertyPath`,
     what the frontend forms read); one data set per validation rule.
 
+## Snapshots of read models
+
+Pages with large computed responses (portfolio, account deals, analytics, dashboard, instrument
+pages) are pinned by JSON snapshots: `App\Tests\Support\MatchesJsonSnapshots` compares the response
+with `__snapshots__/<TestClass>/<name>.json` next to the test.
+
+* Database ids depend on the order tests run in and are written as `<id>`; assert the ids that
+  matter with `idsAt()`.
+* A snapshot is the contract with the SPA: review its diff like code. After an intended change,
+  rewrite it with `docker exec -e UPDATE_SNAPSHOTS=1 <php container> php bin/phpunit <test file>`.
+* `tests/Investments/PortfolioScenario` builds a portfolio that covers every branch of the deal
+  calculations; freeze time with `mockTime()` before building it.
+
 ## Test database
 
 `make test-db` grants the app user access to `<db>_test`, drops and recreates it, runs all

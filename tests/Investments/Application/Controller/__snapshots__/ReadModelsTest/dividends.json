@@ -1,0 +1,30 @@
+{
+    "items": [
+        {
+            "id": "<id>",
+            "date": "05.02.2026",
+            "ticker": "AAPL",
+            "stockMarket": "SPB",
+            "amount": "2.5000",
+            "tax": "0.3700",
+            "accountName": "Main broker"
+        },
+        {
+            "id": "<id>",
+            "date": "10.01.2026",
+            "ticker": "SBER",
+            "stockMarket": "MOEX",
+            "amount": "1000.0000",
+            "tax": "149.4300",
+            "accountName": "Main broker"
+        }
+    ],
+    "pagination": {
+        "page": 1,
+        "perPage": 20,
+        "totalItems": 2,
+        "totalPages": 1,
+        "hasPrev": false,
+        "hasNext": false
+    }
+}

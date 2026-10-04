@@ -5,12 +5,35 @@ declare(strict_types=1);
 namespace App\Tests\Investments\Application\Controller;
 
 use App\Investments\Domain\Operations\Dividend;
+use App\Investments\Domain\Accounts\Account;
 use App\Tests\Investments\CreatesInvestmentRecords;
 use App\Tests\Support\ApiTestCase;
 
 final class DividendsControllerTest extends ApiTestCase
 {
     use CreatesInvestmentRecords;
+
+    public function testCreateWithholdsTaxByOwnerProfileAndLeavesCashUntouched(): void
+    {
+        $admin = $this->admin();
+        $account = $this->createAccount($admin, balance: '1000');
+        $this->loginAs($admin);
+
+        $this->postJson('/api/dividends/create', [
+            'accountId'   => $account->getId(),
+            'amount'      => '87',
+            'ticker'      => 'SBER',
+            'stockMarket' => 'MOEX',
+            'date'        => '2026-01-15',
+        ]);
+
+        self::assertResponseIsSuccessful();
+        $dividends = $this->findFreshBy(Dividend::class, ['account' => $account->getId()]);
+        self::assertCount(1, $dividends);
+        // The amount is what reached the account; the tax is added on top by the 13% rate
+        self::assertSame(['87.0000', '13.0000', '2026-01-15'], [$dividends[0]->getAmount(), $dividends[0]->getTax(), $dividends[0]->getDate()?->format('Y-m-d')]);
+        self::assertSame('1000.0000', $this->findFresh(Account::class, $account->getId())?->getBalance());
+    }
 
     public function testCreateRejectsOtherUsersAccount(): void
     {

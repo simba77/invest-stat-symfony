@@ -1,0 +1,88 @@
+{
+    "deals": [
+        {
+            "groupData": {
+                "ticker": "SBER",
+                "shortName": "Сбер",
+                "quantity": 3,
+                "buyPrice": "240.0000",
+                "fullBuyPrice": "720.00",
+                "sellPrice": "310.0000",
+                "fullSellPrice": "930.00",
+                "profit": "205.05",
+                "profitPercent": "28.47",
+                "commission": "4.95",
+                "currency": "₽",
+                "isShort": false,
+                "isBlocked": false
+            },
+            "deals": [
+                {
+                    "id": "<id>",
+                    "accountId": "<id>",
+                    "ticker": "SBER",
+                    "shortName": "Сбер",
+                    "quantity": 3,
+                    "buyPrice": "240.0000",
+                    "fullBuyPrice": "720.0000",
+                    "sellPrice": "310.0000",
+                    "fullSellPrice": "930.0000",
+                    "profit": "205.0500",
+                    "profitPercent": "28.4700",
+                    "commission": "4.9500",
+                    "currency": "₽",
+                    "isShort": false,
+                    "isBlocked": false,
+                    "createdAt": "01.10.2025 10:00",
+                    "updatedAt": "02.03.2026 09:00",
+                    "closingDate": "28.01.2026 11:00"
+                }
+            ]
+        },
+        {
+            "groupData": {
+                "ticker": "AAPL",
+                "shortName": "Apple",
+                "quantity": 2,
+                "buyPrice": "100.0000",
+                "fullBuyPrice": "200.00",
+                "sellPrice": "180.0000",
+                "fullSellPrice": "360.00",
+                "profit": "158.80",
+                "profitPercent": "79.40",
+                "commission": "1.20",
+                "currency": "$",
+                "isShort": false,
+                "isBlocked": false
+            },
+            "deals": [
+                {
+                    "id": "<id>",
+                    "accountId": "<id>",
+                    "ticker": "AAPL",
+                    "shortName": "Apple",
+                    "quantity": 2,
+                    "buyPrice": "100.0000",
+                    "fullBuyPrice": "200.0000",
+                    "sellPrice": "180.0000",
+                    "fullSellPrice": "360.0000",
+                    "profit": "158.8000",
+                    "profitPercent": "79.4000",
+                    "commission": "1.2000",
+                    "currency": "$",
+                    "isShort": false,
+                    "isBlocked": false,
+                    "createdAt": "05.05.2023 18:00",
+                    "updatedAt": "02.03.2026 09:00",
+                    "closingDate": "20.01.2026 19:00"
+                }
+            ]
+        }
+    ],
+    "summary": {
+        "buyPrice": "16720.00",
+        "sellPrice": "29730.00",
+        "profit": "12909.05",
+        "profitPercent": "77.20"
+    }
+}

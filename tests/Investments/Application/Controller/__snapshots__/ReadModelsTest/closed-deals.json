@@ -1,0 +1,186 @@
+{
+    "deals": [
+        {
+            "groupData": {
+                "ticker": "SBER",
+                "shortName": "Сбер",
+                "quantity": 13,
+                "buyPrice": "209.2307",
+                "fullBuyPrice": "2720.00",
+                "sellPrice": "271.5384",
+                "fullSellPrice": "3530.00",
+                "profit": "796.05",
+                "profitPercent": "29.26",
+                "commission": "13.95",
+                "currency": "₽",
+                "isShort": false,
+                "isBlocked": false
+            },
+            "deals": [
+                {
+                    "id": "<id>",
+                    "accountId": "<id>",
+                    "ticker": "SBER",
+                    "shortName": "Сбер",
+                    "quantity": 10,
+                    "buyPrice": "200.0000",
+                    "fullBuyPrice": "2000.0000",
+                    "sellPrice": "260.0000",
+                    "fullSellPrice": "2600.0000",
+                    "profit": "591.0000",
+                    "profitPercent": "29.5500",
+                    "commission": "9.0000",
+                    "currency": "₽",
+                    "isShort": false,
+                    "isBlocked": false,
+                    "createdAt": "01.02.2025 10:00",
+                    "updatedAt": "02.03.2026 09:00",
+                    "closingDate": "10.12.2025 14:00"
+                },
+                {
+                    "id": "<id>",
+                    "accountId": "<id>",
+                    "ticker": "SBER",
+                    "shortName": "Сбер",
+                    "quantity": 3,
+                    "buyPrice": "240.0000",
+                    "fullBuyPrice": "720.0000",
+                    "sellPrice": "310.0000",
+                    "fullSellPrice": "930.0000",
+                    "profit": "205.0500",
+                    "profitPercent": "28.4700",
+                    "commission": "4.9500",
+                    "currency": "₽",
+                    "isShort": false,
+                    "isBlocked": false,
+                    "createdAt": "01.10.2025 10:00",
+                    "updatedAt": "02.03.2026 09:00",
+                    "closingDate": "28.01.2026 11:00"
+                }
+            ]
+        },
+        {
+            "groupData": {
+                "ticker": "GAZP",
+                "shortName": "Газпром",
+                "quantity": 10,
+                "buyPrice": "180.0000",
+                "fullBuyPrice": "1800.00",
+                "sellPrice": "160.0000",
+                "fullSellPrice": "1600.00",
+                "profit": "195.50",
+                "profitPercent": "10.86",
+                "commission": "4.50",
+                "currency": "₽",
+                "isShort": true,
+                "isBlocked": false
+            },
+            "deals": [
+                {
+                    "id": "<id>",
+                    "accountId": "<id>",
+                    "ticker": "GAZP",
+                    "shortName": "Газпром",
+                    "quantity": 10,
+                    "buyPrice": "180.0000",
+                    "fullBuyPrice": "1800.0000",
+                    "sellPrice": "160.0000",
+                    "fullSellPrice": "1600.0000",
+                    "profit": "195.5000",
+                    "profitPercent": "10.8600",
+                    "commission": "4.5000",
+                    "currency": "₽",
+                    "isShort": true,
+                    "isBlocked": false,
+                    "createdAt": "02.02.2026 10:00",
+                    "updatedAt": "02.03.2026 09:00",
+                    "closingDate": "15.02.2026 16:00"
+                }
+            ]
+        },
+        {
+            "groupData": {
+                "ticker": "AAPL",
+                "shortName": "Apple",
+                "quantity": 2,
+                "buyPrice": "100.0000",
+                "fullBuyPrice": "200.00",
+                "sellPrice": "180.0000",
+                "fullSellPrice": "360.00",
+                "profit": "158.80",
+                "profitPercent": "79.40",
+                "commission": "1.20",
+                "currency": "$",
+                "isShort": false,
+                "isBlocked": false
+            },
+            "deals": [
+                {
+                    "id": "<id>",
+                    "accountId": "<id>",
+                    "ticker": "AAPL",
+                    "shortName": "Apple",
+                    "quantity": 2,
+                    "buyPrice": "100.0000",
+                    "fullBuyPrice": "200.0000",
+                    "sellPrice": "180.0000",
+                    "fullSellPrice": "360.0000",
+                    "profit": "158.8000",
+                    "profitPercent": "79.4000",
+                    "commission": "1.2000",
+                    "currency": "$",
+                    "isShort": false,
+                    "isBlocked": false,
+                    "createdAt": "05.05.2023 18:00",
+                    "updatedAt": "02.03.2026 09:00",
+                    "closingDate": "20.01.2026 19:00"
+                }
+            ]
+        },
+        {
+            "groupData": {
+                "ticker": "SiH6",
+                "shortName": "Si-3.26",
+                "quantity": 1,
+                "buyPrice": "85000.0000",
+                "fullBuyPrice": "85000.00",
+                "sellPrice": "88000.0000",
+                "fullSellPrice": "88000.00",
+                "profit": "2995.00",
+                "profitPercent": "3.52",
+                "commission": "5.00",
+                "currency": "₽",
+                "isShort": false,
+                "isBlocked": false
+            },
+            "deals": [
+                {
+                    "id": "<id>",
+                    "accountId": "<id>",
+                    "ticker": "SiH6",
+                    "shortName": "Si-3.26",
+                    "quantity": 1,
+                    "buyPrice": "85000.0000",
+                    "fullBuyPrice": "85000.0000",
+                    "sellPrice": "88000.0000",
+                    "fullSellPrice": "88000.0000",
+                    "profit": "2995.0000",
+                    "profitPercent": "3.5200",
+                    "commission": "5.0000",
+                    "currency": "₽",
+                    "isShort": false,
+                    "isBlocked": false,
+                    "createdAt": "25.01.2026 12:00",
+                    "updatedAt": "02.03.2026 09:00",
+                    "closingDate": "01.02.2026 12:00"
+                }
+            ]
+        }
+    ],
+    "summary": {
+        "buyPrice": "105520.00",
+        "sellPrice": "121930.00",
+        "profit": "16690.55",
+        "profitPercent": "15.81"
+    }
+}

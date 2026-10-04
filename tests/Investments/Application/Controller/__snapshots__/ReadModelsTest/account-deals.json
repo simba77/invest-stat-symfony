@@ -1,0 +1,479 @@
+{
+    "account": {
+        "id": "<id>",
+        "name": "Main broker",
+        "balance": "50000.0000",
+        "usdBalance": "100.0000",
+        "deposits": "80000.00",
+        "currentValue": "116625.00",
+        "fullProfit": "36625.00",
+        "isSynced": false
+    },
+    "deals": {
+        "dealsList": {
+            "active": {
+                "shares": {
+                    "RUB": [
+                        {
+                            "groupData": {
+                                "ticker": "SBER",
+                                "shortName": "Сбер",
+                                "quantity": 15,
+                                "buyPrice": "260.0000",
+                                "fullBuyPrice": "3900.0000",
+                                "currentPrice": "300.0000",
+                                "prevPrice": "290.0000",
+                                "fullCurrentPrice": "4500.0000",
+                                "fullPrevPrice": "4350.0000",
+                                "targetPrice": "213.3333",
+                                "fullTargetPrice": "3200.0000",
+                                "profit": "586.5000",
+                                "profitPercent": "15.03",
+                                "dailyProfit": "10.0000",
+                                "fullDailyProfit": "150.00",
+                                "commission": "13.50",
+                                "targetProfit": "-46.6666",
+                                "fullTargetProfit": "-700.0000",
+                                "targetProfitPercent": "-17.94",
+                                "percent": "3.85",
+                                "currency": "₽",
+                                "isShort": false,
+                                "isBlocked": false,
+                                "instrumentType": "share",
+                                "instrumentId": "<id>",
+                                "bondPercent": null,
+                                "bondBuyPercent": null
+                            },
+                            "deals": [
+                                {
+                                    "id": "<id>",
+                                    "accountId": "<id>",
+                                    "ticker": "SBER",
+                                    "shortName": "Сбер",
+                                    "quantity": 10,
+                                    "buyPrice": "250.0000",
+                                    "fullBuyPrice": "2500.0000",
+                                    "currentPrice": "300.0000",
+                                    "prevPrice": "290.0000",
+                                    "fullCurrentPrice": "3000.0000",
+                                    "fullPrevPrice": "2900.0000",
+                                    "targetPrice": "320.0000",
+                                    "fullTargetPrice": "3200.0000",
+                                    "profit": "491.0000",
+                                    "profitPercent": "19.6400",
+                                    "dailyProfit": "10.0000",
+                                    "fullDailyProfit": "100.0000",
+                                    "commission": "9.0000",
+                                    "targetProfit": "70.0000",
+                                    "fullTargetProfit": "700.0000",
+                                    "fullTargetProfitPercent": "28.0000",
+                                    "percent": "2.57",
+                                    "currency": "₽",
+                                    "isShort": false,
+                                    "isBlocked": false,
+                                    "createdAt": "10.06.2025 10:00",
+                                    "updatedAt": "02.03.2026 09:00",
+                                    "accountName": "Main broker",
+                                    "instrumentType": "share",
+                                    "bondPercent": null,
+                                    "bondBuyPercent": null
+                                },
+                                {
+                                    "id": "<id>",
+                                    "accountId": "<id>",
+                                    "ticker": "SBER",
+                                    "shortName": "Сбер",
+                                    "quantity": 5,
+                                    "buyPrice": "280.0000",
+                                    "fullBuyPrice": "1400.0000",
+                                    "currentPrice": "300.0000",
+                                    "prevPrice": "290.0000",
+                                    "fullCurrentPrice": "1500.0000",
+                                    "fullPrevPrice": "1450.0000",
+                                    "targetPrice": "0.0000",
+                                    "fullTargetPrice": "0.0000",
+                                    "profit": "95.5000",
+                                    "profitPercent": "6.8200",
+                                    "dailyProfit": "10.0000",
+                                    "fullDailyProfit": "50.0000",
+                                    "commission": "4.5000",
+                                    "targetProfit": "-280.0000",
+                                    "fullTargetProfit": "-1400.0000",
+                                    "fullTargetProfitPercent": "-100.0000",
+                                    "percent": "1.28",
+                                    "currency": "₽",
+                                    "isShort": false,
+                                    "isBlocked": false,
+                                    "createdAt": "15.09.2025 11:30",
+                                    "updatedAt": "02.03.2026 09:00",
+                                    "accountName": "Main broker",
+                                    "instrumentType": "share",
+                                    "bondPercent": null,
+                                    "bondBuyPercent": null
+                                }
+                            ]
+                        },
+                        {
+                            "groupData": {
+                                "ticker": "GAZP",
+                                "shortName": "Газпром",
+                                "quantity": 20,
+                                "buyPrice": "170.0000",
+                                "fullBuyPrice": "3400.0000",
+                                "currentPrice": "150.0000",
+                                "prevPrice": "160.0000",
+                                "fullCurrentPrice": "3000.0000",
+                                "fullPrevPrice": "3200.0000",
+                                "targetPrice": "140.0000",
+                                "fullTargetPrice": "2800.0000",
+                                "profit": "391.0000",
+                                "profitPercent": "11.50",
+                                "dailyProfit": "-10.0000",
+                                "fullDailyProfit": "-200.00",
+                                "commission": "9.00",
+                                "targetProfit": "30.0000",
+                                "fullTargetProfit": "600.0000",
+                                "targetProfitPercent": "17.64",
+                                "percent": "2.57",
+                                "currency": "₽",
+                                "isShort": true,
+                                "isBlocked": false,
+                                "instrumentType": "share",
+                                "instrumentId": "<id>",
+                                "bondPercent": null,
+                                "bondBuyPercent": null
+                            },
+                            "deals": [
+                                {
+                                    "id": "<id>",
+                                    "accountId": "<id>",
+                                    "ticker": "GAZP",
+                                    "shortName": "Газпром",
+                                    "quantity": 20,
+                                    "buyPrice": "170.0000",
+                                    "fullBuyPrice": "3400.0000",
+                                    "currentPrice": "150.0000",
+                                    "prevPrice": "160.0000",
+                                    "fullCurrentPrice": "3000.0000",
+                                    "fullPrevPrice": "3200.0000",
+                                    "targetPrice": "140.0000",
+                                    "fullTargetPrice": "2800.0000",
+                                    "profit": "391.0000",
+                                    "profitPercent": "11.5000",
+                                    "dailyProfit": "-10.0000",
+                                    "fullDailyProfit": "-200.0000",
+                                    "commission": "9.0000",
+                                    "targetProfit": "30.0000",
+                                    "fullTargetProfit": "600.0000",
+                                    "fullTargetProfitPercent": "17.6400",
+                                    "percent": "2.57",
+                                    "currency": "₽",
+                                    "isShort": true,
+                                    "isBlocked": false,
+                                    "createdAt": "12.01.2026 15:00",
+                                    "updatedAt": "02.03.2026 09:00",
+                                    "accountName": "Main broker",
+                                    "instrumentType": "share",
+                                    "bondPercent": null,
+                                    "bondBuyPercent": null
+                                }
+                            ]
+                        }
+                    ],
+                    "USD": [
+                        {
+                            "groupData": {
+                                "ticker": "AAPL",
+                                "shortName": "Apple",
+                                "quantity": 3,
+                                "buyPrice": "150.0000",
+                                "fullBuyPrice": "450.0000",
+                                "currentPrice": "200.0000",
+                                "prevPrice": "190.0000",
+                                "fullCurrentPrice": "600.0000",
+                                "fullPrevPrice": "570.0000",
+                                "targetPrice": "220.0000",
+                                "fullTargetPrice": "660.0000",
+                                "profit": "148.2000",
+                                "profitPercent": "32.93",
+                                "dailyProfit": "10.0000",
+                                "fullDailyProfit": "30.00",
+                                "commission": "1.80",
+                                "targetProfit": "70.0000",
+                                "fullTargetProfit": "210.0000",
+                                "targetProfitPercent": "46.66",
+                                "percent": "41.15",
+                                "currency": "$",
+                                "isShort": false,
+                                "isBlocked": false,
+                                "instrumentType": "share",
+                                "instrumentId": "<id>",
+                                "bondPercent": null,
+                                "bondBuyPercent": null
+                            },
+                            "deals": [
+                                {
+                                    "id": "<id>",
+                                    "accountId": "<id>",
+                                    "ticker": "AAPL",
+                                    "shortName": "Apple",
+                                    "quantity": 3,
+                                    "buyPrice": "150.0000",
+                                    "fullBuyPrice": "450.0000",
+                                    "currentPrice": "200.0000",
+                                    "prevPrice": "190.0000",
+                                    "fullCurrentPrice": "600.0000",
+                                    "fullPrevPrice": "570.0000",
+                                    "targetPrice": "220.0000",
+                                    "fullTargetPrice": "660.0000",
+                                    "profit": "148.2000",
+                                    "profitPercent": "32.9300",
+                                    "dailyProfit": "10.0000",
+                                    "fullDailyProfit": "30.0000",
+                                    "commission": "1.8000",
+                                    "targetProfit": "70.0000",
+                                    "fullTargetProfit": "210.0000",
+                                    "fullTargetProfitPercent": "46.6600",
+                                    "percent": "0.51",
+                                    "currency": "$",
+                                    "isShort": false,
+                                    "isBlocked": false,
+                                    "createdAt": "05.11.2024 18:00",
+                                    "updatedAt": "02.03.2026 09:00",
+                                    "accountName": "Main broker",
+                                    "instrumentType": "share",
+                                    "bondPercent": null,
+                                    "bondBuyPercent": null
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "bonds": {
+                    "RUB": [
+                        {
+                            "groupData": {
+                                "ticker": "SU26238RMFS4",
+                                "shortName": "ОФЗ 26238",
+                                "quantity": 2,
+                                "buyPrice": "985.0000",
+                                "fullBuyPrice": "1970.0000",
+                                "currentPrice": "962.5000",
+                                "prevPrice": "952.5000",
+                                "fullCurrentPrice": "1925.0000",
+                                "fullPrevPrice": "1905.0000",
+                                "targetPrice": "0.0000",
+                                "fullTargetPrice": "0.0000",
+                                "profit": "-46.0000",
+                                "profitPercent": "-2.33",
+                                "dailyProfit": "10.0000",
+                                "fullDailyProfit": "20.00",
+                                "commission": "1.00",
+                                "targetProfit": "-985.0000",
+                                "fullTargetProfit": "-1970.0000",
+                                "targetProfitPercent": "-100.00",
+                                "percent": "1.65",
+                                "currency": "₽",
+                                "isShort": false,
+                                "isBlocked": false,
+                                "instrumentType": "bond",
+                                "instrumentId": "<id>",
+                                "bondPercent": "95.0000",
+                                "bondBuyPercent": "98.5000"
+                            },
+                            "deals": [
+                                {
+                                    "id": "<id>",
+                                    "accountId": "<id>",
+                                    "ticker": "SU26238RMFS4",
+                                    "shortName": "ОФЗ 26238",
+                                    "quantity": 2,
+                                    "buyPrice": "985.0000",
+                                    "fullBuyPrice": "1970.0000",
+                                    "currentPrice": "962.5000",
+                                    "prevPrice": "952.5000",
+                                    "fullCurrentPrice": "1925.0000",
+                                    "fullPrevPrice": "1905.0000",
+                                    "targetPrice": "0.0000",
+                                    "fullTargetPrice": "0.0000",
+                                    "profit": "-46.0000",
+                                    "profitPercent": "-2.3300",
+                                    "dailyProfit": "10.0000",
+                                    "fullDailyProfit": "20.0000",
+                                    "commission": "1.0000",
+                                    "targetProfit": "-985.0000",
+                                    "fullTargetProfit": "-1970.0000",
+                                    "fullTargetProfitPercent": "-100.0000",
+                                    "percent": "1.65",
+                                    "currency": "₽",
+                                    "isShort": false,
+                                    "isBlocked": false,
+                                    "createdAt": "03.03.2025 10:15",
+                                    "updatedAt": "02.03.2026 09:00",
+                                    "accountName": "Main broker",
+                                    "instrumentType": "bond",
+                                    "bondPercent": "95.0000",
+                                    "bondBuyPercent": "98.5000"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "blocked": {
+                "shares": {
+                    "RUB": [
+                        {
+                            "groupData": {
+                                "ticker": "SBER",
+                                "shortName": "Сбер",
+                                "quantity": 4,
+                                "buyPrice": "200.0000",
+                                "fullBuyPrice": "800.0000",
+                                "currentPrice": "300.0000",
+                                "prevPrice": "290.0000",
+                                "fullCurrentPrice": "1200.0000",
+                                "fullPrevPrice": "1160.0000",
+                                "targetPrice": "0.0000",
+                                "fullTargetPrice": "0.0000",
+                                "profit": "396.4000",
+                                "profitPercent": "49.55",
+                                "dailyProfit": "10.0000",
+                                "fullDailyProfit": "40.00",
+                                "commission": "3.60",
+                                "targetProfit": "-200.0000",
+                                "fullTargetProfit": "-800.0000",
+                                "targetProfitPercent": "-100.00",
+                                "percent": "1.02",
+                                "currency": "₽",
+                                "isShort": false,
+                                "isBlocked": true,
+                                "instrumentType": "share",
+                                "instrumentId": "<id>",
+                                "bondPercent": null,
+                                "bondBuyPercent": null
+                            },
+                            "deals": [
+                                {
+                                    "id": "<id>",
+                                    "accountId": "<id>",
+                                    "ticker": "SBER",
+                                    "shortName": "Сбер",
+                                    "quantity": 4,
+                                    "buyPrice": "200.0000",
+                                    "fullBuyPrice": "800.0000",
+                                    "currentPrice": "300.0000",
+                                    "prevPrice": "290.0000",
+                                    "fullCurrentPrice": "1200.0000",
+                                    "fullPrevPrice": "1160.0000",
+                                    "targetPrice": "0.0000",
+                                    "fullTargetPrice": "0.0000",
+                                    "profit": "396.4000",
+                                    "profitPercent": "49.5500",
+                                    "dailyProfit": "10.0000",
+                                    "fullDailyProfit": "40.0000",
+                                    "commission": "3.6000",
+                                    "targetProfit": "-200.0000",
+                                    "fullTargetProfit": "-800.0000",
+                                    "fullTargetProfitPercent": "-100.0000",
+                                    "percent": "1.02",
+                                    "currency": "₽",
+                                    "isShort": false,
+                                    "isBlocked": true,
+                                    "createdAt": "20.01.2022 12:00",
+                                    "updatedAt": "02.03.2026 09:00",
+                                    "accountName": "Main broker",
+                                    "instrumentType": "share",
+                                    "bondPercent": null,
+                                    "bondBuyPercent": null
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "statuses": {
+            "active": {
+                "code": "active",
+                "name": "Active"
+            },
+            "blocked": {
+                "code": "blocked",
+                "name": "Blocked"
+            }
+        },
+        "instrumentTypes": {
+            "shares": {
+                "code": "shares",
+                "name": "Shares"
+            },
+            "bonds": {
+                "code": "bonds",
+                "name": "Bonds"
+            }
+        },
+        "currencies": {
+            "RUB": {
+                "code": "RUB",
+                "name": "Russian Rouble"
+            },
+            "USD": {
+                "code": "USD",
+                "name": "US Dollar"
+            }
+        },
+        "summary": {
+            "active": {
+                "shares": {
+                    "RUB": {
+                        "buyPrice": "7300.0000",
+                        "buyPriceInBaseCurrency": "7300.0000",
+                        "currentPrice": "7500.0000",
+                        "currentPriceInBaseCurrency": "7500.0000",
+                        "profit": "977.5000",
+                        "profitInBaseCurrency": "977.5000",
+                        "profitPercent": "13.39",
+                        "isBaseCurrency": true
+                    },
+                    "USD": {
+                        "buyPrice": "450.0000",
+                        "buyPriceInBaseCurrency": "36000.0000",
+                        "currentPrice": "600.0000",
+                        "currentPriceInBaseCurrency": "48000.0000",
+                        "profit": "148.2000",
+                        "profitInBaseCurrency": "11856.0000",
+                        "profitPercent": "32.93",
+                        "isBaseCurrency": false
+                    }
+                },
+                "bonds": {
+                    "RUB": {
+                        "buyPrice": "1970.0000",
+                        "buyPriceInBaseCurrency": "1970.0000",
+                        "currentPrice": "1925.0000",
+                        "currentPriceInBaseCurrency": "1925.0000",
+                        "profit": "-46.0000",
+                        "profitInBaseCurrency": "-46.0000",
+                        "profitPercent": "-2.33",
+                        "isBaseCurrency": true
+                    }
+                }
+            },
+            "blocked": {
+                "shares": {
+                    "RUB": {
+                        "buyPrice": "800.0000",
+                        "buyPriceInBaseCurrency": "800.0000",
+                        "currentPrice": "1200.0000",
+                        "currentPriceInBaseCurrency": "1200.0000",
+                        "profit": "396.4000",
+                        "profitInBaseCurrency": "396.4000",
+                        "profitPercent": "49.55",
+                        "isBaseCurrency": true
+                    }
+                }
+            }
+        }
+    }
+}
