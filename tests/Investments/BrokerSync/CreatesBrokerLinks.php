@@ -10,20 +10,14 @@ use App\Investments\Domain\BrokerSync\BrokerProvider;
 use App\Investments\Domain\BrokerSync\Client\ExternalAccount;
 use App\Investments\Domain\BrokerSync\FeeAllocation;
 use App\Investments\Domain\BrokerSync\TokenCipherInterface;
-use App\Shared\Domain\User;
+use App\Tests\Investments\CreatesInvestmentRecords;
 
 /**
  * @psalm-require-extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestCase
  */
 trait CreatesBrokerLinks
 {
-    private function createAccount(User $owner, string $name = 'Broker'): Account
-    {
-        $account = new Account((int) $owner->getId(), $name);
-        $this->persist($account);
-
-        return $account;
-    }
+    use CreatesInvestmentRecords;
 
     private function linkAccount(
         Account $account,

@@ -1,0 +1,53 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\Investments\Application\Controller;
+
+use App\Investments\Domain\Operations\Coupon;
+use App\Tests\Investments\CreatesInvestmentRecords;
+use App\Tests\Support\ApiTestCase;
+
+final class CouponsControllerTest extends ApiTestCase
+{
+    use CreatesInvestmentRecords;
+
+    public function testCreateRejectsOtherUsersAccount(): void
+    {
+        $account = $this->createAccount($this->otherUser());
+        $this->loginAs($this->admin());
+
+        $this->postJson('/api/coupons/create', [
+            'accountId'   => $account->getId(),
+            'amount'      => '100',
+            'ticker'      => 'SU26238RMFS4',
+            'stockMarket' => 'MOEX',
+            'date'        => '2026-01-15',
+        ]);
+
+        self::assertResponseStatusCodeSame(404);
+        self::assertSame([], $this->findFreshBy(Coupon::class, ['account' => $account->getId()]));
+    }
+
+    public function testEditDoesNotMoveCouponToOtherUsersAccount(): void
+    {
+        $admin = $this->admin();
+        $account = $this->createAccount($admin);
+        $coupon = $this->createCoupon($account, amount: '100');
+        $othersAccount = $this->createAccount($this->otherUser());
+        $this->loginAs($admin);
+
+        $this->postJson('/api/coupons/update/' . $coupon->getId(), [
+            'accountId'   => $othersAccount->getId(),
+            'amount'      => '200',
+            'ticker'      => 'SU26238RMFS4',
+            'stockMarket' => 'MOEX',
+            'date'        => '2026-01-15',
+        ]);
+
+        self::assertResponseStatusCodeSame(404);
+        $coupon = $this->findFresh(Coupon::class, $coupon->getId());
+        self::assertSame($account->getId(), $coupon?->getAccount()?->getId());
+        self::assertSame('100.0000', $coupon?->getAmount());
+    }
+}

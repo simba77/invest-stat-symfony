@@ -33,9 +33,9 @@ class CreateCouponCommandHandler
             throw new NotFoundException(sprintf('User with id "%s" not found', $command->userId));
         }
 
-        $account = $this->accountRepository->findById($command->accountId);
+        $account = $this->accountRepository->getByIdAndUser($command->accountId, $user);
         if (! $account) {
-            throw new NotFoundException(sprintf('Account with id "%s" not found', $command->userId));
+            throw new NotFoundException(sprintf('Account with id "%s" not found', $command->accountId));
         }
 
         $this->syncedAccountGuard->assertManual($account);

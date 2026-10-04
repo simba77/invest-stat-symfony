@@ -26,7 +26,7 @@ class UpdateCouponCommandHandler
      */
     public function __invoke(UpdateCouponCommand $command): void
     {
-        $account = $this->accountRepository->findById($command->accountId);
+        $account = $this->accountRepository->getByIdAndUser($command->accountId, $command->user);
         $coupon = $this->couponRepository->findByIdAndUser($command->id, $command->user);
 
         if (! $account) {

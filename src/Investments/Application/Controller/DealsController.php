@@ -152,7 +152,10 @@ class DealsController extends AbstractController
             $this->dealService->sellOne($deal, $dto);
         } else {
             // Sell the required number of securities
-            $account = $this->accountRepository->findById($dto->accountId);
+            $account = $this->accountRepository->getByIdAndUser($dto->accountId, $user);
+            if (! $account) {
+                throw $this->createNotFoundException('No account found for id ' . $dto->accountId);
+            }
             $this->dealService->sellAsNeeded($user, $account, $dto);
         }
 

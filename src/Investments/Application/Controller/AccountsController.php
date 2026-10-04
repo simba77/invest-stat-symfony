@@ -86,7 +86,7 @@ class AccountsController extends AbstractController
         return $this->json($this->accountEditFormCompiler->compile($account));
     }
 
-    #[Route('/accounts/delete/{id}', name: 'app_accounts_accounts_delete', requirements: ['id' => '\d+'])]
+    #[Route('/accounts/delete/{id}', name: 'app_accounts_accounts_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
         $this->commandBus->dispatch(

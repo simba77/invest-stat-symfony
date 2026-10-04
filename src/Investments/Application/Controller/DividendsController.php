@@ -9,6 +9,7 @@ use App\Investments\Application\Request\DTO\Operations\CreateDividendRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\UpdateDividendRequestDTO;
 use App\Investments\Application\UseCases\GetDividendsPageUseCase;
 use App\Investments\Domain\Accounts\Account;
+use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Operations\Dividend;
 use App\Investments\Domain\Tax\TaxCalculatorInterface;
 use App\Shared\Application\Pagination\PageRequestFactory;
@@ -31,6 +32,7 @@ class DividendsController extends AbstractController
         private readonly GetDividendsPageUseCase $getDividendsPageUseCase,
         private readonly TaxCalculatorInterface $taxCalculator,
         private readonly SyncedAccountGuard $syncedAccountGuard,
+        private readonly AccountRepositoryInterface $accountRepository,
     ) {
     }
 
@@ -54,7 +56,7 @@ class DividendsController extends AbstractController
             throw $this->createAccessDeniedException('Authentication required.');
         }
 
-        $account = $this->em->getRepository(Account::class)->find($dto->accountId);
+        $account = $this->account($dto->accountId, $user);
         $this->syncedAccountGuard->assertManual($account);
         $tax = $this->taxCalculator->calculateFromNet($dto->amount, $user->getTaxProfile());
 
@@ -108,7 +110,7 @@ class DividendsController extends AbstractController
         }
 
         $tax = $this->taxCalculator->calculateFromNet($dto->amount, $user->getTaxProfile());
-        $account = $this->em->getRepository(Account::class)->find($dto->accountId);
+        $account = $this->account($dto->accountId, $user);
         $this->syncedAccountGuard->assertManual($dividend->getAccount(), $account);
         $dividend->setDate(new \DateTimeImmutable($dto->date));
         $dividend->setAmount($dto->amount);
@@ -135,4 +137,9 @@ class DividendsController extends AbstractController
         return $this->json(['success' => true]);
     }
 
+    private function account(int $id, User $user): Account
+    {
+        return $this->accountRepository->getByIdAndUser($id, $user)
+            ?? throw $this->createNotFoundException('No account found for id ' . $id);
+    }
 }

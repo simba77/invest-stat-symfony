@@ -13,13 +13,13 @@ use App\Investments\Application\Response\Compiler\CouponFormCompiler;
 use App\Investments\Application\UseCases\GetCouponsPageUseCase;
 use App\Investments\Domain\Operations\CouponRepositoryInterface;
 use App\Shared\Application\Pagination\PageRequestFactory;
+use App\Shared\Domain\Bus\SyncCommandBusInterface;
 use App\Shared\Domain\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -30,7 +30,7 @@ class CouponsController extends AbstractController
     public function __construct(
         private readonly CouponRepositoryInterface $couponRepository,
         private readonly GetCouponsPageUseCase $getCouponsPageUseCase,
-        private readonly MessageBusInterface $messageBus,
+        private readonly SyncCommandBusInterface $commandBus,
         private readonly CouponFormCompiler $couponFormCompiler,
     ) {
     }
@@ -51,7 +51,7 @@ class CouponsController extends AbstractController
     #[Route('/coupons/create', name: 'app_coupons_create', requirements: ['categoryId' => '\d+'], methods: ['POST'])]
     public function create(#[MapRequestPayload] CreateCouponRequestDTO $dto, #[CurrentUser] ?User $user): Response
     {
-        $this->messageBus->dispatch(
+        $this->commandBus->dispatch(
             new CreateCouponCommand(
                 userId:      $user->getId(),
                 accountId:   $dto->accountId,
@@ -78,7 +78,7 @@ class CouponsController extends AbstractController
     #[Route('/coupons/update/{id}', name: 'app_coupons_edit', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function edit(int $id, #[MapRequestPayload] UpdateCouponRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
     {
-        $this->messageBus->dispatch(
+        $this->commandBus->dispatch(
             new UpdateCouponCommand(
                 id:          $id,
                 accountId:   $dto->accountId,
@@ -100,7 +100,7 @@ class CouponsController extends AbstractController
         if (! $coupon) {
             throw $this->createNotFoundException('No coupons found for id ' . $id);
         }
-        $this->messageBus->dispatch(new DeleteCouponCommand($id));
+        $this->commandBus->dispatch(new DeleteCouponCommand($id));
         return $this->json(['success' => true]);
     }
 

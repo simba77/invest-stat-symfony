@@ -51,7 +51,11 @@ class InvestmentsController extends AbstractController
     #[Route('/investments/create', name: 'app_investments_investments_create', requirements: ['categoryId' => '\d+'], methods: ['POST'])]
     public function create(#[MapRequestPayload] InvestmentRequestDTO $dto, #[CurrentUser] ?User $user): Response
     {
-        $account = $this->em->getRepository(Account::class)->find($dto->account);
+        if (! $user) {
+            throw $this->createAccessDeniedException('Authentication required.');
+        }
+
+        $account = $this->account($dto->account, $user);
         $this->syncedAccountGuard->assertManual($account);
         $inv = new Investment($dto->sum, new \DateTimeImmutable($dto->date), $account, $user->getId());
         $this->em->persist($inv);
@@ -88,11 +92,15 @@ class InvestmentsController extends AbstractController
     #[Route('/investments/edit/{id}', name: 'app_investments_investments_edit', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function edit(int $id, #[MapRequestPayload] InvestmentRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
     {
-        $investment = $this->em->getRepository(Investment::class)->findOneBy(['id' => $id, 'userId' => $user?->getId()]);
+        if (! $user) {
+            throw $this->createAccessDeniedException('Authentication required.');
+        }
+
+        $investment = $this->em->getRepository(Investment::class)->findOneBy(['id' => $id, 'userId' => $user->getId()]);
         if (! $investment) {
             throw $this->createNotFoundException('No investment found for id ' . $id);
         }
-        $account = $this->em->getRepository(Account::class)->find($dto->account);
+        $account = $this->account($dto->account, $user);
         $this->syncedAccountGuard->assertManual($investment->getAccount(), $account);
         $investment->setDate(new \DateTimeImmutable($dto->date));
         $investment->setSum($dto->sum);
@@ -116,4 +124,9 @@ class InvestmentsController extends AbstractController
         return $this->json(['success' => true]);
     }
 
+    private function account(int $id, User $user): Account
+    {
+        return $this->accountRepository->getByIdAndUser($id, $user)
+            ?? throw $this->createNotFoundException('No account found for id ' . $id);
+    }
 }
