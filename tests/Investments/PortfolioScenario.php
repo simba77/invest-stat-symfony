@@ -9,7 +9,6 @@ use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Analytics\Statistic;
 use App\Investments\Domain\Instruments\Bond;
 use App\Investments\Domain\Instruments\Future;
-use App\Investments\Domain\Instruments\FutureMultiplier;
 use App\Investments\Domain\Instruments\Securities\ShareTypeEnum;
 use App\Investments\Domain\Instruments\Share;
 use App\Investments\Domain\Operations\Deal;
@@ -52,7 +51,8 @@ trait PortfolioScenario
         $aapl = new Share('AAPL', 'Apple Inc.', 'SPB', 'USD', '200', ShareTypeEnum::Stock->value, shortName: 'Apple', lotSize: '1', isin: 'US0378331005', prevPrice: '190');
         $bond = new Bond('SU26238RMFS4', 'ОФЗ 26238', 'MOEX', 'RUB', '95', prevPrice: '94', shortName: 'ОФЗ 26238', lotSize: '1000', couponAccumulated: '12.5');
         $future = new Future('SiH6', 'Si-3.26', 'MOEX', 'RUB', '90000', prevPrice: '89000', shortName: 'Si-3.26', lotSize: '1', stepPrice: '1');
-        $this->persist($sber, $gazp, $aapl, $bond, $future, new FutureMultiplier('SiH6', '1'));
+        $future->setMultiplier('1');
+        $this->persist($sber, $gazp, $aapl, $bond, $future);
         $this->instruments = ['SBER' => $sber, 'GAZP' => $gazp, 'AAPL' => $aapl, 'SU26238RMFS4' => $bond, 'SiH6' => $future];
 
         // Records of another owner stay out of every page. Their account is created first,
@@ -133,9 +133,7 @@ trait PortfolioScenario
             $deal->setSellPrice($sell);
             $deal->setClosingDate(new \DateTime($closedAt ?? '2026-01-01 10:00'));
         }
-        $deal->setShare($instrument instanceof Share ? $instrument : null);
-        $deal->setBond($instrument instanceof Bond ? $instrument : null);
-        $deal->setFuture($instrument instanceof Future ? $instrument : null);
+        $deal->setInstrument($instrument);
         if ($commissions !== null) {
             $deal->setCommissions($commissions[0], $commissions[1]);
         }

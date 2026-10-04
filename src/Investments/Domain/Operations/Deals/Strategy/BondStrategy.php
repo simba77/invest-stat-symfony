@@ -70,7 +70,7 @@ class BondStrategy implements DealStrategyInterface
 
     public function getCurrency(): string
     {
-        return $this->getBond()->getCurrency() ?? 'RUB';
+        return $this->getBond()->getCurrency();
     }
 
     public function getInstrumentId(): ?int

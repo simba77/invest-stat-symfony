@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Investments\Application\UseCases\Instruments;
 
 use App\Investments\Application\Response\DTO\Instruments\FutureMultiplierDto;
-use App\Investments\Infrastructure\Persistence\Repository\FutureMultiplierRepository;
+use App\Investments\Domain\Instruments\FutureRepositoryInterface;
 
 final readonly class ListFutureMultipliersUseCase
 {
     public function __construct(
-        private FutureMultiplierRepository $futureMultiplierRepository
+        private FutureRepositoryInterface $futureRepository
     ) {
     }
 
@@ -19,14 +19,12 @@ final readonly class ListFutureMultipliersUseCase
      */
     public function execute(): array
     {
-        $futureMultipliers = $this->futureMultiplierRepository->findAll();
-
         $result = [];
-        foreach ($futureMultipliers as $futureMultiplier) {
+        foreach ($this->futureRepository->findWithMultiplier() as $future) {
             $result[] = new FutureMultiplierDto(
-                $futureMultiplier->getId() ?? 0,
-                $futureMultiplier->getTicker(),
-                $futureMultiplier->getValue(),
+                $future->getId() ?? 0,
+                $future->getTicker(),
+                $future->getMultiplier() ?? '',
             );
         }
 

@@ -27,9 +27,4 @@
       <code><![CDATA[$entry]]></code>
     </MoreSpecificImplementedParamType>
   </file>
-  <file src="src/Investments/Domain/Operations/Deals/DealData.php">
-    <UnusedProperty>
-      <code><![CDATA[$futureMultiplierRepository]]></code>
-    </UnusedProperty>
-  </file>
 </files>

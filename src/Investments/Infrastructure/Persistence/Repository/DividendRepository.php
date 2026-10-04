@@ -34,7 +34,15 @@ class DividendRepository extends ServiceEntityRepository implements DividendRepo
     #[\Override]
     public function findByUser(?User $user): array
     {
-        return $this->findBy(['user' => $user], ['date' => Order::Descending->value, 'id' => Order::Descending->value]);
+        return $this->createQueryBuilder('d')
+            ->select(['d', 's'])
+            ->leftJoin('d.share', 's')
+            ->andWhere('d.user = :user')
+            ->setParameter('user', $user?->getId())
+            ->orderBy('d.date', Order::Descending->value)
+            ->addOrderBy('d.id', Order::Descending->value)
+            ->getQuery()
+            ->getResult();
     }
 
     /**

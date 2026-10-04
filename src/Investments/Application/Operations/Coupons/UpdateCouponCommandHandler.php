@@ -6,6 +6,7 @@ namespace App\Investments\Application\Operations\Coupons;
 
 use App\Investments\Application\BrokerSync\SyncedAccountGuard;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
+use App\Investments\Domain\Instruments\BondRepositoryInterface;
 use App\Investments\Domain\Operations\CouponRepositoryInterface;
 use App\Shared\Infrastructure\Symfony\NotFoundException;
 use DateTimeImmutable;
@@ -18,6 +19,7 @@ class UpdateCouponCommandHandler
         private readonly AccountRepositoryInterface $accountRepository,
         private readonly CouponRepositoryInterface $couponRepository,
         private readonly SyncedAccountGuard $syncedAccountGuard,
+        private readonly BondRepositoryInterface $bondRepository,
     ) {
     }
 
@@ -42,6 +44,7 @@ class UpdateCouponCommandHandler
         $coupon->setAmount($command->amount);
         $coupon->setTicker($command->ticker);
         $coupon->setStockMarket($command->stockMarket);
+        $coupon->setBond($this->bondRepository->findByTickerAndStockMarket($command->ticker, $command->stockMarket));
         $coupon->setAccount($account);
 
         $this->couponRepository->save($coupon);

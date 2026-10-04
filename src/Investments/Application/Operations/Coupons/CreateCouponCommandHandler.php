@@ -6,6 +6,7 @@ namespace App\Investments\Application\Operations\Coupons;
 
 use App\Investments\Application\BrokerSync\SyncedAccountGuard;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
+use App\Investments\Domain\Instruments\BondRepositoryInterface;
 use App\Investments\Domain\Operations\Coupon;
 use App\Investments\Domain\Operations\CouponRepositoryInterface;
 use App\Shared\Domain\UserRepositoryInterface;
@@ -20,6 +21,7 @@ class CreateCouponCommandHandler
         private readonly UserRepositoryInterface $userRepository,
         private readonly AccountRepositoryInterface $accountRepository,
         private readonly SyncedAccountGuard $syncedAccountGuard,
+        private readonly BondRepositoryInterface $bondRepository,
     ) {
     }
 
@@ -48,6 +50,7 @@ class CreateCouponCommandHandler
             amount:      $command->amount,
             date:        new \DateTimeImmutable($command->date),
         );
+        $coupon->setBond($this->bondRepository->findByTickerAndStockMarket($command->ticker, $command->stockMarket));
 
         $this->couponRepository->save($coupon);
     }

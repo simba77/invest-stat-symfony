@@ -11,7 +11,6 @@ use App\Investments\Application\Response\Compiler\AnnualStatisticCompiler;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Analytics\StatisticRepositoryInterface;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
-use App\Investments\Domain\Instruments\FutureMultiplierRepositoryInterface;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\Deals\DealData;
 use App\Investments\Domain\Operations\Deals\DealStatus;
@@ -30,7 +29,6 @@ final readonly class GetHomepageDataUseCase
         private AnnualStatisticCompiler $annualStatisticCompiler,
         private StatisticRepositoryInterface $statisticRepository,
         private DealRepositoryInterface $dealRepository,
-        private FutureMultiplierRepositoryInterface $futureMultiplierRepository,
     ) {
     }
 
@@ -51,7 +49,7 @@ final readonly class GetHomepageDataUseCase
         $dailyChange = '0';
         $allActiveDeals = $this->dealRepository->findByUserId($userId);
         foreach ($allActiveDeals as $deal) {
-            $dealData = new DealData($deal, $this->currencyService, $this->futureMultiplierRepository);
+            $dealData = new DealData($deal, $this->currencyService);
             $dailyChange = bcadd($dailyChange, $dealData->getFullDailyProfitInBaseCurrency(), 2);
 
             if ($dealData->getStatus() === DealStatus::Blocked) {

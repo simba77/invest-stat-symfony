@@ -30,17 +30,7 @@ interface DealRepositoryInterface
     /**
      * @return array<int, Deal>
      */
-    public function findByUserAndShare(int $userId, int $shareId, DealStatus $status): array;
-
-    /**
-     * @return array<int, Deal>
-     */
-    public function findByUserAndBond(int $userId, int $bondId, DealStatus $status): array;
-
-    /**
-     * @return array<int, Deal>
-     */
-    public function findByUserAndFuture(int $userId, int $futureId, DealStatus $status): array;
+    public function findByUserAndInstrument(int $userId, int $instrumentId, DealStatus $status): array;
 
     /**
      * @return array<int, Deal>

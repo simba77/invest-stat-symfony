@@ -36,4 +36,29 @@ class FutureRepository extends ServiceEntityRepository implements FutureReposito
     {
         return $this->findOneBy(['tUid' => $tUid]);
     }
+
+    #[\Override]
+    public function findByTicker(string $ticker): ?Future
+    {
+        return $this->findOneBy(['ticker' => $ticker], ['id' => 'ASC']);
+    }
+
+    #[\Override]
+    public function findWithMultiplier(): array
+    {
+        /** @var list<Future> */
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.multiplier IS NOT NULL')
+            ->orderBy('f.ticker', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    #[\Override]
+    public function save(Future $future): void
+    {
+        $em = $this->getEntityManager();
+        $em->persist($future);
+        $em->flush();
+    }
 }

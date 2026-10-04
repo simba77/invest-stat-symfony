@@ -74,7 +74,7 @@ class BondStrategyTest extends TestCase
             quantity: 1,
             buyPrice: '100',
         );
-        $deal->setBond($bond);
+        $deal->setInstrument($bond);
 
         return new BondStrategy($deal);
     }

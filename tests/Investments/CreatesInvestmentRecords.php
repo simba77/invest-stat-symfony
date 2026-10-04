@@ -60,6 +60,8 @@ trait CreatesInvestmentRecords
         string $tax = '0',
     ): Dividend {
         $dividend = new Dividend($this->owner($account), $account, $ticker, $stockMarket, $amount, $tax, new \DateTimeImmutable($date));
+        // Linked to the share like a dividend entered by hand, when the catalogue has it
+        $dividend->setShare($this->entityManager()->getRepository(Share::class)->findOneBy(['ticker' => $ticker, 'stockMarket' => $stockMarket]));
         $this->persist($dividend);
 
         return $dividend;
@@ -68,6 +70,7 @@ trait CreatesInvestmentRecords
     private function createCoupon(Account $account, string $ticker = 'SU26238RMFS4', string $amount = '100', string $date = '2026-01-15'): Coupon
     {
         $coupon = new Coupon($this->owner($account), $account, $ticker, 'MOEX', $amount, new \DateTimeImmutable($date));
+        $coupon->setBond($this->entityManager()->getRepository(Bond::class)->findOneBy(['ticker' => $ticker, 'stockMarket' => 'MOEX']));
         $this->persist($coupon);
 
         return $coupon;

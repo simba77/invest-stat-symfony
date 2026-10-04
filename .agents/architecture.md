@@ -71,6 +71,18 @@ records from the broker instead of manual input. Code: `Investments/*/BrokerSync
 * Tests use `tests/Investments/BrokerSync/FakeBrokerClient` (wired in `config/services.yaml` for
   `when@test`) and `Operations` to build broker operations.
 
+## Instruments catalogue
+
+Shares, bonds and futures live in one `instruments` table (Doctrine single table inheritance,
+`kind` column): `Share`, `Bond` and `Future` extend `Investments\Domain\Instruments\Instrument`.
+A ticker is unique on its exchange.
+
+* Deals refer to an `Instrument` (`instrument_id`), dividends to a `Share`, coupons to a `Bond`;
+  the records keep their ticker too, for securities the catalogue does not know.
+* Doctrine cannot load an `Instrument` lazily: fetch-join `d.instrument` when loading lists of deals.
+* A future values its points with the owner's multiplier, else with the exchange step price
+  (`Future::getPointValue()`).
+
 ## Currency rates
 
 `currency_rates` keeps one rate per currency and exchange day (MOEX indicative rates, the last one

@@ -7,6 +7,7 @@ namespace App\Investments\Domain\Operations;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Instruments\Bond;
 use App\Investments\Domain\Instruments\Future;
+use App\Investments\Domain\Instruments\Instrument;
 use App\Investments\Domain\Instruments\Share;
 use App\Investments\Domain\Operations\Deals\DealStatus;
 use App\Investments\Domain\Operations\Deals\DealType;
@@ -82,17 +83,13 @@ class Deal implements
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $closingDate = null;
 
-    #[ORM\ManyToOne(targetEntity: Share::class)]
+    /**
+     * Unknown when the security is not in the catalogue; the deal still keeps its ticker.
+     * Load it together with the deal: Doctrine cannot load an Instrument lazily.
+     */
+    #[ORM\ManyToOne(targetEntity: Instrument::class)]
     #[ORM\JoinColumn(nullable: true)]
-    private ?Share $share = null;
-
-    #[ORM\ManyToOne(targetEntity: Bond::class)]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?Bond $bond = null;
-
-    #[ORM\ManyToOne(targetEntity: Future::class)]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?Future $future = null;
+    private ?Instrument $instrument = null;
 
     /**
      * Commission the broker charged for opening the deal; null when only estimated.
@@ -293,37 +290,31 @@ class Deal implements
         return $this;
     }
 
+    public function getInstrument(): ?Instrument
+    {
+        return $this->instrument;
+    }
+
+    public function setInstrument(?Instrument $instrument): static
+    {
+        $this->instrument = $instrument;
+
+        return $this;
+    }
+
     public function getShare(): ?Share
     {
-        return $this->share;
+        return $this->instrument instanceof Share ? $this->instrument : null;
     }
 
     public function getBond(): ?Bond
     {
-        return $this->bond;
+        return $this->instrument instanceof Bond ? $this->instrument : null;
     }
 
     public function getFuture(): ?Future
     {
-        return $this->future;
-    }
-
-    public function setShare(?Share $share): static
-    {
-        $this->share = $share;
-        return $this;
-    }
-
-    public function setBond(?Bond $bond): static
-    {
-        $this->bond = $bond;
-        return $this;
-    }
-
-    public function setFuture(?Future $future): static
-    {
-        $this->future = $future;
-        return $this;
+        return $this->instrument instanceof Future ? $this->instrument : null;
     }
 
     /**

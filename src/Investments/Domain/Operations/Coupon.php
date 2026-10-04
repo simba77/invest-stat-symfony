@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Domain\Operations;
 
 use App\Investments\Domain\Accounts\Account;
+use App\Investments\Domain\Instruments\Bond;
 use App\Investments\Infrastructure\Persistence\Repository\CouponRepository;
 use App\Shared\Domain\User;
 use Doctrine\DBAL\Types\Types;
@@ -30,6 +31,11 @@ class Coupon
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private Account $account;
+
+    /** The paying security, when the catalogue knows it; the coupon keeps its ticker anyway. */
+    #[ORM\ManyToOne(targetEntity: Bond::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Bond $bond = null;
 
     #[ORM\Column(length: 255)]
     private string $ticker;
@@ -73,6 +79,18 @@ class Coupon
     public function setAccount(Account $account): static
     {
         $this->account = $account;
+
+        return $this;
+    }
+
+    public function getBond(): ?Bond
+    {
+        return $this->bond;
+    }
+
+    public function setBond(?Bond $bond): static
+    {
+        $this->bond = $bond;
 
         return $this;
     }

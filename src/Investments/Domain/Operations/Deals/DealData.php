@@ -6,7 +6,6 @@ namespace App\Investments\Domain\Operations\Deals;
 
 use App\Investments\Domain\Instruments\Currencies\Currency;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
-use App\Investments\Domain\Instruments\FutureMultiplierRepositoryInterface;
 use App\Investments\Domain\Instruments\Securities\SecurityTypeEnum;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\Deals\Strategy\DealStrategyFactory;
@@ -19,9 +18,8 @@ class DealData
     public function __construct(
         private readonly Deal $deal,
         private readonly CurrencyService $currencyService,
-        private readonly FutureMultiplierRepositoryInterface $futureMultiplierRepository
     ) {
-        $this->strategy = DealStrategyFactory::create($this->deal, $this->futureMultiplierRepository);
+        $this->strategy = DealStrategyFactory::create($this->deal);
     }
 
     public function getId(): int

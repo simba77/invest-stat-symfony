@@ -6,6 +6,8 @@ namespace App\Investments\Infrastructure\Persistence\Repository;
 
 use App\Investments\Application\Request\DTO\Operations\DealsFilterRequestDTO;
 use App\Investments\Domain\Accounts\Account;
+use App\Investments\Domain\Instruments\Bond;
+use App\Investments\Domain\Instruments\Future;
 use App\Investments\Domain\Instruments\Share;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
@@ -32,10 +34,10 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
     public function findByUserId(int $userId): array
     {
         return $this->createQueryBuilder('d')
-            ->select(['d', 's', 'b', 'f'])
-            ->leftJoin('d.share', 's')
-            ->leftJoin('d.bond', 'b')
-            ->leftJoin('d.future', 'f')
+            ->select(['d', 'i'])
+            ->leftJoin('d.instrument', 'i')
+            // Shares come first, by their type and currency
+            ->leftJoin(Share::class, 's', Join::WITH, 's.id = i.id')
             ->andWhere('d.user = :userId')
             ->andWhere('d.status != :status')
             ->setParameter('userId', $userId)
@@ -61,10 +63,10 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
     public function findForUserAndAccount(int $userId, int $accountId): array
     {
         return $this->createQueryBuilder('d')
-            ->select(['d', 's', 'b', 'f'])
-            ->leftJoin('d.share', 's')
-            ->leftJoin('d.bond', 'b')
-            ->leftJoin('d.future', 'f')
+            ->select(['d', 'i'])
+            ->leftJoin('d.instrument', 'i')
+            // Shares come first, by their type and currency
+            ->leftJoin(Share::class, 's', Join::WITH, 's.id = i.id')
             ->andWhere('d.user = :userId')
             ->andWhere('d.account = :accountId')
             ->andWhere('d.status != :status')
@@ -82,59 +84,17 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
     /**
      * @return array<int, Deal>
      */
-    public function findByUserAndShare(int $userId, int $shareId, DealStatus $status): array
-    {
-        return $this->createQueryBuilder('d')
-            ->select(['d', 's'])
-            ->leftJoin('d.share', 's')
-            ->andWhere('d.user = :userId')
-            ->andWhere('d.share = :shareId')
-            ->andWhere('d.status = :status')
-            ->setParameter('userId', $userId)
-            ->setParameter('shareId', $shareId)
-            ->setParameter('status', $status->value)
-            ->addOrderBy('s.type', 'DESC')
-            ->addOrderBy('d.closingDate', 'DESC')
-            ->addOrderBy('d.id', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * @return array<int, Deal>
-     */
     #[\Override]
-    public function findByUserAndBond(int $userId, int $bondId, DealStatus $status): array
+    public function findByUserAndInstrument(int $userId, int $instrumentId, DealStatus $status): array
     {
         return $this->createQueryBuilder('d')
-            ->select(['d', 'b'])
-            ->leftJoin('d.bond', 'b')
+            ->select(['d', 'i'])
+            ->join('d.instrument', 'i')
             ->andWhere('d.user = :userId')
-            ->andWhere('d.bond = :bondId')
+            ->andWhere('d.instrument = :instrumentId')
             ->andWhere('d.status = :status')
             ->setParameter('userId', $userId)
-            ->setParameter('bondId', $bondId)
-            ->setParameter('status', $status->value)
-            ->addOrderBy('d.closingDate', 'DESC')
-            ->addOrderBy('d.id', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * @return array<int, Deal>
-     */
-    #[\Override]
-    public function findByUserAndFuture(int $userId, int $futureId, DealStatus $status): array
-    {
-        return $this->createQueryBuilder('d')
-            ->select(['d', 'f'])
-            ->leftJoin('d.future', 'f')
-            ->andWhere('d.user = :userId')
-            ->andWhere('d.future = :futureId')
-            ->andWhere('d.status = :status')
-            ->setParameter('userId', $userId)
-            ->setParameter('futureId', $futureId)
+            ->setParameter('instrumentId', $instrumentId)
             ->setParameter('status', $status->value)
             ->addOrderBy('d.closingDate', 'DESC')
             ->addOrderBy('d.id', 'ASC')
@@ -149,10 +109,10 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
     public function findForAccount(int $accountId): array
     {
         return $this->createQueryBuilder('d')
-            ->select(['d', 's', 'b', 'f'])
-            ->leftJoin('d.share', 's')
-            ->leftJoin('d.bond', 'b')
-            ->leftJoin('d.future', 'f')
+            ->select(['d', 'i'])
+            ->leftJoin('d.instrument', 'i')
+            // Shares come first, by their type and currency
+            ->leftJoin(Share::class, 's', Join::WITH, 's.id = i.id')
             ->andWhere('d.account = :accountId')
             ->andWhere('d.status != :status')
             ->setParameter('accountId', $accountId)
@@ -196,10 +156,11 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
     public function getAllActiveDealsWithSharesAndTUid(): array
     {
         return $this->createQueryBuilder('d')
-            ->select(['d', 's'])
-            ->leftJoin('d.share', 's')
+            ->select(['d', 'i'])
+            ->join('d.instrument', 'i')
+            ->andWhere('i INSTANCE OF ' . Share::class)
             ->andWhere("d.status != :status")
-            ->andWhere("s.tUid is not null")
+            ->andWhere("i.tUid is not null")
             ->groupBy('d.ticker')
             ->setParameter('status', DealStatus::Closed)
             ->getQuery()
@@ -211,10 +172,11 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
     public function getAllActiveDealsWithBondsAndTUid(): array
     {
         return $this->createQueryBuilder('d')
-            ->select(['d', 'b'])
-            ->leftJoin('d.bond', 'b')
+            ->select(['d', 'i'])
+            ->join('d.instrument', 'i')
+            ->andWhere('i INSTANCE OF ' . Bond::class)
             ->andWhere("d.status != :status")
-            ->andWhere("b.tUid is not null")
+            ->andWhere("i.tUid is not null")
             ->groupBy('d.ticker')
             ->setParameter('status', DealStatus::Closed)
             ->getQuery()
@@ -226,10 +188,11 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
     public function getAllActiveDealsWithFuturesAndTUid(): array
     {
         return $this->createQueryBuilder('d')
-            ->select(['d', 'f'])
-            ->leftJoin('d.future', 'f')
+            ->select(['d', 'i'])
+            ->join('d.instrument', 'i')
+            ->andWhere('i INSTANCE OF ' . Future::class)
             ->andWhere("d.status != :status")
-            ->andWhere("f.tUid is not null")
+            ->andWhere("i.tUid is not null")
             ->groupBy('d.ticker')
             ->setParameter('status', DealStatus::Closed)
             ->getQuery()
@@ -243,10 +206,10 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
     public function getClosedDealsForUserByFilter(int $userId, ?DealsFilterRequestDTO $filter = null): array
     {
         $builder = $this->createQueryBuilder('d')
-            ->select(['d', 's', 'b', 'f'])
-            ->leftJoin('d.share', 's')
-            ->leftJoin('d.bond', 'b')
-            ->leftJoin('d.future', 'f')
+            ->select(['d', 'i'])
+            ->leftJoin('d.instrument', 'i')
+            // Shares come first, by their type and currency
+            ->leftJoin(Share::class, 's', Join::WITH, 's.id = i.id')
             ->andWhere('d.user = :userId')
             ->andWhere('d.status = :status')
             ->setParameter('userId', $userId)
@@ -294,6 +257,13 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
     public function findByAccount(Account $account): array
     {
         /** @var list<Deal> */
-        return $this->findBy(['account' => $account], ['id' => 'ASC']);
+        return $this->createQueryBuilder('d')
+            ->select(['d', 'i'])
+            ->leftJoin('d.instrument', 'i')
+            ->andWhere('d.account = :account')
+            ->setParameter('account', $account->getId())
+            ->orderBy('d.id', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 }

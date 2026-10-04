@@ -20,7 +20,7 @@ final class PortfolioControllerTest extends ApiTestCase
         $account = $this->createAccount($admin, balance: '100000');
         $this->createCurrencyRate('EUR', '90');
         $deal = new Deal($admin, $account, 'XS0000000001', 'MOEX', DealStatus::Active, DealType::Long, 2, '100');
-        $deal->setBond($this->createBond('XS0000000001', 'EUR'));
+        $deal->setInstrument($this->createBond('XS0000000001', 'EUR'));
         $this->persist($deal);
         $this->loginAs($admin);
 

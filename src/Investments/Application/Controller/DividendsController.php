@@ -10,6 +10,7 @@ use App\Investments\Application\Request\DTO\Operations\UpdateDividendRequestDTO;
 use App\Investments\Application\UseCases\GetDividendsPageUseCase;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
+use App\Investments\Domain\Instruments\ShareRepositoryInterface;
 use App\Investments\Domain\Operations\Dividend;
 use App\Investments\Domain\Tax\TaxCalculatorInterface;
 use App\Shared\Application\Pagination\PageRequestFactory;
@@ -33,6 +34,7 @@ class DividendsController extends AbstractController
         private readonly TaxCalculatorInterface $taxCalculator,
         private readonly SyncedAccountGuard $syncedAccountGuard,
         private readonly AccountRepositoryInterface $accountRepository,
+        private readonly ShareRepositoryInterface $shareRepository,
     ) {
     }
 
@@ -69,6 +71,7 @@ class DividendsController extends AbstractController
             tax:         $tax->tax,
             date:        new \DateTimeImmutable($dto->date),
         );
+        $dividend->setShare($this->shareRepository->findByTickerAndStockMarket($dto->ticker, $dto->stockMarket));
 
         $this->em->persist($dividend);
         $this->em->flush();
@@ -117,6 +120,7 @@ class DividendsController extends AbstractController
         $dividend->setTax($tax->tax);
         $dividend->setTicker($dto->ticker);
         $dividend->setStockMarket($dto->stockMarket);
+        $dividend->setShare($this->shareRepository->findByTickerAndStockMarket($dto->ticker, $dto->stockMarket));
         $dividend->setAccount($account);
         $this->em->flush();
 

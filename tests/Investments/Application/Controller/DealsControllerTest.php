@@ -7,7 +7,6 @@ namespace App\Tests\Investments\Application\Controller;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Instruments\Bond;
 use App\Investments\Domain\Instruments\Future;
-use App\Investments\Domain\Instruments\FutureMultiplier;
 use App\Investments\Domain\Instruments\Share;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\Deals\DealStatus;
@@ -159,7 +158,8 @@ final class DealsControllerTest extends ApiTestCase
     {
         $account = $this->manualAccount(balance: '10000');
         $future = new Future('SiH6', 'Si-3.26', 'MOEX', 'RUB', '90000', prevPrice: '89000', lotSize: '1', stepPrice: '1');
-        $this->persist($future, new FutureMultiplier('SiH6', '10'));
+        $future->setMultiplier('10');
+        $this->persist($future);
         $deal = $this->openDeal($account, $future, 1, '85000');
 
         $this->postJson('/api/deals/sell', ['id' => $deal->getId(), 'accountId' => $account->getId(), 'ticker' => 'SiH6', 'price' => '88000', 'quantity' => 1]);
@@ -308,9 +308,7 @@ final class DealsControllerTest extends ApiTestCase
         string $target = '0',
     ): Deal {
         $deal = new Deal($this->owner($account), $account, $instrument->getTicker(), $instrument->getStockMarket(), $status, $type, $quantity, $buyPrice, $target);
-        $deal->setShare($instrument instanceof Share ? $instrument : null);
-        $deal->setBond($instrument instanceof Bond ? $instrument : null);
-        $deal->setFuture($instrument instanceof Future ? $instrument : null);
+        $deal->setInstrument($instrument);
         $this->persist($deal);
         $deal->wasCreatedAt(new \DateTimeImmutable($openedAt));
         $this->persist($deal);

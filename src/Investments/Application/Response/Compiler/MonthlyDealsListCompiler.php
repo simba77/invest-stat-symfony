@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Investments\Application\Response\Compiler;
 
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
-use App\Investments\Domain\Instruments\FutureMultiplierRepositoryInterface;
-use App\Investments\Domain\Instruments\ShareRepositoryInterface;
 use App\Investments\Domain\Operations\Coupon;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\Deals\DealData;
@@ -20,8 +18,6 @@ class MonthlyDealsListCompiler implements CompilerInterface
 {
     public function __construct(
         public readonly CurrencyService $currencyService,
-        public readonly FutureMultiplierRepositoryInterface $futureMultiplierRepository,
-        private readonly ShareRepositoryInterface $shareRepository,
     ) {
     }
 
@@ -36,7 +32,7 @@ class MonthlyDealsListCompiler implements CompilerInterface
         $result = [];
 
         foreach ($entry['deals'] as $deal) {
-            $dealData = new DealData($deal, $this->currencyService, $this->futureMultiplierRepository);
+            $dealData = new DealData($deal, $this->currencyService);
             $date = $deal->getClosingDate()?->format('Y.m') ?? '0';
 
             if (isset($result[$date])) {
@@ -46,11 +42,9 @@ class MonthlyDealsListCompiler implements CompilerInterface
             }
         }
 
-        /** @var array<string, string> $currencies share currency by market and ticker */
-        $currencies = [];
         foreach ($entry['dividends'] as $dividend) {
             $date = $dividend->getDate()?->format('Y.m') ?? '0';
-            $amount = $this->dividendInBaseCurrency($dividend, $currencies);
+            $amount = $this->dividendInBaseCurrency($dividend);
             if (isset($result[$date])) {
                 $result[$date] = bcadd($result[$date], $amount, 2);
             } else {
@@ -77,25 +71,19 @@ class MonthlyDealsListCompiler implements CompilerInterface
      * Dividends are recorded in the currency the share trades in, e.g. dollars on SPB,
      * and count in roubles at the rate of the day they were paid.
      *
-     * @param array<string, string> $currencies
      */
-    private function dividendInBaseCurrency(Dividend $dividend, array &$currencies): string
+    private function dividendInBaseCurrency(Dividend $dividend): string
     {
         $amount = $dividend->getAmount() ?? '0';
-        $key = $dividend->getStockMarket() . ':' . $dividend->getTicker();
-        if (! isset($currencies[$key])) {
-            $share = $this->shareRepository->findByTickerAndStockMarket((string) $dividend->getTicker(), (string) $dividend->getStockMarket());
-            $currencies[$key] = $share?->getCurrency() ?? 'RUB';
-        }
-
-        if ($currencies[$key] === 'RUB') {
+        $currency = $dividend->getShare()?->getCurrency() ?? 'RUB';
+        if ($currency === 'RUB') {
             return $amount;
         }
 
         $paidAt = $dividend->getDate();
         $rate = $paidAt !== null
-            ? $this->currencyService->getCurrencyRateOn($currencies[$key], $paidAt)
-            : $this->currencyService->getCurrencyRate($currencies[$key]);
+            ? $this->currencyService->getCurrencyRateOn($currency, $paidAt)
+            : $this->currencyService->getCurrencyRate($currency);
 
         return bcmul($amount, $rate, 4);
     }

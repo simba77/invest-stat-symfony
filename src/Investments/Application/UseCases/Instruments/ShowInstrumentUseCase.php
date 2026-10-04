@@ -20,7 +20,6 @@ use App\Investments\Domain\Instruments\Currencies\Currency;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
 use App\Investments\Domain\Instruments\Exceptions\InstrumentNotFoundException;
 use App\Investments\Domain\Instruments\Future;
-use App\Investments\Domain\Instruments\FutureMultiplierRepositoryInterface;
 use App\Investments\Domain\Instruments\FutureRepositoryInterface;
 use App\Investments\Domain\Instruments\PriceTrendEnum;
 use App\Investments\Domain\Instruments\Share;
@@ -40,7 +39,6 @@ final readonly class ShowInstrumentUseCase
         private FutureRepositoryInterface $futureRepository,
         private DealRepositoryInterface $dealRepository,
         private CurrencyService $currencyService,
-        private FutureMultiplierRepositoryInterface $futureMultiplierRepository,
         private ClosedDealsListCompiler $closedDealsListCompiler,
         private DividendRepositoryInterface $dividendRepository,
         private AccountRepositoryInterface $accountRepository,
@@ -69,7 +67,7 @@ final readonly class ShowInstrumentUseCase
 
         $dealsGroup = new GroupByTicker($allAssetsSum);
         foreach ($activeDeals as $deal) {
-            $dealsGroup->addDeal(new DealData($deal, $this->currencyService, $this->futureMultiplierRepository));
+            $dealsGroup->addDeal(new DealData($deal, $this->currencyService));
         }
 
         $openPositions = $dealsGroup->getDeals();
@@ -174,7 +172,7 @@ final readonly class ShowInstrumentUseCase
             return [
                 $share->getName(),
                 $share->getTicker(),
-                $share->getCurrency() ?? 'RUB',
+                $share->getCurrency(),
                 $share->getPrice(),
                 $share->getPrevPrice() ?? '0',
                 $share->getLotSize() ?? '1',
@@ -193,7 +191,7 @@ final readonly class ShowInstrumentUseCase
             return [
                 $bond->getName(),
                 $bond->getTicker(),
-                $bond->getCurrency() ?? 'RUB',
+                $bond->getCurrency(),
                 $bond->getPrice(),
                 $bond->getPrevPrice() ?? '0',
                 $bond->getLotSize() ?? '1',
@@ -235,9 +233,7 @@ final readonly class ShowInstrumentUseCase
     private function findDeals(string $type, int $userId, int $id, DealStatus $status): array
     {
         return match ($type) {
-            'share' => $this->dealRepository->findByUserAndShare($userId, $id, $status),
-            'bond' => $this->dealRepository->findByUserAndBond($userId, $id, $status),
-            'future' => $this->dealRepository->findByUserAndFuture($userId, $id, $status),
+            'share', 'bond', 'future' => $this->dealRepository->findByUserAndInstrument($userId, $id, $status),
             default => throw new InstrumentNotFoundException(sprintf('Instrument type %s is not supported', $type)),
         };
     }

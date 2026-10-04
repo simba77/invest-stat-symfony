@@ -8,18 +8,15 @@ use App\Investments\Application\Accounts\AccountBalanceCalculator;
 use App\Investments\Application\BrokerSync\SyncedAccountGuard;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
-use App\Investments\Domain\Instruments\Bond;
-use App\Investments\Domain\Instruments\Future;
+use App\Investments\Domain\Instruments\InstrumentRepositoryInterface;
 use App\Investments\Domain\Instruments\Securities\SecuritiesService;
 use App\Investments\Domain\Instruments\Securities\SecurityTypeEnum;
-use App\Investments\Domain\Instruments\Share;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\Deals\DealStatus;
 use App\Investments\Domain\Operations\Deals\DealType;
 use App\Shared\Domain\UserRepositoryInterface;
 use App\Shared\Infrastructure\Symfony\NotFoundException;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -31,7 +28,7 @@ class CreateDealCommandHandler
         private readonly AccountRepositoryInterface $accountRepository,
         private readonly AccountBalanceCalculator $accountBalanceCalculatorCalculator,
         private readonly SecuritiesService $securitiesService,
-        private readonly EntityManagerInterface $entityManager,
+        private readonly InstrumentRepositoryInterface $instrumentRepository,
         private readonly SyncedAccountGuard $syncedAccountGuard,
     ) {
     }
@@ -49,10 +46,6 @@ class CreateDealCommandHandler
         }
         $this->syncedAccountGuard->assertManual($account);
 
-        $bondRepository = $this->entityManager->getRepository(Bond::class);
-        $sharesRepository = $this->entityManager->getRepository(Share::class);
-        $futuresRepository = $this->entityManager->getRepository(Future::class);
-
         $deal = new Deal(
             user:        $user,
             account:     $account,
@@ -65,13 +58,7 @@ class CreateDealCommandHandler
             targetPrice: $command->targetPrice,
         );
 
-        $share = $sharesRepository->findOneBy(['ticker' => $command->ticker, 'stockMarket' => $command->stockMarket]);
-        $bond = $bondRepository->findOneBy(['ticker' => $command->ticker, 'stockMarket' => $command->stockMarket]);
-        $future = $futuresRepository->findOneBy(['ticker' => $command->ticker, 'stockMarket' => $command->stockMarket]);
-
-        $deal->setShare($share);
-        $deal->setBond($bond);
-        $deal->setFuture($future);
+        $deal->setInstrument($this->instrumentRepository->findByTickerAndStockMarket($command->ticker, $command->stockMarket));
 
         $this->dealRepository->save($deal);
 

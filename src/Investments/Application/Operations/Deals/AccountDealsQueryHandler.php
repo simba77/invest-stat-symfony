@@ -11,7 +11,6 @@ use App\Investments\Application\Response\Compiler\DealListStatuses;
 use App\Investments\Application\Response\DTO\Accounts\AccountDealsResponseDTO;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
-use App\Investments\Domain\Instruments\FutureMultiplierRepositoryInterface;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\Deals\DealData;
 use App\Investments\Domain\Operations\Deals\GroupByTicker;
@@ -29,8 +28,7 @@ class AccountDealsQueryHandler
         private readonly UserRepositoryInterface $userRepository,
         private readonly CurrencyService $currencyService,
         private readonly PropertyAccessorInterface $propertyAccess,
-        private readonly AccountBalanceCalculator $accountBalanceCalculator,
-        private readonly FutureMultiplierRepositoryInterface $futureMultiplierRepository
+        private readonly AccountBalanceCalculator $accountBalanceCalculator
     ) {
     }
 
@@ -53,7 +51,7 @@ class AccountDealsQueryHandler
             $currency = $currencies->add($deal);
             $ticker = $deal->getTicker();
 
-            $dealData = new DealData($deal, $this->currencyService, $this->futureMultiplierRepository);
+            $dealData = new DealData($deal, $this->currencyService);
 
             /** @var ?GroupByTicker $group */
             $group = $this->propertyAccess->getValue($result, '[' . $status->code . '][' . $instrumentType->code . '][' . $currency->code . '][' . $ticker . ']');

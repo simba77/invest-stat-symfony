@@ -17,6 +17,7 @@ final class CouponsControllerTest extends ApiTestCase
     {
         $admin = $this->admin();
         $account = $this->createAccount($admin, balance: '1000');
+        $bond = $this->createBond('SU26238RMFS4');
         $this->loginAs($admin);
 
         $this->postJson('/api/coupons/create', [
@@ -30,6 +31,7 @@ final class CouponsControllerTest extends ApiTestCase
         self::assertResponseStatusCodeSame(201);
         $coupons = $this->findFreshBy(Coupon::class, ['account' => $account->getId()]);
         self::assertSame(['120.0000', '2026-02-20'], [$coupons[0]->getAmount(), $coupons[0]->getDate()?->format('Y-m-d')]);
+        self::assertSame($bond->getId(), $coupons[0]->getBond()?->getId());
         self::assertSame('1000.0000', $this->findFresh(Account::class, $account->getId())?->getBalance());
     }
 

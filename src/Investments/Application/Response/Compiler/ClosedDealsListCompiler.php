@@ -6,7 +6,6 @@ namespace App\Investments\Application\Response\Compiler;
 
 use App\Investments\Application\Response\DTO\Analytics\SummaryForClosedDealsDTO;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
-use App\Investments\Domain\Instruments\FutureMultiplierRepositoryInterface;
 use App\Investments\Domain\Operations\Deals\ClosedDealsGroupedByTicker;
 use App\Investments\Domain\Operations\Deals\DealData;
 use App\Shared\Infrastructure\Compiler\CompilerInterface;
@@ -17,8 +16,7 @@ use App\Shared\Infrastructure\Compiler\CompilerInterface;
 class ClosedDealsListCompiler implements CompilerInterface
 {
     public function __construct(
-        public readonly CurrencyService $currencyService,
-        public readonly FutureMultiplierRepositoryInterface $futureMultiplierRepository
+        public readonly CurrencyService $currencyService
     ) {
     }
 
@@ -35,7 +33,7 @@ class ClosedDealsListCompiler implements CompilerInterface
         $summaryProfit = '0';
 
         foreach ($entry as $deal) {
-            $dealData = new DealData($deal, $this->currencyService, $this->futureMultiplierRepository);
+            $dealData = new DealData($deal, $this->currencyService);
 
             if (array_key_exists($dealData->getTicker(), $dealsByTickers)) {
                 $group = $dealsByTickers[$dealData->getTicker()];

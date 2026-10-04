@@ -17,6 +17,7 @@ final class DividendsControllerTest extends ApiTestCase
     {
         $admin = $this->admin();
         $account = $this->createAccount($admin, balance: '1000');
+        $sber = $this->createShare('SBER');
         $this->loginAs($admin);
 
         $this->postJson('/api/dividends/create', [
@@ -32,6 +33,7 @@ final class DividendsControllerTest extends ApiTestCase
         self::assertCount(1, $dividends);
         // The amount is what reached the account; the tax is added on top by the 13% rate
         self::assertSame(['87.0000', '13.0000', '2026-01-15'], [$dividends[0]->getAmount(), $dividends[0]->getTax(), $dividends[0]->getDate()?->format('Y-m-d')]);
+        self::assertSame($sber->getId(), $dividends[0]->getShare()?->getId());
         self::assertSame('1000.0000', $this->findFresh(Account::class, $account->getId())?->getBalance());
     }
 

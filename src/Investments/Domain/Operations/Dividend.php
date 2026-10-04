@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Domain\Operations;
 
 use App\Investments\Domain\Accounts\Account;
+use App\Investments\Domain\Instruments\Share;
 use App\Investments\Infrastructure\Persistence\Repository\DividendRepository;
 use App\Shared\Domain\CreatedByProvider;
 use App\Shared\Domain\CreatedDateProvider;
@@ -46,6 +47,11 @@ class Dividend implements
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private Account $account;
+
+    /** The paying security, when the catalogue knows it; the dividend keeps its ticker anyway. */
+    #[ORM\ManyToOne(targetEntity: Share::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Share $share = null;
 
     #[ORM\Column(length: 255)]
     private string $ticker;
@@ -94,6 +100,18 @@ class Dividend implements
     public function setAccount(Account $account): static
     {
         $this->account = $account;
+
+        return $this;
+    }
+
+    public function getShare(): ?Share
+    {
+        return $this->share;
+    }
+
+    public function setShare(?Share $share): static
+    {
+        $this->share = $share;
 
         return $this;
     }

@@ -154,9 +154,7 @@ final class LedgerProjector
         if (! self::sameMoment($deal->getClosingDate(), $lot->getClosedAt())) {
             $deal->setClosingDate($lot->getClosedAt());
         }
-        $deal->setShare($instrument instanceof Share ? $instrument : null);
-        $deal->setBond($instrument instanceof Bond ? $instrument : null);
-        $deal->setFuture(null);
+        $deal->setInstrument($instrument);
         $deal->setCommissions(
             bcadd($lot->getOpenCommission(), '0', 4),
             $lot->isOpen() ? null : bcadd($lot->getCloseCommission(), '0', 4),
@@ -224,17 +222,19 @@ final class LedgerProjector
         }
 
         foreach ($payouts as $payout) {
-            [$ticker, $stockMarket] = $this->tickerAndMarket($payout->getInstrument(), $lookup);
+            [$ticker, $stockMarket, $instrument] = $this->tickerAndMarket($payout->getInstrument(), $lookup);
             $date = Ledger::localDate($payout->getPaidAt());
             $dividend = $synced[$payout->getExternalId()] ?? null;
             unset($synced[$payout->getExternalId()]);
             if ($dividend === null) {
                 $dividend = new Dividend($user, $account, $ticker, $stockMarket, bcadd($payout->getNet(), '0', 4), bcadd($payout->getTax(), '0', 4), $date);
+                $dividend->setShare($instrument instanceof Share ? $instrument : null);
                 $dividend->markSynced($payout->getExternalId());
                 $this->entityManager->persist($dividend);
                 continue;
             }
 
+            $dividend->setShare($instrument instanceof Share ? $instrument : null);
             $dividend->setTicker($ticker);
             $dividend->setStockMarket($stockMarket);
             $dividend->setAmount(bcadd($payout->getNet(), '0', 4));
@@ -266,17 +266,19 @@ final class LedgerProjector
         }
 
         foreach ($payouts as $payout) {
-            [$ticker, $stockMarket] = $this->tickerAndMarket($payout->getInstrument(), $lookup);
+            [$ticker, $stockMarket, $instrument] = $this->tickerAndMarket($payout->getInstrument(), $lookup);
             $date = Ledger::localDate($payout->getPaidAt());
             $coupon = $synced[$payout->getExternalId()] ?? null;
             unset($synced[$payout->getExternalId()]);
             if ($coupon === null) {
                 $coupon = new Coupon($user, $account, $ticker, $stockMarket, bcadd($payout->getNet(), '0', 4), $date);
+                $coupon->setBond($instrument instanceof Bond ? $instrument : null);
                 $coupon->markSynced($payout->getExternalId());
                 $this->entityManager->persist($coupon);
                 continue;
             }
 
+            $coupon->setBond($instrument instanceof Bond ? $instrument : null);
             $coupon->setTicker($ticker);
             $coupon->setStockMarket($stockMarket);
             $coupon->setAmount(bcadd($payout->getNet(), '0', 4));
@@ -348,15 +350,15 @@ final class LedgerProjector
 
     /**
      * @param \Closure(string): ?ExternalInstrument $lookup
-     * @return array{string, string}
+     * @return array{string, string, Share|Bond|null}
      */
     private function tickerAndMarket(InstrumentRef $instrument, \Closure $lookup): array
     {
         $resolved = $this->instrument($instrument, $lookup);
 
         return $resolved !== null
-            ? [$resolved->getTicker(), $resolved->getStockMarket()]
-            : [$instrument->ticker, $instrument->stockMarket];
+            ? [$resolved->getTicker(), $resolved->getStockMarket(), $resolved]
+            : [$instrument->ticker, $instrument->stockMarket, null];
     }
 
     /**

@@ -5,24 +5,15 @@ declare(strict_types=1);
 namespace App\Investments\Domain\Operations\Deals\Strategy;
 
 use App\Investments\Domain\Instruments\Future;
-use App\Investments\Domain\Instruments\FutureMultiplierRepositoryInterface;
 use App\Investments\Domain\Instruments\Securities\SecurityTypeEnum;
 use App\Investments\Domain\Operations\Deal;
 use RuntimeException;
 
 class FutureStrategy implements DealStrategyInterface
 {
-    private ?FutureMultiplierRepositoryInterface $futureMultiplierRepository = null;
-
     public function __construct(
         private readonly Deal $deal
     ) {
-    }
-
-    public function setFutureMultiplierRepository(FutureMultiplierRepositoryInterface $futureMultiplierRepository): self
-    {
-        $this->futureMultiplierRepository = $futureMultiplierRepository;
-        return $this;
     }
 
     private function getFuture(): Future
@@ -75,16 +66,7 @@ class FutureStrategy implements DealStrategyInterface
      */
     private function getMultiplier(): string
     {
-        if ($this->futureMultiplierRepository === null) {
-            return $this->deal->getFuture()?->getStepPrice() ?? '1';
-        }
-
-        $multiplierFromDb = $this->futureMultiplierRepository->findByTicker($this->deal->getTicker());
-        if ($multiplierFromDb !== null) {
-            return $multiplierFromDb->getValue();
-        }
-
-        return $this->deal->getFuture()?->getStepPrice() ?? '1';
+        return $this->getFuture()->getPointValue();
     }
 
     public function getInstrumentId(): ?int
