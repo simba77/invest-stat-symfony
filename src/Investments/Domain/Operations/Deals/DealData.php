@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Domain\Operations\Deals;
 
+use App\Investments\Domain\Instruments\Currencies\Currency;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
 use App\Investments\Domain\Instruments\FutureMultiplierRepositoryInterface;
 use App\Investments\Domain\Instruments\Securities\SecurityTypeEnum;
@@ -196,13 +197,7 @@ class DealData
 
     public function getCurrencyName(): string
     {
-        if ($this->getCurrency() === 'RUB') {
-            return '₽';
-        }
-        if ($this->getCurrency() === 'CNY') {
-            return '¥';
-        }
-        return '$';
+        return Currency::symbolOf($this->getCurrency());
     }
 
     public function getType(): ?DealType

@@ -16,6 +16,7 @@ use App\Investments\Application\Response\DTO\Instruments\ShowSharePortfolioDTO;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Instruments\Bond;
 use App\Investments\Domain\Instruments\BondRepositoryInterface;
+use App\Investments\Domain\Instruments\Currencies\Currency;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
 use App\Investments\Domain\Instruments\Exceptions\InstrumentNotFoundException;
 use App\Investments\Domain\Instruments\Future;
@@ -142,7 +143,7 @@ final readonly class ShowInstrumentUseCase
             logo:            null,
             marketName:      $this->getMarket($stockMarket),
             stockMarket:     $stockMarket,
-            currency:        $this->getCurrencySymbol($currencyCode),
+            currency:        Currency::symbolOf($currencyCode),
             currencyCode:    $currencyCode,
             price:           $price,
             prevPrice:       $prevPrice,
@@ -261,15 +262,6 @@ final readonly class ShowInstrumentUseCase
             return 'СПБ Биржа';
         }
         return $stockMarket;
-    }
-
-    private function getCurrencySymbol(string $currencyCode): string
-    {
-        return match ($currencyCode) {
-            'RUB' => '₽',
-            'CNY' => '¥',
-            default => '$',
-        };
     }
 
     private function calculatePriceChangePercent(string $price, string $prevPrice): string

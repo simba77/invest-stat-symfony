@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Response\Compiler;
 
 use App\Investments\Application\Response\DTO\Operations\Deals\DealCurrencyDTO;
+use App\Investments\Domain\Instruments\Currencies\Currency;
 use App\Investments\Domain\Operations\Deal;
 
 class DealListCurrencies
@@ -18,25 +19,10 @@ class DealListCurrencies
             $deal->getShare() !== null => $deal->getShare()->getCurrency(),
             $deal->getBond() !== null => $deal->getBond()->getCurrency(),
             $deal->getFuture() !== null => $deal->getFuture()->getCurrency(),
-            default => 'RUB',
-        };
+            default => null,
+        } ?? 'RUB';
 
-        $currencies = [
-            'USD' => [
-                'code' => 'USD',
-                'name' => 'US Dollar',
-            ],
-            'RUB' => [
-                'code' => 'RUB',
-                'name' => 'Russian Rouble',
-            ],
-            'CNY' => [
-                'code' => 'CNY',
-                'name' => 'Chinese Yuan',
-            ],
-        ];
-
-        $currency = new DealCurrencyDTO($currencies[$currencyCode]['code'], $currencies[$currencyCode]['name']);
+        $currency = new DealCurrencyDTO($currencyCode, Currency::titleOf($currencyCode));
         $this->currencies[$currency->code] = $currency;
         return $currency;
     }
