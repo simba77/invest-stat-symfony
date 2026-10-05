@@ -5,66 +5,54 @@ declare(strict_types=1);
 namespace App\Investments\Application\Accounts;
 
 use App\Investments\Domain\Accounts\Account;
-use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Instruments\Currencies\CurrencyService;
 use App\Investments\Domain\Instruments\Securities\SecurityTypeEnum;
+use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\Deals\DealData;
-use App\Investments\Infrastructure\Persistence\Repository\DealRepository;
 
+/**
+ * The value of an account now: its money and its open deals at the current prices and rates.
+ * Computed on every request instead of being kept on the account.
+ */
 class AccountBalanceCalculator
 {
     public function __construct(
-        protected readonly AccountRepositoryInterface $accountRepository,
-        protected readonly DealRepository $dealRepository,
-        protected readonly CurrencyService $currencyService
+        protected readonly DealRepositoryInterface $dealRepository,
+        protected readonly CurrencyService $currencyService,
     ) {
     }
 
-    public function recalculateBalanceForAllAccounts(): void
-    {
-        $accounts = $this->accountRepository->findAll();
-        foreach ($accounts as $account) {
-            $this->recalculateBalance($account);
-        }
-    }
-
-    public function recalculateBalance(Account $account): void
-    {
-        $summaryData = $this->calculateSumOfAllDealsForAccount($account);
-        $account->setStartSumOfAssets($summaryData['fullBuyPrice']);
-        $account->setCurrentSumOfAssets($summaryData['fullCurrentPrice']);
-        $this->accountRepository->save($account);
-    }
-
     /**
-     * @param Account $account
-     * @return array{fullBuyPrice: string, fullCurrentPrice: string}
+     * What the open deals are worth in roubles; a future counts by its open profit, not its price.
+     *
+     * @return numeric-string
      */
-    public function calculateSumOfAllDealsForAccount(Account $account): array
+    public function getAssetsValue(Account $account): string
     {
-        $deals = $this->dealRepository->findForAccount($account->getId());
-        $fullBuyPrice = '0';
-        $fullCurrentPrice = '0';
-        foreach ($deals as $deal) {
+        $value = '0';
+        foreach ($this->dealRepository->findForAccount((int) $account->getId()) as $deal) {
             $dealData = new DealData($deal, $this->currencyService);
-            if ($dealData->getSecurityType() === SecurityTypeEnum::Future) {
-                $fullCurrentPrice = bcadd($fullCurrentPrice, $dealData->getProfitInBaseCurrency(), 4);
-            } else {
-                $fullBuyPrice = bcadd($fullBuyPrice, $dealData->getFullBuyPriceInBaseCurrency(), 4);
-                $fullCurrentPrice = bcadd($fullCurrentPrice, $dealData->getFullCurrentPriceInBaseCurrency(), 4);
-            }
+            $value = bcadd(
+                $value,
+                $dealData->getSecurityType() === SecurityTypeEnum::Future
+                    ? $dealData->getProfitInBaseCurrency()
+                    : $dealData->getFullCurrentPriceInBaseCurrency(),
+                4,
+            );
         }
-        return [
-            'fullBuyPrice'     => $fullBuyPrice,
-            'fullCurrentPrice' => $fullCurrentPrice,
-        ];
+
+        return $value;
     }
 
     public function getTotalBalance(Account $account): string
     {
-        $usdRate = $this->currencyService->getUSDRUBRate();
-        $currentValue = bcadd($account->getCurrentSumOfAssets(), $account->getBalance(), 2);
-        $usdBalance = bcmul($account->getUsdBalance(), $usdRate, 2);
-        return bcadd($currentValue, $usdBalance, 2);
+        $total = bcadd($this->getAssetsValue($account), $account->getBalance(), 2);
+        foreach ($account->getCashByCurrency() as $currency => $amount) {
+            if ($currency !== 'RUB') {
+                $total = bcadd($total, bcmul($amount, $this->currencyService->getCurrencyRate($currency), 2), 2);
+            }
+        }
+
+        return $total;
     }
 }

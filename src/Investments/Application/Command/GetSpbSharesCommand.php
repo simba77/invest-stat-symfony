@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Command;
 
-use App\Investments\Application\Accounts\AccountBalanceCalculator;
 use App\Investments\Domain\Instruments\Securities\ShareTypeEnum;
 use App\Investments\Domain\Instruments\Share;
 use App\Investments\Domain\Operations\Deal;
@@ -27,8 +26,7 @@ class GetSpbSharesCommand extends Command
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly InvestCabHttpClient $httpClient,
-        private readonly LoggerInterface $logger,
-        private readonly AccountBalanceCalculator $accountBalanceCalculator
+        private readonly LoggerInterface $logger
     ) {
         parent::__construct();
     }
@@ -78,8 +76,6 @@ class GetSpbSharesCommand extends Command
                 $this->logger->warning($throwable->getMessage(), ['e' => $throwable]);
             }
         }
-
-        $this->accountBalanceCalculator->recalculateBalanceForAllAccounts();
 
         $io->success('Success');
         return Command::SUCCESS;

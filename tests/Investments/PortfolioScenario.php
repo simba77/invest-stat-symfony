@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Investments;
 
-use App\Investments\Application\Accounts\AccountBalanceCalculator;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Analytics\Statistic;
 use App\Investments\Domain\Instruments\Bond;
@@ -100,10 +99,6 @@ trait PortfolioScenario
             new Statistic($second, new \DateTimeImmutable('2026-01-03 10:00:00'), '10000', '0', '15000', '11500', '-3500'),
             new Statistic($second, new \DateTimeImmutable('2026-03-01 10:00:00'), '10000', '0', '15000', '11600', '-3400'),
         );
-
-        $calculator = static::getContainer()->get(AccountBalanceCalculator::class);
-        $calculator->recalculateBalance($main);
-        $calculator->recalculateBalance($second);
 
         return ['main' => $main, 'second' => $second];
     }

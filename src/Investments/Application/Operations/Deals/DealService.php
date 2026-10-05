@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Operations\Deals;
 
-use App\Investments\Application\Accounts\AccountBalanceCalculator;
 use App\Investments\Application\BrokerSync\SyncedAccountGuard;
 use App\Investments\Application\Request\DTO\Operations\SellDealRequestDTO;
 use App\Investments\Application\Response\DTO\Instruments\SecurityDTO;
@@ -26,7 +25,6 @@ class DealService
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly SecuritiesService $securitiesService,
-        private readonly AccountBalanceCalculator $accountBalanceCalculator,
         private readonly SyncedAccountGuard $syncedAccountGuard,
         private readonly ClockInterface $clock,
     ) {
@@ -41,8 +39,6 @@ class DealService
         $this->entityManager->persist($deal);
 
         $this->changeAccountBalance($deal, $dto);
-
-        $this->accountBalanceCalculator->recalculateBalance($deal->getAccount());
 
         $this->entityManager->flush();
     }
@@ -104,9 +100,7 @@ class DealService
             $this->entityManager->persist($additionalDeal);
         }
 
-
         $this->changeAccountBalance($deal, $dto);
-        $this->accountBalanceCalculator->recalculateBalance($account);
 
         $this->entityManager->flush();
     }

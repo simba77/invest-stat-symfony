@@ -54,24 +54,13 @@ class Account implements
     #[ORM\OneToMany(mappedBy: 'account', targetEntity: Investment::class)]
     private Collection $investments;
 
-    /** @var numeric-string|null */
-    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?string $balance = null;
-
-    /** @var numeric-string|null */
-    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?string $usdBalance = null;
-
     /**
-     * @psalm-suppress UnusedProperty
-     * @var numeric-string|null
+     * Money by currency; for a synced account as the broker reports it.
+     *
+     * @var Collection<int, AccountCash>
      */
-    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?string $startSumOfAssets = null;
-
-    /** @var numeric-string|null */
-    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, nullable: true)]
-    private ?string $currentSumOfAssets = null;
+    #[ORM\OneToMany(mappedBy: 'account', targetEntity: AccountCash::class, cascade: ['persist'], orphanRemoval: true)]
+    private Collection $cash;
 
     /** @var numeric-string|null */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
@@ -107,10 +96,11 @@ class Account implements
         int $sort = 100
     ) {
         $this->investments = new ArrayCollection();
+        $this->cash = new ArrayCollection();
         $this->userId = $userId;
         $this->name = $name;
-        $this->balance = $balance;
-        $this->usdBalance = $usdBalance;
+        $this->setCash('RUB', $balance);
+        $this->setCash('USD', $usdBalance);
         $this->commission = $commission;
         $this->futuresCommission = $futuresCommission;
         $this->sort = $sort;
@@ -151,47 +141,80 @@ class Account implements
         return $this;
     }
 
+    /**
+     * @return numeric-string
+     */
+    public function getCash(string $currency): string
+    {
+        foreach ($this->cash as $cash) {
+            if ($cash->getCurrency() === $currency) {
+                return $cash->getAmount();
+            }
+        }
+
+        return '0.0000';
+    }
+
+    /**
+     * @return array<string, numeric-string> by currency
+     */
+    public function getCashByCurrency(): array
+    {
+        $result = [];
+        foreach ($this->cash as $cash) {
+            $result[$cash->getCurrency()] = $cash->getAmount();
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param numeric-string $amount
+     */
+    public function setCash(string $currency, string $amount): static
+    {
+        foreach ($this->cash as $cash) {
+            if ($cash->getCurrency() === $currency) {
+                $cash->setAmount($amount);
+
+                return $this;
+            }
+        }
+        $this->cash->add(new AccountCash($this, $currency, $amount));
+
+        return $this;
+    }
+
+    /**
+     * @return numeric-string
+     */
     public function getBalance(): string
     {
-        return $this->balance ?? '0';
+        return $this->getCash('RUB');
     }
 
+    /**
+     * @param numeric-string|null $balance
+     */
     public function setBalance(?string $balance): static
     {
-        $this->balance = $balance;
-
-        return $this;
+        return $this->setCash('RUB', $balance ?? '0');
     }
 
+    /**
+     * @return numeric-string
+     */
     public function getUsdBalance(): string
     {
-        return $this->usdBalance ?? '0';
+        return $this->getCash('USD');
     }
 
+    /**
+     * @param numeric-string|null $usdBalance
+     */
     public function setUsdBalance(?string $usdBalance): static
     {
-        $this->usdBalance = $usdBalance;
-
-        return $this;
-    }
-
-    public function setStartSumOfAssets(?string $startSumOfAssets): static
-    {
-        $this->startSumOfAssets = $startSumOfAssets;
-
-        return $this;
-    }
-
-    public function getCurrentSumOfAssets(): string
-    {
-        return $this->currentSumOfAssets ?? '0';
-    }
-
-    public function setCurrentSumOfAssets(?string $currentSumOfAssets): static
-    {
-        $this->currentSumOfAssets = $currentSumOfAssets;
-
-        return $this;
+        return $this->setCash('USD', $usdBalance ?? '0');
     }
 
     /**

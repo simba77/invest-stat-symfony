@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Operations\Deals;
 
-use App\Investments\Application\Accounts\AccountBalanceCalculator;
 use App\Investments\Application\BrokerSync\SyncedAccountGuard;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
@@ -26,7 +25,6 @@ class CreateDealCommandHandler
         private readonly DealRepositoryInterface $dealRepository,
         private readonly UserRepositoryInterface $userRepository,
         private readonly AccountRepositoryInterface $accountRepository,
-        private readonly AccountBalanceCalculator $accountBalanceCalculatorCalculator,
         private readonly SecuritiesService $securitiesService,
         private readonly InstrumentRepositoryInterface $instrumentRepository,
         private readonly SyncedAccountGuard $syncedAccountGuard,
@@ -64,7 +62,6 @@ class CreateDealCommandHandler
 
         $this->changeAccountBalanceWhenAddDeal($account, $command);
 
-        $this->accountBalanceCalculatorCalculator->recalculateBalance($account);
     }
 
     private function changeAccountBalanceWhenAddDeal(Account $account, CreateDealCommand $dealRequestDTO): void

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Command;
 
-use App\Investments\Application\Accounts\AccountBalanceCalculator;
 use App\Investments\Application\Instruments\CurrencyRatesUpdater;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -19,8 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class GetCurrencyRatesCommand extends Command
 {
     public function __construct(
-        private readonly CurrencyRatesUpdater $currencyRatesUpdater,
-        private readonly AccountBalanceCalculator $accountBalanceCalculator
+        private readonly CurrencyRatesUpdater $currencyRatesUpdater
     ) {
         parent::__construct();
     }
@@ -30,8 +28,6 @@ class GetCurrencyRatesCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $this->currencyRatesUpdater->updateCurrent();
-
-        $this->accountBalanceCalculator->recalculateBalanceForAllAccounts();
 
         $io->success('Success');
 

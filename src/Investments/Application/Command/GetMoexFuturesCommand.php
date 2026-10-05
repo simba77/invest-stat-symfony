@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Command;
 
-use App\Investments\Application\Accounts\AccountBalanceCalculator;
 use App\Investments\Domain\Instruments\Future;
 use App\Investments\Domain\Instruments\Securities\MoexFuturesProvider;
 use Carbon\Carbon;
@@ -23,8 +22,7 @@ class GetMoexFuturesCommand extends Command
 {
     public function __construct(
         private readonly MoexFuturesProvider $futuresProvider,
-        private readonly EntityManagerInterface $em,
-        private readonly AccountBalanceCalculator $accountBalanceCalculator
+        private readonly EntityManagerInterface $em
     ) {
         parent::__construct();
     }
@@ -47,7 +45,6 @@ class GetMoexFuturesCommand extends Command
                 if($updatePeriodStart->diffInMinutes($updated) > 0 && $updatePeriodStart->diffInMinutes($updated) < 5) {
                     continue;
                 }
-
 
                 if (empty($item->getPrice())) {
                     continue;
@@ -76,8 +73,6 @@ class GetMoexFuturesCommand extends Command
             $this->em->persist($future);
             $this->em->flush();
         }
-
-        $this->accountBalanceCalculator->recalculateBalanceForAllAccounts();
 
         $io->success('Success');
 

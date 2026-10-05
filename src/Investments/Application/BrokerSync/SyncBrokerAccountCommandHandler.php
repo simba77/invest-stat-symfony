@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\BrokerSync;
 
-use App\Investments\Application\Accounts\AccountBalanceCalculator;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\BrokerSync\BrokerAccountLink;
@@ -45,7 +44,6 @@ final readonly class SyncBrokerAccountCommandHandler
         private LedgerReplayer $ledgerReplayer,
         private LedgerProjector $ledgerProjector,
         private PositionsReconciler $positionsReconciler,
-        private AccountBalanceCalculator $accountBalanceCalculator,
         private EntityManagerInterface $entityManager,
         private ClockInterface $clock,
         private LoggerInterface $logger,
@@ -105,10 +103,8 @@ final readonly class SyncBrokerAccountCommandHandler
         $warnings = [
             ...$ledger->warnings,
             ...$this->ledgerProjector->project($account, $ledger, static fn (string $uid) => $client->findInstrument($token, $uid)),
-            ...$this->updateCash($account, $positions),
         ];
-
-        $this->accountBalanceCalculator->recalculateBalance($account);
+        $this->updateCash($account, $positions);
 
         $warnings = array_values(array_unique($warnings));
         $link->markSynced(
@@ -121,22 +117,18 @@ final readonly class SyncBrokerAccountCommandHandler
 
     /**
      * The broker knows the cash exactly; it is not derived from deals for a synced account.
-     *
-     * @return list<string> warnings
+     * A currency the broker no longer reports is spent.
      */
-    private function updateCash(Account $account, ExternalPositions $positions): array
+    private function updateCash(Account $account, ExternalPositions $positions): void
     {
-        $account->setBalance(bcadd($positions->money['RUB'] ?? '0', '0', 4));
-        $account->setUsdBalance(bcadd($positions->money['USD'] ?? '0', '0', 4));
-
-        $warnings = [];
-        foreach ($positions->money as $currency => $amount) {
-            if (! in_array($currency, ['RUB', 'USD'], true) && bccomp($amount, '0', 9) !== 0) {
-                $warnings[] = sprintf('%s %s of cash is not shown: accounts keep roubles and dollars only', $amount, $currency);
+        foreach (array_keys($account->getCashByCurrency()) as $currency) {
+            if (! isset($positions->money[$currency])) {
+                $account->setCash($currency, '0');
             }
         }
-
-        return $warnings;
+        foreach (['RUB', 'USD', ...array_keys($positions->money)] as $currency) {
+            $account->setCash($currency, bcadd($positions->money[$currency] ?? '0', '0', 4));
+        }
     }
 
     private function link(int $accountId): BrokerAccountLink

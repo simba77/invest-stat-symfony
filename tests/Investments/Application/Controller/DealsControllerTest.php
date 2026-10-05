@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Investments\Application\Controller;
 
+use App\Investments\Application\Accounts\AccountBalanceCalculator;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Instruments\Bond;
 use App\Investments\Domain\Instruments\Future;
@@ -346,14 +347,16 @@ final class DealsControllerTest extends ApiTestCase
     }
 
     /**
-     * Rouble and dollar cash, and the current value of the deals as last recalculated.
+     * Rouble and dollar cash, and the current value of the open deals.
      *
      * @return list<string>
      */
     private function cashAndAssets(Account $account): array
     {
         $account = $this->findFresh(Account::class, $account->getId());
+        self::assertNotNull($account);
+        $assets = static::getContainer()->get(AccountBalanceCalculator::class)->getAssetsValue($account);
 
-        return [(string) $account?->getBalance(), (string) $account?->getUsdBalance(), (string) $account?->getCurrentSumOfAssets()];
+        return [$account->getBalance(), $account->getUsdBalance(), bcadd($assets, '0', 4)];
     }
 }
