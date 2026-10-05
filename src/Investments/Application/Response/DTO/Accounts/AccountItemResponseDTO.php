@@ -18,6 +18,7 @@ class AccountItemResponseDTO
         public string $currentValue,
         public string $fullProfit,
         public bool $isSynced,
+        public bool $isClosed = false,
     ) {
     }
 }

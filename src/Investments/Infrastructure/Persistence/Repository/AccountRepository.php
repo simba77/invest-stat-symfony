@@ -6,6 +6,9 @@ namespace App\Investments\Infrastructure\Persistence\Repository;
 
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
+use App\Investments\Domain\Operations\Coupon;
+use App\Investments\Domain\Operations\Deal;
+use App\Investments\Domain\Operations\Dividend;
 use App\Investments\Domain\Operations\Investment;
 use App\Shared\Domain\User;
 use App\Shared\Infrastructure\Persistence\Doctrine\ServiceEntityRepository;
@@ -90,6 +93,25 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
     public function findById(int $id): ?Account
     {
         return $this->find($id);
+    }
+
+    public function hasRecords(Account $account): bool
+    {
+        foreach ([Deal::class, Investment::class, Dividend::class, Coupon::class] as $class) {
+            $found = $this->getEntityManager()->createQueryBuilder()
+                ->select('r.id')
+                ->from($class, 'r')
+                ->andWhere('IDENTITY(r.account) = :account')
+                ->setParameter('account', $account->getId())
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getScalarResult();
+            if ($found !== []) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function save(Account $account): void

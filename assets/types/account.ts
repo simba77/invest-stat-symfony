@@ -7,6 +7,7 @@ export interface Account {
   currentValue: number,
   fullProfit: number,
   isSynced: boolean,
+  isClosed: boolean,
   blockGroups: BlockGroups[],
 }
 

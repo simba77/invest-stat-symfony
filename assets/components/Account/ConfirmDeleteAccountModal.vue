@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { TriangleAlert } from 'lucide-vue-next'
 import { useModal } from '@/composable/useModal'
+import { ref } from 'vue'
 import useAccounts from '@/composable/useAccounts'
+import { apiErrorMessage } from '@/utils/api-error'
 
 interface ConfirmModal {
   id: number
@@ -14,11 +16,17 @@ const props = defineProps<{ modelValue: ConfirmModal }>()
 const modal = useModal()
 const accounts = useAccounts()
 
+const error = ref('')
+
 function deleteAccount(): void {
+  error.value = ''
   accounts.deleteAccount(props.modelValue.id)
-    .finally(() => {
+    .then(() => {
       modal.close()
       accounts.getAccounts()
+    })
+    .catch((reason) => {
+      error.value = apiErrorMessage(reason)
     })
 }
 </script>
@@ -42,6 +50,12 @@ function deleteAccount(): void {
             class="text-muted"
             v-html="modelValue.text"
           />
+          <div
+            v-if="error"
+            class="text-danger mt-2"
+          >
+            {{ error }}
+          </div>
         </div>
       </div>
     </div>

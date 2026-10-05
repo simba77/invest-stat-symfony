@@ -116,6 +116,19 @@ final class SyncedAccountTest extends ApiTestCase
         );
     }
 
+    public function testRefusesToCloseSyncedAccount(): void
+    {
+        $admin = $this->admin();
+        $account = $this->createAccount($admin);
+        $this->linkAccount($account);
+        $this->loginAs($admin);
+
+        $this->postJson('/api/accounts/close/' . $account->getId());
+
+        self::assertResponseStatusCodeSame(409);
+        self::assertFalse($this->findFresh(Account::class, $account->getId())?->isClosed());
+    }
+
     public function testMarksSyncedAccountInEditForm(): void
     {
         $admin = $this->admin();

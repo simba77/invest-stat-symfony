@@ -1,5 +1,6 @@
 import type {Ref} from 'vue'
 import {ref} from 'vue'
+import {apiErrorMessage} from '@/utils/api-error'
 
 interface UseAsync<T extends (...args: any[]) => unknown> {
   loading: Ref<boolean>
@@ -21,7 +22,7 @@ export default function useAsync<T extends (...args: any[]) => unknown>(fn: T): 
         validationErrors.value = error.response.data
       } else {
         console.log(error)
-        alert('An Error has Occurred')
+        alert(apiErrorMessage(error))
       }
       throw error
     } finally {

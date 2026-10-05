@@ -41,6 +41,7 @@ class AccountItemCompiler implements CompilerInterface
             currentValue: $totalBalance,
             fullProfit:   bcsub($totalBalance, $sumDeposits, 2),
             isSynced:     $this->syncedAccountGuard->isSynced($account),
+            isClosed:     $account->isClosed(),
         );
     }
 }

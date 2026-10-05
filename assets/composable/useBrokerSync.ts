@@ -6,12 +6,7 @@ import type {
   ExternalBrokerAccount,
 } from '@/types/brokerSync'
 
-/**
- * The message the API returns for broker errors and refused changes.
- */
-export function apiErrorMessage(error: any): string {
-  return error?.response?.data?.message ?? 'An error has occurred'
-}
+export {apiErrorMessage} from '@/utils/api-error'
 
 export function useBrokerSync() {
   async function getPage(accountId: number): Promise<BrokerSyncPage> {

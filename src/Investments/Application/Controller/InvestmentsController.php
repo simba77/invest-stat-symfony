@@ -87,7 +87,11 @@ class InvestmentsController extends AbstractController
             ];
         }
 
-        $accounts = $this->accountRepository->findByUser($user);
+        // A closed account is offered only to the deposit already made into it
+        $accounts = array_values(array_filter(
+            $this->accountRepository->findByUser($user),
+            static fn (Account $account): bool => ! $account->isClosed() || $account->getId() === ($form['account'] ?? null),
+        ));
         return $this->json(
             [
                 'form'     => $form,

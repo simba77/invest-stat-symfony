@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import PageComponent from "@/components/PageComponent.vue"
 import PreloaderComponent from "@/components/Common/PreloaderComponent.vue"
-import {provide} from "vue"
+import {computed, provide, ref} from "vue"
 import AccountComponent from "@/components/Account/AccountComponent.vue"
 import useAccounts from "@/composable/useAccounts"
 import {usePage} from "@/composable/usePage";
@@ -13,6 +13,10 @@ const {
 } = useAccounts()
 
 const {setPageTitle} = usePage()
+
+const openAccounts = computed(() => accounts.value.filter((account) => !account.isClosed))
+const closedAccounts = computed(() => accounts.value.filter((account) => account.isClosed))
+const showClosed = ref(false)
 
 provide('accounts', {getAccounts})
 
@@ -38,10 +42,33 @@ setPageTitle('Accounts')
     <template v-if="!loading && accounts">
       <div>
         <div
-          v-for="(account, index) in accounts"
-          :key="index"
+          v-for="account in openAccounts"
+          :key="account.id"
         >
           <account-component :account="account" />
+        </div>
+      </div>
+      <div
+        v-if="closedAccounts.length > 0"
+        class="mt-3"
+      >
+        <button
+          type="button"
+          class="btn btn-link p-0"
+          @click="showClosed = !showClosed"
+        >
+          Closed accounts ({{ closedAccounts.length }})
+        </button>
+        <div
+          v-if="showClosed"
+          class="text-muted"
+        >
+          <div
+            v-for="account in closedAccounts"
+            :key="account.id"
+          >
+            <account-component :account="account" />
+          </div>
         </div>
       </div>
     </template>

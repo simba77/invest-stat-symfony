@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { Account } from "@/types/account";
-import { Pen, CircleX, CirclePlus } from 'lucide-vue-next';
+import { Pen, CircleX, CirclePlus, Archive, ArchiveRestore } from 'lucide-vue-next';
 import { useModal } from "@/composable/useModal";
 import ConfirmDeleteAccountModal from "@/components/Account/ConfirmDeleteAccountModal.vue";
 import { useNumbers } from "@/composable/useNumbers";
+import useAccounts from "@/composable/useAccounts";
+import useAsync from "@/utils/use-async";
 
 defineProps<{
   account: Account
@@ -11,6 +13,22 @@ defineProps<{
 
 const modal = useModal()
 const {formatPrice} = useNumbers()
+const accounts = useAccounts()
+
+const {loading: closing, run: setClosed} = useAsync(async (account: Account, close: boolean) => {
+  if (close) {
+    await accounts.closeAccount(account.id)
+  } else {
+    await accounts.reopenAccount(account.id)
+  }
+  await accounts.getAccounts()
+})
+
+function close(account: Account) {
+  if (confirm('Close "' + account.name + '"? It leaves the lists and the forms; its records stay in the statistics.')) {
+    setClosed(account, true)
+  }
+}
 
 function confirmDeletion(account: Account) {
   modal.open({
@@ -18,7 +36,7 @@ function confirmDeletion(account: Account) {
     modelValue: {
       id: account.id,
       title: 'Deletion confirmation',
-      text: 'Are you sure you want to delete &quot;<b>' + account.name + '</b>&quot;?',
+      text: 'Are you sure you want to delete &quot;<b>' + account.name + '</b>&quot;? Only an empty account can be deleted.',
     },
   })
 }
@@ -45,6 +63,7 @@ function confirmDeletion(account: Account) {
     </div>
     <div class="d-flex align-items-center">
       <router-link
+        v-if="!account.isClosed"
         :to="{name: 'AddAsset', params: {account: account.id}}"
         class="btn btn-link p-0 me-2"
         title="Add Asset"
@@ -58,6 +77,26 @@ function confirmDeletion(account: Account) {
       >
         <pen :size="20" />
       </router-link>
+      <button
+        v-if="account.isClosed"
+        type="button"
+        class="btn btn-link p-0 me-2"
+        title="Reopen Account"
+        :disabled="closing"
+        @click="setClosed(account, false)"
+      >
+        <archive-restore :size="20" />
+      </button>
+      <button
+        v-else-if="!account.isSynced"
+        type="button"
+        class="btn btn-link p-0 me-2"
+        title="Close Account"
+        :disabled="closing"
+        @click="close(account)"
+      >
+        <archive :size="20" />
+      </button>
       <button
         type="button"
         class="btn btn-link-danger p-0"

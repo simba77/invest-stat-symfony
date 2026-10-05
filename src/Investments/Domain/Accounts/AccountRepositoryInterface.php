@@ -30,6 +30,11 @@ interface AccountRepositoryInterface
      */
     public function findAll(): array;
 
+    /**
+     * Whether the account holds deals, deposits, dividends or coupons.
+     */
+    public function hasRecords(Account $account): bool;
+
     public function save(Account $account): void;
 
     public function remove(Account $account): void;

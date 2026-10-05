@@ -27,6 +27,28 @@ final class InvestmentsControllerTest extends ApiTestCase
         self::assertSame('6000.0000', $this->findFresh(Account::class, $account->getId())?->getBalance());
     }
 
+    public function testFormOffersClosedAccountOnlyToItsDeposit(): void
+    {
+        $admin = $this->admin();
+        $open = $this->createAccount($admin, 'Open');
+        $closed = $this->createAccount($admin, 'Closed');
+        $deposit = $this->createInvestment($closed);
+        $closed->close(new \DateTimeImmutable('2026-02-01'));
+        $this->persist($closed);
+        $this->loginAs($admin);
+
+        $this->getJson('/api/investments/get-form/0');
+        /** @var array{accounts: list<array{name: string}>} $form */
+        $form = $this->responseJson();
+        self::assertSame(['Open'], array_column($form['accounts'], 'name'));
+
+        $this->getJson('/api/investments/get-form/' . $deposit->getId());
+        /** @var array{accounts: list<array{name: string}>} $form */
+        $form = $this->responseJson();
+        self::assertSame(['Open', 'Closed'], array_column($form['accounts'], 'name'));
+        self::assertNotNull($open->getId());
+    }
+
     public function testCreateRejectsOtherUsersAccount(): void
     {
         $account = $this->createAccount($this->otherUser());

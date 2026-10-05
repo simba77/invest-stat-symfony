@@ -74,6 +74,12 @@ class Account implements
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $journalStartedAt = null;
 
+    /**
+     * When the user closed the account: it leaves the lists and the forms, its records stay in the statistics.
+     */
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $closedAt = null;
+
     /** @var numeric-string|null */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
     private ?string $commission = null;
@@ -300,6 +306,26 @@ class Account implements
     public function stopJournal(): void
     {
         $this->journalStartedAt = null;
+    }
+
+    public function getClosedAt(): ?\DateTimeImmutable
+    {
+        return $this->closedAt;
+    }
+
+    public function isClosed(): bool
+    {
+        return $this->closedAt !== null;
+    }
+
+    public function close(\DateTimeImmutable $at): void
+    {
+        $this->closedAt ??= $at;
+    }
+
+    public function reopen(): void
+    {
+        $this->closedAt = null;
     }
 
     /**

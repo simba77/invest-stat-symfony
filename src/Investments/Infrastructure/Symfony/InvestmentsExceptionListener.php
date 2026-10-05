@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Investments\Infrastructure\Symfony;
 
+use App\Investments\Domain\Accounts\AccountCannotBeClosedException;
+use App\Investments\Domain\Accounts\AccountCannotBeDeletedException;
 use App\Investments\Domain\BrokerSync\AccountIsSyncedException;
 use App\Investments\Domain\BrokerSync\BrokerSyncDisabledException;
 use App\Investments\Domain\BrokerSync\Client\BrokerApiException;
@@ -33,6 +35,8 @@ final class InvestmentsExceptionListener
             $exception instanceof ExternalAccountNotFoundException,
             $exception instanceof BrokerSyncDisabledException => JsonResponse::HTTP_BAD_REQUEST,
             $exception instanceof AccountIsSyncedException,
+            $exception instanceof AccountCannotBeClosedException,
+            $exception instanceof AccountCannotBeDeletedException,
             $exception instanceof DealCannotBeDeletedException => JsonResponse::HTTP_CONFLICT,
             default => null,
         };

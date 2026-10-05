@@ -21,7 +21,7 @@ class Statistic
 
     /** @psalm-suppress UnusedProperty */
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Account $account;
 
     /** @psalm-suppress UnusedProperty */

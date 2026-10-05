@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Controller;
 
+use App\Investments\Application\Accounts\CloseAccountCommand;
 use App\Investments\Application\Accounts\CreateAccountCommand;
 use App\Investments\Application\Accounts\DeleteAccountCommand;
 use App\Investments\Application\Accounts\UpdateAccountCommand;
@@ -88,6 +89,22 @@ class AccountsController extends AbstractController
             throw new NotFoundException(sprintf('Account with id "%s" not found', $id));
         }
         return $this->json($this->accountEditFormCompiler->compile($account));
+    }
+
+    #[Route('/accounts/close/{id}', name: 'app_accounts_accounts_close', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function close(int $id, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $this->commandBus->dispatch(new CloseAccountCommand(accountId: $id, user: $user));
+
+        return $this->json(['success' => true]);
+    }
+
+    #[Route('/accounts/reopen/{id}', name: 'app_accounts_accounts_reopen', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function reopen(int $id, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $this->commandBus->dispatch(new CloseAccountCommand(accountId: $id, user: $user, close: false));
+
+        return $this->json(['success' => true]);
     }
 
     #[Route('/accounts/delete/{id}', name: 'app_accounts_accounts_delete', requirements: ['id' => '\d+'], methods: ['POST'])]

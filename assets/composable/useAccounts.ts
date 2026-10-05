@@ -18,6 +18,19 @@ export default function () {
     await axios.post('/api/accounts/delete/' + id).then((response) => response.data);
   }
 
+  async function closeAccount(id: number) {
+    await axios.post('/api/accounts/close/' + id)
+  }
+
+  async function reopenAccount(id: number) {
+    await axios.post('/api/accounts/reopen/' + id)
+  }
+
+  // A closed account is offered only to the record already made in it
+  function selectableAccounts(currentId: number | string | null | undefined): Account[] {
+    return accounts.value.filter((item) => !item.isClosed || item.id === Number(currentId))
+  }
+
   async function getAccount(id: number) {
     account.value = await axios.get('/api/deals/' + id).then((response) => response.data);
   }
@@ -30,6 +43,9 @@ export default function () {
     loading,
     loadingAccount,
     deleteAccount,
+    closeAccount,
+    reopenAccount,
+    selectableAccounts,
     getAccounts: asyncGetAccounts,
     getAccount: asyncGetAccount,
   }

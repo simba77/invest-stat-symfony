@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Investments\Application\Controller;
 
 use App\Investments\Domain\Accounts\Account;
+use App\Investments\Domain\Analytics\Statistic;
 use App\Investments\Domain\Journal\ManualOperation;
 use App\Investments\Domain\Journal\ManualOperationType;
 use App\Investments\Domain\Operations\Deal;
@@ -110,6 +111,69 @@ final class AccountsControllerTest extends ApiTestCase
         $this->getJson('/api/accounts/delete/' . $account->getId());
 
         self::assertResponseStatusCodeSame(405);
+        self::assertNotNull($this->findFresh(Account::class, $account->getId()));
+    }
+
+    public function testClosedAccountStaysInListMarked(): void
+    {
+        $admin = $this->admin();
+        $account = $this->createAccount($admin);
+        $this->createInvestment($account);
+        $this->loginAs($admin);
+
+        $this->postJson('/api/accounts/close/' . $account->getId());
+
+        self::assertResponseIsSuccessful();
+        self::assertNotNull($this->findFresh(Account::class, $account->getId())?->getClosedAt());
+        $this->getJson('/api/accounts');
+        /** @var list<array{id: int, isClosed: bool, deposits: string}> $accounts */
+        $accounts = $this->responseJson();
+        self::assertSame([[$account->getId(), true, '1000.00']], array_map(static fn (array $item) => [$item['id'], $item['isClosed'], $item['deposits']], $accounts));
+
+        $this->postJson('/api/accounts/reopen/' . $account->getId());
+
+        self::assertResponseIsSuccessful();
+        self::assertFalse($this->findFresh(Account::class, $account->getId())?->isClosed());
+    }
+
+    public function testDoesNotCloseAccountOfAnotherUser(): void
+    {
+        $account = $this->createAccount($this->otherUser());
+        $this->loginAs($this->admin());
+
+        $this->postJson('/api/accounts/close/' . $account->getId());
+
+        self::assertResponseStatusCodeSame(404);
+        self::assertFalse($this->findFresh(Account::class, $account->getId())?->isClosed());
+    }
+
+    public function testDeletesEmptyAccountWithItsStatistics(): void
+    {
+        $admin = $this->admin();
+        $account = $this->createAccount($admin, balance: '100');
+        $this->persist(new Statistic($account, new \DateTimeImmutable('2026-01-01'), '100', '0', '0', '100', '100'));
+        $this->loginAs($admin);
+
+        $this->postJson('/api/accounts/delete/' . $account->getId());
+
+        self::assertResponseIsSuccessful();
+        self::assertNull($this->findFresh(Account::class, $account->getId()));
+        self::assertSame([], $this->findFreshBy(Statistic::class, ['account' => $account->getId()]));
+    }
+
+    public function testRefusesToDeleteAccountWithRecords(): void
+    {
+        $admin = $this->admin();
+        $account = $this->createAccount($admin);
+        $this->createCoupon($account);
+        $this->loginAs($admin);
+
+        $this->postJson('/api/accounts/delete/' . $account->getId());
+
+        self::assertResponseStatusCodeSame(409);
+        /** @var array{message: string} $error */
+        $error = $this->responseJson();
+        self::assertStringContainsString('Only an empty account can be deleted', $error['message']);
         self::assertNotNull($this->findFresh(Account::class, $account->getId()));
     }
 

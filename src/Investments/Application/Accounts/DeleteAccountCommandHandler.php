@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\Accounts;
 
+use App\Investments\Domain\Accounts\AccountCannotBeDeletedException;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Shared\Infrastructure\Symfony\NotFoundException;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -21,6 +22,10 @@ class DeleteAccountCommandHandler
         $account = $this->accountRepository->getByIdAndUser($command->accountId, $command->user);
         if (! $account) {
             throw new NotFoundException(sprintf('Account with id "%s" not found', $command->accountId));
+        }
+        // The statistics, the cash and the journal of an empty account go with it
+        if ($this->accountRepository->hasRecords($account)) {
+            throw AccountCannotBeDeletedException::hasRecords($account);
         }
         $this->accountRepository->remove($account);
     }

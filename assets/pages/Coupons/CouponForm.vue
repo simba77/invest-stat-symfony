@@ -23,7 +23,7 @@ const form = reactive({
   errors: undefined
 })
 
-const {accounts, getAccounts} = useAccounts()
+const {getAccounts, selectableAccounts} = useAccounts()
 
 getAccounts()
 
@@ -78,7 +78,7 @@ if (route.params.id) {
                   placeholder="Select Account"
                   field-value="id"
                   :error="validationErrors"
-                  :options="accounts"
+                  :options="selectableAccounts(form.fields.accountId)"
                 />
 
                 <input-text
