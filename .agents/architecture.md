@@ -29,6 +29,12 @@ Accounts belong to a user (`accounts.user_id`); deals, dividends, coupons, depos
 operations belong to an account and reach their owner through it. Scope lookups by the account's
 owner (`getByIdAndUser()`, `findByIdAndUser()`), never by an id alone.
 
+An account the user no longer uses is closed (`accounts.closed_at`), not deleted: it moves to the
+collapsed "Closed accounts" block and out of the account selects of the forms, while its records
+stay in the analytics and the statistics. A synced account is unlinked before closing. Only an
+account without deals, deposits, dividends and coupons can be deleted (HTTP 409 otherwise); its
+statistics, cash and journal go with it.
+
 ## Repositories
 
 * Contract: `Domain/*RepositoryInterface`.
@@ -103,6 +109,12 @@ A manual account is rebuilt from its own journal, `manual_operations` (`Domain/J
   deploy that touches the journal: it starts the missing journals and rebuilds the others.
 * The value of an account is computed on request (`AccountBalanceCalculator`): its cash by currency
   (`account_cash`) and its open deals at the current prices and rates.
+* The "Operations" tab lists the journal (`GET /api/accounts/{id}/operations`, latest first). A
+  sale, a block or a cash operation can be cancelled and a sale's price and date corrected
+  (`ManualJournal::cancel()`, `correctSale()`); a purchase changes through its deal. Before a
+  change the journal is replayed with it in memory, and the change is refused (HTTP 409) when the
+  replay brings a warning the journal does not have now — a later sale or block that loses its lot
+  (`#n` parts are numbered in the order of the sales) — or frees more cash than was blocked.
 
 ## Instruments catalogue
 
