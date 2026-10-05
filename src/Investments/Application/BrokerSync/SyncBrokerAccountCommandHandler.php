@@ -19,6 +19,7 @@ use App\Investments\Domain\BrokerSync\TokenCipherInterface;
 use App\Investments\Domain\Instruments\ShareSplitRepositoryInterface;
 use App\Shared\Infrastructure\Symfony\NotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -45,6 +46,7 @@ final readonly class SyncBrokerAccountCommandHandler
         private LedgerProjector $ledgerProjector,
         private PositionsReconciler $positionsReconciler,
         private EntityManagerInterface $entityManager,
+        private ManagerRegistry $managerRegistry,
         private ClockInterface $clock,
         private LoggerInterface $logger,
     ) {
@@ -148,8 +150,13 @@ final readonly class SyncBrokerAccountCommandHandler
         ]);
 
         try {
-            // Forget whatever the failed run changed in memory before saving the status
-            $this->entityManager->clear();
+            // Forget whatever the failed run changed in memory before saving the status; a database
+            // error closes the entity manager, and the next accounts need it too
+            if ($this->entityManager->isOpen()) {
+                $this->entityManager->clear();
+            } else {
+                $this->managerRegistry->resetManager();
+            }
             $link = $this->link($accountId);
             $link->markFailed($exception->getMessage());
             $this->linkRepository->save($link);

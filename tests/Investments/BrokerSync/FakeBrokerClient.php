@@ -35,6 +35,9 @@ final class FakeBrokerClient implements BrokerClientInterface
 
     public ?string $failure = null;
 
+    /** @var (\Closure(): void)|null called when positions are asked for, e.g. to break the database meanwhile */
+    public ?\Closure $onPositions = null;
+
     public function __construct()
     {
         $this->positions = new ExternalPositions([], []);
@@ -61,6 +64,9 @@ final class FakeBrokerClient implements BrokerClientInterface
     public function getPositions(string $token, string $accountId): ExternalPositions
     {
         $this->receive($token);
+        if ($this->onPositions !== null) {
+            ($this->onPositions)();
+        }
 
         return $this->positions;
     }

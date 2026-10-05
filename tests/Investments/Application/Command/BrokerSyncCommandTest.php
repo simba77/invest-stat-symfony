@@ -99,6 +99,32 @@ final class BrokerSyncCommandTest extends KernelTestCase
         self::assertSame('2026-10-01 12:00:00', $link->getLastSyncedAt()?->format('Y-m-d H:i:s'));
     }
 
+    public function testRecordsFailureClosingEntityManagerAndSyncsNextAccount(): void
+    {
+        static::mockTime('2026-10-02 12:00:00');
+        $first = $this->createAccount($this->admin(), 'First');
+        $this->linkAccount($first, externalAccountId: '1000');
+        $second = $this->createAccount($this->admin(), 'Second');
+        $this->linkAccount($second, externalAccountId: '2000');
+        $command = $this->command();
+        $entityManager = $this->entityManager();
+        $this->brokerClient()->onPositions = function () use ($entityManager): void {
+            // A database error closes the entity manager, as a conflicting update did
+            $this->brokerClient()->onPositions = null;
+            $entityManager->close();
+            throw new \RuntimeException('Record has changed since last read');
+        };
+
+        $command->execute([]);
+
+        self::assertSame(Command::FAILURE, $command->getStatusCode());
+        $links = $this->findFreshBy(BrokerAccountLink::class, []);
+        self::assertSame(
+            [[SyncStatus::Failed, 'Record has changed since last read'], [SyncStatus::Success, null]],
+            array_map(static fn (BrokerAccountLink $link) => [$link->getLastSyncStatus(), $link->getLastSyncMessage()], $links),
+        );
+    }
+
     public function testSyncsOnlyEnabledLinksByDefault(): void
     {
         $enabled = $this->createAccount($this->admin(), 'Enabled');
