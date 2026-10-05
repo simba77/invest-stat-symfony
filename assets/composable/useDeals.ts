@@ -18,8 +18,14 @@ export function useDeals() {
     })
   }
 
+  // Blocked deals stay in the account, but sales by quantity pass them by
+  async function setBlocked(id: number, blocked: boolean) {
+    await axios.post((blocked ? '/api/deals/block/' : '/api/deals/unblock/') + id)
+  }
+
   return {
     sell,
     deleteDeal,
+    setBlocked,
   }
 }

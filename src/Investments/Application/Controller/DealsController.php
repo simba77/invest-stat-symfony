@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Controller;
 
 use App\Investments\Application\Operations\Deals\AccountDealsQuery;
+use App\Investments\Application\Operations\Deals\BlockDealCommand;
 use App\Investments\Application\Operations\Deals\CreateDealCommand;
 use App\Investments\Application\Operations\Deals\DealService;
 use App\Investments\Application\Operations\Deals\DeleteDealCommand;
@@ -17,6 +18,7 @@ use App\Investments\Application\Response\DTO\Operations\EditDealDTO;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Journal\NotEnoughSecuritiesException;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
+use App\Investments\Domain\Operations\Deals\DealStatus;
 use App\Investments\Domain\Operations\Deals\DealType;
 use App\Shared\Domain\Bus\QueryBusInterface;
 use App\Shared\Domain\Bus\SyncCommandBusInterface;
@@ -144,6 +146,24 @@ class DealsController extends AbstractController
         return $this->json(['success' => true]);
     }
 
+    #[Route('/deals/block/{id}', name: 'app_deals_deals_block', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function block(int $id, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $this->assertOpenDealOf($id, $user);
+        $this->commandBus->dispatch(new BlockDealCommand($id, true));
+
+        return $this->json(['success' => true]);
+    }
+
+    #[Route('/deals/unblock/{id}', name: 'app_deals_deals_unblock', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function unblock(int $id, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $this->assertOpenDealOf($id, $user);
+        $this->commandBus->dispatch(new BlockDealCommand($id, false));
+
+        return $this->json(['success' => true]);
+    }
+
     #[Route('/deals/sell', name: 'app_deals_deals_sell', methods: ['POST'])]
     public function sell(#[MapRequestPayload] SellDealRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
     {
@@ -172,5 +192,13 @@ class DealsController extends AbstractController
         }
 
         return $this->json(['success' => true]);
+    }
+
+    private function assertOpenDealOf(int $id, ?User $user): void
+    {
+        $deal = $this->dealRepository->findById($id);
+        if (! $deal || $deal->getUser()->getId() !== $user?->getId() || $deal->getStatus() === DealStatus::Closed) {
+            throw $this->createNotFoundException('No open deal found for id ' . $id);
+        }
     }
 }

@@ -300,6 +300,50 @@ final class DealsControllerTest extends ApiTestCase
         self::assertCount(2, $this->findFreshBy(Deal::class, ['account' => $account->getId()]));
     }
 
+    public function testBlockedDealIsPassedByWhenSellingByQuantity(): void
+    {
+        $account = $this->manualAccount(balance: '0');
+        $sber = $this->createShare('SBER', price: '300');
+        $old = $this->openDeal($account, $sber, 4, '200', openedAt: '2022-01-20 12:00:00');
+        $new = $this->openDeal($account, $sber, 10, '250', openedAt: '2025-06-10 10:00:00');
+
+        $this->postJson('/api/deals/block/' . $old->getId());
+        self::assertResponseIsSuccessful();
+        $this->postJson('/api/deals/sell', ['id' => null, 'accountId' => $account->getId(), 'ticker' => 'SBER', 'price' => '310', 'quantity' => 10]);
+
+        self::assertResponseIsSuccessful();
+        self::assertSame(DealStatus::Blocked, $this->findFresh(Deal::class, $old->getId())?->getStatus());
+        self::assertSame(DealStatus::Closed, $this->findFresh(Deal::class, $new->getId())?->getStatus());
+        $blocks = $this->findFreshBy(ManualOperation::class, ['account' => $account->getId(), 'type' => ManualOperationType::Block]);
+        self::assertSame([self::NOW], array_map(static fn (ManualOperation $operation) => $operation->getExecutedAt()->format('Y-m-d H:i:s'), $blocks));
+    }
+
+    public function testUnblockedDealCanBeSoldAgain(): void
+    {
+        $account = $this->manualAccount(balance: '0');
+        $deal = $this->openDeal($account, $this->createShare('SBER', price: '300'), 4, '200', status: DealStatus::Blocked);
+
+        $this->postJson('/api/deals/unblock/' . $deal->getId());
+
+        self::assertResponseIsSuccessful();
+        self::assertSame(DealStatus::Active, $this->findFresh(Deal::class, $deal->getId())?->getStatus());
+    }
+
+    public function testBlockRefusesClosedDealAndDealOfOtherUser(): void
+    {
+        $account = $this->manualAccount(balance: '0');
+        $closed = $this->openDeal($account, $this->createShare('SBER', price: '300'), 4, '200', status: DealStatus::Closed);
+        $other = $this->createAccount($this->otherUser());
+        $othersDeal = new Deal($this->otherUser(), $other, 'SBER', 'MOEX', DealStatus::Active, DealType::Long, 10, '300');
+        $this->persist($othersDeal);
+
+        $this->postJson('/api/deals/block/' . $closed->getId());
+        self::assertResponseStatusCodeSame(404);
+        $this->postJson('/api/deals/block/' . $othersDeal->getId());
+        self::assertResponseStatusCodeSame(404);
+        self::assertSame(DealStatus::Active, $this->findFresh(Deal::class, $othersDeal->getId())?->getStatus());
+    }
+
     public function testShowReturnsDealForm(): void
     {
         $account = $this->manualAccount(balance: '0');
