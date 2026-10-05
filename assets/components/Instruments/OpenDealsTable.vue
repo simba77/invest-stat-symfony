@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import {Lock, Pencil, XCircle, Banknote, MoveRight} from "lucide-vue-next";
+import {Lock, LockOpen, Pencil, XCircle, Banknote, MoveRight} from "lucide-vue-next";
 import type {Deal} from "@/types/account";
 import {useModal} from "@/composable/useModal";
+import {useDeals} from "@/composable/useDeals";
 import DeleteDealModal from "@/components/Account/DeleteDealModal.vue";
 import SellModal from "@/components/Modals/SellModal.vue";
 import {useNumbers} from "@/composable/useNumbers";
@@ -13,7 +14,17 @@ defineProps<{
   hideActions?: boolean
 }>();
 
+const emit = defineEmits<{
+  (event: 'changed'): void
+}>();
+
 const modal = useModal();
+const deals = useDeals();
+
+async function toggleBlocked(deal: Deal) {
+  await deals.setBlocked(deal.id, !deal.isBlocked)
+  emit('changed')
+}
 
 function deleteDeal(deal: Deal) {
   modal.open({
@@ -182,6 +193,22 @@ function showSellModal(item: Deal) {
               @click.prevent="showSellModal(data)"
             >
               <banknote :size="20" />
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-link p-0 text-muted hover-opacity"
+              :title="data.isBlocked ? 'Unblock' : 'Block'"
+              @click.prevent="toggleBlocked(data)"
+            >
+              <lock-open
+                v-if="data.isBlocked"
+                :size="20"
+              />
+              <lock
+                v-else
+                :size="20"
+              />
             </button>
 
             <button

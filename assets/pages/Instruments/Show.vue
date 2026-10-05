@@ -221,7 +221,10 @@ const hiddenDividendsCount = computed(() => {
           </div>
           <div class="shadow-sm">
             <div class="table-responsive">
-              <open-deals-table :items="instrumentData.openPositions" />
+              <open-deals-table
+                :items="instrumentData.openPositions"
+                @changed="run"
+              />
             </div>
           </div>
         </section>
