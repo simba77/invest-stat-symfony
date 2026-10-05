@@ -25,7 +25,7 @@ final class AccountsControllerTest extends ApiTestCase
         $this->postJson('/api/accounts/create', ['name' => 'New broker', 'balance' => '5000', 'usdBalance' => '10', 'commission' => '0.1', 'futuresCommission' => '0', 'sort' => 100]);
 
         self::assertResponseIsSuccessful();
-        $accounts = $this->findFreshBy(Account::class, ['userId' => $admin->getId(), 'name' => 'New broker']);
+        $accounts = $this->findFreshBy(Account::class, ['user' => $admin->getId(), 'name' => 'New broker']);
         self::assertCount(1, $accounts);
         self::assertNotNull($accounts[0]->getJournalStartedAt());
         self::assertSame(['RUB' => '5000.0000', 'USD' => '10.0000'], $accounts[0]->getCashByCurrency());

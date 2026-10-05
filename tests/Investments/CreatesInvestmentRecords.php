@@ -24,7 +24,7 @@ trait CreatesInvestmentRecords
      */
     private function createAccount(User $owner, string $name = 'Broker', string $balance = '0'): Account
     {
-        $account = new Account((int) $owner->getId(), $name, balance: $balance);
+        $account = new Account($owner, $name, balance: $balance);
         $this->persist($account);
 
         return $account;

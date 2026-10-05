@@ -39,7 +39,7 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
             // Shares come first, by their type and currency
             ->leftJoin(Share::class, 's', Join::WITH, 's.id = i.id')
             ->join('d.account', 'acc')
-            ->andWhere('acc.userId = :userId')
+            ->andWhere('IDENTITY(acc.user) = :userId')
             ->andWhere('d.status != :status')
             ->setParameter('userId', $userId)
             ->setParameter('status', DealStatus::Closed)
@@ -69,7 +69,7 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
             // Shares come first, by their type and currency
             ->leftJoin(Share::class, 's', Join::WITH, 's.id = i.id')
             ->join('d.account', 'acc')
-            ->andWhere('acc.userId = :userId')
+            ->andWhere('IDENTITY(acc.user) = :userId')
             ->andWhere('d.account = :accountId')
             ->andWhere('d.status != :status')
             ->setParameter('userId', $userId)
@@ -93,7 +93,7 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
             ->select(['d', 'i'])
             ->join('d.instrument', 'i')
             ->join('d.account', 'acc')
-            ->andWhere('acc.userId = :userId')
+            ->andWhere('IDENTITY(acc.user) = :userId')
             ->andWhere('d.instrument = :instrumentId')
             ->andWhere('d.status = :status')
             ->setParameter('userId', $userId)
@@ -214,7 +214,7 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
             // Shares come first, by their type and currency
             ->leftJoin(Share::class, 's', Join::WITH, 's.id = i.id')
             ->join('d.account', 'acc')
-            ->andWhere('acc.userId = :userId')
+            ->andWhere('IDENTITY(acc.user) = :userId')
             ->andWhere('d.status = :status')
             ->setParameter('userId', $userId)
             ->setParameter('status', DealStatus::Closed);

@@ -81,7 +81,7 @@ final class HomepageControllerTest extends ApiTestCase
     public function testDashboardCountsBlockedCashOfAnyAccount(): void
     {
         $admin = $this->admin();
-        $account = new Account((int) $admin->getId(), 'Broker', balance: '1000', usdBalance: '100');
+        $account = new Account($admin, 'Broker', balance: '1000', usdBalance: '100');
         $account->setBlockedCash('RUB', '300');
         $account->setBlockedCash('USD', '40');
         $this->persist($account, new CurrencyRate('RUB', 'USD', '80', new \DateTimeImmutable('2026-01-15')));

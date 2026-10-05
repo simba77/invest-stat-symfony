@@ -30,7 +30,7 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
     {
         return $this->createQueryBuilder('a')
             ->select('a as account')
-            ->andWhere('a.userId = :val')
+            ->andWhere('IDENTITY(a.user) = :val')
             ->setParameter('val', $userId)
             ->orderBy('a.sort', 'ASC')
             ->addSelect('(select sum(inv.sum) from ' . Investment::class . ' as inv where inv.account = a) as deposits_sum')
@@ -40,12 +40,12 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
 
     public function getByIdAndUser(int $id, User $user): ?Account
     {
-        return $this->findOneBy(['id' => $id, 'userId' => $user->getId()]);
+        return $this->findOneBy(['id' => $id, 'user' => $user]);
     }
 
     public function findByUser(User $user): array
     {
-        return $this->findBy(['userId' => $user->getId()]);
+        return $this->findBy(['user' => $user]);
     }
 
     /**
@@ -69,7 +69,7 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
     {
         return $this->createQueryBuilder('a')
             ->select('a as account')
-            ->andWhere('a.userId = :user_id')
+            ->andWhere('IDENTITY(a.user) = :user_id')
             ->andWhere('a.id = :id')
             ->setParameter('id', $id)
             ->setParameter('user_id', $user->getId())

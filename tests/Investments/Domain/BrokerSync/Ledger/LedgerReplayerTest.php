@@ -17,6 +17,7 @@ use App\Investments\Domain\BrokerSync\Ledger\LedgerReplayer;
 use App\Investments\Domain\BrokerSync\Ledger\Lot;
 use App\Investments\Domain\Instruments\ShareSplit;
 use App\Investments\Domain\Operations\Deals\DealType;
+use App\Shared\Domain\User;
 use App\Tests\Investments\BrokerSync\Operations;
 use PHPUnit\Framework\TestCase;
 
@@ -236,7 +237,7 @@ final class LedgerReplayerTest extends TestCase
         array $splits = [],
         string $asOf = '2026-10-02 12:00:00',
     ): Ledger {
-        $link = new BrokerAccountLink(new Account(1, 'Broker'), BrokerProvider::TInvest, 'token', '2000', 'Broker', null, $allocation, true);
+        $link = new BrokerAccountLink(new Account(new User(), 'Broker'), BrokerProvider::TInvest, 'token', '2000', 'Broker', null, $allocation, true);
         $journal = array_map(static fn (ExternalOperation $operation) => new BrokerOperation($link, $operation), $operations);
 
         return (new LedgerReplayer())->replay($journal, $splits, $allocation, new \DateTimeImmutable($asOf));

@@ -62,8 +62,7 @@ class BondStrategyTest extends TestCase
 
     private function createStrategy(Bond $bond): BondStrategy
     {
-        $user = new User();
-        $account = new Account(userId: 1, name: 'Test account');
+        $account = new Account(user: new User(), name: 'Test account');
         $deal = new Deal(
             account: $account,
             ticker: $bond->getTicker(),

@@ -18,6 +18,7 @@ use App\Shared\Domain\UpdatedByProvider;
 use App\Shared\Domain\UpdatedDateProvider;
 use App\Shared\Domain\UpdatedDateProviderInterface;
 use App\Shared\Domain\UpdatedUserProviderInterface;
+use App\Shared\Domain\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -41,8 +42,9 @@ class Account implements
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private int $userId;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private User $user;
 
     #[ORM\Column(length: 255)]
     private string $name;
@@ -88,7 +90,7 @@ class Account implements
     private Collection $deals;
 
     /**
-     * @param int $userId
+     * @param User $user
      * @param string $name
      * @param numeric-string $balance
      * @param numeric-string $usdBalance
@@ -97,7 +99,7 @@ class Account implements
      * @param int $sort
      */
     public function __construct(
-        int $userId,
+        User $user,
         string $name,
         string $balance = '0',
         string $usdBalance = '0',
@@ -107,7 +109,7 @@ class Account implements
     ) {
         $this->investments = new ArrayCollection();
         $this->cash = new ArrayCollection();
-        $this->userId = $userId;
+        $this->user = $user;
         $this->name = $name;
         $this->setCash('RUB', $balance);
         $this->setCash('USD', $usdBalance);
@@ -122,9 +124,14 @@ class Account implements
         return $this->id;
     }
 
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
     public function getUserId(): ?int
     {
-        return $this->userId;
+        return $this->user->getId();
     }
 
     public function getName(): ?string

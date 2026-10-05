@@ -15,6 +15,7 @@ use App\Investments\Domain\Journal\ManualLedger;
 use App\Investments\Domain\Journal\ManualLedgerReplayer;
 use App\Investments\Domain\Journal\ManualOperation;
 use App\Investments\Domain\Journal\ManualOperationType;
+use App\Shared\Domain\User;
 use PHPUnit\Framework\TestCase;
 
 final class ManualLedgerReplayerTest extends TestCase
@@ -26,7 +27,7 @@ final class ManualLedgerReplayerTest extends TestCase
     #[\Override]
     protected function setUp(): void
     {
-        $this->account = new Account(1, 'Manual');
+        $this->account = new Account(new User(), 'Manual');
     }
 
     public function testSaleByQuantityClosesOldestLotAndKeepsTheRestWithItsTarget(): void

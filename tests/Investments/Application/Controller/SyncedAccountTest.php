@@ -77,7 +77,7 @@ final class SyncedAccountTest extends ApiTestCase
     public function testKeepsBrokerCashWhenAccountIsEdited(): void
     {
         $admin = $this->admin();
-        $account = new Account((int) $admin->getId(), 'Autofollow', balance: '1134.78');
+        $account = new Account($admin, 'Autofollow', balance: '1134.78');
         $this->persist($account);
         $this->linkAccount($account);
         $this->loginAs($admin);

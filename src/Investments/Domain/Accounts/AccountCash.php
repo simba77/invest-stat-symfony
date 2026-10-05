@@ -20,7 +20,7 @@ class AccountCash
      *
      * @var numeric-string
      */
-    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, options: ['default' => 0])]
+    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, options: ['default' => '0.0000'])]
     private string $blocked = '0';
 
     /** @psalm-suppress UnusedProperty */

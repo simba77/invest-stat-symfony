@@ -23,7 +23,7 @@ class CreateAccountCommandHandler
     public function __invoke(CreateAccountCommand $command): void
     {
         $account = new Account(
-            userId:            (int) $command->user->getId(),
+            user:              $command->user,
             name:              $command->name,
             commission:        $command->commission,
             futuresCommission: $command->futuresCommission,

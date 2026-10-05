@@ -9,13 +9,14 @@ use App\Investments\Domain\Instruments\Bond;
 use App\Investments\Domain\Instruments\Future;
 use App\Investments\Domain\Instruments\Securities\ShareTypeEnum;
 use App\Investments\Domain\Instruments\Share;
+use App\Shared\Domain\User;
 use PHPUnit\Framework\TestCase;
 
 final class AccountTest extends TestCase
 {
     public function testChargesTradesByTariff(): void
     {
-        $account = new Account(1, 'Broker', commission: '0.3', futuresCommission: '2.5');
+        $account = new Account(new User(), 'Broker', commission: '0.3', futuresCommission: '2.5');
 
         self::assertSame('7.50', $account->tradeCommission(new Share('SBER', 'Сбер', 'MOEX', 'RUB', '300', ShareTypeEnum::Stock->value), '250', 10));
         // 0.3% of 2 × 1000 × 98.5%
