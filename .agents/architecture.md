@@ -23,6 +23,12 @@ Layers inside a context:
   `EntityManager->getRepository()`. Existing code that still does it is legacy — do not copy it.
 * Contexts may use `Shared`; avoid new cross-dependencies between other contexts.
 
+## Ownership
+
+Accounts belong to a user (`accounts.user_id`); deals, dividends, coupons, deposits and journal
+operations belong to an account and reach their owner through it. Scope lookups by the account's
+owner (`getByIdAndUser()`, `findByIdAndUser()`), never by an id alone.
+
 ## Repositories
 
 * Contract: `Domain/*RepositoryInterface`.
@@ -85,8 +91,13 @@ A manual account is rebuilt from its own journal, `manual_operations` (`Domain/J
   lots into deals matched by `external_id` (the lot key), so deal ids survive rebuilds. A part
   sold off a lot keeps the key, the rest gets `#n` and the opening date of the purchase.
 * Cash = what the trades moved (a bond with its accrued coupon, a future by its result when closed)
-  + cash adjustments + deposits + dividends (in the share's currency) + coupons. Changes of payouts
-  and deposits go through `ManualJournal::changeRecords()`, which rebuilds the cash.
+  less their commissions + cash adjustments + deposits + dividends (in the share's currency) +
+  coupons. Changes of payouts and deposits go through `ManualJournal::changeRecords()`, which
+  rebuilds the cash. Blocks of cash (`block_cash`) set aside the part of it that cannot be used
+  (`account_cash.blocked`); the dashboard counts it as blocked assets.
+* A trade entered by hand is charged by the account tariff (`Account::tradeCommission()`): a percent
+  of a share or bond trade, a fixed sum per future. Deals recorded before have no known commission
+  and are estimated from the current price, as before.
 * An account without a journal (`accounts.journal_started_at` is null) starts one from its deals as
   they are on the first change; a cash adjustment keeps its cash. Run `accounts:rebuild` after a
   deploy that touches the journal: it starts the missing journals and rebuilds the others.
