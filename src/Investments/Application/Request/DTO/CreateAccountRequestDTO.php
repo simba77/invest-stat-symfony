@@ -16,6 +16,15 @@ final class CreateAccountRequestDTO
         public string $balance = '0',
         #[Assert\NotBlank]
         public string $usdBalance = '0',
+        /** The part of the rouble cash that cannot be used. */
+        #[Assert\NotBlank]
+        #[Assert\Type(['type' => ['numeric']])]
+        #[Assert\PositiveOrZero]
+        public string $blockedBalance = '0',
+        #[Assert\NotBlank]
+        #[Assert\Type(['type' => ['numeric']])]
+        #[Assert\PositiveOrZero]
+        public string $blockedUsdBalance = '0',
         #[Assert\NotBlank]
         public string $commission = '0',
         #[Assert\NotBlank]

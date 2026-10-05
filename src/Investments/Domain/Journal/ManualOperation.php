@@ -90,7 +90,7 @@ class ManualOperation implements CreatedDateProviderInterface, UpdatedDateProvid
     private ?string $lot = null;
 
     /**
-     * The money a cash adjustment adds, or takes when negative.
+     * The money a cash adjustment adds or takes, or the sum a block of cash blocks or frees.
      *
      * @var numeric-string|null
      */
@@ -183,6 +183,18 @@ class ManualOperation implements CreatedDateProviderInterface, UpdatedDateProvid
     public static function cashAdjustment(Account $account, \DateTimeImmutable $executedAt, string $currency, string $amount): self
     {
         $operation = new self($account, ManualOperationType::CashAdjustment, $executedAt);
+        $operation->currency = $currency;
+        $operation->amount = $amount;
+
+        return $operation;
+    }
+
+    /**
+     * @param numeric-string $amount blocked when positive, freed when negative
+     */
+    public static function blockCash(Account $account, \DateTimeImmutable $executedAt, string $currency, string $amount): self
+    {
+        $operation = new self($account, ManualOperationType::BlockCash, $executedAt);
         $operation->currency = $currency;
         $operation->amount = $amount;
 

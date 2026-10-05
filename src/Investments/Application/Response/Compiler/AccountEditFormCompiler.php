@@ -30,6 +30,8 @@ class AccountEditFormCompiler implements CompilerInterface
             name:              $entry->getName(),
             balance:           $entry->getBalance(),
             usdBalance:        $entry->getUsdBalance(),
+            blockedBalance:    $entry->getBlockedCash('RUB'),
+            blockedUsdBalance: $entry->getBlockedCash('USD'),
             commission:        $entry->getCommission(),
             futuresCommission: $entry->getFuturesCommission(),
             sort:              $entry->getSort(),

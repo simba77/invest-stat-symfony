@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Shared\Application\Controller;
 
+use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Instruments\CurrencyRate;
 use App\Tests\Deposits\CreatesDeposits;
 use App\Tests\Support\ApiTestCase;
@@ -75,5 +76,26 @@ final class HomepageControllerTest extends ApiTestCase
         self::assertSame('1050.00', $totals['Deposits + Investments']);
         self::assertSame('1050.00', $totals['Saving + All Brokers Assets']);
         self::assertSame('1050.00', $totals['Liquid assets']);
+    }
+
+    public function testDashboardCountsBlockedCashOfAnyAccount(): void
+    {
+        $admin = $this->admin();
+        $account = new Account((int) $admin->getId(), 'Broker', balance: '1000', usdBalance: '100');
+        $account->setBlockedCash('RUB', '300');
+        $account->setBlockedCash('USD', '40');
+        $this->persist($account, new CurrencyRate('RUB', 'USD', '80', new \DateTimeImmutable('2026-01-15')));
+        $this->loginAs($admin);
+
+        $this->getJson('/api/dashboard');
+
+        self::assertResponseIsSuccessful();
+        /** @var array{summary: list<array{name: string, total: string}>} $dashboard */
+        $dashboard = $this->responseJson();
+        $totals = array_column($dashboard['summary'], 'total', 'name');
+        // 1000 + 100 × 80 held, of which 300 + 40 × 80 are blocked
+        self::assertSame('9000.00', $totals['All Assets']);
+        self::assertSame('3500.00', $totals['Blocked Assets']);
+        self::assertSame('5500.00', $totals['Liquid assets']);
     }
 }

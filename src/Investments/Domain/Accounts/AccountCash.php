@@ -15,6 +15,14 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\UniqueConstraint(name: 'account_cash_currency', columns: ['account_id', 'currency'])]
 class AccountCash
 {
+    /**
+     * The part of the amount that cannot be used, e.g. frozen by sanctions.
+     *
+     * @var numeric-string
+     */
+    #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 4, options: ['default' => 0])]
+    private string $blocked = '0';
+
     /** @psalm-suppress UnusedProperty */
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -51,6 +59,24 @@ class AccountCash
     public function getAmount(): string
     {
         return $this->amount;
+    }
+
+    /**
+     * @return numeric-string
+     */
+    public function getBlocked(): string
+    {
+        return $this->blocked;
+    }
+
+    /**
+     * @param numeric-string $blocked
+     */
+    public function setBlocked(string $blocked): void
+    {
+        if (bccomp($this->blocked, $blocked, 4) !== 0) {
+            $this->blocked = $blocked;
+        }
     }
 
     /**

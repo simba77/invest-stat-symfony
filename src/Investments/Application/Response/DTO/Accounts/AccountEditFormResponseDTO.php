@@ -13,6 +13,8 @@ class AccountEditFormResponseDTO
         public string $name,
         public string $balance,
         public string $usdBalance,
+        public string $blockedBalance,
+        public string $blockedUsdBalance,
         public string $commission,
         public string $futuresCommission,
         public int $sort,

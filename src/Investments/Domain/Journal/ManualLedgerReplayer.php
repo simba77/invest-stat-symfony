@@ -36,7 +36,7 @@ final readonly class ManualLedgerReplayer
             $state->warnings[] = sprintf('%d operations refer to lot %s that was never opened', count($waiting), $lot);
         }
 
-        return new ManualLedger($state->book->lots(), $state->instruments, $state->cash, $state->knownCommissions, $state->warnings);
+        return new ManualLedger($state->book->lots(), $state->instruments, $state->cash, $state->blockedCash, $state->knownCommissions, $state->warnings);
     }
 
     private function apply(ManualLedgerState $state, ManualOperation $operation): void
@@ -44,6 +44,12 @@ final readonly class ManualLedgerReplayer
         $type = $operation->getType();
         if ($type === ManualOperationType::CashAdjustment) {
             $this->addCash($state, (string) $operation->getCurrency(), $operation->getAmount());
+
+            return;
+        }
+        if ($type === ManualOperationType::BlockCash) {
+            $currency = (string) $operation->getCurrency();
+            $state->blockedCash[$currency] = bcadd($state->blockedCash[$currency] ?? '0', $operation->getAmount(), 4);
 
             return;
         }

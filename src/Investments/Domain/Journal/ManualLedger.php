@@ -16,6 +16,7 @@ final readonly class ManualLedger
      * @param list<Lot> $lots
      * @param array<string, Instrument|null> $instruments the catalogue instrument by lot instrument uid
      * @param array<string, numeric-string> $cash what trades and cash adjustments added, by currency
+     * @param array<string, numeric-string> $blockedCash the part of the cash that is blocked, by currency
      * @param array<string, true> $knownCommissions the lots opened with a recorded commission, by the key of the opening
      * @param list<string> $warnings
      */
@@ -23,6 +24,7 @@ final readonly class ManualLedger
         public array $lots,
         public array $instruments,
         public array $cash,
+        public array $blockedCash,
         public array $knownCommissions,
         public array $warnings,
     ) {

@@ -196,6 +196,56 @@ class Account implements
     }
 
     /**
+     * The part of the cash in the currency that cannot be used.
+     *
+     * @return numeric-string
+     */
+    public function getBlockedCash(string $currency): string
+    {
+        foreach ($this->cash as $cash) {
+            if ($cash->getCurrency() === $currency) {
+                return $cash->getBlocked();
+            }
+        }
+
+        return '0.0000';
+    }
+
+    /**
+     * @return array<string, numeric-string> by currency, only the currencies with blocked cash
+     */
+    public function getBlockedCashByCurrency(): array
+    {
+        $result = [];
+        foreach ($this->cash as $cash) {
+            if (bccomp($cash->getBlocked(), '0', 4) !== 0) {
+                $result[$cash->getCurrency()] = $cash->getBlocked();
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param numeric-string $blocked
+     */
+    public function setBlockedCash(string $currency, string $blocked): static
+    {
+        foreach ($this->cash as $cash) {
+            if ($cash->getCurrency() === $currency) {
+                $cash->setBlocked($blocked);
+
+                return $this;
+            }
+        }
+        $cash = new AccountCash($this, $currency, '0');
+        $cash->setBlocked($blocked);
+        $this->cash->add($cash);
+
+        return $this;
+    }
+
+    /**
      * @return numeric-string
      */
     public function getBalance(): string

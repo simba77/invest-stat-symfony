@@ -24,7 +24,8 @@ use Psr\Log\LoggerInterface;
 
 /**
  * The journal of a manual account: the deals and the cash of the account are rebuilt from it after
- * every change. Cash is what the trades, the deposits and the payouts brought, plus adjustments.
+ * every change. Cash is what the trades, the deposits and the payouts brought, plus adjustments;
+ * blocks of cash set aside the part of it that cannot be used.
  *
  * An account that has no journal yet starts one from its deals as they are, and an adjustment
  * keeps its cash as it was.
@@ -91,6 +92,20 @@ final readonly class ManualJournal
     }
 
     /**
+     * Blocks or frees cash so that the given part of the cash in the currency is blocked.
+     *
+     * @param numeric-string $amount
+     */
+    public function adjustBlockedCash(Account $account, string $currency, string $amount): void
+    {
+        $this->start($account);
+        $difference = bcsub($amount, $account->getBlockedCash($currency), 4);
+        if (bccomp($difference, '0', 4) !== 0) {
+            $this->record($account, ManualOperation::blockCash($account, $this->clock->now(), $currency, $difference));
+        }
+    }
+
+    /**
      * The key of the lot of a deal, by which the journal refers to it.
      */
     public function lotOf(Deal $deal): string
@@ -144,6 +159,9 @@ final readonly class ManualJournal
                 if (bccomp($difference, '0', 4) !== 0) {
                     $adjustments[] = ManualOperation::cashAdjustment($account, $now, $currency, $difference);
                 }
+                if (bccomp($account->getBlockedCash($currency), '0', 4) !== 0) {
+                    $adjustments[] = ManualOperation::blockCash($account, $now, $currency, $account->getBlockedCash($currency));
+                }
             }
             $this->operationRepository->save(...$adjustments);
 
@@ -161,8 +179,9 @@ final readonly class ManualJournal
         $ledger = $this->replay($account);
         $this->projector->project($account, $ledger);
         $cash = $this->cash($account, $ledger);
-        foreach (array_unique([...array_keys($account->getCashByCurrency()), ...array_keys($cash)]) as $currency) {
+        foreach (array_unique([...array_keys($account->getCashByCurrency()), ...array_keys($cash), ...array_keys($ledger->blockedCash)]) as $currency) {
             $account->setCash($currency, $cash[$currency] ?? '0');
+            $account->setBlockedCash($currency, $ledger->blockedCash[$currency] ?? '0');
         }
         $this->accountRepository->save($account);
     }

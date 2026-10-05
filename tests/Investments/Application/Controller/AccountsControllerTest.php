@@ -61,6 +61,46 @@ final class AccountsControllerTest extends ApiTestCase
         );
     }
 
+    public function testEditOfBlockedCashRecordsTheDifference(): void
+    {
+        $admin = $this->admin();
+        $account = $this->createAccount($admin, balance: '1000');
+        $account->setUsdBalance('3000');
+        $this->persist($account);
+        $this->loginAs($admin);
+
+        $this->postJson('/api/accounts/update/' . $account->getId(), $this->accountForm(usdBalance: '3000', blockedUsdBalance: '1200'));
+        $this->postJson('/api/accounts/update/' . $account->getId(), $this->accountForm(usdBalance: '3000', blockedUsdBalance: '1000'));
+
+        self::assertResponseIsSuccessful();
+        $account = $this->findFresh(Account::class, $account->getId());
+        self::assertSame(['USD' => '1000.0000'], $account?->getBlockedCashByCurrency());
+        self::assertSame('3000.0000', $account?->getUsdBalance());
+        self::assertSame(
+            ['1200.0000', '-200.0000'],
+            array_map(
+                static fn (ManualOperation $operation) => $operation->getAmount(),
+                $this->findFreshBy(ManualOperation::class, ['account' => $account?->getId(), 'type' => ManualOperationType::BlockCash]),
+            ),
+        );
+
+        $this->getJson('/api/accounts/get-form/' . (int) $account?->getId());
+        /** @var array<string, mixed> $form */
+        $form = $this->responseJson();
+        self::assertSame(['0.0000', '1000.0000'], [$form['blockedBalance'], $form['blockedUsdBalance']]);
+    }
+
+    public function testEditRefusesNegativeBlockedCash(): void
+    {
+        $admin = $this->admin();
+        $account = $this->createAccount($admin);
+        $this->loginAs($admin);
+
+        $this->postJson('/api/accounts/update/' . $account->getId(), $this->accountForm(blockedUsdBalance: '-1'));
+
+        $this->assertViolatedFields(['blockedUsdBalance']);
+    }
+
     public function testDeleteIsNotReachableByGet(): void
     {
         $admin = $this->admin();
@@ -71,5 +111,22 @@ final class AccountsControllerTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame(405);
         self::assertNotNull($this->findFresh(Account::class, $account->getId()));
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function accountForm(string $usdBalance = '0', string $blockedUsdBalance = '0'): array
+    {
+        return [
+            'name'              => 'Broker',
+            'balance'           => '1000',
+            'blockedBalance'    => '0',
+            'usdBalance'        => $usdBalance,
+            'blockedUsdBalance' => $blockedUsdBalance,
+            'commission'        => '0.1',
+            'futuresCommission' => '0',
+            'sort'              => 100,
+        ];
     }
 }

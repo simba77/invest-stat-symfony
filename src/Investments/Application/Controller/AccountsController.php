@@ -49,6 +49,8 @@ class AccountsController extends AbstractController
                 name:              $dto->name,
                 balance:           $dto->balance,
                 usdBalance:        $dto->usdBalance,
+                blockedBalance:    $dto->blockedBalance,
+                blockedUsdBalance: $dto->blockedUsdBalance,
                 commission:        $dto->commission,
                 futuresCommission: $dto->futuresCommission,
                 sort:              $dto->sort
@@ -67,6 +69,8 @@ class AccountsController extends AbstractController
                 name:              $dto->name,
                 balance:           $dto->balance,
                 usdBalance:        $dto->usdBalance,
+                blockedBalance:    $dto->blockedBalance,
+                blockedUsdBalance: $dto->blockedUsdBalance,
                 commission:        $dto->commission,
                 futuresCommission: $dto->futuresCommission,
                 sort:              $dto->sort,

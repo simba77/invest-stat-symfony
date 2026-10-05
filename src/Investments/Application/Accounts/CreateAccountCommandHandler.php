@@ -35,5 +35,7 @@ class CreateAccountCommandHandler
         // The starting cash is the first entry of the journal
         $this->journal->adjustCash($account, 'RUB', $command->balance);
         $this->journal->adjustCash($account, 'USD', $command->usdBalance);
+        $this->journal->adjustBlockedCash($account, 'RUB', $command->blockedBalance);
+        $this->journal->adjustBlockedCash($account, 'USD', $command->blockedUsdBalance);
     }
 }

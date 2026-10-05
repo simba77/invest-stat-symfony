@@ -41,6 +41,20 @@ final class ManualJournalTest extends KernelTestCase
         );
     }
 
+    public function testStartingJournalKeepsBlockedCash(): void
+    {
+        $account = $this->createAccount($this->admin(), balance: '1000');
+        $account->setUsdBalance('3620');
+        $account->setBlockedCash('USD', '3620');
+        $this->persist($account);
+
+        $this->journal()->rebuild($account);
+
+        $account = $this->findFresh(Account::class, $account->getId());
+        self::assertSame(['USD' => '3620.0000'], $account?->getBlockedCashByCurrency());
+        self::assertSame(['block_cash' => 1, 'cash_adjustment' => 2], $this->operationCounts($account ?? self::fail()));
+    }
+
     public function testStartedJournalIsNotStartedAgain(): void
     {
         $accounts = $this->createPortfolio($this->admin());

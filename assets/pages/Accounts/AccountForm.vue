@@ -13,7 +13,9 @@ const router = useRouter();
 const form = reactive({
   name: '',
   balance: '0',
+  blockedBalance: '0',
   usdBalance: '0',
+  blockedUsdBalance: '0',
   commission: '0',
   futuresCommission: '0',
   sort: 100,
@@ -110,11 +112,33 @@ onMounted(() => {
 
                 <input-text
                   :key="componentKey"
+                  v-model.trim="form.blockedBalance"
+                  :error="errors"
+                  name="blockedBalance"
+                  label="Blocked of the Balance"
+                  placeholder="The part that cannot be used"
+                  type="number"
+                  :disabled="isSynced"
+                />
+
+                <input-text
+                  :key="componentKey"
                   v-model.trim="form.usdBalance"
                   :error="errors"
                   name="usdBalance"
                   label="USD Balance"
                   placeholder="Enter USD Balance"
+                  type="number"
+                  :disabled="isSynced"
+                />
+
+                <input-text
+                  :key="componentKey"
+                  v-model.trim="form.blockedUsdBalance"
+                  :error="errors"
+                  name="blockedUsdBalance"
+                  label="Blocked of the USD Balance"
+                  placeholder="The part that cannot be used"
                   type="number"
                   :disabled="isSynced"
                 />

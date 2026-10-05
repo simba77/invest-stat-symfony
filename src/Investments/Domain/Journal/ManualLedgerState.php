@@ -22,6 +22,9 @@ final class ManualLedgerState
     /** @var array<string, numeric-string> by currency */
     public array $cash = [];
 
+    /** @var array<string, numeric-string> by currency */
+    public array $blockedCash = [];
+
     /** @var array<string, true> lots opened so far, by key */
     public array $opened = [];
 

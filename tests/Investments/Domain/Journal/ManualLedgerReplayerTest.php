@@ -151,6 +151,18 @@ final class ManualLedgerReplayerTest extends TestCase
         self::assertSame(['RUB' => '1000.0000', 'USD' => '-200.0000'], $ledger->cash);
     }
 
+    public function testBlockOfCashSetsAsideItsPartWithoutSpendingIt(): void
+    {
+        $ledger = $this->replay(
+            ManualOperation::cashAdjustment($this->account, new \DateTimeImmutable('2025-01-01'), 'USD', '3620'),
+            ManualOperation::blockCash($this->account, new \DateTimeImmutable('2025-01-02'), 'USD', '3620'),
+            ManualOperation::blockCash($this->account, new \DateTimeImmutable('2025-03-01'), 'USD', '-620'),
+        );
+
+        self::assertSame(['USD' => '3620.0000'], $ledger->cash);
+        self::assertSame(['USD' => '3000.0000'], $ledger->blockedCash);
+    }
+
     public function testWarnsAboutClosingMoreThanIsOpen(): void
     {
         $sber = $this->share('SBER');

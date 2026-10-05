@@ -58,12 +58,13 @@ final readonly class GetHomepageDataUseCase
         }
 
         $accounts = $this->accountRepository->findByUserWithDeposits($userId);
-        $accountsList = $this->accountsListCompiler->compile($accounts);
-        foreach ($accountsList as $account) {
+        foreach ($this->accountsListCompiler->compile($accounts) as $account) {
             $allAssetsSum = bcadd($account->currentValue, $allAssetsSum, 2);
-
-            if ($account->id === 1) {
-                $blockedAssetsSum = bcadd($blockedAssetsSum, bcmul($account->usdBalance, $this->currencyService->getUSDRUBRate()), 2);
+        }
+        foreach ($accounts as $item) {
+            foreach ($item['account']->getBlockedCashByCurrency() as $currency => $amount) {
+                $rate = $currency === 'RUB' ? '1' : $this->currencyService->getCurrencyRate($currency);
+                $blockedAssetsSum = bcadd($blockedAssetsSum, bcmul($amount, $rate, 2), 2);
             }
         }
 
