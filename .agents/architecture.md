@@ -115,6 +115,10 @@ A manual account is rebuilt from its own journal, `manual_operations` (`Domain/J
   change the journal is replayed with it in memory, and the change is refused (HTTP 409) when the
   replay brings a warning the journal does not have now — a later sale or block that loses its lot
   (`#n` parts are numbered in the order of the sales) — or frees more cash than was blocked.
+* The "Operations" page (`GET /api/operations`) shows the history of all accounts at once, filtered
+  by account and `OperationCategory`: one SQL `UNION ALL` (`OperationHistoryRepository`) over the
+  journals and the deposits, dividends and coupons of the manual accounts and the executed
+  `broker_operations` of the synced ones (their projected records are left out, as duplicates).
 
 ## Instruments catalogue
 

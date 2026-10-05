@@ -135,6 +135,14 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('./pages/Accounts/AssetForm.vue')
   },
   {
+    name: 'Operations',
+    path: '/operations',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import('./pages/Operations.vue')
+  },
+  {
     name: 'ClosedDeals',
     path: '/closed-deals',
     meta: {

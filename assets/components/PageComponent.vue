@@ -34,6 +34,10 @@ const navigation: NavItem[] = [
     routeName: 'Accounts',
   },
   {
+    name: 'Operations',
+    routeName: 'Operations',
+  },
+  {
     name: 'Analytics',
     routeName: null,
     children: [
