@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Investments\Domain\Accounts;
 
+use App\Investments\Domain\Instruments\Bond;
+use App\Investments\Domain\Instruments\Future;
+use App\Investments\Domain\Instruments\Instrument;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\Investment;
 use App\Investments\Infrastructure\Persistence\Repository\AccountRepository;
@@ -255,6 +258,28 @@ class Account implements
         $this->commission = $commission;
 
         return $this;
+    }
+
+    /**
+     * What the broker charges for a trade by the tariff of the account: a percent of the money of a
+     * share or a bond trade (a bond by its nominal times the price in percent), a fixed sum per future.
+     *
+     * @param numeric-string $price as the security is quoted
+     * @return numeric-string rounded to kopecks
+     */
+    public function tradeCommission(?Instrument $instrument, string $price, int $quantity): string
+    {
+        if ($instrument instanceof Future) {
+            return bcround(bcmul($this->getFuturesCommission(), (string) $quantity, 4), 2);
+        }
+
+        $money = bcmul($price, (string) $quantity, 9);
+        $nominal = $instrument instanceof Bond ? $instrument->getLotSize() : null;
+        if ($nominal !== null) {
+            $money = bcdiv(bcmul($money, $nominal, 9), '100', 9);
+        }
+
+        return bcround(bcdiv(bcmul($money, $this->getCommission(), 9), '100', 9), 2);
     }
 
     public function getFuturesCommission(): string

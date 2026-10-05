@@ -17,7 +17,8 @@ use Psr\Clock\ClockInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
- * Records a purchase or a short sale in the journal; the deal and the cash follow from it.
+ * Records a purchase or a short sale in the journal with the commission of the account tariff;
+ * the deal and the cash follow from it.
  */
 #[AsMessageHandler]
 final readonly class CreateDealCommandHandler
@@ -51,6 +52,7 @@ final readonly class CreateDealCommandHandler
             price:           $command->buyPrice,
             targetPrice:     $command->targetPrice,
             accruedInterest: $instrument instanceof Bond ? $instrument->getCouponAccumulated() : null,
+            commission:      $account->tradeCommission($instrument, $command->buyPrice, $command->quantity),
         ));
     }
 }

@@ -36,7 +36,7 @@ final class DealsControllerTest extends ApiTestCase
         static::mockTime(self::NOW);
     }
 
-    public function testCreatePaysForLongDealFromRoubleCashWithoutCommission(): void
+    public function testCreatePaysForLongDealAndItsCommissionFromRoubleCash(): void
     {
         $account = $this->manualAccount(balance: '10000');
         $sber = $this->createShare('SBER', price: '300');
@@ -51,7 +51,9 @@ final class DealsControllerTest extends ApiTestCase
             ['SBER', 'MOEX', DealStatus::Active, DealType::Long, 10, '250.0000', '320.0000', '0.0000', $sber->getId(), null, null, self::NOW],
             $this->describe($deals[0]),
         );
-        self::assertSame(['7500.0000', '0.0000', '3000.0000'], $this->cashAndAssets($account));
+        self::assertSame(['7.5000', null], [$deals[0]->getBuyCommission(), $deals[0]->getSellCommission()]);
+        // 2500 and 0.3% of it
+        self::assertSame(['7492.5000', '0.0000', '3000.0000'], $this->cashAndAssets($account));
     }
 
     public function testCreateAddsProceedsOfShortDealToCash(): void
@@ -64,7 +66,7 @@ final class DealsControllerTest extends ApiTestCase
         self::assertResponseIsSuccessful();
         self::assertSame(DealType::Short, $this->findFreshBy(Deal::class, ['account' => $account->getId()])[0]->getType());
         // The short is valued like a long position: its market value is added to the assets
-        self::assertSame(['13400.0000', '0.0000', '3000.0000'], $this->cashAndAssets($account));
+        self::assertSame(['13389.8000', '0.0000', '3000.0000'], $this->cashAndAssets($account));
     }
 
     public function testCreatePaysForDollarShareFromDollarCash(): void
@@ -76,7 +78,7 @@ final class DealsControllerTest extends ApiTestCase
         $this->postJson('/api/deals/create/' . $account->getId(), $this->dealPayload('AAPL', 3, '150', market: 'SPB'));
 
         self::assertResponseIsSuccessful();
-        self::assertSame(['10000.0000', '550.0000', '48000.0000'], $this->cashAndAssets($account));
+        self::assertSame(['10000.0000', '548.6500', '48000.0000'], $this->cashAndAssets($account));
     }
 
     public function testCreatePaysForBondNominalPercentAndAccruedCoupon(): void
@@ -90,8 +92,8 @@ final class DealsControllerTest extends ApiTestCase
         self::assertResponseIsSuccessful();
         $deal = $this->findFreshBy(Deal::class, ['account' => $account->getId()])[0];
         self::assertSame(['98.5000', $bond->getId()], [$deal->getBuyPrice(), $deal->getBond()?->getId()]);
-        // 2 × (1000 × 98.5% + 12.5 accrued coupon); the accrued coupon paid is not kept with the deal
-        self::assertSame(['8005.0000', '0.0000', '1925.0000'], $this->cashAndAssets($account));
+        // 2 × (1000 × 98.5% + 12.5 accrued coupon) and 0.3% of 1970
+        self::assertSame(['7999.0900', '0.0000', '1925.0000'], $this->cashAndAssets($account));
     }
 
     public function testCreateLeavesCashUntouchedForFuture(): void
@@ -102,8 +104,8 @@ final class DealsControllerTest extends ApiTestCase
         $this->postJson('/api/deals/create/' . $account->getId(), $this->dealPayload('SiH6', 1, '85000'));
 
         self::assertResponseIsSuccessful();
-        // A future adds its open profit, not its price, to the assets
-        self::assertSame(['10000.0000', '0.0000', '4995.0000'], $this->cashAndAssets($account));
+        // A future adds its open profit, not its price, to the assets; the account charges nothing for futures
+        self::assertSame(['10000.0000', '0.0000', '5000.0000'], $this->cashAndAssets($account));
     }
 
     /**
@@ -128,8 +130,8 @@ final class DealsControllerTest extends ApiTestCase
      */
     public static function unknownSecurities(): iterable
     {
-        yield 'on MOEX in roubles' => ['MOEX', ['9800.0000', '1000.0000']];
-        yield 'elsewhere in dollars' => ['SPB', ['10000.0000', '800.0000']];
+        yield 'on MOEX in roubles' => ['MOEX', ['9799.4000', '1000.0000']];
+        yield 'elsewhere in dollars' => ['SPB', ['10000.0000', '799.4000']];
     }
 
     public function testSellOneClosesDealAndAddsProceedsToCash(): void
@@ -142,7 +144,7 @@ final class DealsControllerTest extends ApiTestCase
         self::assertResponseIsSuccessful();
         $deal = $this->findFresh(Deal::class, $deal->getId());
         self::assertSame([DealStatus::Closed, 10, '310.0000', self::NOW], [$deal?->getStatus(), $deal?->getQuantity(), $deal?->getSellPrice(), $deal?->getClosingDate()?->format('Y-m-d H:i:s')]);
-        self::assertSame(['10600.0000', '0.0000', '0.0000'], $this->cashAndAssets($account));
+        self::assertSame(['10590.7000', '0.0000', '0.0000'], $this->cashAndAssets($account));
     }
 
     public function testSellOneOfShortDealPaysForBuyingBack(): void
@@ -154,7 +156,7 @@ final class DealsControllerTest extends ApiTestCase
 
         self::assertResponseIsSuccessful();
         self::assertSame(DealStatus::Closed, $this->findFresh(Deal::class, $deal->getId())?->getStatus());
-        self::assertSame(['10200.0000', '0.0000', '0.0000'], $this->cashAndAssets($account));
+        self::assertSame(['10190.4000', '0.0000', '0.0000'], $this->cashAndAssets($account));
     }
 
     public function testSellOneOfFutureAddsItsResultInRoubles(): void
@@ -202,7 +204,7 @@ final class DealsControllerTest extends ApiTestCase
                 $deal->createdAt()->format('Y-m-d H:i:s'),
             ], $deals),
         );
-        self::assertSame(['3720.0000', '0.0000', '2100.0000'], $this->cashAndAssets($account));
+        self::assertSame(['3708.8400', '0.0000', '2100.0000'], $this->cashAndAssets($account));
     }
 
     public function testSellAsNeededRefusesToSellMoreThanTheOpenDealsHold(): void
@@ -265,8 +267,41 @@ final class DealsControllerTest extends ApiTestCase
         self::assertResponseIsSuccessful();
         $operations = $this->findFreshBy(ManualOperation::class, ['account' => $account->getId(), 'type' => ManualOperationType::Buy]);
         self::assertCount(1, $operations);
-        self::assertSame([10, '250.0000', '320.0000', self::NOW], [$operations[0]->getQuantity(), $operations[0]->getPrice(), $operations[0]->getTargetPrice(), $operations[0]->getExecutedAt()->format('Y-m-d H:i:s')]);
+        self::assertSame(
+            [10, '250.0000', '320.0000', '7.5000', self::NOW],
+            [$operations[0]->getQuantity(), $operations[0]->getPrice(), $operations[0]->getTargetPrice(), $operations[0]->getCommission(), $operations[0]->getExecutedAt()->format('Y-m-d H:i:s')],
+        );
         self::assertSame($operations[0]->getOpenedLot(), $this->findFreshBy(Deal::class, ['account' => $account->getId()])[0]->getExternalId());
+    }
+
+    public function testDealBoughtAndSoldHereKeepsTheCommissionsOfBothTrades(): void
+    {
+        $account = $this->manualAccount(balance: '10000');
+        $this->createShare('SBER', price: '300');
+        $this->postJson('/api/deals/create/' . $account->getId(), $this->dealPayload('SBER', 10, '250'));
+        $deal = $this->findFreshBy(Deal::class, ['account' => $account->getId()])[0];
+
+        $this->postJson('/api/deals/sell', ['id' => $deal->getId(), 'accountId' => $account->getId(), 'ticker' => 'SBER', 'price' => '310', 'quantity' => 10]);
+
+        self::assertResponseIsSuccessful();
+        $deal = $this->findFresh(Deal::class, $deal->getId());
+        self::assertSame(['7.5000', '9.3000'], [$deal?->getBuyCommission(), $deal?->getSellCommission()]);
+        // 10000 - 2500 - 7.50 + 3100 - 9.30
+        self::assertSame(['10583.2000', '0.0000', '0.0000'], $this->cashAndAssets($account));
+    }
+
+    public function testEditChargesCorrectedPurchaseByTariff(): void
+    {
+        $account = $this->manualAccount(balance: '10000');
+        $this->createShare('SBER', price: '300');
+        $this->postJson('/api/deals/create/' . $account->getId(), $this->dealPayload('SBER', 10, '250'));
+        $deal = $this->findFreshBy(Deal::class, ['account' => $account->getId()])[0];
+
+        $this->postJson('/api/deals/edit/' . $deal->getId(), $this->dealPayload('SBER', 20, '240'));
+
+        self::assertResponseIsSuccessful();
+        self::assertSame('14.4000', $this->findFresh(Deal::class, $deal->getId())?->getBuyCommission());
+        self::assertSame(['5185.6000', '0.0000', '6000.0000'], $this->cashAndAssets($account));
     }
 
     public function testEditOfTheRestOfPartlySoldDealChangesThePurchase(): void

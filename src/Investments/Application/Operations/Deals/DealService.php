@@ -19,7 +19,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Clock\ClockInterface;
 
 /**
- * Records sales in the journal; the deals and the cash follow from it.
+ * Records sales in the journal with the commission of the account tariff; the deals and the cash
+ * follow from it.
  */
 class DealService
 {
@@ -76,6 +77,7 @@ class DealService
             quantity:        $quantity,
             price:           $dto->price,
             accruedInterest: $instrument instanceof Bond ? $instrument->getCouponAccumulated() : null,
+            commission:      $deal->getAccount()->tradeCommission($instrument, $dto->price, $quantity),
         );
     }
 }

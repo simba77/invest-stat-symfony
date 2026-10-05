@@ -288,7 +288,8 @@ class ManualOperation implements CreatedDateProviderInterface, UpdatedDateProvid
     }
 
     /**
-     * Corrects the purchase or the short sale the operation opened.
+     * Corrects the purchase or the short sale the operation opened. A commission known before is
+     * charged again by the tariff for the corrected trade; an unknown one stays unknown.
      *
      * @param numeric-string $price
      * @param numeric-string|null $targetPrice
@@ -310,6 +311,9 @@ class ManualOperation implements CreatedDateProviderInterface, UpdatedDateProvid
         $this->quantity = $quantity;
         $this->price = $price;
         $this->targetPrice = $targetPrice;
+        if ($this->commission !== null) {
+            $this->commission = $this->account->tradeCommission($instrument, $price, $quantity);
+        }
     }
 
     private function setSecurity(?Instrument $instrument, string $ticker, string $stockMarket): void
