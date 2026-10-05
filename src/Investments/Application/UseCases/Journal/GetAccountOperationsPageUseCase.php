@@ -38,11 +38,12 @@ final readonly class GetAccountOperationsPageUseCase
             throw new NotFoundException(sprintf('Account with id "%s" not found', $accountId));
         }
 
-        $totalItems = $this->operationRepository->countByAccount($account);
+        // Operations left from before the account was synced no longer describe it
+        $totalItems = $account->getJournalStartedAt() !== null ? $this->operationRepository->countByAccount($account) : 0;
         $pageRequest = $this->pageRequestFactory->create($page, $perPage, $totalItems);
         $pagination = $this->paginationMetaFactory->create($pageRequest->page, $pageRequest->perPage, $totalItems);
 
-        $operations = $this->operationRepository->findPageByAccount($account, $pageRequest->offset, $pageRequest->perPage);
+        $operations = $totalItems > 0 ? $this->operationRepository->findPageByAccount($account, $pageRequest->offset, $pageRequest->perPage) : [];
         $lots = array_values(array_unique(array_filter(array_map(static fn ($operation) => $operation->getLot(), $operations))));
         $openings = $this->operationRepository->findOpenings($account, ...$lots);
 

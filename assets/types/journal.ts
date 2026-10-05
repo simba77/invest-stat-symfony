@@ -18,4 +18,14 @@ export interface ManualOperation {
   currency: string | null
   lotOpenedAt: string | null
   lotPrice: string | null
+  // A purchase is deleted through its deal
+  canCancel: boolean
+  // Only the price and the date of a sale can be corrected
+  canEdit: boolean
+}
+
+export interface SaleCorrection {
+  price: string
+  // ATOM, e.g. 2026-03-05T09:00:00+00:00
+  executedAt: string
 }

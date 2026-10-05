@@ -12,6 +12,7 @@ use App\Investments\Domain\Journal\ManualLedgerReplayer;
 use App\Investments\Domain\Journal\ManualOperation;
 use App\Investments\Domain\Journal\ManualOperationRepositoryInterface;
 use App\Investments\Domain\Journal\ManualOperationType;
+use App\Investments\Domain\Journal\OperationCannotBeChangedException;
 use App\Investments\Domain\Operations\CouponRepositoryInterface;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
@@ -106,6 +107,45 @@ final readonly class ManualJournal
     }
 
     /**
+     * Takes a close, a block or a cash operation out of the journal; a purchase goes with its deal.
+     *
+     * @throws OperationCannotBeChangedException when later operations would lose their lot
+     */
+    public function cancel(ManualOperation $operation): void
+    {
+        if ($operation->getType()->direction() !== null) {
+            throw OperationCannotBeChangedException::opening();
+        }
+        $account = $operation->getAccount();
+        $operations = $this->operationRepository->findByAccount($account);
+        $this->assertReplays($operations, array_values(array_filter($operations, static fn (ManualOperation $item) => $item !== $operation)));
+
+        $this->entityManager->wrapInTransaction(function () use ($account, $operation): void {
+            $this->operationRepository->remove($operation);
+            $this->rebuildStarted($account);
+        });
+    }
+
+    /**
+     * Corrects the price and the date of a sale.
+     *
+     * @param numeric-string $price
+     * @throws OperationCannotBeChangedException when later operations would lose their lot
+     */
+    public function correctSale(ManualOperation $sale, string $price, \DateTimeImmutable $executedAt): void
+    {
+        $corrected = clone $sale;
+        $corrected->correctClose($price, $executedAt);
+        $operations = $this->operationRepository->findByAccount($sale->getAccount());
+        $after = array_map(static fn (ManualOperation $item) => $item === $sale ? $corrected : $item, $operations);
+        usort($after, static fn (ManualOperation $a, ManualOperation $b) => [$a->getExecutedAt(), $a->getId()] <=> [$b->getExecutedAt(), $b->getId()]);
+        $this->assertReplays($operations, $after);
+
+        $sale->correctClose($price, $executedAt);
+        $this->record($sale->getAccount(), $sale);
+    }
+
+    /**
      * The key of the lot of a deal, by which the journal refers to it.
      */
     public function lotOf(Deal $deal): string
@@ -184,6 +224,32 @@ final readonly class ManualJournal
             $account->setBlockedCash($currency, $ledger->blockedCash[$currency] ?? '0');
         }
         $this->accountRepository->save($account);
+    }
+
+    /**
+     * Refuses a change after which the journal replays with problems it does not have now: a close
+     * or a block that no longer finds its lot, more blocked cash freed than was blocked.
+     *
+     * @param list<ManualOperation> $before
+     * @param list<ManualOperation> $after in the order they happened
+     * @throws OperationCannotBeChangedException
+     */
+    private function assertReplays(array $before, array $after): void
+    {
+        $was = $this->replayer->replay($before);
+        $will = $this->replayer->replay($after);
+        $known = array_count_values($was->warnings);
+        foreach ($will->warnings as $warning) {
+            if (($known[$warning] ?? 0) === 0) {
+                throw OperationCannotBeChangedException::breaksJournal($warning);
+            }
+            $known[$warning]--;
+        }
+        foreach ($will->blockedCash as $currency => $blocked) {
+            if (bccomp($blocked, '0', 4) < 0 && bccomp($was->blockedCash[$currency] ?? '0', '0', 4) >= 0) {
+                throw OperationCannotBeChangedException::breaksJournal(sprintf('more %s would be freed than was blocked', $currency));
+            }
+        }
     }
 
     private function replay(Account $account): ManualLedger

@@ -19,6 +19,8 @@ final readonly class ManualOperationItemDTO
      * @param string|null $amount of a cash adjustment or a block of cash
      * @param string|null $currency of the security, or of the cash
      * @param string|null $lotOpenedAt when the lot a close or a block is about was opened
+     * @param bool $canCancel a purchase is deleted through its deal instead
+     * @param bool $canEdit only the price and the date of a sale can be corrected
      */
     public function __construct(
         public int $id,
@@ -34,6 +36,8 @@ final readonly class ManualOperationItemDTO
         public ?string $currency,
         public ?string $lotOpenedAt,
         public ?string $lotPrice,
+        public bool $canCancel,
+        public bool $canEdit,
     ) {
     }
 }

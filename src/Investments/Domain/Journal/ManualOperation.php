@@ -328,6 +328,24 @@ class ManualOperation implements CreatedDateProviderInterface, UpdatedDateProvid
         }
     }
 
+    /**
+     * Corrects the price and the date of a sale. A commission known before is charged again by the
+     * tariff for the corrected price; an unknown one stays unknown.
+     *
+     * @param numeric-string $price
+     */
+    public function correctClose(string $price, \DateTimeImmutable $executedAt): void
+    {
+        if ($this->type !== ManualOperationType::Close) {
+            throw OperationCannotBeChangedException::notSale();
+        }
+        $this->price = $price;
+        $this->executedAt = $executedAt;
+        if ($this->commission !== null) {
+            $this->commission = $this->account->tradeCommission($this->instrument, $price, $this->getQuantity());
+        }
+    }
+
     private function setSecurity(?Instrument $instrument, string $ticker, string $stockMarket): void
     {
         $this->instrument = $instrument;

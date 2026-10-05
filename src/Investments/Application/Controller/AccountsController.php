@@ -8,7 +8,10 @@ use App\Investments\Application\Accounts\CloseAccountCommand;
 use App\Investments\Application\Accounts\CreateAccountCommand;
 use App\Investments\Application\Accounts\DeleteAccountCommand;
 use App\Investments\Application\Accounts\UpdateAccountCommand;
+use App\Investments\Application\Journal\CancelOperationCommand;
+use App\Investments\Application\Journal\CorrectSaleCommand;
 use App\Investments\Application\Request\DTO\CreateAccountRequestDTO;
+use App\Investments\Application\Request\DTO\Operations\CorrectSaleRequestDTO;
 use App\Investments\Application\Response\Compiler\AccountEditFormCompiler;
 use App\Investments\Application\Response\Compiler\AccountsListCompiler;
 use App\Investments\Application\UseCases\Journal\GetAccountOperationsPageUseCase;
@@ -102,6 +105,28 @@ class AccountsController extends AbstractController
         $perPage = $request->query->getInt('perPage', PageRequestFactory::DEFAULT_PER_PAGE);
 
         return $this->json($this->getAccountOperationsPageUseCase->execute($id, $user, $page, $perPage));
+    }
+
+    #[Route('/accounts/{id}/operations/{operationId}/cancel', name: 'app_accounts_accounts_operations_cancel', requirements: ['id' => '\d+', 'operationId' => '\d+'], methods: ['POST'])]
+    public function cancelOperation(int $id, int $operationId, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $this->commandBus->dispatch(new CancelOperationCommand(accountId: $id, operationId: $operationId, user: $user));
+
+        return $this->json(['success' => true]);
+    }
+
+    #[Route('/accounts/{id}/operations/{operationId}/edit', name: 'app_accounts_accounts_operations_edit', requirements: ['id' => '\d+', 'operationId' => '\d+'], methods: ['POST'])]
+    public function correctSale(int $id, int $operationId, #[MapRequestPayload] CorrectSaleRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $this->commandBus->dispatch(new CorrectSaleCommand(
+            accountId:   $id,
+            operationId: $operationId,
+            user:        $user,
+            price:       $dto->price,
+            executedAt:  new \DateTimeImmutable($dto->executedAt),
+        ));
+
+        return $this->json(['success' => true]);
     }
 
     #[Route('/accounts/close/{id}', name: 'app_accounts_accounts_close', requirements: ['id' => '\d+'], methods: ['POST'])]

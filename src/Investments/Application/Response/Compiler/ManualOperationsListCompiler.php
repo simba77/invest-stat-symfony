@@ -55,6 +55,8 @@ final readonly class ManualOperationsListCompiler implements CompilerInterface
                 currency:       $isCash ? $operation->getCurrency() : $instrument?->getCurrency(),
                 lotOpenedAt:    $opening?->getExecutedAt()->format(\DateTimeInterface::ATOM),
                 lotPrice:       $opening?->getPrice(),
+                canCancel:      $operation->getType()->direction() === null,
+                canEdit:        $operation->getType() === ManualOperationType::Close,
             );
         }
 

@@ -65,8 +65,13 @@ final readonly class ManualLedgerReplayer
         if ($type === ManualOperationType::Close) {
             $this->close($state, $operation);
         } elseif ($type === ManualOperationType::Block || $type === ManualOperationType::Unblock) {
-            // A lot closed meanwhile stays as it was
-            $state->book->findOpen((string) $lot)?->setBlocked($type === ManualOperationType::Block);
+            $open = $state->book->findOpen((string) $lot);
+            if ($open === null) {
+                // A lot closed meanwhile stays as it was
+                $state->warnings[] = sprintf('%s of lot %s that is not open', ucfirst($type->value), (string) $lot);
+            } else {
+                $open->setBlocked($type === ManualOperationType::Block);
+            }
         } else {
             $this->open($state, $operation);
         }

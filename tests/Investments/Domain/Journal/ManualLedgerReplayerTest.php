@@ -176,6 +176,21 @@ final class ManualLedgerReplayerTest extends TestCase
         self::assertSame(['SBER: 3 of 8 securities were not open to be closed'], $ledger->warnings);
     }
 
+    public function testWarnsAboutBlockOfLotThatIsNotOpen(): void
+    {
+        $sber = $this->share('SBER');
+
+        $ledger = $this->replay(
+            $this->buy($sber, 5, '250', '2025-06-10'),
+            $this->close($sber, 5, '310', '2026-03-02', lot: 'op:1'),
+            ManualOperation::block($this->account, new \DateTimeImmutable('2026-03-03'), 'op:1'),
+            ManualOperation::block($this->account, new \DateTimeImmutable('2026-03-04'), 'op:1#1', blocked: false),
+        );
+
+        self::assertSame([['op:1', 5, '250', '310', '2026-03-02', null, null]], $this->lots($ledger));
+        self::assertSame(['Block of lot op:1 that is not open', 'Unblock of lot op:1#1 that is not open'], $ledger->warnings);
+    }
+
     private function replay(ManualOperation ...$operations): ManualLedger
     {
         foreach ($operations as $operation) {

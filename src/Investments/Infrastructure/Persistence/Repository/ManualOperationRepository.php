@@ -75,6 +75,21 @@ class ManualOperationRepository extends ServiceEntityRepository implements Manua
     }
 
     #[\Override]
+    public function findByIdAndAccount(int $id, Account $account): ?ManualOperation
+    {
+        /** @var ManualOperation|null */
+        return $this->createQueryBuilder('o')
+            ->select(['o', 'i'])
+            ->leftJoin('o.instrument', 'i')
+            ->andWhere('o.id = :id')
+            ->andWhere('o.account = :account')
+            ->setParameter('id', $id)
+            ->setParameter('account', $account->getId())
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    #[\Override]
     public function countByAccount(Account $account): int
     {
         return (int) $this->createQueryBuilder('o')

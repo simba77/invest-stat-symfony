@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type {ManualOperation} from '@/types/journal'
+import type {ManualOperation, SaleCorrection} from '@/types/journal'
 import type {PaginatedResponse} from '@/types/pagination'
 
 export function useAccountOperations() {
@@ -9,5 +9,13 @@ export function useAccountOperations() {
       .then((response) => response.data)
   }
 
-  return {getOperations}
+  async function cancelOperation(accountId: number, id: number): Promise<void> {
+    await axios.post(`/api/accounts/${accountId}/operations/${id}/cancel`)
+  }
+
+  async function correctSale(accountId: number, id: number, correction: SaleCorrection): Promise<void> {
+    await axios.post(`/api/accounts/${accountId}/operations/${id}/edit`, correction)
+  }
+
+  return {getOperations, cancelOperation, correctSale}
 }

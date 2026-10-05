@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import {onMounted, ref} from 'vue'
+import {Pen, Undo2} from 'lucide-vue-next'
 import PaginationComponent from '@/components/Common/PaginationComponent.vue'
 import PreloaderComponent from '@/components/Common/PreloaderComponent.vue'
 import {useAccountOperations} from '@/composable/useAccountOperations'
+import useAccounts from '@/composable/useAccounts'
+import {useModal} from '@/composable/useModal'
+import CorrectSaleModal from '@/components/Account/CorrectSaleModal.vue'
+import {apiErrorMessage} from '@/utils/api-error'
 import {useNumbers} from '@/composable/useNumbers'
 import useAsync from '@/utils/use-async'
 import type {ManualOperation} from '@/types/journal'
@@ -12,7 +17,9 @@ const props = defineProps<{
   accountId: number
 }>()
 
-const {getOperations} = useAccountOperations()
+const {getOperations, cancelOperation} = useAccountOperations()
+const accounts = useAccounts()
+const modal = useModal()
 const {formatPrice} = useNumbers()
 const operations = ref<PaginatedResponse<ManualOperation> | null>(null)
 
@@ -64,7 +71,32 @@ function date(value: string): string {
   return new Date(value).toLocaleString('ru-RU', {dateStyle: 'short', timeStyle: 'short'})
 }
 
-defineExpose({reload: () => load(operations.value?.pagination.page ?? 1)})
+// The deals and the cash of the account follow from the journal
+function reload() {
+  load(operations.value?.pagination.page ?? 1)
+  accounts.getAccount(props.accountId)
+}
+
+async function cancel(operation: ManualOperation) {
+  if (!confirm('Cancel "' + title(operation) + '" of ' + date(operation.executedAt) + '? The deals and the cash are rebuilt without it.')) {
+    return
+  }
+  try {
+    await cancelOperation(props.accountId, operation.id)
+    reload()
+  } catch (reason) {
+    alert(apiErrorMessage(reason))
+  }
+}
+
+function edit(operation: ManualOperation) {
+  modal.open({
+    component: CorrectSaleModal,
+    modelValue: {accountId: props.accountId, operation, onSaved: reload},
+  })
+}
+
+defineExpose({reload})
 
 onMounted(() => load(1))
 </script>
@@ -73,7 +105,8 @@ onMounted(() => load(1))
   <div class="mb-4">
     <p class="small text-muted">
       The deals and the cash of the account follow from these operations, the latest first.
-      Purchases are corrected through their deals.
+      Purchases are corrected or deleted through their deals; a sale can be corrected, and a sale,
+      a block or a cash operation cancelled.
     </p>
     <preloader-component v-if="loading && !operations" />
     <template v-if="operations">
@@ -105,6 +138,7 @@ onMounted(() => load(1))
               <th class="text-end">
                 Amount
               </th>
+              <th />
             </tr>
           </thead>
           <tbody>
@@ -142,6 +176,26 @@ onMounted(() => load(1))
                 <template v-if="operation.amount !== null">
                   {{ formatPrice(Number(operation.amount), currency(operation.currency)) }}
                 </template>
+              </td>
+              <td class="text-end text-nowrap">
+                <button
+                  v-if="operation.canEdit"
+                  type="button"
+                  class="btn btn-link p-0 me-2"
+                  title="Correct the price and the date"
+                  @click="edit(operation)"
+                >
+                  <pen :size="18" />
+                </button>
+                <button
+                  v-if="operation.canCancel"
+                  type="button"
+                  class="btn btn-link-danger p-0"
+                  title="Cancel the operation"
+                  @click="cancel(operation)"
+                >
+                  <undo-2 :size="18" />
+                </button>
               </td>
             </tr>
           </tbody>

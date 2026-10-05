@@ -11,6 +11,7 @@ use App\Investments\Domain\BrokerSync\BrokerSyncDisabledException;
 use App\Investments\Domain\BrokerSync\Client\BrokerApiException;
 use App\Investments\Domain\BrokerSync\Client\ExternalAccountNotFoundException;
 use App\Investments\Domain\Journal\DealCannotBeDeletedException;
+use App\Investments\Domain\Journal\OperationCannotBeChangedException;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -37,7 +38,8 @@ final class InvestmentsExceptionListener
             $exception instanceof AccountIsSyncedException,
             $exception instanceof AccountCannotBeClosedException,
             $exception instanceof AccountCannotBeDeletedException,
-            $exception instanceof DealCannotBeDeletedException => JsonResponse::HTTP_CONFLICT,
+            $exception instanceof DealCannotBeDeletedException,
+            $exception instanceof OperationCannotBeChangedException => JsonResponse::HTTP_CONFLICT,
             default => null,
         };
 

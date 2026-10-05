@@ -25,6 +25,8 @@ interface ManualOperationRepositoryInterface
      */
     public function findAboutLot(Account $account, string $lot): array;
 
+    public function findByIdAndAccount(int $id, Account $account): ?ManualOperation;
+
     public function countByAccount(Account $account): int;
 
     /**
