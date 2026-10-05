@@ -25,6 +25,22 @@ interface ManualOperationRepositoryInterface
      */
     public function findAboutLot(Account $account, string $lot): array;
 
+    public function countByAccount(Account $account): int;
+
+    /**
+     * A page of the journal of the account, the latest operations first.
+     *
+     * @return list<ManualOperation>
+     */
+    public function findPageByAccount(Account $account, int $offset, int $limit): array;
+
+    /**
+     * The operations that opened the lots, or the lots the parts were split off.
+     *
+     * @return array<string, ManualOperation> by lot; a lot of another account or an unknown one is left out
+     */
+    public function findOpenings(Account $account, string ...$lots): array;
+
     public function save(ManualOperation ...$operations): void;
 
     public function remove(ManualOperation ...$operations): void;

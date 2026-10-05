@@ -5,6 +5,7 @@ import {useRoute} from 'vue-router'
 import AssetsTableComponent from '@/components/Account/AssetsTableComponent.vue'
 import BrokerSyncStatus from '@/components/Account/BrokerSyncStatus.vue'
 import BrokerExpenses from '@/components/Account/BrokerExpenses.vue'
+import AccountOperations from '@/components/Account/AccountOperations.vue'
 import PreloaderComponent from '@/components/Common/PreloaderComponent.vue'
 import {provide, ref} from 'vue'
 import { useNumbers } from "@/composable/useNumbers";
@@ -16,6 +17,7 @@ const {formatPrice} = useNumbers()
 getAccount(params.id);
 
 const expenses = ref<InstanceType<typeof BrokerExpenses> | null>(null)
+const tab = ref<'assets' | 'operations'>('assets')
 
 function reloadSynced() {
   getAccount(params.id)
@@ -55,59 +57,93 @@ provide('accounts', {getAccounts: getAccount})
         @synced="reloadSynced"
       />
 
-      <template
-        v-for="(groupedByStatus, groupedByStatusIndex) in data.deals.dealsList"
-        :key="groupedByStatusIndex"
+      <!-- The journal of a manual account; a synced one takes its operations from the broker -->
+      <ul
+        v-if="!data.account.isSynced"
+        class="nav nav-tabs mb-3"
       >
-        <!-- Если групп блокировки больше одной, выводим название -->
-        <template v-if="Object.keys(data.deals.dealsList).length > 1">
-          <div class="fw-bold text-uppercase mb-2">
-            {{ data.deals.statuses[groupedByStatusIndex]['name'] }}
-          </div>
-        </template>
-
-        <!-- Вывод типа инструмента -->
-        <template
-          v-for="(groupedByInstrumentType, groupedByInstrumentTypeIndex) in groupedByStatus"
-          :key="groupedByInstrumentTypeIndex"
-        >
-          <div class="fw-bold text-muted mb-2">
-            {{ data.deals.instrumentTypes[groupedByInstrumentTypeIndex]['name'] }}
-          </div>
-
-
-          <!-- Выводим группы активов по валютам -->
-          <template
-            v-for="(groupedByCurrency, groupedByCurrencyIndex) in groupedByInstrumentType"
-            :key="groupedByCurrencyIndex"
+        <li class="nav-item">
+          <button
+            type="button"
+            class="nav-link"
+            :class="{active: tab === 'assets'}"
+            @click="tab = 'assets'"
           >
-            <div class="d-flex align-items-center mb-4">
-              <div class="fw-bold small">
-                {{ data.deals.currencies[groupedByCurrencyIndex]['name'] }}
-              </div>
-              <div class="flex-grow-1 ms-3 border-bottom" />
-            </div>
+            Assets
+          </button>
+        </li>
+        <li class="nav-item">
+          <button
+            type="button"
+            class="nav-link"
+            :class="{active: tab === 'operations'}"
+            @click="tab = 'operations'"
+          >
+            Operations
+          </button>
+        </li>
+      </ul>
 
-            <div class="table-responsive mb-4">
-              <template v-if="Object.keys(groupedByCurrency).length < 1">
-                <div class="text-muted small">
-                  The List is Empty
-                </div>
-              </template>
-              <template v-else>
-                <!-- Выводим таблицу с активами -->
-                <assets-table-component
-                  :assets="groupedByCurrency"
-                  :summary="data.deals.summary[groupedByStatusIndex][groupedByInstrumentTypeIndex][groupedByCurrencyIndex]"
-                  :hide-actions="data.account.isSynced"
-                />
-              </template>
+      <account-operations
+        v-if="tab === 'operations' && !data.account.isSynced"
+        :account-id="data.account.id"
+      />
+
+      <div v-show="tab === 'assets' || data.account.isSynced">
+        <template
+          v-for="(groupedByStatus, groupedByStatusIndex) in data.deals.dealsList"
+          :key="groupedByStatusIndex"
+        >
+          <!-- Если групп блокировки больше одной, выводим название -->
+          <template v-if="Object.keys(data.deals.dealsList).length > 1">
+            <div class="fw-bold text-uppercase mb-2">
+              {{ data.deals.statuses[groupedByStatusIndex]['name'] }}
             </div>
           </template>
-          <!-- // Выводим группы активов по валютам -->
+
+          <!-- Вывод типа инструмента -->
+          <template
+            v-for="(groupedByInstrumentType, groupedByInstrumentTypeIndex) in groupedByStatus"
+            :key="groupedByInstrumentTypeIndex"
+          >
+            <div class="fw-bold text-muted mb-2">
+              {{ data.deals.instrumentTypes[groupedByInstrumentTypeIndex]['name'] }}
+            </div>
+
+
+            <!-- Выводим группы активов по валютам -->
+            <template
+              v-for="(groupedByCurrency, groupedByCurrencyIndex) in groupedByInstrumentType"
+              :key="groupedByCurrencyIndex"
+            >
+              <div class="d-flex align-items-center mb-4">
+                <div class="fw-bold small">
+                  {{ data.deals.currencies[groupedByCurrencyIndex]['name'] }}
+                </div>
+                <div class="flex-grow-1 ms-3 border-bottom" />
+              </div>
+
+              <div class="table-responsive mb-4">
+                <template v-if="Object.keys(groupedByCurrency).length < 1">
+                  <div class="text-muted small">
+                    The List is Empty
+                  </div>
+                </template>
+                <template v-else>
+                  <!-- Выводим таблицу с активами -->
+                  <assets-table-component
+                    :assets="groupedByCurrency"
+                    :summary="data.deals.summary[groupedByStatusIndex][groupedByInstrumentTypeIndex][groupedByCurrencyIndex]"
+                    :hide-actions="data.account.isSynced"
+                  />
+                </template>
+              </div>
+            </template>
+            <!-- // Выводим группы активов по валютам -->
+          </template>
+          <!-- // Вывод типа инструмента -->
         </template>
-        <!-- // Вывод типа инструмента -->
-      </template>
+      </div>
 
       <broker-expenses
         v-if="data.account.isSynced"

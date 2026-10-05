@@ -75,6 +75,75 @@ class ManualOperationRepository extends ServiceEntityRepository implements Manua
     }
 
     #[\Override]
+    public function countByAccount(Account $account): int
+    {
+        return (int) $this->createQueryBuilder('o')
+            ->select('COUNT(o.id)')
+            ->andWhere('o.account = :account')
+            ->setParameter('account', $account->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    #[\Override]
+    public function findPageByAccount(Account $account, int $offset, int $limit): array
+    {
+        /** @var list<ManualOperation> */
+        return $this->createQueryBuilder('o')
+            ->select(['o', 'i'])
+            ->leftJoin('o.instrument', 'i')
+            ->andWhere('o.account = :account')
+            ->setParameter('account', $account->getId())
+            ->orderBy('o.executedAt', 'DESC')
+            ->addOrderBy('o.id', 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    #[\Override]
+    public function findOpenings(Account $account, string ...$lots): array
+    {
+        $ids = [];
+        foreach ($lots as $lot) {
+            $id = self::openingId($lot);
+            if ($id !== null) {
+                $ids[$lot] = $id;
+            }
+        }
+        if ($ids === []) {
+            return [];
+        }
+
+        /** @var list<ManualOperation> $openings */
+        $openings = $this->createQueryBuilder('o')
+            ->select(['o', 'i'])
+            ->leftJoin('o.instrument', 'i')
+            ->andWhere('o.id IN (:ids)')
+            ->andWhere('o.account = :account')
+            ->andWhere('o.type IN (:types)')
+            ->setParameter('ids', array_values(array_unique($ids)))
+            ->setParameter('account', $account->getId())
+            ->setParameter('types', [ManualOperationType::Buy->value, ManualOperationType::Short->value])
+            ->getQuery()
+            ->getResult();
+
+        $byId = [];
+        foreach ($openings as $opening) {
+            $byId[$opening->getId()] = $opening;
+        }
+        $result = [];
+        foreach ($ids as $lot => $id) {
+            if (isset($byId[$id])) {
+                $result[$lot] = $byId[$id];
+            }
+        }
+
+        return $result;
+    }
+
+    #[\Override]
     public function save(ManualOperation ...$operations): void
     {
         $em = $this->getEntityManager();

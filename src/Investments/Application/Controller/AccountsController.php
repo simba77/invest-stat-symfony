@@ -11,12 +11,15 @@ use App\Investments\Application\Accounts\UpdateAccountCommand;
 use App\Investments\Application\Request\DTO\CreateAccountRequestDTO;
 use App\Investments\Application\Response\Compiler\AccountEditFormCompiler;
 use App\Investments\Application\Response\Compiler\AccountsListCompiler;
+use App\Investments\Application\UseCases\Journal\GetAccountOperationsPageUseCase;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
+use App\Shared\Application\Pagination\PageRequestFactory;
 use App\Shared\Domain\Bus\SyncCommandBusInterface;
 use App\Shared\Domain\User;
 use App\Shared\Infrastructure\Symfony\NotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,6 +34,7 @@ class AccountsController extends AbstractController
         private readonly AccountsListCompiler $accountsListCompiler,
         private readonly SyncCommandBusInterface $commandBus,
         private readonly AccountEditFormCompiler $accountEditFormCompiler,
+        private readonly GetAccountOperationsPageUseCase $getAccountOperationsPageUseCase,
     ) {
     }
 
@@ -89,6 +93,15 @@ class AccountsController extends AbstractController
             throw new NotFoundException(sprintf('Account with id "%s" not found', $id));
         }
         return $this->json($this->accountEditFormCompiler->compile($account));
+    }
+
+    #[Route('/accounts/{id}/operations', name: 'app_accounts_accounts_operations', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function operations(int $id, Request $request, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $page = max(1, $request->query->getInt('page', 1));
+        $perPage = $request->query->getInt('perPage', PageRequestFactory::DEFAULT_PER_PAGE);
+
+        return $this->json($this->getAccountOperationsPageUseCase->execute($id, $user, $page, $perPage));
     }
 
     #[Route('/accounts/close/{id}', name: 'app_accounts_accounts_close', requirements: ['id' => '\d+'], methods: ['POST'])]
