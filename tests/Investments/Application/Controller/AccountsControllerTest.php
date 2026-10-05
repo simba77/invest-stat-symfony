@@ -42,7 +42,7 @@ final class AccountsControllerTest extends ApiTestCase
     {
         $admin = $this->admin();
         $account = $this->createAccount($admin, balance: '7500');
-        $deal = new Deal($admin, $account, 'SBER', 'MOEX', DealStatus::Active, DealType::Long, 10, '250');
+        $deal = new Deal($account, 'SBER', 'MOEX', DealStatus::Active, DealType::Long, 10, '250');
         $this->persist($deal);
         $this->loginAs($admin);
 

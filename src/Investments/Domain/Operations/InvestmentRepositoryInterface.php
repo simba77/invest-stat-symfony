@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Domain\Operations;
 
 use App\Investments\Domain\Accounts\Account;
+use App\Shared\Domain\User;
 interface InvestmentRepositoryInterface
 {
     /**
@@ -41,4 +42,9 @@ interface InvestmentRepositoryInterface
      * @return list<Investment>
      */
     public function findByAccount(Account $account): array;
+
+    /**
+     * The record when it belongs to an account of the user.
+     */
+    public function findByIdAndUser(int $id, User $user): ?Investment;
 }

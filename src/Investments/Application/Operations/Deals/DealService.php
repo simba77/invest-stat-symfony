@@ -13,7 +13,6 @@ use App\Investments\Domain\Journal\ManualOperation;
 use App\Investments\Domain\Journal\NotEnoughSecuritiesException;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\Deals\DealStatus;
-use App\Shared\Domain\User;
 use Doctrine\Common\Collections\Order;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Clock\ClockInterface;
@@ -48,11 +47,11 @@ class DealService
      *
      * @throws NotEnoughSecuritiesException
      */
-    public function sellAsNeeded(User $user, Account $account, SellDealRequestDTO $dto): void
+    public function sellAsNeeded(Account $account, SellDealRequestDTO $dto): void
     {
         $this->syncedAccountGuard->assertManual($account);
         $deals = $this->entityManager->getRepository(Deal::class)->findBy(
-            ['user' => $user, 'account' => $account, 'ticker' => $dto->ticker, 'status' => DealStatus::Active],
+            ['account' => $account, 'ticker' => $dto->ticker, 'status' => DealStatus::Active],
             ['id' => Order::Ascending->value],
         );
         $available = array_sum(array_map(static fn (Deal $deal) => $deal->getQuantity(), $deals));

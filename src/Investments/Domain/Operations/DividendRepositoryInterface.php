@@ -46,4 +46,9 @@ interface DividendRepositoryInterface
      * @return list<Dividend>
      */
     public function findByAccount(Account $account): array;
+
+    /**
+     * The record when it belongs to an account of the user.
+     */
+    public function findByIdAndUser(int $id, User $user): ?Dividend;
 }

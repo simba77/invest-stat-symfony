@@ -11,9 +11,6 @@ use App\Investments\Domain\Journal\ManualLedger;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\Deals\DealStatus;
-use App\Shared\Domain\User;
-use App\Shared\Domain\UserRepositoryInterface;
-use App\Shared\Infrastructure\Symfony\NotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -24,7 +21,6 @@ final readonly class ManualLedgerProjector
 {
     public function __construct(
         private DealRepositoryInterface $dealRepository,
-        private UserRepositoryInterface $userRepository,
         private EntityManagerInterface $entityManager,
     ) {
     }
@@ -48,7 +44,6 @@ final readonly class ManualLedgerProjector
             unset($deals[$lot->getKey()]);
             if ($deal === null) {
                 $deal = new Deal(
-                    user:        $this->owner($account),
                     account:     $account,
                     ticker:      $lot->getInstrument()->ticker,
                     stockMarket: $lot->getInstrument()->stockMarket,
@@ -136,11 +131,5 @@ final readonly class ManualLedgerProjector
         }
 
         return bccomp($current ?? '0', $new ?? '0', 4) !== 0;
-    }
-
-    private function owner(Account $account): User
-    {
-        return $this->userRepository->findById($account->getUserId() ?? 0)
-            ?? throw new NotFoundException(sprintf('Owner of account "%s" not found', (string) $account->getId()));
     }
 }

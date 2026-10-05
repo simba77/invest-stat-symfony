@@ -31,7 +31,14 @@ class CouponRepository extends ServiceEntityRepository implements CouponReposito
     #[\Override]
     public function findByUser(?User $user): array
     {
-        return $this->findBy(['user' => $user], ['date' => Order::Descending->value, 'id' => Order::Descending->value]);
+        return $this->createQueryBuilder('c')
+            ->join('c.account', 'a')
+            ->andWhere('a.userId = :user')
+            ->setParameter('user', $user?->getId())
+            ->orderBy('c.date', Order::Descending->value)
+            ->addOrderBy('c.id', Order::Descending->value)
+            ->getQuery()
+            ->getResult();
     }
 
     /**
@@ -42,8 +49,8 @@ class CouponRepository extends ServiceEntityRepository implements CouponReposito
     {
         return $this->createQueryBuilder('c')
             ->select(['c', 'a'])
-            ->leftJoin('c.account', 'a')
-            ->andWhere('IDENTITY(c.user) = :userId')
+            ->join('c.account', 'a')
+            ->andWhere('a.userId = :userId')
             ->setParameter('userId', $userId)
             ->orderBy('c.date', Order::Descending->value)
             ->addOrderBy('c.id', Order::Descending->value)
@@ -58,7 +65,8 @@ class CouponRepository extends ServiceEntityRepository implements CouponReposito
     {
         return (int) $this->createQueryBuilder('c')
             ->select('COUNT(c.id)')
-            ->andWhere('IDENTITY(c.user) = :userId')
+            ->join('c.account', 'a')
+            ->andWhere('a.userId = :userId')
             ->setParameter('userId', $userId)
             ->getQuery()
             ->getSingleScalarResult();
@@ -67,7 +75,15 @@ class CouponRepository extends ServiceEntityRepository implements CouponReposito
     #[\Override]
     public function findByIdAndUser(int $id, User $user): ?Coupon
     {
-        return $this->findOneBy(['id' => $id, 'user' => $user]);
+        /** @var Coupon|null */
+        return $this->createQueryBuilder('c')
+            ->join('c.account', 'a')
+            ->andWhere('c.id = :id')
+            ->andWhere('a.userId = :user')
+            ->setParameter('id', $id)
+            ->setParameter('user', $user->getId())
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     #[\Override]

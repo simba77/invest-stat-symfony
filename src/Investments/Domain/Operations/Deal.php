@@ -20,14 +20,13 @@ use App\Shared\Domain\UpdatedByProvider;
 use App\Shared\Domain\UpdatedDateProvider;
 use App\Shared\Domain\UpdatedDateProviderInterface;
 use App\Shared\Domain\UpdatedUserProviderInterface;
-use App\Shared\Domain\User;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DealRepository::class)]
 #[ORM\Table(name: 'deals')]
 #[ORM\UniqueConstraint(name: 'deal_external_id', columns: ['account_id', 'external_id'])]
-#[ORM\Index(columns: ['user_id', 'status'], name: 'user_status')]
+#[ORM\Index(columns: ['account_id', 'status'], name: 'deal_account_status')]
 class Deal implements
     CreatedDateProviderInterface,
     UpdatedDateProviderInterface,
@@ -44,10 +43,6 @@ class Deal implements
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    #[ORM\ManyToOne(inversedBy: 'deals')]
-    #[ORM\JoinColumn(nullable: false)]
-    private User $user;
 
     #[ORM\ManyToOne(inversedBy: 'deals')]
     #[ORM\JoinColumn(nullable: false)]
@@ -104,7 +99,6 @@ class Deal implements
     private ?string $sellCommission = null;
 
     /**
-     * @param User $user
      * @param Account $account
      * @param string $ticker
      * @param string $stockMarket
@@ -116,7 +110,6 @@ class Deal implements
      * @param numeric-string $sellPrice
      */
     public function __construct(
-        User $user,
         Account $account,
         string $ticker,
         string $stockMarket,
@@ -127,7 +120,6 @@ class Deal implements
         string $targetPrice = '0',
         string $sellPrice = '0',
     ) {
-        $this->user = $user;
         $this->account = $account;
         $this->ticker = $ticker;
         $this->stockMarket = $stockMarket;
@@ -142,18 +134,6 @@ class Deal implements
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUser(): User
-    {
-        return $this->user;
-    }
-
-    public function setUser(User $user): static
-    {
-        $this->user = $user;
-
-        return $this;
     }
 
     public function getAccount(): Account

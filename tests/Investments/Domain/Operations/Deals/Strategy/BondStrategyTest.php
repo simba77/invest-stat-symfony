@@ -65,7 +65,6 @@ class BondStrategyTest extends TestCase
         $user = new User();
         $account = new Account(userId: 1, name: 'Test account');
         $deal = new Deal(
-            user: $user,
             account: $account,
             ticker: $bond->getTicker(),
             stockMarket: $bond->getStockMarket(),

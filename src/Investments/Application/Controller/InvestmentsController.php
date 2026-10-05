@@ -12,6 +12,7 @@ use App\Investments\Application\UseCases\GetInvestmentsPageUseCase;
 use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Operations\Investment;
+use App\Investments\Domain\Operations\InvestmentRepositoryInterface;
 use App\Shared\Application\Pagination\PageRequestFactory;
 use App\Shared\Domain\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -34,6 +35,7 @@ class InvestmentsController extends AbstractController
         protected readonly AccountsSimpleListCompiler $accountsSimpleListCompiler,
         private readonly SyncedAccountGuard $syncedAccountGuard,
         private readonly ManualJournal $journal,
+        private readonly InvestmentRepositoryInterface $investmentRepository,
     ) {
     }
 
@@ -59,7 +61,7 @@ class InvestmentsController extends AbstractController
 
         $account = $this->account($dto->account, $user);
         $this->syncedAccountGuard->assertManual($account);
-        $investment = new Investment($dto->sum, new \DateTimeImmutable($dto->date), $account, (int) $user->getId());
+        $investment = new Investment($dto->sum, new \DateTimeImmutable($dto->date), $account);
         $this->journal->changeRecords(function () use ($investment): void {
             $this->em->persist($investment);
             $this->em->flush();
@@ -73,7 +75,7 @@ class InvestmentsController extends AbstractController
     {
         $form = [];
         if ($id > 0) {
-            $investment = $this->em->getRepository(Investment::class)->findOneBy(['id' => $id, 'userId' => $user?->getId()]);
+            $investment = ($user !== null ? $this->investmentRepository->findByIdAndUser($id, $user) : null);
             if (! $investment) {
                 throw $this->createNotFoundException('No investment found for id ' . $id);
             }
@@ -101,7 +103,7 @@ class InvestmentsController extends AbstractController
             throw $this->createAccessDeniedException('Authentication required.');
         }
 
-        $investment = $this->em->getRepository(Investment::class)->findOneBy(['id' => $id, 'userId' => $user->getId()]);
+        $investment = $this->investmentRepository->findByIdAndUser($id, $user);
         if (! $investment) {
             throw $this->createNotFoundException('No investment found for id ' . $id);
         }
@@ -120,7 +122,7 @@ class InvestmentsController extends AbstractController
     #[Route('/investments/delete/{id}', name: 'app_investments_investments_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
-        $investment = $this->em->getRepository(Investment::class)->findOneBy(['id' => $id, 'userId' => $user?->getId()]);
+        $investment = ($user !== null ? $this->investmentRepository->findByIdAndUser($id, $user) : null);
         if (! $investment) {
             throw $this->createNotFoundException('No investment found for id ' . $id);
         }

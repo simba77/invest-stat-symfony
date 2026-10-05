@@ -38,7 +38,8 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
             ->leftJoin('d.instrument', 'i')
             // Shares come first, by their type and currency
             ->leftJoin(Share::class, 's', Join::WITH, 's.id = i.id')
-            ->andWhere('d.user = :userId')
+            ->join('d.account', 'acc')
+            ->andWhere('acc.userId = :userId')
             ->andWhere('d.status != :status')
             ->setParameter('userId', $userId)
             ->setParameter('status', DealStatus::Closed)
@@ -67,7 +68,8 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
             ->leftJoin('d.instrument', 'i')
             // Shares come first, by their type and currency
             ->leftJoin(Share::class, 's', Join::WITH, 's.id = i.id')
-            ->andWhere('d.user = :userId')
+            ->join('d.account', 'acc')
+            ->andWhere('acc.userId = :userId')
             ->andWhere('d.account = :accountId')
             ->andWhere('d.status != :status')
             ->setParameter('userId', $userId)
@@ -90,7 +92,8 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
         return $this->createQueryBuilder('d')
             ->select(['d', 'i'])
             ->join('d.instrument', 'i')
-            ->andWhere('d.user = :userId')
+            ->join('d.account', 'acc')
+            ->andWhere('acc.userId = :userId')
             ->andWhere('d.instrument = :instrumentId')
             ->andWhere('d.status = :status')
             ->setParameter('userId', $userId)
@@ -210,7 +213,8 @@ class DealRepository extends ServiceEntityRepository implements DealRepositoryIn
             ->leftJoin('d.instrument', 'i')
             // Shares come first, by their type and currency
             ->leftJoin(Share::class, 's', Join::WITH, 's.id = i.id')
-            ->andWhere('d.user = :userId')
+            ->join('d.account', 'acc')
+            ->andWhere('acc.userId = :userId')
             ->andWhere('d.status = :status')
             ->setParameter('userId', $userId)
             ->setParameter('status', DealStatus::Closed);

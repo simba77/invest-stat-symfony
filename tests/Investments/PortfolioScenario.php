@@ -122,7 +122,7 @@ trait PortfolioScenario
         ?array $commissions = null,
     ): Deal {
         $instrument = $this->instruments[$ticker];
-        $deal = new Deal($this->owner($account), $account, $ticker, $instrument->getStockMarket(), $status, $type, $quantity, $buyPrice, $target);
+        $deal = new Deal($account, $ticker, $instrument->getStockMarket(), $status, $type, $quantity, $buyPrice, $target);
         if ($sell !== null) {
             $deal->setStatus(DealStatus::Closed);
             $deal->setSellPrice($sell);

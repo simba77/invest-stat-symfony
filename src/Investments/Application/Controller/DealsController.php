@@ -92,7 +92,7 @@ class DealsController extends AbstractController
     public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
         $deal = $this->dealRepository->findById($id);
-        if (! $deal || $deal->getUser()->getId() !== $user->getId()) {
+        if (! $deal || $deal->getAccount()->getUserId() !== $user->getId()) {
             throw $this->createNotFoundException('No expense found for id ' . $id);
         }
 
@@ -105,7 +105,7 @@ class DealsController extends AbstractController
     public function getById(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
         $deal = $this->dealRepository->findById($id);
-        if (! $deal || $deal->getUser()->getId() !== $user->getId()) {
+        if (! $deal || $deal->getAccount()->getUserId() !== $user->getId()) {
             throw $this->createNotFoundException('No deal found for id ' . $id);
         }
         return $this->json(
@@ -127,7 +127,7 @@ class DealsController extends AbstractController
     public function edit(int $id, #[MapRequestPayload] EditDealRequestDTO $dto, #[CurrentUser] ?User $user): JsonResponse
     {
         $deal = $this->dealRepository->findById($id);
-        if (! $deal || $deal->getUser()->getId() !== $user->getId()) {
+        if (! $deal || $deal->getAccount()->getUserId() !== $user->getId()) {
             throw $this->createNotFoundException('No deal found for id ' . $id);
         }
 
@@ -170,7 +170,7 @@ class DealsController extends AbstractController
         if ($dto->id) {
             // Sell one deal
             $deal = $this->dealRepository->findById($dto->id);
-            if (! $deal || $deal->getUser()->getId() !== $user->getId()) {
+            if (! $deal || $deal->getAccount()->getUserId() !== $user->getId()) {
                 throw $this->createNotFoundException('No deal found for id ' . $dto->id);
             }
 
@@ -182,7 +182,7 @@ class DealsController extends AbstractController
                 throw $this->createNotFoundException('No account found for id ' . $dto->accountId);
             }
             try {
-                $this->dealService->sellAsNeeded($user, $account, $dto);
+                $this->dealService->sellAsNeeded($account, $dto);
             } catch (NotEnoughSecuritiesException $exception) {
                 // Reported like the request validation, so that the form shows it next to the quantity
                 throw new UnprocessableEntityHttpException('Validation failed', new ValidationFailedException($dto, new ConstraintViolationList([
@@ -197,7 +197,7 @@ class DealsController extends AbstractController
     private function assertOpenDealOf(int $id, ?User $user): void
     {
         $deal = $this->dealRepository->findById($id);
-        if (! $deal || $deal->getUser()->getId() !== $user?->getId() || $deal->getStatus() === DealStatus::Closed) {
+        if (! $deal || $deal->getAccount()->getUserId() !== $user?->getId() || $deal->getStatus() === DealStatus::Closed) {
             throw $this->createNotFoundException('No open deal found for id ' . $id);
         }
     }

@@ -37,7 +37,8 @@ class DividendRepository extends ServiceEntityRepository implements DividendRepo
         return $this->createQueryBuilder('d')
             ->select(['d', 's'])
             ->leftJoin('d.share', 's')
-            ->andWhere('d.user = :user')
+            ->join('d.account', 'a')
+            ->andWhere('a.userId = :user')
             ->setParameter('user', $user?->getId())
             ->orderBy('d.date', Order::Descending->value)
             ->addOrderBy('d.id', Order::Descending->value)
@@ -53,8 +54,8 @@ class DividendRepository extends ServiceEntityRepository implements DividendRepo
     {
         return $this->createQueryBuilder('d')
             ->select(['d', 'a'])
-            ->leftJoin('d.account', 'a')
-            ->andWhere('IDENTITY(d.user) = :userId')
+            ->join('d.account', 'a')
+            ->andWhere('a.userId = :userId')
             ->setParameter('userId', $userId)
             ->orderBy('d.date', 'DESC')
             ->addOrderBy('d.id', 'DESC')
@@ -69,7 +70,8 @@ class DividendRepository extends ServiceEntityRepository implements DividendRepo
     {
         return (int) $this->createQueryBuilder('d')
             ->select('COUNT(d.id)')
-            ->andWhere('IDENTITY(d.user) = :userId')
+            ->join('d.account', 'a')
+            ->andWhere('a.userId = :userId')
             ->setParameter('userId', $userId)
             ->getQuery()
             ->getSingleScalarResult();
@@ -81,7 +83,8 @@ class DividendRepository extends ServiceEntityRepository implements DividendRepo
 
         $result = $qb
             ->select('COALESCE(SUM(d.amount), 0) as total')
-            ->andWhere('d.user = :userId')
+            ->join('d.account', 'a')
+            ->andWhere('a.userId = :userId')
             ->andWhere('d.ticker = :ticker')
             ->andWhere('d.stockMarket = :stockMarket')
             ->setParameter('userId', $userId)
@@ -101,8 +104,8 @@ class DividendRepository extends ServiceEntityRepository implements DividendRepo
     {
         return $this->createQueryBuilder('d')
             ->select(['d', 'a'])
-            ->leftJoin('d.account', 'a')
-            ->andWhere('IDENTITY(d.user) = :userId')
+            ->join('d.account', 'a')
+            ->andWhere('a.userId = :userId')
             ->andWhere('d.ticker = :ticker')
             ->andWhere('d.stockMarket = :stockMarket')
             ->setParameter('userId', $userId)
@@ -145,5 +148,19 @@ class DividendRepository extends ServiceEntityRepository implements DividendRepo
     {
         /** @var list<Dividend> */
         return $this->findBy(['account' => $account], ['id' => 'ASC']);
+    }
+
+    #[\Override]
+    public function findByIdAndUser(int $id, User $user): ?Dividend
+    {
+        /** @var Dividend|null */
+        return $this->createQueryBuilder('d')
+            ->join('d.account', 'owner')
+            ->andWhere('d.id = :id')
+            ->andWhere('owner.userId = :user')
+            ->setParameter('id', $id)
+            ->setParameter('user', $user->getId())
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

@@ -64,7 +64,7 @@ final class SyncedAccountTest extends ApiTestCase
         $admin = $this->admin();
         $account = $this->createAccount($admin);
         $this->linkAccount($account);
-        $deal = new Deal($admin, $account, 'SBER', 'MOEX', DealStatus::Active, DealType::Long, 10, '300');
+        $deal = new Deal($account, 'SBER', 'MOEX', DealStatus::Active, DealType::Long, 10, '300');
         $this->persist($deal);
         $this->loginAs($admin);
 

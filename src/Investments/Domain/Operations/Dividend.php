@@ -15,7 +15,6 @@ use App\Shared\Domain\UpdatedByProvider;
 use App\Shared\Domain\UpdatedDateProvider;
 use App\Shared\Domain\UpdatedDateProviderInterface;
 use App\Shared\Domain\UpdatedUserProviderInterface;
-use App\Shared\Domain\User;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -38,11 +37,6 @@ class Dividend implements
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    /** @psalm-suppress UnusedProperty */
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private User $user;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -69,7 +63,6 @@ class Dividend implements
     private \DateTimeInterface $date;
 
     public function __construct(
-        User $user,
         Account $account,
         string $ticker,
         string $stockMarket,
@@ -77,7 +70,6 @@ class Dividend implements
         string $tax,
         \DateTimeInterface $date
     ) {
-        $this->user = $user;
         $this->account = $account;
         $this->ticker = $ticker;
         $this->stockMarket = $stockMarket;

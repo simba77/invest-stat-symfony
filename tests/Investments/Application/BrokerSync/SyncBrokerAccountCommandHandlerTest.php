@@ -228,8 +228,8 @@ final class SyncBrokerAccountCommandHandlerTest extends KernelTestCase
     private function createManualRecords(Account $account): void
     {
         $owner = $this->admin();
-        $deal = new Deal($owner, $account, 'GAZP', 'MOEX', DealStatus::Active, DealType::Long, 10, '150');
-        $investment = new Investment('60000', new \DateTimeImmutable('2024-03-12'), $account, (int) $owner->getId());
+        $deal = new Deal($account, 'GAZP', 'MOEX', DealStatus::Active, DealType::Long, 10, '150');
+        $investment = new Investment('60000', new \DateTimeImmutable('2024-03-12'), $account);
         $this->persist($deal, $investment);
         self::assertSame(RecordSource::Manual, $deal->getSource());
     }

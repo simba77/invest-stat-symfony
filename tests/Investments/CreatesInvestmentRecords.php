@@ -59,7 +59,7 @@ trait CreatesInvestmentRecords
         string $stockMarket = 'MOEX',
         string $tax = '0',
     ): Dividend {
-        $dividend = new Dividend($this->owner($account), $account, $ticker, $stockMarket, $amount, $tax, new \DateTimeImmutable($date));
+        $dividend = new Dividend($account, $ticker, $stockMarket, $amount, $tax, new \DateTimeImmutable($date));
         // Linked to the share like a dividend entered by hand, when the catalogue has it
         $dividend->setShare($this->entityManager()->getRepository(Share::class)->findOneBy(['ticker' => $ticker, 'stockMarket' => $stockMarket]));
         $this->persist($dividend);
@@ -69,7 +69,7 @@ trait CreatesInvestmentRecords
 
     private function createCoupon(Account $account, string $ticker = 'SU26238RMFS4', string $amount = '100', string $date = '2026-01-15'): Coupon
     {
-        $coupon = new Coupon($this->owner($account), $account, $ticker, 'MOEX', $amount, new \DateTimeImmutable($date));
+        $coupon = new Coupon($account, $ticker, 'MOEX', $amount, new \DateTimeImmutable($date));
         $coupon->setBond($this->entityManager()->getRepository(Bond::class)->findOneBy(['ticker' => $ticker, 'stockMarket' => 'MOEX']));
         $this->persist($coupon);
 
@@ -78,17 +78,9 @@ trait CreatesInvestmentRecords
 
     private function createInvestment(Account $account, string $sum = '1000', string $date = '2026-01-15'): Investment
     {
-        $investment = new Investment($sum, new \DateTimeImmutable($date), $account, (int) $account->getUserId());
+        $investment = new Investment($sum, new \DateTimeImmutable($date), $account);
         $this->persist($investment);
 
         return $investment;
-    }
-
-    private function owner(Account $account): User
-    {
-        $owner = $this->entityManager()->find(User::class, $account->getUserId());
-        self::assertNotNull($owner);
-
-        return $owner;
     }
 }

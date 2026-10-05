@@ -369,7 +369,7 @@ final class DealsControllerTest extends ApiTestCase
         $account = $this->manualAccount(balance: '0');
         $closed = $this->openDeal($account, $this->createShare('SBER', price: '300'), 4, '200', status: DealStatus::Closed);
         $other = $this->createAccount($this->otherUser());
-        $othersDeal = new Deal($this->otherUser(), $other, 'SBER', 'MOEX', DealStatus::Active, DealType::Long, 10, '300');
+        $othersDeal = new Deal($other, 'SBER', 'MOEX', DealStatus::Active, DealType::Long, 10, '300');
         $this->persist($othersDeal);
 
         $this->postJson('/api/deals/block/' . $closed->getId());
@@ -397,7 +397,7 @@ final class DealsControllerTest extends ApiTestCase
     {
         $other = $this->otherUser();
         $account = $this->createAccount($other);
-        $deal = new Deal($other, $account, 'SBER', 'MOEX', DealStatus::Active, DealType::Long, 10, '300');
+        $deal = new Deal($account, 'SBER', 'MOEX', DealStatus::Active, DealType::Long, 10, '300');
         $this->persist($deal);
         $this->loginAs($this->admin());
 
@@ -432,7 +432,7 @@ final class DealsControllerTest extends ApiTestCase
         string $openedAt = '2025-01-01 10:00:00',
         string $target = '0',
     ): Deal {
-        $deal = new Deal($this->owner($account), $account, $instrument->getTicker(), $instrument->getStockMarket(), $status, $type, $quantity, $buyPrice, $target);
+        $deal = new Deal($account, $instrument->getTicker(), $instrument->getStockMarket(), $status, $type, $quantity, $buyPrice, $target);
         $deal->setInstrument($instrument);
         $this->persist($deal);
         $deal->wasCreatedAt(new \DateTimeImmutable($openedAt));

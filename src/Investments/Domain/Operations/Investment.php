@@ -37,10 +37,6 @@ class Investment implements
     #[ORM\Column]
     private ?int $id = null;
 
-    /** @psalm-suppress UnusedProperty */
-    #[ORM\Column(name: 'user_id')]
-    private int $userId;
-
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2)]
     private string $sum;
 
@@ -48,14 +44,14 @@ class Investment implements
     private \DateTimeInterface $date;
 
     #[ORM\ManyToOne(targetEntity: Account::class, inversedBy: 'investments')]
-    private ?Account $account;
+    #[ORM\JoinColumn(nullable: false)]
+    private Account $account;
 
-    public function __construct(string $sum, \DateTimeImmutable $date, Account $account, int $userId)
+    public function __construct(string $sum, \DateTimeImmutable $date, Account $account)
     {
         $this->sum = $sum;
         $this->date = $date;
         $this->account = $account;
-        $this->userId = $userId;
     }
 
     public function getId(): ?int
@@ -87,12 +83,12 @@ class Investment implements
         return $this;
     }
 
-    public function getAccount(): ?Account
+    public function getAccount(): Account
     {
         return $this->account;
     }
 
-    public function setAccount(?Account $account): static
+    public function setAccount(Account $account): static
     {
         $this->account = $account;
 

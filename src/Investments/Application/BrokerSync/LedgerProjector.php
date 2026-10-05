@@ -21,9 +21,6 @@ use App\Investments\Domain\Operations\Dividend;
 use App\Investments\Domain\Operations\DividendRepositoryInterface;
 use App\Investments\Domain\Operations\Investment;
 use App\Investments\Domain\Operations\InvestmentRepositoryInterface;
-use App\Shared\Domain\User;
-use App\Shared\Domain\UserRepositoryInterface;
-use App\Shared\Infrastructure\Symfony\NotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -44,7 +41,6 @@ final class LedgerProjector
         private readonly DividendRepositoryInterface $dividendRepository,
         private readonly CouponRepositoryInterface $couponRepository,
         private readonly InvestmentRepositoryInterface $investmentRepository,
-        private readonly UserRepositoryInterface $userRepository,
         private readonly InstrumentResolver $instrumentResolver,
         private readonly EntityManagerInterface $entityManager,
     ) {
@@ -58,12 +54,9 @@ final class LedgerProjector
     {
         $this->instruments = [];
         $this->warnings = [];
-        $user = $this->userRepository->findById($account->getUserId() ?? 0)
-            ?? throw new NotFoundException(sprintf('Owner of account "%s" not found', (string) $account->getId()));
-
-        $openedDeals = $this->projectDeals($account, $user, $ledger->lots, $lookup);
-        $this->projectDividends($account, $user, $ledger->dividends, $lookup);
-        $this->projectCoupons($account, $user, $ledger->coupons, $lookup);
+        $openedDeals = $this->projectDeals($account, $ledger->lots, $lookup);
+        $this->projectDividends($account, $ledger->dividends, $lookup);
+        $this->projectCoupons($account, $ledger->coupons, $lookup);
         $this->projectCashFlows($account, $ledger);
         $this->entityManager->flush();
 
@@ -81,7 +74,7 @@ final class LedgerProjector
      * @param \Closure(string): ?ExternalInstrument $lookup
      * @return list<array{Deal, \DateTimeImmutable}> the deals created by this run, with their opening time
      */
-    private function projectDeals(Account $account, User $user, array $lots, \Closure $lookup): array
+    private function projectDeals(Account $account, array $lots, \Closure $lookup): array
     {
         $synced = [];
         $targetPrices = [];
@@ -112,7 +105,6 @@ final class LedgerProjector
             $buyPrice = $this->price($lot->getOpenPrice(), $instrument);
             if ($deal === null) {
                 $deal = new Deal(
-                    user:        $user,
                     account:     $account,
                     ticker:      $instrument->getTicker(),
                     stockMarket: $instrument->getStockMarket(),
@@ -209,7 +201,7 @@ final class LedgerProjector
      * @param list<Payout> $payouts
      * @param \Closure(string): ?ExternalInstrument $lookup
      */
-    private function projectDividends(Account $account, User $user, array $payouts, \Closure $lookup): void
+    private function projectDividends(Account $account, array $payouts, \Closure $lookup): void
     {
         $synced = [];
         foreach ($this->dividendRepository->findByAccount($account) as $dividend) {
@@ -227,7 +219,7 @@ final class LedgerProjector
             $dividend = $synced[$payout->getExternalId()] ?? null;
             unset($synced[$payout->getExternalId()]);
             if ($dividend === null) {
-                $dividend = new Dividend($user, $account, $ticker, $stockMarket, bcadd($payout->getNet(), '0', 4), bcadd($payout->getTax(), '0', 4), $date);
+                $dividend = new Dividend($account, $ticker, $stockMarket, bcadd($payout->getNet(), '0', 4), bcadd($payout->getTax(), '0', 4), $date);
                 $dividend->setShare($instrument instanceof Share ? $instrument : null);
                 $dividend->markSynced($payout->getExternalId());
                 $this->entityManager->persist($dividend);
@@ -253,7 +245,7 @@ final class LedgerProjector
      * @param list<Payout> $payouts
      * @param \Closure(string): ?ExternalInstrument $lookup
      */
-    private function projectCoupons(Account $account, User $user, array $payouts, \Closure $lookup): void
+    private function projectCoupons(Account $account, array $payouts, \Closure $lookup): void
     {
         $synced = [];
         foreach ($this->couponRepository->findByAccount($account) as $coupon) {
@@ -271,7 +263,7 @@ final class LedgerProjector
             $coupon = $synced[$payout->getExternalId()] ?? null;
             unset($synced[$payout->getExternalId()]);
             if ($coupon === null) {
-                $coupon = new Coupon($user, $account, $ticker, $stockMarket, bcadd($payout->getNet(), '0', 4), $date);
+                $coupon = new Coupon($account, $ticker, $stockMarket, bcadd($payout->getNet(), '0', 4), $date);
                 $coupon->setBond($instrument instanceof Bond ? $instrument : null);
                 $coupon->markSynced($payout->getExternalId());
                 $this->entityManager->persist($coupon);
@@ -315,7 +307,7 @@ final class LedgerProjector
             $investment = $synced[$cashFlow->externalId] ?? null;
             unset($synced[$cashFlow->externalId]);
             if ($investment === null) {
-                $investment = new Investment($sum, $date, $account, (int) $account->getUserId());
+                $investment = new Investment($sum, $date, $account);
                 $investment->markSynced($cashFlow->externalId);
                 $this->entityManager->persist($investment);
                 continue;

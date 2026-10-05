@@ -349,7 +349,7 @@ final class BrokerSyncControllerTest extends ApiTestCase
         $admin = $this->admin();
         $account = $this->createAccount($admin, balance: '1134.78');
         $this->linkAccount($account);
-        $deal = new Deal($admin, $account, 'SBER', 'MOEX', DealStatus::Active, DealType::Long, 10, '300');
+        $deal = new Deal($account, 'SBER', 'MOEX', DealStatus::Active, DealType::Long, 10, '300');
         $deal->markSynced('broker-lot-1');
         $deal->setCommissions('1.5000', null);
         $this->persist($deal);

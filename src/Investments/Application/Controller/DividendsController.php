@@ -13,6 +13,7 @@ use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Instruments\ShareRepositoryInterface;
 use App\Investments\Domain\Operations\Dividend;
+use App\Investments\Domain\Operations\DividendRepositoryInterface;
 use App\Investments\Domain\Tax\TaxCalculatorInterface;
 use App\Shared\Application\Pagination\PageRequestFactory;
 use App\Shared\Domain\User;
@@ -37,6 +38,7 @@ class DividendsController extends AbstractController
         private readonly AccountRepositoryInterface $accountRepository,
         private readonly ShareRepositoryInterface $shareRepository,
         private readonly ManualJournal $journal,
+        private readonly DividendRepositoryInterface $dividendRepository,
     ) {
     }
 
@@ -65,7 +67,6 @@ class DividendsController extends AbstractController
         $tax = $this->taxCalculator->calculateFromNet($dto->amount, $user->getTaxProfile());
 
         $dividend = new Dividend(
-            user:        $user,
             account:     $account,
             ticker:      $dto->ticker,
             stockMarket: $dto->stockMarket,
@@ -88,7 +89,7 @@ class DividendsController extends AbstractController
     {
         $form = [];
         if ($id > 0) {
-            $dividend = $this->em->getRepository(Dividend::class)->findOneBy(['id' => $id, 'user' => $user]);
+            $dividend = ($user !== null ? $this->dividendRepository->findByIdAndUser($id, $user) : null);
             if (! $dividend) {
                 throw $this->createNotFoundException('No dividend found for id ' . $id);
             }
@@ -112,7 +113,7 @@ class DividendsController extends AbstractController
             throw $this->createAccessDeniedException('Authentication required.');
         }
 
-        $dividend = $this->em->getRepository(Dividend::class)->findOneBy(['id' => $id, 'user' => $user]);
+        $dividend = $this->dividendRepository->findByIdAndUser($id, $user);
         if (! $dividend) {
             throw $this->createNotFoundException('No dividend found for id ' . $id);
         }
@@ -137,7 +138,7 @@ class DividendsController extends AbstractController
     #[Route('/dividends/delete/{id}', name: 'app_dividends_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
-        $dividend = $this->em->getRepository(Dividend::class)->findOneBy(['id' => $id, 'user' => $user]);
+        $dividend = ($user !== null ? $this->dividendRepository->findByIdAndUser($id, $user) : null);
         if (! $dividend) {
             throw $this->createNotFoundException('No dividend found for id ' . $id);
         }

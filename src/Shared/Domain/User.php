@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace App\Shared\Domain;
 
-use App\Investments\Domain\Operations\Deal;
 use App\Shared\Infrastructure\Persistence\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -42,12 +39,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['authUserData'])]
     private ?string $name = null;
 
-    /**
-     * @var Collection<int, Deal>
-     */
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Deal::class, orphanRemoval: true)]
-    private Collection $deals;
-
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
     #[Groups(['authUserData'])]
     private ?string $salary = null;
@@ -55,11 +46,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 20, options: ['default' => TaxProfile::Ndfl13->value])]
     #[Groups(['authUserData'])]
     private string $taxProfile = TaxProfile::Ndfl13->value;
-
-    public function __construct()
-    {
-        $this->deals = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -153,24 +139,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setName(?string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Deal>
-     */
-    public function getDeals(): Collection
-    {
-        return $this->deals;
-    }
-
-    public function addDeal(Deal $deal): static
-    {
-        if (!$this->deals->contains($deal)) {
-            $this->deals->add($deal);
-            $deal->setUser($this);
-        }
 
         return $this;
     }

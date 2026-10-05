@@ -45,7 +45,6 @@ class CreateCouponCommandHandler
         $this->syncedAccountGuard->assertManual($account);
 
         $coupon = new Coupon(
-            user:        $user,
             account:     $account,
             ticker:      $command->ticker,
             stockMarket: $command->stockMarket,
