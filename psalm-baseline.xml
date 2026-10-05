@@ -5,11 +5,6 @@
       <code><![CDATA[$groupByCurrency]]></code>
     </UnusedForeachValue>
   </file>
-  <file src="src/Investments/Application/Operations/Deals/DealService.php">
-    <RedundantCondition>
-      <code><![CDATA[$securityDTO->securityType === SecurityTypeEnum::Future]]></code>
-    </RedundantCondition>
-  </file>
   <file src="src/Investments/Application/Operations/Deals/PortfolioQueryHandler.php">
     <UnusedForeachValue>
       <code><![CDATA[$groupByCurrency]]></code>

@@ -7,7 +7,8 @@ namespace App\Investments\Domain\BrokerSync\Ledger;
 use App\Investments\Domain\Operations\Deals\DealType;
 
 /**
- * Open lots per instrument, matched first in, first out. A sale without long lots opens a short.
+ * Open lots per instrument. Broker trades are matched first in, first out, and a sale without
+ * long lots opens a short. Manual trades open and close lots explicitly, by key or by quantity.
  */
 final class LotBook
 {
@@ -36,6 +37,73 @@ final class LotBook
     public function sell(InstrumentRef $instrument, string $operationId, int $quantity, string $price, \DateTimeImmutable $at, string $commission, string $currency): void
     {
         $this->trade($instrument, DealType::Short, $operationId, $quantity, $price, $at, $commission, $currency);
+    }
+
+    /**
+     * Opens a lot under the given key, whatever lots of the instrument are open.
+     *
+     * @param numeric-string $price
+     * @param numeric-string $commission
+     * @param numeric-string|null $target
+     */
+    public function open(
+        InstrumentRef $instrument,
+        string $key,
+        DealType $direction,
+        int $quantity,
+        string $price,
+        \DateTimeImmutable $at,
+        string $commission,
+        string $currency,
+        ?string $target = null,
+    ): Lot {
+        $lot = new Lot($key, $key, $instrument, $direction, $quantity, $price, $at, $commission, $currency, $target);
+        $this->lots[] = $lot;
+        $this->open[$instrument->uid][] = $lot;
+
+        return $lot;
+    }
+
+    /**
+     * Closes the lot with the key, or, without a key, the oldest lots of the instrument that are not
+     * blocked. Closes no more than is open.
+     *
+     * @param numeric-string $price
+     * @param numeric-string $commission of the whole trade
+     * @return list<Lot> the closed parts
+     */
+    public function close(string $uid, ?string $key, int $quantity, string $price, \DateTimeImmutable $at, string $commission): array
+    {
+        $lot = $key !== null ? $this->findOpen($key) : null;
+        $candidates = $key !== null
+            ? ($lot !== null ? [$lot] : [])
+            : array_values(array_filter($this->open[$uid] ?? [], static fn (Lot $lot) => ! $lot->isBlocked()));
+
+        $closed = [];
+        $left = $quantity;
+        foreach ($candidates as $lot) {
+            if ($left <= 0) {
+                break;
+            }
+            $part = $this->closeLot($lot, $left, $price, $at, $commission, $quantity);
+            $left -= $part->getQuantity();
+            $closed[] = $part;
+        }
+
+        return $closed;
+    }
+
+    public function findOpen(string $key): ?Lot
+    {
+        foreach ($this->open as $lots) {
+            foreach ($lots as $lot) {
+                if ($lot->getKey() === $key) {
+                    return $lot;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**

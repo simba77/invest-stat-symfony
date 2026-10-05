@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Operations\Coupons;
 
 use App\Investments\Application\BrokerSync\SyncedAccountGuard;
+use App\Investments\Application\Journal\ManualJournal;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Instruments\BondRepositoryInterface;
 use App\Investments\Domain\Operations\CouponRepositoryInterface;
@@ -19,6 +20,7 @@ class UpdateCouponCommandHandler
         private readonly AccountRepositoryInterface $accountRepository,
         private readonly CouponRepositoryInterface $couponRepository,
         private readonly SyncedAccountGuard $syncedAccountGuard,
+        private readonly ManualJournal $journal,
         private readonly BondRepositoryInterface $bondRepository,
     ) {
     }
@@ -40,13 +42,14 @@ class UpdateCouponCommandHandler
 
         $this->syncedAccountGuard->assertManual($coupon->getAccount(), $account);
 
-        $coupon->setDate(new DateTimeImmutable($command->date));
-        $coupon->setAmount($command->amount);
-        $coupon->setTicker($command->ticker);
-        $coupon->setStockMarket($command->stockMarket);
-        $coupon->setBond($this->bondRepository->findByTickerAndStockMarket($command->ticker, $command->stockMarket));
-        $coupon->setAccount($account);
-
-        $this->couponRepository->save($coupon);
+        $this->journal->changeRecords(function () use ($coupon, $command, $account): void {
+            $coupon->setDate(new DateTimeImmutable($command->date));
+            $coupon->setAmount($command->amount);
+            $coupon->setTicker($command->ticker);
+            $coupon->setStockMarket($command->stockMarket);
+            $coupon->setBond($this->bondRepository->findByTickerAndStockMarket($command->ticker, $command->stockMarket));
+            $coupon->setAccount($account);
+            $this->couponRepository->save($coupon);
+        }, $coupon->getAccount(), $account);
     }
 }

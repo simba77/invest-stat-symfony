@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Controller;
 
 use App\Investments\Application\BrokerSync\SyncedAccountGuard;
+use App\Investments\Application\Journal\ManualJournal;
 use App\Investments\Application\Request\DTO\Operations\InvestmentRequestDTO;
 use App\Investments\Application\Response\Compiler\AccountsSimpleListCompiler;
 use App\Investments\Application\UseCases\GetInvestmentsPageUseCase;
@@ -32,6 +33,7 @@ class InvestmentsController extends AbstractController
         protected readonly AccountRepositoryInterface $accountRepository,
         protected readonly AccountsSimpleListCompiler $accountsSimpleListCompiler,
         private readonly SyncedAccountGuard $syncedAccountGuard,
+        private readonly ManualJournal $journal,
     ) {
     }
 
@@ -57,9 +59,12 @@ class InvestmentsController extends AbstractController
 
         $account = $this->account($dto->account, $user);
         $this->syncedAccountGuard->assertManual($account);
-        $inv = new Investment($dto->sum, new \DateTimeImmutable($dto->date), $account, $user->getId());
-        $this->em->persist($inv);
-        $this->em->flush();
+        $investment = new Investment($dto->sum, new \DateTimeImmutable($dto->date), $account, (int) $user->getId());
+        $this->journal->changeRecords(function () use ($investment): void {
+            $this->em->persist($investment);
+            $this->em->flush();
+        }, $account);
+
         return $this->json(['success' => true]);
     }
 
@@ -102,10 +107,12 @@ class InvestmentsController extends AbstractController
         }
         $account = $this->account($dto->account, $user);
         $this->syncedAccountGuard->assertManual($investment->getAccount(), $account);
-        $investment->setDate(new \DateTimeImmutable($dto->date));
-        $investment->setSum($dto->sum);
-        $investment->setAccount($account);
-        $this->em->flush();
+        $this->journal->changeRecords(function () use ($investment, $dto, $account): void {
+            $investment->setDate(new \DateTimeImmutable($dto->date));
+            $investment->setSum($dto->sum);
+            $investment->setAccount($account);
+            $this->em->flush();
+        }, $investment->getAccount(), $account);
 
         return $this->json(['success' => true]);
     }
@@ -118,8 +125,10 @@ class InvestmentsController extends AbstractController
             throw $this->createNotFoundException('No investment found for id ' . $id);
         }
         $this->syncedAccountGuard->assertManual($investment->getAccount());
-        $this->em->remove($investment);
-        $this->em->flush();
+        $this->journal->changeRecords(function () use ($investment): void {
+            $this->em->remove($investment);
+            $this->em->flush();
+        }, $investment->getAccount());
 
         return $this->json(['success' => true]);
     }

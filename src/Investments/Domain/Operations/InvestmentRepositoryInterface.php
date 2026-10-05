@@ -29,6 +29,13 @@ interface InvestmentRepositoryInterface
     public function getDailyCashFlowsByUserId(int $userId): array;
 
     /**
+     * What was put into the account less what was taken out, in roubles.
+     *
+     * @return numeric-string
+     */
+    public function sumByAccount(Account $account): string;
+
+    /**
      * Every record of the account, in the order they were created.
      *
      * @return list<Investment>

@@ -13,7 +13,7 @@ final class InvestmentsControllerTest extends ApiTestCase
 {
     use CreatesInvestmentRecords;
 
-    public function testCreateCountsDepositButLeavesCashUntouched(): void
+    public function testCreateAddsDepositToCash(): void
     {
         $admin = $this->admin();
         $account = $this->createAccount($admin, balance: '1000');
@@ -24,7 +24,7 @@ final class InvestmentsControllerTest extends ApiTestCase
         self::assertResponseIsSuccessful();
         $deposits = $this->findFreshBy(Investment::class, ['account' => $account->getId()]);
         self::assertSame(['5000.00', '2026-01-15'], [$deposits[0]->getSum(), $deposits[0]->getDate()?->format('Y-m-d')]);
-        self::assertSame('1000.0000', $this->findFresh(Account::class, $account->getId())?->getBalance());
+        self::assertSame('6000.0000', $this->findFresh(Account::class, $account->getId())?->getBalance());
     }
 
     public function testCreateRejectsOtherUsersAccount(): void

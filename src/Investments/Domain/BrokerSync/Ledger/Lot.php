@@ -20,6 +20,9 @@ final class Lot
     /** @var numeric-string */
     private string $closeCommission = '0';
 
+    /** A blocked lot is held but cannot be traded: sales by quantity pass it by. */
+    private bool $blocked = false;
+
     /**
      * @param numeric-string $openPrice
      * @param numeric-string $openCommission
@@ -34,6 +37,7 @@ final class Lot
         private readonly \DateTimeImmutable $openedAt,
         private string $openCommission,
         private readonly string $currency,
+        private readonly ?string $target = null,
     ) {
     }
 
@@ -121,6 +125,27 @@ final class Lot
     }
 
     /**
+     * The price the owner aims to close the lot at.
+     *
+     * @return numeric-string|null
+     */
+    public function getTarget(): ?string
+    {
+        /** @var numeric-string|null */
+        return $this->target;
+    }
+
+    public function isBlocked(): bool
+    {
+        return $this->blocked;
+    }
+
+    public function setBlocked(bool $blocked): void
+    {
+        $this->blocked = $blocked;
+    }
+
+    /**
      * Keeps $quantity in this lot and moves the rest, with its share of the commission, into a new lot.
      */
     public function splitOff(int $quantity, string $key): self
@@ -141,7 +166,9 @@ final class Lot
             openedAt:       $this->openedAt,
             openCommission: bcsub($this->openCommission, $keptCommission, 9),
             currency:       $this->currency,
+            target:         $this->target,
         );
+        $rest->blocked = $this->blocked;
 
         $this->quantity = $quantity;
         $this->openCommission = $keptCommission;

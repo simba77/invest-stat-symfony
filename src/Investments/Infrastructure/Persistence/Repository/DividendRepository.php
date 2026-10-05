@@ -114,6 +114,29 @@ class DividendRepository extends ServiceEntityRepository implements DividendRepo
             ->getResult();
     }
 
+    #[\Override]
+    public function sumByAccountAndCurrency(Account $account): array
+    {
+        /** @var list<array{currency: string|null, amount: numeric-string}> $rows */
+        $rows = $this->createQueryBuilder('d')
+            ->select('s.currency AS currency', 'SUM(d.amount) AS amount')
+            ->leftJoin('d.share', 's')
+            ->andWhere('d.account = :account')
+            ->setParameter('account', $account->getId())
+            ->groupBy('s.currency')
+            ->getQuery()
+            ->getArrayResult();
+
+        $sums = [];
+        foreach ($rows as $row) {
+            // A dividend of a share the catalogue does not know is taken to be in roubles
+            $currency = $row['currency'] ?? 'RUB';
+            $sums[$currency] = bcadd($sums[$currency] ?? '0', $row['amount'], 4);
+        }
+
+        return $sums;
+    }
+
     /**
      * @return list<Dividend>
      */

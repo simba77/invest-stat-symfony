@@ -115,6 +115,20 @@ class InvestmentRepository extends ServiceEntityRepository implements Investment
             ->fetchAllAssociative();
     }
 
+    #[\Override]
+    public function sumByAccount(Account $account): string
+    {
+        $sum = $this->createQueryBuilder('inv')
+            ->select('SUM(inv.sum)')
+            ->andWhere('inv.account = :account')
+            ->setParameter('account', $account->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        /** @var numeric-string */
+        return is_numeric($sum) ? (string) $sum : '0';
+    }
+
     /**
      * @return list<Investment>
      */

@@ -65,11 +65,33 @@ records from the broker instead of manual input. Code: `Investments/*/BrokerSync
   dividends, coupons and investments matched by `external_id` (`LedgerProjector`).
   Cash balances come from the broker positions; `PositionsReconciler` reports differences.
 * Records of a synced account carry `source = broker`; manual changes to such an account are
-  refused (`SyncedAccountGuard`, HTTP 409). Unlinking keeps the records and makes them editable.
+  refused (`SyncedAccountGuard`, HTTP 409). Unlinking keeps the records and starts a manual journal
+  from them.
 * A new broker: implement `Domain/BrokerSync/Client/BrokerClientInterface`, map its operation types
   to `BrokerOperationType`, add the provider to `BrokerProvider` and `BrokerClientFactory`.
 * Tests use `tests/Investments/BrokerSync/FakeBrokerClient` (wired in `config/services.yaml` for
   `when@test`) and `Operations` to build broker operations.
+
+## Manual journal
+
+A manual account is rebuilt from its own journal, `manual_operations` (`Domain/Journal`,
+`Application/Journal/ManualJournal`), the way a synced one is rebuilt from the broker's.
+
+* Write paths record operations instead of changing deals or cash: a purchase or a short sale
+  opens a lot (`op:<id>`), a sale closes a lot by key (one deal) or the oldest lots that are not
+  blocked (by quantity, refused when more is asked than they hold), a block or an unblock marks a
+  lot from its date, a cash adjustment records an edit of the cash in the account form.
+* `ManualLedgerReplayer` replays the journal with `LotBook`; `ManualLedgerProjector` writes the
+  lots into deals matched by `external_id` (the lot key), so deal ids survive rebuilds. A part
+  sold off a lot keeps the key, the rest gets `#n` and the opening date of the purchase.
+* Cash = what the trades moved (a bond with its accrued coupon, a future by its result when closed)
+  + cash adjustments + deposits + dividends (in the share's currency) + coupons. Changes of payouts
+  and deposits go through `ManualJournal::changeRecords()`, which rebuilds the cash.
+* An account without a journal (`accounts.journal_started_at` is null) starts one from its deals as
+  they are on the first change; a cash adjustment keeps its cash. Run `accounts:rebuild` after a
+  deploy that touches the journal: it starts the missing journals and rebuilds the others.
+* The value of an account is computed on request (`AccountBalanceCalculator`): its cash by currency
+  (`account_cash`) and its open deals at the current prices and rates.
 
 ## Instruments catalogue
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Controller;
 
 use App\Investments\Application\BrokerSync\SyncedAccountGuard;
+use App\Investments\Application\Journal\ManualJournal;
 use App\Investments\Application\Request\DTO\Operations\CreateDividendRequestDTO;
 use App\Investments\Application\Request\DTO\Operations\UpdateDividendRequestDTO;
 use App\Investments\Application\UseCases\GetDividendsPageUseCase;
@@ -35,6 +36,7 @@ class DividendsController extends AbstractController
         private readonly SyncedAccountGuard $syncedAccountGuard,
         private readonly AccountRepositoryInterface $accountRepository,
         private readonly ShareRepositoryInterface $shareRepository,
+        private readonly ManualJournal $journal,
     ) {
     }
 
@@ -73,8 +75,11 @@ class DividendsController extends AbstractController
         );
         $dividend->setShare($this->shareRepository->findByTickerAndStockMarket($dto->ticker, $dto->stockMarket));
 
-        $this->em->persist($dividend);
-        $this->em->flush();
+        $this->journal->changeRecords(function () use ($dividend): void {
+            $this->em->persist($dividend);
+            $this->em->flush();
+        }, $account);
+
         return $this->json(['success' => true]);
     }
 
@@ -115,14 +120,16 @@ class DividendsController extends AbstractController
         $tax = $this->taxCalculator->calculateFromNet($dto->amount, $user->getTaxProfile());
         $account = $this->account($dto->accountId, $user);
         $this->syncedAccountGuard->assertManual($dividend->getAccount(), $account);
-        $dividend->setDate(new \DateTimeImmutable($dto->date));
-        $dividend->setAmount($dto->amount);
-        $dividend->setTax($tax->tax);
-        $dividend->setTicker($dto->ticker);
-        $dividend->setStockMarket($dto->stockMarket);
-        $dividend->setShare($this->shareRepository->findByTickerAndStockMarket($dto->ticker, $dto->stockMarket));
-        $dividend->setAccount($account);
-        $this->em->flush();
+        $this->journal->changeRecords(function () use ($dividend, $dto, $tax, $account): void {
+            $dividend->setDate(new \DateTimeImmutable($dto->date));
+            $dividend->setAmount($dto->amount);
+            $dividend->setTax($tax->tax);
+            $dividend->setTicker($dto->ticker);
+            $dividend->setStockMarket($dto->stockMarket);
+            $dividend->setShare($this->shareRepository->findByTickerAndStockMarket($dto->ticker, $dto->stockMarket));
+            $dividend->setAccount($account);
+            $this->em->flush();
+        }, $dividend->getAccount(), $account);
 
         return $this->json(['success' => true]);
     }
@@ -130,13 +137,15 @@ class DividendsController extends AbstractController
     #[Route('/dividends/delete/{id}', name: 'app_dividends_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(int $id, #[CurrentUser] ?User $user): JsonResponse
     {
-        $investment = $this->em->getRepository(Dividend::class)->findOneBy(['id' => $id, 'user' => $user]);
-        if (! $investment) {
+        $dividend = $this->em->getRepository(Dividend::class)->findOneBy(['id' => $id, 'user' => $user]);
+        if (! $dividend) {
             throw $this->createNotFoundException('No dividend found for id ' . $id);
         }
-        $this->syncedAccountGuard->assertManual($investment->getAccount());
-        $this->em->remove($investment);
-        $this->em->flush();
+        $this->syncedAccountGuard->assertManual($dividend->getAccount());
+        $this->journal->changeRecords(function () use ($dividend): void {
+            $this->em->remove($dividend);
+            $this->em->flush();
+        }, $dividend->getAccount());
 
         return $this->json(['success' => true]);
     }

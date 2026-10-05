@@ -92,6 +92,20 @@ class CouponRepository extends ServiceEntityRepository implements CouponReposito
         $em->flush();
     }
 
+    #[\Override]
+    public function sumByAccount(Account $account): string
+    {
+        $sum = $this->createQueryBuilder('c')
+            ->select('SUM(c.amount)')
+            ->andWhere('c.account = :account')
+            ->setParameter('account', $account->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        /** @var numeric-string */
+        return is_numeric($sum) ? (string) $sum : '0';
+    }
+
     /**
      * @return list<Coupon>
      */

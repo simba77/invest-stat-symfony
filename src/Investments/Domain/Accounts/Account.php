@@ -62,6 +62,13 @@ class Account implements
     #[ORM\OneToMany(mappedBy: 'account', targetEntity: AccountCash::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $cash;
 
+    /**
+     * Since when the deals and the cash of a manual account are rebuilt from its journal;
+     * null while they are as entered or as the broker sync left them.
+     */
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $journalStartedAt = null;
+
     /** @var numeric-string|null */
     #[ORM\Column(type: Types::DECIMAL, precision: 18, scale: 2, nullable: true)]
     private ?string $commission = null;
@@ -215,6 +222,24 @@ class Account implements
     public function setUsdBalance(?string $usdBalance): static
     {
         return $this->setCash('USD', $usdBalance ?? '0');
+    }
+
+    public function getJournalStartedAt(): ?\DateTimeImmutable
+    {
+        return $this->journalStartedAt;
+    }
+
+    public function startJournal(\DateTimeImmutable $at): void
+    {
+        $this->journalStartedAt = $at;
+    }
+
+    /**
+     * The broker sync takes over the records; a journal starts again from them once unlinked.
+     */
+    public function stopJournal(): void
+    {
+        $this->journalStartedAt = null;
     }
 
     /**

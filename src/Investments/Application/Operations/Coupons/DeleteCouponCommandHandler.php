@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Operations\Coupons;
 
 use App\Investments\Application\BrokerSync\SyncedAccountGuard;
+use App\Investments\Application\Journal\ManualJournal;
 use App\Investments\Domain\Operations\CouponRepositoryInterface;
 use App\Shared\Infrastructure\Symfony\NotFoundException;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -15,6 +16,7 @@ class DeleteCouponCommandHandler
     public function __construct(
         public readonly CouponRepositoryInterface $couponRepository,
         private readonly SyncedAccountGuard $syncedAccountGuard,
+        private readonly ManualJournal $journal,
     ) {
     }
 
@@ -25,6 +27,6 @@ class DeleteCouponCommandHandler
             throw new NotFoundException(sprintf('Coupon with id "%s" not found', $command->id));
         }
         $this->syncedAccountGuard->assertManual($coupon->getAccount());
-        $this->couponRepository->remove($coupon);
+        $this->journal->changeRecords(fn () => $this->couponRepository->remove($coupon), $coupon->getAccount());
     }
 }

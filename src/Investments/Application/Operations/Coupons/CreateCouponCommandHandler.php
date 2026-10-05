@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Investments\Application\Operations\Coupons;
 
 use App\Investments\Application\BrokerSync\SyncedAccountGuard;
+use App\Investments\Application\Journal\ManualJournal;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\Instruments\BondRepositoryInterface;
 use App\Investments\Domain\Operations\Coupon;
@@ -21,6 +22,7 @@ class CreateCouponCommandHandler
         private readonly UserRepositoryInterface $userRepository,
         private readonly AccountRepositoryInterface $accountRepository,
         private readonly SyncedAccountGuard $syncedAccountGuard,
+        private readonly ManualJournal $journal,
         private readonly BondRepositoryInterface $bondRepository,
     ) {
     }
@@ -52,6 +54,6 @@ class CreateCouponCommandHandler
         );
         $coupon->setBond($this->bondRepository->findByTickerAndStockMarket($command->ticker, $command->stockMarket));
 
-        $this->couponRepository->save($coupon);
+        $this->journal->changeRecords(fn () => $this->couponRepository->save($coupon), $account);
     }
 }

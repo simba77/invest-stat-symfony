@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace App\Tests\Investments\Application\Controller;
 
+use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\BrokerSync\BrokerAccountLink;
 use App\Investments\Domain\BrokerSync\BrokerOperation;
 use App\Investments\Domain\BrokerSync\BrokerOperationType;
 use App\Investments\Domain\BrokerSync\Client\ExternalAccount;
 use App\Investments\Domain\BrokerSync\Client\ExternalPositions;
 use App\Investments\Domain\BrokerSync\FeeAllocation;
+use App\Investments\Domain\Operations\Deal;
+use App\Investments\Domain\Operations\Deals\DealStatus;
+use App\Investments\Domain\Operations\Deals\DealType;
 use App\Tests\Investments\BrokerSync\CreatesBrokerLinks;
 use App\Tests\Investments\BrokerSync\Operations;
 use App\Tests\Support\ApiTestCase;
@@ -338,6 +342,27 @@ final class BrokerSyncControllerTest extends ApiTestCase
 
         self::assertResponseIsSuccessful();
         self::assertSame([], $this->findFreshBy(BrokerAccountLink::class, ['account' => $account->getId()]));
+    }
+
+    public function testDeleteTurnsSyncedRecordsIntoManualJournal(): void
+    {
+        $admin = $this->admin();
+        $account = $this->createAccount($admin, balance: '1134.78');
+        $this->linkAccount($account);
+        $deal = new Deal($admin, $account, 'SBER', 'MOEX', DealStatus::Active, DealType::Long, 10, '300');
+        $deal->markSynced('broker-lot-1');
+        $deal->setCommissions('1.5000', null);
+        $this->persist($deal);
+        $this->loginAs($admin);
+
+        $this->postJson('/api/accounts/' . $account->getId() . '/broker-sync/delete');
+
+        self::assertResponseIsSuccessful();
+        $account = $this->findFresh(Account::class, $account->getId());
+        self::assertNotNull($account?->getJournalStartedAt());
+        self::assertSame('1134.7800', $account?->getBalance());
+        $deal = $this->findFresh(Deal::class, $deal->getId());
+        self::assertSame([false, 10, '300.0000', '1.5000'], [$deal?->isSynced(), $deal?->getQuantity(), $deal?->getBuyPrice(), $deal?->getBuyCommission()]);
     }
 
     public function testDeleteLeavesLinkOfOtherUser(): void

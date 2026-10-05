@@ -15,6 +15,7 @@ use App\Investments\Application\Request\DTO\Operations\SellDealRequestDTO;
 use App\Investments\Application\Response\Compiler\AccountItemCompiler;
 use App\Investments\Application\Response\DTO\Operations\EditDealDTO;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
+use App\Investments\Domain\Journal\NotEnoughSecuritiesException;
 use App\Investments\Domain\Operations\DealRepositoryInterface;
 use App\Investments\Domain\Operations\Deals\DealType;
 use App\Shared\Domain\Bus\QueryBusInterface;
@@ -24,9 +25,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 #[IsGranted('IS_AUTHENTICATED', statusCode: 403)]
 class DealsController extends AbstractController
@@ -156,7 +161,14 @@ class DealsController extends AbstractController
             if (! $account) {
                 throw $this->createNotFoundException('No account found for id ' . $dto->accountId);
             }
-            $this->dealService->sellAsNeeded($user, $account, $dto);
+            try {
+                $this->dealService->sellAsNeeded($user, $account, $dto);
+            } catch (NotEnoughSecuritiesException $exception) {
+                // Reported like the request validation, so that the form shows it next to the quantity
+                throw new UnprocessableEntityHttpException('Validation failed', new ValidationFailedException($dto, new ConstraintViolationList([
+                    new ConstraintViolation(sprintf('Only %d can be sold.', $exception->available), null, [], $dto, 'quantity', $dto->quantity),
+                ])));
+            }
         }
 
         return $this->json(['success' => true]);

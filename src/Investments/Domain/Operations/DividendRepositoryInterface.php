@@ -34,6 +34,13 @@ interface DividendRepositoryInterface
     public function findByUserAndTickerAndStockMarket(int $userId, string $ticker, string $stockMarket): array;
 
     /**
+     * What the dividends brought to the account, in the currency of their shares.
+     *
+     * @return array<string, numeric-string> by currency
+     */
+    public function sumByAccountAndCurrency(Account $account): array;
+
+    /**
      * Every record of the account, in the order they were created.
      *
      * @return list<Dividend>

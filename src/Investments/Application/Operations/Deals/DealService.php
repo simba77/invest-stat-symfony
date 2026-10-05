@@ -5,167 +5,77 @@ declare(strict_types=1);
 namespace App\Investments\Application\Operations\Deals;
 
 use App\Investments\Application\BrokerSync\SyncedAccountGuard;
+use App\Investments\Application\Journal\ManualJournal;
 use App\Investments\Application\Request\DTO\Operations\SellDealRequestDTO;
-use App\Investments\Application\Response\DTO\Instruments\SecurityDTO;
 use App\Investments\Domain\Accounts\Account;
-use App\Investments\Domain\Instruments\Securities\SecuritiesService;
-use App\Investments\Domain\Instruments\Securities\SecurityTypeEnum;
+use App\Investments\Domain\Instruments\Bond;
+use App\Investments\Domain\Journal\ManualOperation;
+use App\Investments\Domain\Journal\NotEnoughSecuritiesException;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\Deals\DealStatus;
-use App\Investments\Domain\Operations\Deals\DealType;
-use App\Investments\Domain\Operations\Deals\Exceptions\NoDealsException;
 use App\Shared\Domain\User;
 use Doctrine\Common\Collections\Order;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Clock\ClockInterface;
-use RuntimeException;
 
+/**
+ * Records sales in the journal; the deals and the cash follow from it.
+ */
 class DealService
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly SecuritiesService $securitiesService,
         private readonly SyncedAccountGuard $syncedAccountGuard,
+        private readonly ManualJournal $journal,
         private readonly ClockInterface $clock,
     ) {
     }
 
+    /**
+     * Sells the whole deal.
+     */
     public function sellOne(Deal $deal, SellDealRequestDTO $dto): void
     {
-        $this->syncedAccountGuard->assertManual($deal->getAccount());
-        $deal->setStatus(DealStatus::Closed);
-        $deal->setSellPrice($dto->price);
-        $deal->setClosingDate($this->now());
-        $this->entityManager->persist($deal);
+        $account = $deal->getAccount();
+        $this->syncedAccountGuard->assertManual($account);
 
-        $this->changeAccountBalance($deal, $dto);
-
-        $this->entityManager->flush();
+        $this->journal->record($account, $this->sale($deal, $this->journal->lotOf($deal), $deal->getQuantity(), $dto));
     }
 
+    /**
+     * Sells the quantity from the oldest deals of the security that are not blocked.
+     *
+     * @throws NotEnoughSecuritiesException
+     */
     public function sellAsNeeded(User $user, Account $account, SellDealRequestDTO $dto): void
     {
         $this->syncedAccountGuard->assertManual($account);
-        $needToSell = $dto->quantity;
-        $deals = $this->entityManager->getRepository(Deal::class)
-            ->findBy(
-                [
-                    'user' => $user,
-                    'account' => $account,
-                    'ticker' => $dto->ticker,
-                    'status' => DealStatus::Active,
-                ],
-                ['id' => Order::Ascending->value]
-            );
-        if (empty($deals)) {
-            throw new NoDealsException('No Deals for this Ticker and Account');
+        $deals = $this->entityManager->getRepository(Deal::class)->findBy(
+            ['user' => $user, 'account' => $account, 'ticker' => $dto->ticker, 'status' => DealStatus::Active],
+            ['id' => Order::Ascending->value],
+        );
+        $available = array_sum(array_map(static fn (Deal $deal) => $deal->getQuantity(), $deals));
+        if ($deals === [] || $dto->quantity > $available) {
+            throw new NotEnoughSecuritiesException($available);
         }
 
-        foreach ($deals as $deal) {
-            if ($deal->getQuantity() > $needToSell) {
-                // Clone the deal and set the remaining quantity
-                $additionalDeal = clone $deal;
-                $additionalDeal->setQuantity($deal->getQuantity() - $needToSell);
-                $this->entityManager->persist($additionalDeal);
-
-                // Set the sell status and set the quantity
-                $deal->setQuantity($needToSell);
-                $deal->setStatus(DealStatus::Closed);
-                $deal->setClosingDate($this->now());
-                $deal->setSellPrice($dto->price);
-                $this->entityManager->persist($deal);
-                $needToSell = 0;
-                break;
-            }
-
-            // Set the sell status and reduce quantity that need to sell
-            $deal->setStatus(DealStatus::Closed);
-            $deal->setClosingDate($this->now());
-            $deal->setSellPrice($dto->price);
-            $this->entityManager->persist($deal);
-            $needToSell -= $deal->getQuantity();
-
-            if ($needToSell === 0) {
-                break;
-            }
-        }
-
-        // If the number of securities in the database is less than the quantity need to sell.
-        if ($needToSell > 0) {
-            $additionalDeal = clone $deal;
-            $additionalDeal->setQuantity($needToSell);
-            $additionalDeal->setStatus(DealStatus::Closed);
-            $additionalDeal->setClosingDate($this->now());
-            $additionalDeal->setSellPrice($dto->price);
-            $this->entityManager->persist($additionalDeal);
-        }
-
-        $this->changeAccountBalance($deal, $dto);
-
-        $this->entityManager->flush();
+        $this->journal->record($account, $this->sale($deals[0], null, $dto->quantity, $dto));
     }
 
-    private function now(): \DateTime
+    private function sale(Deal $deal, ?string $lot, int $quantity, SellDealRequestDTO $dto): ManualOperation
     {
-        return \DateTime::createFromImmutable($this->clock->now());
-    }
+        $instrument = $deal->getInstrument();
 
-    private function changeAccountBalance(Deal $deal, SellDealRequestDTO $dto): void
-    {
-        $security = $this->securitiesService->getSecurityByTickerAndStockMarket($deal->getTicker(), $deal->getStockMarket());
-        if (! $security) {
-            throw new RuntimeException('Security not found');
-        }
-
-        $dealSum = $this->getDealSum($security, $dto, $deal);
-        $account = $deal->getAccount();
-        if ($security->currency === 'RUB') {
-            $balanceToChange = $account->getBalance();
-
-            // Depends on the type of deal we decide to increase or decrease the balance.
-            if ($deal->getType() === DealType::Long) {
-                $account->setBalance(bcadd($balanceToChange, $dealSum, 4));
-            } elseif ($deal->getType() === DealType::Short) {
-                $account->setBalance(bcsub($balanceToChange, $dealSum, 4));
-            }
-        } else {
-            $balanceToChange = $account->getUsdBalance();
-
-            // Depends on the type of deal we decide to increase or decrease the balance.
-            if ($deal->getType() === DealType::Long) {
-                $account->setUsdBalance(bcadd($balanceToChange, $dealSum, 4));
-            } elseif ($deal->getType() === DealType::Short) {
-                $account->setUsdBalance(bcsub($balanceToChange, $dealSum, 4));
-            }
-        }
-
-        $this->entityManager->persist($account);
-        $this->entityManager->flush();
-    }
-
-    private function getDealSum(SecurityDTO $securityDTO, SellDealRequestDTO $dealRequestDTO, Deal $deal): string
-    {
-        if ($securityDTO->securityType === SecurityTypeEnum::Share) {
-            return bcmul($dealRequestDTO->price, (string) $dealRequestDTO->quantity, 4);
-        } elseif ($securityDTO->securityType === SecurityTypeEnum::Bond) {
-            $result = bcmul($securityDTO->lotSize, $dealRequestDTO->price, 4);
-            $result = bcdiv($result, '100', 4);
-            $result = bcmul($result, (string) $dealRequestDTO->quantity, 4);
-            return bcadd($result, bcmul($securityDTO->bondAccumulatedCoupon, (string) $dealRequestDTO->quantity, 4), 4);
-        } elseif ($securityDTO->securityType === SecurityTypeEnum::Future) {
-            if ($securityDTO->lotSize < $dealRequestDTO->price) {
-                $sellLotPrice = $dealRequestDTO->price;
-                $buyLotPrice = $deal->getBuyPrice();
-            } else {
-                $sellLotPrice = bcmul($securityDTO->lotSize, $dealRequestDTO->price, 4);
-                $buyLotPrice = bcmul($deal->getBuyPrice(), $securityDTO->lotSize, 4);
-            }
-            $sellFullPrice = bcmul($sellLotPrice, (string) $dealRequestDTO->quantity, 4);
-            $buyFullPrice = bcmul($buyLotPrice, (string) $dealRequestDTO->quantity, 4);
-            return bcsub($sellFullPrice, $buyFullPrice);
-        }
-
-        // @phpstan-ignore-next-line
-        return '0';
+        return ManualOperation::close(
+            account:         $deal->getAccount(),
+            executedAt:      $this->clock->now(),
+            instrument:      $instrument,
+            ticker:          $deal->getTicker(),
+            stockMarket:     (string) $deal->getStockMarket(),
+            lot:             $lot,
+            quantity:        $quantity,
+            price:           $dto->price,
+            accruedInterest: $instrument instanceof Bond ? $instrument->getCouponAccumulated() : null,
+        );
     }
 }

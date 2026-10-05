@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Investments\Application\BrokerSync;
 
+use App\Investments\Application\Journal\ManualJournal;
 use App\Investments\Domain\Accounts\AccountRepositoryInterface;
 use App\Investments\Domain\BrokerSync\BrokerAccountLinkRepositoryInterface;
 use App\Shared\Infrastructure\Symfony\NotFoundException;
@@ -18,6 +19,7 @@ final readonly class DeleteBrokerSyncSettingsCommandHandler
     public function __construct(
         private AccountRepositoryInterface $accountRepository,
         private BrokerAccountLinkRepositoryInterface $linkRepository,
+        private ManualJournal $journal,
     ) {
     }
 
@@ -30,5 +32,7 @@ final readonly class DeleteBrokerSyncSettingsCommandHandler
         }
 
         $this->linkRepository->remove($link);
+        // The records stay as the broker left them and become the start of a manual journal
+        $this->journal->rebuild($account);
     }
 }

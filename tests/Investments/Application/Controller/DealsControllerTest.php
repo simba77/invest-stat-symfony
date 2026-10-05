@@ -9,6 +9,8 @@ use App\Investments\Domain\Accounts\Account;
 use App\Investments\Domain\Instruments\Bond;
 use App\Investments\Domain\Instruments\Future;
 use App\Investments\Domain\Instruments\Share;
+use App\Investments\Domain\Journal\ManualOperation;
+use App\Investments\Domain\Journal\ManualOperationType;
 use App\Investments\Domain\Operations\Deal;
 use App\Investments\Domain\Operations\Deals\DealStatus;
 use App\Investments\Domain\Operations\Deals\DealType;
@@ -17,8 +19,8 @@ use App\Tests\Support\ApiTestCase;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 
 /**
- * Characterization of manual deals: how creating, selling, editing and deleting a deal
- * changes the deals and the cash of the account.
+ * Manual deals: creating, selling, editing and deleting a deal records it in the journal of the
+ * account, and the deals and the cash follow from the journal.
  */
 final class DealsControllerTest extends ApiTestCase
 {
@@ -155,7 +157,7 @@ final class DealsControllerTest extends ApiTestCase
         self::assertSame(['10200.0000', '0.0000', '0.0000'], $this->cashAndAssets($account));
     }
 
-    public function testSellOneOfFutureAddsPriceDifferenceWithoutMultiplier(): void
+    public function testSellOneOfFutureAddsItsResultInRoubles(): void
     {
         $account = $this->manualAccount(balance: '10000');
         $future = new Future('SiH6', 'Si-3.26', 'MOEX', 'RUB', '90000', prevPrice: '89000', lotSize: '1', stepPrice: '1');
@@ -166,7 +168,8 @@ final class DealsControllerTest extends ApiTestCase
         $this->postJson('/api/deals/sell', ['id' => $deal->getId(), 'accountId' => $account->getId(), 'ticker' => 'SiH6', 'price' => '88000', 'quantity' => 1]);
 
         self::assertResponseIsSuccessful();
-        self::assertSame(['13000.0000', '0.0000', '0.0000'], $this->cashAndAssets($account));
+        // (88000 - 85000) points × 10 roubles a point
+        self::assertSame(['40000.0000', '0.0000', '0.0000'], $this->cashAndAssets($account));
     }
 
     public function testSellAsNeededClosesOldestActiveDealsAndSplitsTheLastOne(): void
@@ -187,8 +190,8 @@ final class DealsControllerTest extends ApiTestCase
                 [DealStatus::Blocked, 4, '200.0000', '0.0000', null, '2022-01-20 12:00:00'],
                 [DealStatus::Closed, 10, '250.0000', '310.0000', self::NOW, '2025-06-10 10:00:00'],
                 [DealStatus::Closed, 2, '280.0000', '310.0000', self::NOW, '2025-09-15 11:30:00'],
-                // The rest of the split deal is a new deal that counts as opened at the sale
-                [DealStatus::Active, 3, '280.0000', '0.0000', null, self::NOW],
+                // The rest of the split deal is a new deal, opened when the purchase was
+                [DealStatus::Active, 3, '280.0000', '0.0000', null, '2025-09-15 11:30:00'],
             ],
             array_map(static fn (Deal $deal) => [
                 $deal->getStatus(),
@@ -202,35 +205,31 @@ final class DealsControllerTest extends ApiTestCase
         self::assertSame(['3720.0000', '0.0000', '2100.0000'], $this->cashAndAssets($account));
     }
 
-    public function testSellAsNeededRecordsClosedDealForSecuritiesThatWereNotHeld(): void
+    public function testSellAsNeededRefusesToSellMoreThanTheOpenDealsHold(): void
     {
         $account = $this->manualAccount(balance: '0');
-        $this->openDeal($account, $this->createShare('SBER', price: '300'), 5, '250');
+        $sber = $this->createShare('SBER', price: '300');
+        $this->openDeal($account, $sber, 4, '200', status: DealStatus::Blocked);
+        $deal = $this->openDeal($account, $sber, 5, '250');
 
         $this->postJson('/api/deals/sell', ['id' => null, 'accountId' => $account->getId(), 'ticker' => 'SBER', 'price' => '310', 'quantity' => 8]);
 
-        self::assertResponseIsSuccessful();
-        self::assertSame(
-            [[DealStatus::Closed, 5, '250.0000'], [DealStatus::Closed, 3, '250.0000']],
-            array_map(
-                static fn (Deal $deal) => [$deal->getStatus(), $deal->getQuantity(), $deal->getBuyPrice()],
-                $this->findFreshBy(Deal::class, ['account' => $account->getId()]),
-            ),
-        );
-        self::assertSame(['2480.0000', '0.0000', '0.0000'], $this->cashAndAssets($account));
+        $this->assertViolatedFields(['quantity']);
+        self::assertSame(DealStatus::Active, $this->findFresh(Deal::class, $deal->getId())?->getStatus());
+        self::assertSame(['0.0000', '0.0000', '2700.0000'], $this->cashAndAssets($account));
     }
 
-    public function testSellAsNeededFailsWithoutActiveDeals(): void
+    public function testSellAsNeededRefusesWithoutOpenDeals(): void
     {
         $account = $this->manualAccount(balance: '0');
         $this->createShare('SBER');
 
         $this->postJson('/api/deals/sell', ['id' => null, 'accountId' => $account->getId(), 'ticker' => 'SBER', 'price' => '310', 'quantity' => 8]);
 
-        self::assertResponseStatusCodeSame(500);
+        $this->assertViolatedFields(['quantity']);
     }
 
-    public function testEditChangesDealButNotCash(): void
+    public function testEditCorrectsDealAndItsCash(): void
     {
         $account = $this->manualAccount(balance: '7500');
         $deal = $this->openDeal($account, $this->createShare('SBER', price: '300'), 10, '250');
@@ -240,10 +239,11 @@ final class DealsControllerTest extends ApiTestCase
         self::assertResponseIsSuccessful();
         $deal = $this->findFresh(Deal::class, $deal->getId());
         self::assertSame([20, '240.0000', '330.0000'], [$deal?->getQuantity(), $deal?->getBuyPrice(), $deal?->getTargetPrice()]);
-        self::assertSame(['7500.0000', '0.0000', '6000.0000'], $this->cashAndAssets($account));
+        // The purchase cost 4800 instead of 2500
+        self::assertSame(['5200.0000', '0.0000', '6000.0000'], $this->cashAndAssets($account));
     }
 
-    public function testDeleteRemovesDealButNotItsCash(): void
+    public function testDeleteRemovesDealAndReturnsItsCash(): void
     {
         $account = $this->manualAccount(balance: '7500');
         $deal = $this->openDeal($account, $this->createShare('SBER', price: '300'), 10, '250');
@@ -252,7 +252,52 @@ final class DealsControllerTest extends ApiTestCase
 
         self::assertResponseIsSuccessful();
         self::assertNull($this->findFresh(Deal::class, $deal->getId()));
-        self::assertSame(['7500.0000', '0.0000', '0.0000'], $this->cashAndAssets($account));
+        self::assertSame(['10000.0000', '0.0000', '0.0000'], $this->cashAndAssets($account));
+    }
+
+    public function testCreateRecordsPurchaseInJournal(): void
+    {
+        $account = $this->manualAccount(balance: '10000');
+        $this->createShare('SBER', price: '300');
+
+        $this->postJson('/api/deals/create/' . $account->getId(), $this->dealPayload('SBER', 10, '250', target: '320'));
+
+        self::assertResponseIsSuccessful();
+        $operations = $this->findFreshBy(ManualOperation::class, ['account' => $account->getId(), 'type' => ManualOperationType::Buy]);
+        self::assertCount(1, $operations);
+        self::assertSame([10, '250.0000', '320.0000', self::NOW], [$operations[0]->getQuantity(), $operations[0]->getPrice(), $operations[0]->getTargetPrice(), $operations[0]->getExecutedAt()->format('Y-m-d H:i:s')]);
+        self::assertSame($operations[0]->getOpenedLot(), $this->findFreshBy(Deal::class, ['account' => $account->getId()])[0]->getExternalId());
+    }
+
+    public function testEditOfTheRestOfPartlySoldDealChangesThePurchase(): void
+    {
+        $account = $this->manualAccount(balance: '0');
+        $sold = $this->openDeal($account, $this->createShare('SBER', price: '300'), 10, '250');
+        $this->postJson('/api/deals/sell', ['id' => null, 'accountId' => $account->getId(), 'ticker' => 'SBER', 'price' => '310', 'quantity' => 4]);
+        $rest = $this->findFreshBy(Deal::class, ['account' => $account->getId(), 'status' => DealStatus::Active])[0];
+
+        $this->postJson('/api/deals/edit/' . $rest->getId(), $this->dealPayload('SBER', 8, '240'));
+
+        self::assertResponseIsSuccessful();
+        self::assertSame(
+            [[$sold->getId(), 4, '240.0000', DealStatus::Closed], [$rest->getId(), 8, '240.0000', DealStatus::Active]],
+            array_map(
+                static fn (Deal $deal) => [$deal->getId(), $deal->getQuantity(), $deal->getBuyPrice(), $deal->getStatus()],
+                $this->findFreshBy(Deal::class, ['account' => $account->getId()]),
+            ),
+        );
+    }
+
+    public function testDeleteRefusesSoldPartOfPurchase(): void
+    {
+        $account = $this->manualAccount(balance: '0');
+        $sold = $this->openDeal($account, $this->createShare('SBER', price: '300'), 10, '250');
+        $this->postJson('/api/deals/sell', ['id' => null, 'accountId' => $account->getId(), 'ticker' => 'SBER', 'price' => '310', 'quantity' => 4]);
+
+        $this->postJson('/api/deals/delete/' . $sold->getId());
+
+        self::assertResponseStatusCodeSame(409);
+        self::assertCount(2, $this->findFreshBy(Deal::class, ['account' => $account->getId()]));
     }
 
     public function testShowReturnsDealForm(): void

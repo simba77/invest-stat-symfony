@@ -8,6 +8,7 @@ use App\Investments\Domain\BrokerSync\AccountIsSyncedException;
 use App\Investments\Domain\BrokerSync\BrokerSyncDisabledException;
 use App\Investments\Domain\BrokerSync\Client\BrokerApiException;
 use App\Investments\Domain\BrokerSync\Client\ExternalAccountNotFoundException;
+use App\Investments\Domain\Journal\DealCannotBeDeletedException;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -15,10 +16,10 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 
 /**
- * Turns broker sync failures into JSON errors whose message the SPA can show.
+ * Turns refusals of the investments context into JSON errors whose message the SPA can show.
  */
 #[AsEventListener(event: KernelEvents::EXCEPTION)]
-final class BrokerSyncExceptionListener
+final class InvestmentsExceptionListener
 {
     public function __invoke(ExceptionEvent $event): void
     {
@@ -31,7 +32,8 @@ final class BrokerSyncExceptionListener
             $exception instanceof BrokerApiException => JsonResponse::HTTP_BAD_GATEWAY,
             $exception instanceof ExternalAccountNotFoundException,
             $exception instanceof BrokerSyncDisabledException => JsonResponse::HTTP_BAD_REQUEST,
-            $exception instanceof AccountIsSyncedException => JsonResponse::HTTP_CONFLICT,
+            $exception instanceof AccountIsSyncedException,
+            $exception instanceof DealCannotBeDeletedException => JsonResponse::HTTP_CONFLICT,
             default => null,
         };
 

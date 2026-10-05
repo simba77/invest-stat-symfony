@@ -8,7 +8,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Marks a record built from a broker operation, so that the next sync finds and updates it.
+ * Identifies a record rebuilt from a journal, so that the next rebuild finds and updates it:
+ * from broker operations for a synced account, from manual operations for the others.
  */
 trait SyncedRecord
 {
@@ -36,6 +37,17 @@ trait SyncedRecord
     public function markSynced(string $externalId): static
     {
         $this->source = RecordSource::Broker;
+        $this->externalId = $externalId;
+
+        return $this;
+    }
+
+    /**
+     * Marks a record of a manual account rebuilt from its journal under the given key.
+     */
+    public function trackAs(string $externalId): static
+    {
+        $this->source = RecordSource::Manual;
         $this->externalId = $externalId;
 
         return $this;

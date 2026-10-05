@@ -46,6 +46,8 @@ final readonly class SaveBrokerSyncSettingsCommandHandler
         $externalAccount = $this->findExternalAccount($command, $token);
 
         if ($link === null) {
+            // The broker sync rebuilds the records from now on
+            $account->stopJournal();
             $link = new BrokerAccountLink(
                 account:                 $account,
                 provider:                $command->provider,
